@@ -1,0 +1,23 @@
+Index: etc/pam.d/system
+===================================================================
+--- etc/pam.d/system	(revision 256917)
++++ etc/pam.d/system	(working copy)
+@@ -9,7 +9,7 @@
+ auth		requisite	pam_opieaccess.so	no_warn allow_local
+ #auth		sufficient	pam_krb5.so		no_warn try_first_pass
+ #auth		sufficient	pam_ssh.so		no_warn try_first_pass
+-auth		required	pam_unix.so		no_warn try_first_pass nullok
++auth		required	pam_unix.so		no_warn try_first_pass
+ 
+ # account
+ #account 	required	pam_krb5.so
+Index: etc/pam.d/passwd
+===================================================================
+--- etc/pam.d/passwd	(revision 256917)
++++ etc/pam.d/passwd	(working copy)
+@@ -8,4 +8,4 @@
+ 
+ # password
+ #password	requisite	pam_passwdqc.so		enforce=users
+-password	required	pam_unix.so		no_warn try_first_pass nullok
++password	required	pam_unix.so		no_warn try_first_pass

@@ -1,0 +1,14 @@
+diff --git a/sys/netinet/ip_input.c b/sys/netinet/ip_input.c
+index ae87d62..c226f7d 100644
+--- a/sys/netinet/ip_input.c
++++ b/sys/netinet/ip_input.c
+@@ -536,8 +536,7 @@ tooshort:
+ 		goto ours;
+ 	}
+ 	if (m->m_flags & M_IP_NEXTHOP) {
+-		dchg = (m_tag_find(m, PACKET_TAG_IPFORWARD, NULL) != NULL);
+-		if (dchg != 0) {
++		if (m_tag_find(m, PACKET_TAG_IPFORWARD, NULL) != NULL) {
+ 			/*
+ 			 * Directly ship the packet on.  This allows
+ 			 * forwarding packets originally destined to us

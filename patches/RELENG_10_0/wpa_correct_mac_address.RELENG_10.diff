@@ -1,0 +1,12 @@
+diff --git a/contrib/wpa/src/l2_packet/l2_packet_freebsd.c b/contrib/wpa/src/l2_packet/l2_packet_freebsd.c
+index 2e9a04c..1dc0b8f 100644
+--- a/contrib/wpa/src/l2_packet/l2_packet_freebsd.c
++++ b/contrib/wpa/src/l2_packet/l2_packet_freebsd.c
+@@ -208,6 +208,7 @@ static int eth_get(const char *device, u8 ea[ETH_ALEN])
+ 		    (ifm->ifm_addrs & RTA_IFP) == 0)
+ 			continue;
+ 		if (sdl->sdl_family != AF_LINK || sdl->sdl_nlen == 0 ||
++		    (strlen(device) != sdl->sdl_nlen) ||
+ 		    os_memcmp(sdl->sdl_data, device, sdl->sdl_nlen) != 0)
+ 			continue;
+ 		os_memcpy(ea, LLADDR(sdl), sdl->sdl_alen);

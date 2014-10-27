@@ -1,0 +1,762 @@
+diff --git a/sbin/ifconfig/ifvlan.c b/sbin/ifconfig/ifvlan.c
+index cefcbbc..6761ab2 100644
+--- a/sbin/ifconfig/ifvlan.c
++++ b/sbin/ifconfig/ifvlan.c
+@@ -1,6 +1,10 @@
+ /*
+- * Copyright (c) 1999
+- *	Bill Paul <wpaul@ctr.columbia.edu>.  All rights reserved.
++ * Copyright (c) 1999 Bill Paul <wpaul@ctr.columbia.edu>
++ * Copyright (c) 2012 ADARA Networks, Inc.
++ * All rights reserved.
++  *
++ * Portions of this software were developed by Robert N. M. Watson under
++ * contract to ADARA Networks, Inc.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions
+@@ -79,10 +83,14 @@ vlan_status(int s)
+ {
+ 	struct vlanreq		vreq;
+ 
+-	if (getvlan(s, &ifr, &vreq) != -1)
+-		printf("\tvlan: %d parent interface: %s\n",
+-		    vreq.vlr_tag, vreq.vlr_parent[0] == '\0' ?
+-		    "<none>" : vreq.vlr_parent);
++	if (getvlan(s, &ifr, &vreq) == -1)
++		return;
++	printf("\tvlan: %d", vreq.vlr_tag);
++	if (ioctl(s, SIOCGVLANPCP, (caddr_t)&ifr) != -1)
++		printf(" vlanpcp: %u", ifr.ifr_vlan_pcp);
++	printf(" parent interface: %s", vreq.vlr_parent[0] == '\0' ?
++	    "<none>" : vreq.vlr_parent);
++	printf("\n");
+ }
+ 
+ static void
+@@ -150,6 +158,22 @@ DECL_CMD_FUNC(setvlandev, val, d)
+ }
+ 
+ static
++DECL_CMD_FUNC(setvlanpcp, val, d)
++{
++	u_long ul;
++	char *endp;
++
++	ul = strtoul(val, &endp, 0);
++	if (*endp != '\0')
++		errx(1, "invalid value for vlanpcp");
++	if (ul > 7)
++		errx(1, "value for vlanpcp out of range");
++	ifr.ifr_vlan_pcp = ul;
++	if (ioctl(s, SIOCSVLANPCP, (caddr_t)&ifr) == -1)
++		err(1, "SIOCSVLANPCP");
++}
++
++static
+ DECL_CMD_FUNC(unsetvlandev, val, d)
+ {
+ 	struct vlanreq		vreq;
+@@ -170,6 +194,7 @@ DECL_CMD_FUNC(unsetvlandev, val, d)
+ static struct cmd vlan_cmds[] = {
+ 	DEF_CLONE_CMD_ARG("vlan",			setvlantag),
+ 	DEF_CLONE_CMD_ARG("vlandev",			setvlandev),
++	DEF_CMD_ARG("vlanpcp",				setvlanpcp),
+ 	/* NB: non-clone cmds */
+ 	DEF_CMD_ARG("vlan",				setvlantag),
+ 	DEF_CMD_ARG("vlandev",				setvlandev),
+diff --git a/sbin/pfctl/parse.y b/sbin/pfctl/parse.y
+index 3a475a9..782ebb6 100644
+--- a/sbin/pfctl/parse.y
++++ b/sbin/pfctl/parse.y
+@@ -37,6 +37,8 @@ __FBSDID("$FreeBSD$");
+ #include <sys/sysctl.h>
+ #endif
+ #include <net/if.h>
++#include <net/ethernet.h>
++#include <net/if_vlan_var.h>
+ #include <netinet/in.h>
+ #include <netinet/in_systm.h>
+ #include <netinet/ip.h>
+@@ -241,6 +243,11 @@ struct filter_opts {
+ 	char			*tag;
+ 	char			*match_tag;
+ 	u_int8_t		 match_tag_not;
++	struct {
++		uint8_t          pcp[2];
++		uint8_t          op;
++		uint8_t          setpcp;
++	} ieee8021q_pcp;
+ 	u_int32_t                dnpipe;
+ 	u_int32_t                pdnpipe;
+ 	u_int32_t                free_flags;
+@@ -463,6 +470,7 @@ int	parseport(char *, struct range *r, int);
+ %token	STICKYADDRESS MAXSRCSTATES MAXSRCNODES SOURCETRACK GLOBAL RULE
+ %token	MAXSRCCONN MAXSRCCONNRATE OVERLOAD FLUSH SLOPPY
+ %token	TAGGED TAG IFBOUND FLOATING STATEPOLICY STATEDEFAULTS ROUTE SETTOS
++%token	IEEE8021QPCP IEEE8021QSETPCP
+ %token	DIVERTTO DIVERTREPLY
+ %token	<v.string>		STRING
+ %token	<v.number>		NUMBER
+@@ -886,6 +894,11 @@ anchorrule	: ANCHOR anchorname dir quick interface af proto fromto
+ 				YYERROR;
+ 			}
+ 
++			r.ieee8021q_pcp.pcp[0] = $9.ieee8021q_pcp.pcp[0];
++			r.ieee8021q_pcp.pcp[1] = $9.ieee8021q_pcp.pcp[1];
++			r.ieee8021q_pcp.op = $9.ieee8021q_pcp.op;
++			r.ieee8021q_pcp.setpcp = $9.ieee8021q_pcp.setpcp;
++
+ 			if ($9.match_tag)
+ 				if (strlcpy(r.match_tagname, $9.match_tag,
+ 				    PF_TAG_NAME_SIZE) >= PF_TAG_NAME_SIZE) {
+@@ -1962,6 +1975,11 @@ pfrule		: action dir logquick interface route af proto fromto
+ 			r.prob = $9.prob;
+ 			r.rtableid = $9.rtableid;
+ 
++			r.ieee8021q_pcp.pcp[0] = $9.ieee8021q_pcp.pcp[0];
++			r.ieee8021q_pcp.pcp[1] = $9.ieee8021q_pcp.pcp[1];
++			r.ieee8021q_pcp.op = $9.ieee8021q_pcp.op;
++			r.ieee8021q_pcp.setpcp = $9.ieee8021q_pcp.setpcp;
++
+ 			r.af = $6;
+ 			if ($9.tag)
+ 				if (strlcpy(r.tagname, $9.tag,
+@@ -2498,6 +2516,98 @@ filter_opt	: USER uids {
+ 			if (filter_opts.prob == 0)
+ 				filter_opts.prob = 1;
+ 		}
++		| IEEE8021QPCP STRING {
++			u_int pcp;
++
++			/*
++			* XXXRW: More complete set of operations, similar to
++			* ports.
++			*/
++			if (!strcmp($2, "be"))
++				pcp = IEEE8021Q_PCP_BE;
++			else if (!strcmp($2, "bk"))
++				pcp = IEEE8021Q_PCP_BK;
++			else if (!strcmp($2, "ee"))
++				pcp = IEEE8021Q_PCP_EE;
++			else if (!strcmp($2, "ca"))
++				pcp = IEEE8021Q_PCP_CA;
++			else if (!strcmp($2, "vi"))
++				pcp = IEEE8021Q_PCP_VI;
++			else if (!strcmp($2, "vo"))
++				pcp = IEEE8021Q_PCP_VO;
++			else if (!strcmp($2, "ic"))
++				pcp = IEEE8021Q_PCP_IC;
++			else if (!strcmp($2, "nc"))
++				pcp = IEEE8021Q_PCP_NC;
++			else
++				pcp = 8;               /* flag bad argument */
++			if (pcp > 7) {
++				yyerror("invalid ieee8021q_pcp value %s", $2);
++				free($2);
++				YYERROR;
++			}
++			free($2);
++			filter_opts.ieee8021q_pcp.pcp[0] = pcp;
++			filter_opts.ieee8021q_pcp.pcp[1] = 0;
++			filter_opts.ieee8021q_pcp.op = PF_OP_EQ;
++		}
++		| IEEE8021QPCP number {
++			u_int pcp;
++
++			pcp = $2;
++			if (pcp > 7) {
++				yyerror("invalid ieee8021q_pcp value %u", pcp);
++				YYERROR;
++			}
++			filter_opts.ieee8021q_pcp.pcp[0] = pcp;
++			filter_opts.ieee8021q_pcp.pcp[1] = 0;
++			filter_opts.ieee8021q_pcp.op = PF_OP_EQ;
++		}
++		| IEEE8021QSETPCP STRING {
++			u_int pcp;
++
++			/*
++			* XXXRW: More complete set of operations, similar to
++			* ports.
++			*/
++			if (!strcmp($2, "be"))
++				pcp = IEEE8021Q_PCP_BE;
++			else if (!strcmp($2, "bk"))
++				pcp = IEEE8021Q_PCP_BK;
++			else if (!strcmp($2, "ee"))
++				pcp = IEEE8021Q_PCP_EE;
++			else if (!strcmp($2, "ca"))
++				pcp = IEEE8021Q_PCP_CA;
++			else if (!strcmp($2, "vi"))
++				pcp = IEEE8021Q_PCP_VI;
++			else if (!strcmp($2, "vo"))
++				pcp = IEEE8021Q_PCP_VO;
++			else if (!strcmp($2, "ic"))
++				pcp = IEEE8021Q_PCP_IC;
++			else if (!strcmp($2, "nc"))
++				pcp = IEEE8021Q_PCP_NC;
++			else
++				pcp = 8;               /* flag bad argument */
++			if (pcp > 7) {
++				yyerror("invalid ieee8021q_setpcp value %s",
++					$2);
++				free($2);
++				YYERROR;
++			}
++			free($2);
++			filter_opts.ieee8021q_pcp.setpcp = pcp | SETPCP_VALID;
++		}
++		| IEEE8021QSETPCP number {
++			u_int pcp;
++
++			pcp = $2;
++			if (pcp > 7) {
++				yyerror("invalid ieee8021q_setpcp value %u",
++					pcp);
++				YYERROR;
++			}
++			filter_opts.ieee8021q_pcp.setpcp = pcp | SETPCP_VALID;
++		}
+ 		| RTABLE NUMBER				{
+ 			if ($2 < 0 || $2 > rt_tableid_max()) {
+ 				yyerror("invalid rtable id");
+@@ -5472,6 +5582,8 @@ lookup(char *s)
+ 		{ "hostid",		HOSTID},
+ 		{ "icmp-type",		ICMPTYPE},
+ 		{ "icmp6-type",		ICMP6TYPE},
++		{ "ieee8021q-pcp",	IEEE8021QPCP},
++		{ "ieee8021q-setpcp",	IEEE8021QSETPCP},
+ 		{ "if-bound",		IFBOUND},
+ 		{ "in",			IN},
+ 		{ "include",		INCLUDE},
+diff --git a/sbin/pfctl/pfctl_parser.c b/sbin/pfctl/pfctl_parser.c
+index afc2b82..2612b11 100644
+--- a/sbin/pfctl/pfctl_parser.c
++++ b/sbin/pfctl/pfctl_parser.c
+@@ -40,6 +40,8 @@ __FBSDID("$FreeBSD$");
+ #include <sys/param.h>
+ #include <sys/proc.h>
+ #include <net/if.h>
++#include <net/ethernet.h>
++#include <net/if_vlan_var.h>
+ #include <netinet/in.h>
+ #include <netinet/in_systm.h>
+ #include <netinet/ip.h>
+@@ -65,6 +67,8 @@ __FBSDID("$FreeBSD$");
+ void		 print_op (u_int8_t, const char *, const char *);
+ void		 print_port (u_int8_t, u_int16_t, u_int16_t, const char *, int);
+ void		 print_ugid (u_int8_t, unsigned, unsigned, const char *, unsigned);
++void		 print_ieee8021q_pcp (u_int8_t, uint8_t, uint8_t);
++void		 print_ieee8021q_setpcp (u_int8_t);
+ void		 print_flags (u_int8_t);
+ void		 print_fromto(struct pf_rule_addr *, pf_osfp_t,
+ 		    struct pf_rule_addr *, u_int8_t, u_int8_t, int, int);
+@@ -353,6 +357,47 @@ print_ugid(u_int8_t op, unsigned u1, unsigned u2, const char *t, unsigned umax)
+ 		print_op(op, a1, a2);
+ }
+ 
++static const char *
++ieee8021q_pcp_name(u_int8_t pcp)
++{
++	const char *s;
++
++	if (pcp == IEEE8021Q_PCP_BE)
++		s = "be";
++	else if (pcp == IEEE8021Q_PCP_BK)
++		s = "bk";
++	else if (pcp == IEEE8021Q_PCP_EE)
++		s = "ee";
++	else if (pcp == IEEE8021Q_PCP_CA)
++		s = "ca";
++	else if (pcp == IEEE8021Q_PCP_VI)
++		s = "vi";
++	else if (pcp == IEEE8021Q_PCP_VO)
++		s = "vo";
++	else if (pcp == IEEE8021Q_PCP_IC)
++		s = "ic";
++	else if (pcp == IEEE8021Q_PCP_NC)
++		s = "nc";
++	else
++		s = "??";
++	return (s);
++}
++
++ void
++print_ieee8021q_pcp(u_int8_t op, u_int8_t pcp0, u_int8_t pcp1)
++{
++
++	printf(" ieee8021q-pcp");
++	print_op(op, ieee8021q_pcp_name(pcp0), ieee8021q_pcp_name(pcp1));
++}
++
++void
++print_ieee8021q_setpcp(u_int8_t pcp)
++{
++
++	printf(" ieee8021q-setpcp %s", ieee8021q_pcp_name(pcp));
++}
++
+ void
+ print_flags(u_int8_t f)
+ {
+@@ -1024,6 +1069,13 @@ print_rule(struct pf_rule *r, const char *anchor_call, int verbose, int numeric)
+ 	}
+ 	if (r->rtableid != -1)
+ 		printf(" rtable %u", r->rtableid);
++	if (r->ieee8021q_pcp.op != 0)
++		print_ieee8021q_pcp(r->ieee8021q_pcp.op,
++			r->ieee8021q_pcp.pcp[0], r->ieee8021q_pcp.pcp[1]);
++	if (r->ieee8021q_pcp.setpcp & SETPCP_VALID)
++		print_ieee8021q_setpcp(r->ieee8021q_pcp.setpcp &
++			SETPCP_PCP_MASK);
++
+ 	if (r->divert.port) {
+ #ifdef __FreeBSD__
+ 		printf(" divert-to %u", ntohs(r->divert.port));
+diff --git a/sys/net/if.h b/sys/net/if.h
+index ad4d730..16558ea 100644
+--- a/sys/net/if.h
++++ b/sys/net/if.h
+@@ -385,6 +385,7 @@ struct	ifreq {
+ 		caddr_t	ifru_data;
+ 		int	ifru_cap[2];
+ 		u_int	ifru_fib;
++		u_char	ifru_vlan_pcp;
+ 	} ifr_ifru;
+ #define	ifr_addr	ifr_ifru.ifru_addr	/* address */
+ #define	ifr_dstaddr	ifr_ifru.ifru_dstaddr	/* other end of p-to-p link */
+@@ -402,6 +403,7 @@ struct	ifreq {
+ #define	ifr_curcap	ifr_ifru.ifru_cap[1]	/* current capabilities */
+ #define	ifr_index	ifr_ifru.ifru_index	/* interface index */
+ #define	ifr_fib		ifr_ifru.ifru_fib	/* interface fib */
++#define	ifr_vlan_pcp	ifr_ifru.ifru_vlan_pcp	/* VLAN priority */
+ };
+ 
+ #define	_SIZEOF_ADDR_IFREQ(ifr) \
+diff --git a/sys/net/if_vlan.c b/sys/net/if_vlan.c
+index b7f1197..916ca8c 100644
+--- a/sys/net/if_vlan.c
++++ b/sys/net/if_vlan.c
+@@ -1,5 +1,9 @@
+ /*-
+  * Copyright 1998 Massachusetts Institute of Technology
++ * Copyright 2012 ADARA Networks, Inc.
++ *
++ * Portions of this software were developed by Robert N. M. Watson under
++ * contract to ADARA Networks, Inc.
+  *
+  * Permission to use, copy, modify, and distribute this software and
+  * its documentation for any purpose and without fee is hereby
+@@ -51,6 +55,7 @@ __FBSDID("$FreeBSD$");
+ #include <sys/mbuf.h>
+ #include <sys/module.h>
+ #include <sys/rwlock.h>
++#include <sys/priv.h>
+ #include <sys/queue.h>
+ #include <sys/socket.h>
+ #include <sys/sockio.h>
+@@ -112,6 +117,7 @@ struct	ifvlan {
+ 		int	ifvm_mintu;	/* min transmission unit */
+ 		uint16_t ifvm_proto;	/* encapsulation ethertype */
+ 		uint16_t ifvm_tag;	/* tag to apply on packets leaving if */
++		uint8_t	ifvm_pcp;	/* Priority Code Point (PCP). */
+ 	}	ifv_mib;
+ 	SLIST_HEAD(, vlan_mc_entry) vlan_mc_listhead;
+ #ifndef VLAN_ARRAY
+@@ -120,6 +126,7 @@ struct	ifvlan {
+ };
+ #define	ifv_proto	ifv_mib.ifvm_proto
+ #define	ifv_vid		ifv_mib.ifvm_tag
++#define	ifv_pcp		ifv_mib.ifvm_pcp
+ #define	ifv_encaplen	ifv_mib.ifvm_encaplen
+ #define	ifv_mtufudge	ifv_mib.ifvm_mtufudge
+ #define	ifv_mintu	ifv_mib.ifvm_mintu
+@@ -144,6 +151,15 @@ static int soft_pad = 0;
+ SYSCTL_INT(_net_link_vlan, OID_AUTO, soft_pad, CTLFLAG_RW, &soft_pad, 0,
+ 	   "pad short frames before tagging");
+ 
++/*
++ * For now, make preserving PCP via an mbuf tag optional, as it increases
++ * per-packet memory allocations and frees.  In the future, it would be
++ * preferable to reuse ether_vtag for this, or similar.
++ */
++static int vlan_mtag_pcp = 0;
++SYSCTL_INT(_net_link_vlan, OID_AUTO, mtag_pcp, CTLFLAG_RW, &vlan_mtag_pcp, 0,
++	"Retain VLAN PCP information as packets are passed up the stack");
++
+ static const char vlanname[] = "vlan";
+ static MALLOC_DEFINE(M_VLAN, vlanname, "802.1Q Virtual LAN Interface");
+ 
+@@ -693,6 +709,16 @@ vlan_devat(struct ifnet *ifp, uint16_t vid)
+ }
+ 
+ /*
++ * Recalculate the cached VLAN tag exposed via the MIB.
++ */
++static void
++vlan_tag_recalculate(struct ifvlan *ifv)
++{
++
++	ifv->ifv_mib.ifvm_tag = EVL_MAKETAG(ifv->ifv_vid, ifv->ifv_pcp, 0);
++}
++
++/*
+  * VLAN support can be loaded as a module.  The only place in the
+  * system that's intimately aware of this is ether_input.  We hook
+  * into this code through vlan_input_p which is defined there and
+@@ -1026,6 +1052,8 @@ vlan_transmit(struct ifnet *ifp, struct mbuf *m)
+ {
+ 	struct ifvlan *ifv;
+ 	struct ifnet *p;
++	struct m_tag *mtag;
++	uint16_t tag;
+ 	int error, len, mcast;
+ 
+ 	ifv = ifp->if_softc;
+@@ -1081,11 +1109,16 @@ vlan_transmit(struct ifnet *ifp, struct mbuf *m)
+ 	 * knows how to find the VLAN tag to use, so we attach a
+ 	 * packet tag that holds it.
+ 	 */
++	if (vlan_mtag_pcp && (mtag = m_tag_locate(m, MTAG_8021Q,
++	    MTAG_8021Q_PCP_OUT, NULL)) != NULL)
++		tag = EVL_MAKETAG(ifv->ifv_vid, *(uint8_t *)(mtag + 1), 0);
++	else
++		tag = EVL_MAKETAG(ifv->ifv_vid, ifv->ifv_pcp, 0);
+ 	if (p->if_capenable & IFCAP_VLAN_HWTAGGING) {
+-		m->m_pkthdr.ether_vtag = ifv->ifv_vid;
++		m->m_pkthdr.ether_vtag = tag;
+ 		m->m_flags |= M_VLANTAG;
+ 	} else {
+-		m = ether_vlanencap(m, ifv->ifv_vid);
++		m = ether_vlanencap(m, tag);
+ 		if (m == NULL) {
+ 			if_printf(ifp, "unable to prepend VLAN header\n");
+ 			ifp->if_oerrors++;
+@@ -1119,7 +1152,8 @@ vlan_input(struct ifnet *ifp, struct mbuf *m)
+ {
+ 	struct ifvlantrunk *trunk = ifp->if_vlantrunk;
+ 	struct ifvlan *ifv;
+-	uint16_t vid;
++	struct m_tag *mtag;
++	uint16_t vid, tag;
+ 
+ 	KASSERT(trunk != NULL, ("%s: no trunk", __func__));
+ 
+@@ -1128,7 +1162,7 @@ vlan_input(struct ifnet *ifp, struct mbuf *m)
+ 		 * Packet is tagged, but m contains a normal
+ 		 * Ethernet frame; the tag is stored out-of-band.
+ 		 */
+-		vid = EVL_VLANOFTAG(m->m_pkthdr.ether_vtag);
++		tag = m->m_pkthdr.ether_vtag;
+ 		m->m_flags &= ~M_VLANTAG;
+ 	} else {
+ 		struct ether_vlan_header *evl;
+@@ -1144,7 +1178,7 @@ vlan_input(struct ifnet *ifp, struct mbuf *m)
+ 				return;
+ 			}
+ 			evl = mtod(m, struct ether_vlan_header *);
+-			vid = EVL_VLANOFTAG(ntohs(evl->evl_tag));
++			tag = ntohs(evl->evl_tag);
+ 
+ 			/*
+ 			 * Remove the 802.1q header by copying the Ethernet
+@@ -1168,6 +1202,8 @@ vlan_input(struct ifnet *ifp, struct mbuf *m)
+ 		}
+ 	}
+ 
++	vid = EVL_VLANOFTAG(tag);
++
+ 	TRUNK_RLOCK(trunk);
+ 	ifv = vlan_gethash(trunk, vid);
+ 	if (ifv == NULL || !UP_AND_RUNNING(ifv->ifv_ifp)) {
+@@ -1178,6 +1214,28 @@ vlan_input(struct ifnet *ifp, struct mbuf *m)
+ 	}
+ 	TRUNK_RUNLOCK(trunk);
+ 
++	if (vlan_mtag_pcp) {
++		/*
++		 * While uncommon, it is possible that we will find a 802.1q
++		 * packet encapsulated inside another packet that also had an
++		 * 802.1q header.  For example, ethernet tunneled over IPSEC
++		 * arriving over ethernet.  In that case, we replace the
++		 * existing 802.1q PCP m_tag value.
++		 */
++		mtag = m_tag_locate(m, MTAG_8021Q, MTAG_8021Q_PCP_IN, NULL);
++		if (mtag == NULL) {
++			mtag = m_tag_alloc(MTAG_8021Q, MTAG_8021Q_PCP_IN,
++			    sizeof(uint8_t), M_NOWAIT);
++			if (mtag == NULL) {
++				m_freem(m);
++				ifp->if_ierrors++;
++				return;
++			}
++			m_tag_prepend(m, mtag);
++		}
++		*(uint8_t *)(mtag + 1) = EVL_PRIOFTAG(tag);
++	}
++
+ 	m->m_pkthdr.rcvif = ifv->ifv_ifp;
+ 	ifv->ifv_ifp->if_ipackets++;
+ 
+@@ -1226,6 +1284,8 @@ exists:
+ 	}
+ 
+ 	ifv->ifv_vid = vid;	/* must set this before vlan_inshash() */
++	ifv->ifv_pcp = 0;       /* Default: best effort delivery. */
++	vlan_tag_recalculate(ifv);
+ 	error = vlan_inshash(trunk, ifv);
+ 	if (error)
+ 		goto done;
+@@ -1712,6 +1772,34 @@ vlan_ioctl(struct ifnet *ifp, u_long cmd, caddr_t data)
+ 			error = vlan_setmulti(ifp);
+ 		break;
+ 
++	case SIOCGVLANPCP:
++#ifdef VIMAGE
++		if (ifp->if_vnet != ifp->if_home_vnet) {
++			error = EPERM;
++			break;
++		}
++#endif
++		ifr->ifr_vlan_pcp = ifv->ifv_pcp;
++		break;
++
++	case SIOCSVLANPCP:
++#ifdef VIMAGE
++		if (ifp->if_vnet != ifp->if_home_vnet) {
++			error = EPERM;
++			break;
++		}
++#endif
++		error = priv_check(curthread, PRIV_NET_SETVLANPCP);
++		if (error)
++			break;
++		if (ifr->ifr_vlan_pcp > 7) {
++			error = EINVAL;
++			break;
++		}
++		ifv->ifv_pcp = ifr->ifr_vlan_pcp;
++		vlan_tag_recalculate(ifv);
++		break;
++
+ 	default:
+ 		error = EINVAL;
+ 		break;
+diff --git a/sys/net/if_vlan_var.h b/sys/net/if_vlan_var.h
+index 4eb3b09..b1950e1 100644
+--- a/sys/net/if_vlan_var.h
++++ b/sys/net/if_vlan_var.h
+@@ -89,6 +89,23 @@ struct	vlanreq {
+ #define	SIOCSETVLAN	SIOCSIFGENERIC
+ #define	SIOCGETVLAN	SIOCGIFGENERIC
+ 
++#define	SIOCGVLANPCP	_IOWR('i', 152, struct ifreq)	/* Get VLAN PCP */
++#define	SIOCSVLANPCP	 _IOW('i', 153, struct ifreq)	/* Set VLAN PCP */
++
++/*
++ * Names for 802.1q priorities ("802.1p").  Notice that in this scheme,
++ * (0 < 1), allowing default 0-tagged traffic to take priority over background
++ * tagged traffic.
++ */
++#define	IEEE8021Q_PCP_BK	1	/* Background (lowest) */
++#define	IEEE8021Q_PCP_BE	0	/* Best effort (default) */
++#define	IEEE8021Q_PCP_EE	2	/* Excellent effort */
++#define	IEEE8021Q_PCP_CA	3	/* Critical applications */
++#define	IEEE8021Q_PCP_VI	4	/* Video, < 100ms latency */
++#define	IEEE8021Q_PCP_VO	5	/* Video, < 10ms latency */
++#define	IEEE8021Q_PCP_IC	6	/* Internetwork control */
++#define	IEEE8021Q_PCP_NC	7	/* Network control (highest) */
++
+ #ifdef _KERNEL
+ /*
+  * Drivers that are capable of adding and removing the VLAN header
+@@ -126,6 +143,16 @@ struct	vlanreq {
+  * if_capabilities.
+  */
+ 
++/*
++ * The 802.1q code may also tag mbufs with the PCP (priority) field for use in
++ * other layers of the stack, in which case an m_tag will be used.  This is
++ * semantically quite different from use of the ether_vtag field, which is
++ * defined only between the device driver and VLAN layer.
++ */
++#define	MTAG_8021Q		1326104895
++#define	MTAG_8021Q_PCP_IN	0		/* Input priority. */
++#define	MTAG_8021Q_PCP_OUT	1		/* Output priority. */
++
+ #define	VLAN_CAPABILITIES(_ifp) do {				\
+ 	if ((_ifp)->if_vlantrunk != NULL) 			\
+ 		(*vlan_trunk_cap_p)(_ifp);			\
+diff --git a/sys/net/pfvar.h b/sys/net/pfvar.h
+index 57ca93c..89200d8 100644
+--- a/sys/net/pfvar.h
++++ b/sys/net/pfvar.h
+@@ -402,6 +402,14 @@ struct pf_rule_gid {
+ 	u_int8_t	 op;
+ };
+ 
++struct pf_rule_ieee8021q_pcp {
++	u_int8_t	 pcp[2];
++	u_int8_t	 op;
++#define	SETPCP_VALID	0x80	/* Set if PCP value in field is valid. */
++#define	SETPCP_PCP_MASK	0x07	/* Mask to retrieve pcp if SETPCP_VALID. */
++	u_int8_t	 setpcp;
++};
++
+ struct pf_rule_addr {
+ 	struct pf_addr_wrap	 addr;
+ 	u_int16_t		 port[2];
+@@ -604,6 +612,7 @@ struct pf_rule {
+ 	u_int32_t		 max_src_nodes;
+ 	u_int32_t		 max_src_states;
+ 	u_int32_t		 spare1;			/* netgraph */
++	struct pf_rule_ieee8021q_pcp    ieee8021q_pcp;
+ 	u_int32_t		 max_src_conn;
+ 	struct {
+ 		u_int32_t		limit;
+@@ -1856,6 +1865,8 @@ int	pf_match_addr(u_int8_t, struct pf_addr *, struct pf_addr *,
+ int	pf_match_addr_range(struct pf_addr *, struct pf_addr *,
+ 	    struct pf_addr *, sa_family_t);
+ int	pf_match_port(u_int8_t, u_int16_t, u_int16_t, u_int16_t);
++int	pf_match_ieee8021q_pcp(u_int8_t, u_int8_t, u_int8_t, struct mbuf *);
++int	pf_ieee8021q_setpcp(struct mbuf *m, struct pf_rule *r);
+ 
+ void	pf_normalize_init(void);
+ void	pf_normalize_cleanup(void);
+diff --git a/sys/netpfil/pf/pf.c b/sys/netpfil/pf/pf.c
+index 3e3f7e1..2f95c09 100644
+--- a/sys/netpfil/pf/pf.c
++++ b/sys/netpfil/pf/pf.c
+@@ -62,6 +62,8 @@ __FBSDID("$FreeBSD$");
+ 
+ #include <net/if.h>
+ #include <net/if_types.h>
++#include <net/ethernet.h>
++#include <net/if_vlan_var.h>
+ #include <net/route.h>
+ #include <net/radix_mpath.h>
+ #include <net/vnet.h>
+@@ -2487,6 +2489,26 @@ pf_send_tcp(struct mbuf *replyto, const struct pf_rule *r, sa_family_t af,
+ 	pf_send(pfse);
+ }
+ 
++int
++pf_ieee8021q_setpcp(struct mbuf *m, struct pf_rule *r)
++{
++	struct m_tag *mtag;
++
++	KASSERT(r->ieee8021q_pcp.setpcp & SETPCP_VALID,
++	    ("%s with invalid setpcp", __func__));
++
++	mtag = m_tag_locate(m, MTAG_8021Q, MTAG_8021Q_PCP_OUT, NULL);
++	if (mtag == NULL) {
++		mtag = m_tag_alloc(MTAG_8021Q, MTAG_8021Q_PCP_OUT,
++		    sizeof(uint8_t), M_NOWAIT);
++		if (mtag == NULL)
++			return (ENOMEM);
++		m_tag_prepend(m, mtag);
++	}
++	*(uint8_t *)(mtag + 1) = (r->ieee8021q_pcp.setpcp & SETPCP_PCP_MASK);
++	return (0);
++}
++
+ static void
+ pf_send_icmp(struct mbuf *m, u_int8_t type, u_int8_t code, sa_family_t af,
+     struct pf_rule *r)
+@@ -2660,6 +2682,36 @@ pf_match_port(u_int8_t op, u_int16_t a1, u_int16_t a2, u_int16_t p)
+ 	return (pf_match(op, a1, a2, p));
+ }
+ 
++int
++pf_match_ieee8021q_pcp(u_int8_t op, u_int8_t pcp1, u_int8_t pcp2,
++    struct mbuf *m)
++{
++	struct m_tag *mtag;
++	uint8_t mpcp;
++
++	/*
++	* Packets without 802.1q headers are treated as having a PCP of 0
++	* (best effort).
++	*/
++	mtag = m_tag_locate(m, MTAG_8021Q, MTAG_8021Q_PCP_IN, NULL);
++	if (mtag != NULL)
++		mpcp = *(uint8_t *)(mtag + 1);
++	else
++		mpcp = IEEE8021Q_PCP_BE;
++
++	/*
++	* 802.1q uses a non-traditional ordering, in which 1 < 0, allowing
++	* default 0-tagged ("best effort") traffic to take precedence over
++	* 1-tagged ("background") traffic.  Renumber both PCP arguments
++	* before making a comparison so that we can use boring arithmetic
++	* operators.
++	*/
++	pcp1 = ((pcp1 == 0) ? 1 : ((pcp1 == 1) ? 0 : pcp1));
++	pcp2 = ((pcp2 == 0) ? 1 : ((pcp2 == 1) ? 0 : pcp2));
++	mpcp = ((mpcp == 0) ? 1 : ((mpcp == 1) ? 0 : mpcp));
++	return (pf_match(op, pcp1, pcp2, mpcp));
++}
++
+ static int
+ pf_match_uid(u_int8_t op, uid_t a1, uid_t a2, uid_t u)
+ {
+@@ -3419,6 +3471,10 @@ pf_test_rule(struct pf_rule **rm, struct pf_state **sm, int direction,
+ 		    !pf_match_gid(r->gid.op, r->gid.gid[0], r->gid.gid[1],
+ 		    pd->lookup.gid))
+ 			r = TAILQ_NEXT(r, entries);
++		else if (r->ieee8021q_pcp.op &&
++		    !pf_match_ieee8021q_pcp(r->ieee8021q_pcp.op,
++		    r->ieee8021q_pcp.pcp[0], r->ieee8021q_pcp.pcp[1], m))
++			r = TAILQ_NEXT(r, entries);
+ 		else if (r->prob &&
+ 		    r->prob <= arc4random())
+ 			r = TAILQ_NEXT(r, entries);
+@@ -3873,6 +3929,10 @@ pf_test_fragment(struct pf_rule **rm, int direction, struct pfi_kif *kif,
+ 		    pd->proto == IPPROTO_ICMPV6) &&
+ 		    (r->type || r->code))
+ 			r = TAILQ_NEXT(r, entries);
++                else if (r->ieee8021q_pcp.op &&
++                    !pf_match_ieee8021q_pcp(r->ieee8021q_pcp.op,
++                    r->ieee8021q_pcp.pcp[0], r->ieee8021q_pcp.pcp[1], m))
++                        r = TAILQ_NEXT(r, entries);
+ 		else if (r->prob && r->prob <=
+ 		    (arc4random() % (UINT_MAX - 1) + 1))
+ 			r = TAILQ_NEXT(r, entries);
+@@ -6691,6 +6751,24 @@ done:
+ 	if (r->rtableid >= 0)
+ 		M_SETFIB(m, r->rtableid);
+ 
++	if ((r->ieee8021q_pcp.setpcp & SETPCP_VALID) &&
++	    pf_ieee8021q_setpcp(m, r)) {
++		action = PF_DROP;
++		REASON_SET(&reason, PFRES_MEMORY);
++		log = 1;
++		DPFPRINTF(PF_DEBUG_MISC,
++		    ("pf: failed to allocate 802.1q mtag\n"));
++	}
++
++	if ((r->ieee8021q_pcp.setpcp & SETPCP_VALID) &&
++	    pf_ieee8021q_setpcp(m, r)) {
++		action = PF_DROP;
++		REASON_SET(&reason, PFRES_MEMORY);
++		log = 1;
++		DPFPRINTF(PF_DEBUG_MISC,
++		    ("pf: failed to allocate 802.1q mtag\n"));
++	}
++
+ #ifdef ALTQ
+ 	if (action == PF_PASS && r->qid) {
+ 		if (pd.pf_mtag == NULL &&
+diff --git a/sys/sys/priv.h b/sys/sys/priv.h
+index 18d17af..65f151d 100644
+--- a/sys/sys/priv.h
++++ b/sys/sys/priv.h
+@@ -339,6 +339,7 @@
+ #define	PRIV_NET_SETIFVNET	417	/* Move interface to vnet. */
+ #define	PRIV_NET_SETIFDESCR	418	/* Set interface description. */
+ #define	PRIV_NET_SETIFFIB	419	/* Set interface fib. */
++#define	PRIV_NET_SETVLANPCP     420     /* Set VLAN priority. */
+ 
+ /*
+  * 802.11-related privileges.

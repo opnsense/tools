@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+# $FreeBSD$
+# $Id: uzip,v 1.1.1.1 2008/03/25 19:58:15 sullrich Exp $
+#
+
+# PROVIDE: uzip
+# BEFORE: disks
+# KEYWORD: nojail
+
+. /etc/rc.subr
+
+name="uzip"
+start_cmd="uzip_start"
+stop_cmd="uzip_stop"
+
+uzip_start() {
+    for loopfs in /uzip/*.uzip; do
+	if [ -f ${loopfs} ]; then
+	    filename=${loopfs#/uzip/}
+	    mountpoint=/${filename%.uzip}
+	    device=/dev/$(mdconfig -a -t vnode -o readonly -f $loopfs)
+	    sleep 1
+	    if [ -c ${device} ]; then
+		mount -r ${device}.uzip ${mountpoint}
+	    fi
+	fi
+    done
+}
+
+uzip_stop() {
+    for mounteddev in /dev/*.uzip; do
+	if [ -c ${mounteddev} ]; then
+	    device=${mounteddev%.uzip}
+	    umount ${mounteddev}
+	    mdconfig -d -u ${device}
+	fi
+    done
+}
+
+load_rc_config $name
+run_rc_command "$1"

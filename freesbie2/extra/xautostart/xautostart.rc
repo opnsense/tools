@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+# Copyright (c) 2006 Matteo Riondato
+#
+# See COPYING for licence details
+#
+# $Id: xautostart.rc,v 1.1.1.1 2008/03/25 19:58:16 sullrich Exp $
+#
+# PROVIDE xautostart
+# REQUIRE homemfs xconfig
+
+. /etc/rc.subr
+
+name="xautostart"
+start_cmd="do_xautostart"
+stop_cmd=":"
+
+do_xautostart()
+{
+	winmanager=`kenv -q freesbie.wm`
+	for i in `ls /home`; do
+		case $winmanager in
+		xfce*)
+			wm_command="startxfce4"
+			;;
+		fluxbox)
+			wm_command="fluxbox"
+			;;
+		*)
+			wm_command=""
+			;;
+		esac
+
+		if [ "x$wm_command" != "x" ]; then
+			sed -i -e 1s/^.*$/exec\ $wm_command/ \
+			/home/${i}/.xinitrc
+			( 
+			echo "" 
+			echo "set XORG_ON=\`ps ac | grep Xorg\`" 
+			echo "if ( \"\$XORG_ON\" != \"\" ) then" 
+        		echo "exit" 
+			echo "endif" 
+			echo "" 
+			echo "if  ( ! \$?DISPLAY ) then" 
+			echo "set TTY_TYPE=\`echo \$tty | cut -c 4\`" 
+			echo "if ( \$TTY_TYPE == \"v\" ) then" 
+			echo "[ -x /usr/X11R6/bin/startx ] && startx" 
+			echo "endif" 
+			echo "endif" 
+			) >> /home/${i}/.cshrc
+		fi
+	done
+}
+
+load_rc_config $name
+run_rc_command "$1"
+

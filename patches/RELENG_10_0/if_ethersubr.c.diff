@@ -1,0 +1,13 @@
+diff --git a/sys/net/if_ethersubr.c b/sys/net/if_ethersubr.c
+index 638b364..8a0a0f3 100644
+--- a/sys/net/if_ethersubr.c
++++ b/sys/net/if_ethersubr.c
+@@ -924,8 +924,6 @@ ether_ifattach(struct ifnet *ifp, const u_int8_t *lla)
+ 	for (i = 0; i < ifp->if_addrlen; i++)
+ 		if (lla[i] != 0)
+ 			break; 
+-	if (i != ifp->if_addrlen)
+-		if_printf(ifp, "Ethernet address: %6D\n", lla, ":");
+ 
+ 	uuid_ether_add(LLADDR(sdl));
+ }

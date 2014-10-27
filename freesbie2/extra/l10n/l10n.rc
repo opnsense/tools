@@ -1,0 +1,229 @@
+#!/bin/sh
+#
+# Copyright (c) 2006 Mozhaisky Sergei
+# Copyright (c) 2006 Matteo Riondato
+#
+# See COPYING for licence terms.
+#
+#
+# $Id: l10n.rc,v 1.1.1.1 2008/03/25 19:58:16 sullrich Exp $
+#
+# PROVIDE: l10n
+# REQUIRE: etcmfs syscons xconfig
+
+. /etc/rc.subr
+
+name="l10n"
+start_cmd="l10n_start"
+stop_cmd=":"
+
+FL=`kenv -q freesbie.lang`
+
+SUPLANG="bg cs/cz de en es fr it pl ru sk ua" 
+
+# path
+P="/etc"
+F_CSHRC="${P}/csh.cshrc"
+F_PROFILE="${P}/profile"
+F_RC="${P}/rc.conf"
+F_TTYS="${P}/ttys"
+
+set_lang() {
+case $1 in
+	# Bulgarian
+	bg)
+	X_LANG="cs_CZ.ISO8859-2"
+	X_MM_CHARSET="ISO-8859-2"
+	X_KEYMAP="bg.bds.ctrlcaps"
+	X_XORG_KEYMAP="bg"
+	;;
+	# Czech
+	cz|cs)
+	X_LANG="cs_CZ.ISO8859-2"
+	X_MM_CHARSET="ISO-8859-2"
+	X_KEYMAP="cz.iso2"
+	X_XORG_KEYMAP="cz"
+	;;
+	# German
+	de)
+	X_LANG="de_DE.ISO8859-1"
+	X_MM_CHARSET="ISO-8859-1"
+	X_KEYMAP="german.iso"
+	X_XORG_KEYMAP="de"
+	;;
+	# English
+	en)
+	;;
+	# Spanish
+	es)
+	X_LANG="es_ES.ISO8859-1"
+	X_MM_CHARSET="ISO-8859-1"
+	X_KEYMAP="spanish.iso"
+	X_XORG_KEYMAP="es"
+	;;
+	# French
+	fr)
+	X_LANG="fr_FR.ISO8859-1"
+	X_MM_CHARSET="ISO-8859-1"
+	X_KEYMAP="fr.iso"
+	X_XORG_KEYMAP="fr"
+	;;
+	# Italian
+	it)
+	X_LANG="it_IT.ISO8859-15"
+	X_MM_CHARSET="ISO-8859-15"
+	X_KEYMAP="it.iso"
+	X_XORG_KEYMAP="it"
+	;;
+	# Polski
+	pl)
+	X_LANG="pl_PL.ISO8859-2"
+	X_MM_CHARSET="ISO-8859-2"
+	X_KEYMAP="pl_PL.ISO8859-2"
+	X_XORG_KEYMAP="pl"
+	;;
+	# Russian
+	ru)
+	X_LANG="ru_RU.KOI8-R"
+	X_MM_CHARSET="KOI8-R"
+	X_KEYMAP="ru.koi8-r.win"
+	;;
+	# Slovak
+	sk)
+	X_LANG="sk_SK.ISO8859-2"
+	X_MM_CHARSET="ISO-8859-2"
+	X_KEYMAP="sk.iso2"
+	X_XORG_KEYMAP="sk"
+	;;
+	# Ukrainian
+	ua)
+	X_LANG="uk_UA.KOI8-U"
+	X_MM_CHARSET="KOI8-U"
+	X_KEYMAP="ua.koi8-u"
+	X_SCRNMAP="koi8-u2cp866u"
+	X_XORG_KEYMAP="ua(winkeys)"
+	;;
+esac
+}
+
+set_tty()
+{
+case $1 in
+	ISO-8859-1|ISO-8859-15)
+	X_TTY="cons25l1"
+	;;
+	ISO-8859-2)
+	X_TTY="cons25l2"
+	;;
+	ISO-8859-7)
+	X_TTY="cons25l7"
+	;;
+	KOI8-R)
+	X_TTY="cons25r"
+	;;
+	KOI8-U)
+	X_TTY="cons25u"
+	;;
+	US-ASCII)
+	X_TTY="cons25w"
+	;;
+	*)
+	X_TTY="cons25"
+	;;
+esac
+}
+
+set_font() {
+case $1 in
+	ISO-8859-1)
+	X_FONT="iso"
+	;;
+	ISO-8859-15)
+	X_FONT="iso15"
+	;;
+	ISO-8859-2)
+	X_FONT="iso02"
+	;;
+	ISO-8859-7)
+	X_FONT="iso07"
+	;;
+	KOI8-R)
+	X_FONT="cp866"
+	#X_FONT="866-frenzy"
+	X_SCRNMAP="koi8-r2cp866"
+	;;
+	KOI8-U)
+	X_FONT="cp866u"
+	#X_FONT="866-frenzy"
+	X_SCRNMAP="koi8-r2cp866"
+	;;
+	KOI8-U)
+	X_FONT="cp866u"
+	#X_FONT="866-frenzy"
+	X_SCRNMAP="koi8-u2cp866u"
+	;;
+	US-ASCII)
+	X_FONT="iso"
+	;;
+	*)
+	X_FONT="cp437"
+	;;
+esac
+}
+
+l10n_start() {
+
+	if [ -z ${FL} ]; then
+		exit 1
+	fi
+
+	echo -n "setting locale: "
+	set_lang ${FL}
+	set_tty ${X_MM_CHARSET}
+	set_font ${X_MM_CHARSET}
+
+	DATENOW=`date "+%Y-%m-%d %H:%M:%S"`
+
+	# set language
+	printf "
+### locale # ${DATENOW} #
+setenv LANG ${X_LANG}
+setenv MM_CHARSET ${X_MM_CHARSET}
+setenv LC_ALL ${X_LANG}
+" >> ${F_CSHRC}
+	printf "
+### locale # ${DATENOW} #
+LANG=${X_LANG}; export LANG
+MM_CHARSET=${X_MM_CHARSET}; export MM_CHARSET
+LC_ALL=${X_LANG}; export LC_ALL
+" >> ${F_PROFILE}
+
+	# patching ttys
+	TTY_C=`awk '/ttyv0/{print $4}' ${F_TTYS}`
+	sed -i "" "s/[[:<:]]${TTY_C}[[:>:]]/${X_TTY}/g" ${F_TTYS}
+
+	# patching rc.conf
+	printf "
+### locale # ${DATENOW} #
+keymap=\"${X_KEYMAP}\"
+font8x16=\"${X_FONT}\"
+" >> ${F_RC}
+
+	if [ "x${X_SCRNMAP}" != "x" ]; then
+		printf "
+scrnmap=\"${X_SCRNMAP}\"
+" >> ${F_RC}
+	fi
+
+	/etc/rc.d/syscons restart 2> /dev/null
+
+	# update Xorg keyboard info
+	if [ -e /etc/X11/xorg.conf ]; then
+	    sed -i "" "s/\"us\"/\"${X_XORG_KEYMAP}\"/" /etc/X11/xorg.conf
+	fi
+
+	echo "."
+}
+
+load_rc_config $name
+run_rc_command "$1"

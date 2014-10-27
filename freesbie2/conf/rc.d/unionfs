@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+# $FreeBSD$
+# $Id: unionfs,v 1.1.1.1 2008/03/25 19:58:15 sullrich Exp $
+#
+
+# PROVIDE: unionfs
+# REQUIRE: disks
+# BEFORE:  hostid
+# KEYWORD: nojail
+
+. /etc/rc.subr
+
+name="unionfs"
+start_cmd="unionfs_start"
+stop_cmd=""
+
+unionfs_start() {
+    unionsize="$(($(sysctl -n hw.usermem) / 2))b"
+    device=$(mdconfig -a -t malloc -s ${unionsize})
+    newfs /dev/${device} > /dev/null 2>&1
+    mount /dev/${device} /mnt/union
+
+    # TMPFS does not support unionfs yet.
+    #mount -t tmpfs tmpfs /mnt/union
+
+    # Use TMPFS for /tmp
+    mount -t tmpfs tmpfs /tmp
+
+    while read uniondir; do
+	mkdir /mnt/union/${uniondir}
+	mount_unionfs -o copymode=transparent -o noatime /mnt/union/${uniondir} /${uniondir}
+	if [ -f /dist/${uniondir}.dirs ]; then
+	    mtree -PU -p /${uniondir} < /dist/${uniondir}.dirs > /dev/null 2>&1
+	fi
+    done < /dist/uniondirs
+}
+
+load_rc_config $name
+run_rc_command "$1"

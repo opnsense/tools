@@ -1,0 +1,4 @@
+This directory contains scripts to be executed in the livefs chroot
+by customscripts plugin, right before the iso is packed. Useful to
+do internal operations such as adding users or editing files in an
+automatic way.

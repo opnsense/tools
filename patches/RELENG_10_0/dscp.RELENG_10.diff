@@ -1,0 +1,230 @@
+diff --git a/sbin/pfctl/parse.y b/sbin/pfctl/parse.y
+index 99c26c0..90e0959 100644
+--- a/sbin/pfctl/parse.y
++++ b/sbin/pfctl/parse.y
+@@ -215,6 +215,7 @@ struct filter_opts {
+ #define FOM_TOS		0x04
+ #define FOM_KEEP	0x08
+ #define FOM_SRCTRACK	0x10
++#define FOM_DSCP	0x20
+ 	struct node_uid		*uid;
+ 	struct node_gid		*gid;
+ 	struct {
+@@ -225,6 +226,7 @@ struct filter_opts {
+ 	} flags;
+ 	struct node_icmp	*icmpspec;
+ 	u_int32_t		 tos;
++	u_int32_t		 dscp;
+ 	u_int32_t		 prob;
+ 	struct {
+ 		int			 action;
+@@ -440,7 +442,7 @@ int	parseport(char *, struct range *r, int);
+ %token	RETURNRST RETURNICMP RETURNICMP6 PROTO INET INET6 ALL ANY ICMPTYPE
+ %token	ICMP6TYPE CODE KEEP MODULATE STATE PORT RDR NAT BINAT ARROW NODF
+ %token	MINTTL ERROR ALLOWOPTS FASTROUTE FILENAME ROUTETO DUPTO REPLYTO NO LABEL
+-%token	NOROUTE URPFFAILED FRAGMENT USER GROUP MAXMSS MAXIMUM TTL TOS DROP TABLE
++%token	NOROUTE URPFFAILED FRAGMENT USER GROUP MAXMSS MAXIMUM TTL TOS DSCP DROP TABLE
+ %token	REASSEMBLE FRAGDROP FRAGCROP ANCHOR NATANCHOR RDRANCHOR BINATANCHOR
+ %token	SET OPTIMIZATION TIMEOUT LIMIT LOGINTERFACE BLOCKPOLICY RANDOMID
+ %token	REQUIREORDER SYNPROXY FINGERPRINTS NOSYNC DEBUG SKIP HOSTID
+@@ -458,7 +460,7 @@ int	parseport(char *, struct range *r, int);
+ %token	<v.i>			PORTBINARY
+ %type	<v.interface>		interface if_list if_item_not if_item
+ %type	<v.number>		number icmptype icmp6type uid gid
+-%type	<v.number>		tos not yesno
++%type	<v.number>		tos dscp not yesno
+ %type	<v.probability>		probability
+ %type	<v.i>			no dir af fragcache optimizer
+ %type	<v.i>			sourcetrack flush unaryop statelock
+@@ -1928,7 +1930,14 @@ pfrule		: action dir logquick interface route af proto fromto
+ #endif
+ 			}
+ 
+-			r.tos = $9.tos;
++			if ($9.tos) {
++				r.tos = $9.tos;
++				r.rule_flag |= PFRULE_TOS;
++			}
++			if ($9.dscp) {
++				r.tos = $9.dscp;
++				r.rule_flag |= PFRULE_DSCP;
++			}
+ 			r.keep_state = $9.keep.action;
+ 			o = $9.keep.options;
+ 
+@@ -2306,6 +2315,14 @@ filter_opt	: USER uids {
+ 			filter_opts.marker |= FOM_TOS;
+ 			filter_opts.tos = $2;
+ 		}
++		| dscp {
++			if (filter_opts.marker & FOM_DSCP) {
++				yyerror("dscp cannot be redefined");
++				YYERROR;
++			}
++			filter_opts.marker |= FOM_DSCP;
++			filter_opts.dscp = $1;
++		}
+ 		| keep {
+ 			if (filter_opts.marker & FOM_KEEP) {
+ 				yyerror("modulate or keep cannot be redefined");
+@@ -3398,6 +3415,48 @@ tos	: STRING			{
+ 		}
+ 		;
+ 
++dscp		: DSCP STRING			{
++                        if (!strcmp($2, "EF"))
++                                $$ = DSCP_EF;
++                        else if (!strcmp($2, "VA"))
++                                $$ = DSCP_VA;
++                        else if (!strcmp($2, "af11"))
++                                $$ = DSCP_AF11;
++                        else if (!strcmp($2, "af12"))
++                                $$ = DSCP_AF12;
++                        else if (!strcmp($2, "af13"))
++                                $$ = DSCP_AF13;
++                        else if (!strcmp($2, "af21"))
++                                $$ = DSCP_AF21;
++                        else if (!strcmp($2, "af22"))
++                                $$ = DSCP_AF22;
++                        else if (!strcmp($2, "af23"))
++                                $$ = DSCP_AF23;
++                        else if (!strcmp($2, "af31"))
++                                $$ = DSCP_AF31;
++                        else if (!strcmp($2, "af32"))
++                                $$ = DSCP_AF32;
++                        else if (!strcmp($2, "af33"))
++                                $$ = DSCP_AF33;
++                        else if (!strcmp($2, "af41"))
++                                $$ = DSCP_AF41;
++                        else if (!strcmp($2, "af42"))
++                                $$ = DSCP_AF42;
++                        else if (!strcmp($2, "af43"))
++                                $$ = DSCP_AF43;
++                        else if ($2[0] == '0' && $2[1] == 'x')
++                                $$ = strtoul($2, NULL, 16) * 4;
++                        else
++                                $$ = strtoul($2, NULL, 10) * 4;
++                        if (!$$ || $$ > 255) {
++                                yyerror("illegal dscp value %s", $2);
++                                free($2);
++                                YYERROR;
++                        }
++                        free($2);
++               }
++		;
++
+ sourcetrack	: SOURCETRACK		{ $$ = PF_SRCTRACK; }
+ 		| SOURCETRACK GLOBAL	{ $$ = PF_SRCTRACK_GLOBAL; }
+ 		| SOURCETRACK RULE	{ $$ = PF_SRCTRACK_RULE; }
+@@ -4440,6 +4497,10 @@ filter_consistent(struct pf_rule *r, int anchor_call)
+ 		    "synproxy state or modulate state");
+ 		problems++;
+ 	}
++	if ((r->rule_flag & PFRULE_TOS) && (r->rule_flag & PFRULE_DSCP)) {
++		yyerror("tos and dscp cannot be used together");
++		problems++;
++	}
+ 	return (-problems);
+ }
+ 
+@@ -5234,6 +5295,7 @@ lookup(char *s)
+ 		{ "divert-to",		DIVERTTO},
+ 		{ "drop",		DROP},
+ 		{ "drop-ovl",		FRAGDROP},
++		{ "dscp",		DSCP},
+ 		{ "dup-to",		DUPTO},
+ 		{ "fastroute",		FASTROUTE},
+ 		{ "file",		FILENAME},
+diff --git a/sbin/pfctl/pfctl_parser.c b/sbin/pfctl/pfctl_parser.c
+index f248995..544bc22 100644
+--- a/sbin/pfctl/pfctl_parser.c
++++ b/sbin/pfctl/pfctl_parser.c
+@@ -847,8 +847,10 @@ print_rule(struct pf_rule *r, const char *anchor_call, int verbose, int numeric)
+ 				printf(" code %u", r->code-1);
+ 		}
+ 	}
+-	if (r->tos)
+-		printf(" tos 0x%2.2x", r->tos);
++	if (r->tos && (r->rule_flag & PFRULE_TOS))
++                printf(" tos 0x%2.2x", r->tos);
++        if (r->tos && (r->rule_flag & PFRULE_DSCP))
++                printf(" dscp 0x%2.2x", r->tos & DSCP_MASK);
+ 	if (!r->keep_state && r->action == PF_PASS && !anchor_call[0])
+ 		printf(" no state");
+ 	else if (r->keep_state == PF_STATE_NORMAL)
+diff --git a/sys/net/pfvar.h b/sys/net/pfvar.h
+index c16591b..8ac2659 100644
+--- a/sys/net/pfvar.h
++++ b/sys/net/pfvar.h
+@@ -643,6 +643,29 @@ struct pf_rule {
+ 	u_int8_t		 allow_opts;
+ 	u_int8_t		 rt;
+ 	u_int8_t		 return_ttl;
++
++#ifndef DSCP_EF
++/* Copied from altq_cdnr.h */
++/* diffserve code points */
++#define DSCP_MASK       0xfc
++#define DSCP_CUMASK     0x03
++#define DSCP_VA         0xb0
++#define DSCP_EF         0xb8
++#define DSCP_AF11       0x28
++#define DSCP_AF12       0x30
++#define DSCP_AF13       0x38
++#define DSCP_AF21       0x48
++#define DSCP_AF22       0x50
++#define DSCP_AF23       0x58
++#define DSCP_AF31       0x68
++#define DSCP_AF32       0x70
++#define DSCP_AF33       0x78
++#define DSCP_AF41       0x88
++#define DSCP_AF42       0x90
++#define DSCP_AF43       0x98
++#define AF_CLASSMASK            0xe0
++#define AF_DROPPRECMASK         0x18
++#endif
+ 	u_int8_t		 tos;
+ 	u_int8_t		 set_tos;
+ 	u_int8_t		 anchor_relative;
+@@ -677,6 +699,13 @@ struct pf_rule {
+ #define PFRULE_REASSEMBLE_TCP	0x1000
+ #define PFRULE_SET_TOS		0x2000
+ 
++/* rule flags for TOS or DSCP differentiation */
++#define PFRULE_TOS		0x2000
++#define PFRULE_DSCP		0x4000
++
++/* rule flags for handling ALTQ hashing required by certain disciplines */
++#define PFRULE_ALTQ_HASH	0x8000
++
+ /* rule flags again */
+ #define PFRULE_IFBOUND		0x00010000	/* if-bound */
+ #define PFRULE_STATESLOPPY	0x00020000	/* sloppy state tracking */
+diff --git a/sys/netpfil/pf/pf.c b/sys/netpfil/pf/pf.c
+index 2de8c40..5786066b 100644
+--- a/sys/netpfil/pf/pf.c
++++ b/sys/netpfil/pf/pf.c
+@@ -3216,8 +3216,11 @@ pf_test_rule(struct pf_rule **rm, struct pf_state **sm, int direction,
+ 		/* icmp only. type always 0 in other cases */
+ 		else if (r->code && r->code != icmpcode + 1)
+ 			r = TAILQ_NEXT(r, entries);
+-		else if (r->tos && !(r->tos == pd->tos))
+-			r = TAILQ_NEXT(r, entries);
++                else if ((r->rule_flag & PFRULE_TOS) && r->tos && !(r->tos == pd->tos))
++                        r = TAILQ_NEXT(r, entries);
++                else if ((r->rule_flag & PFRULE_DSCP) && r->tos &&
++                        !(r->tos == (pd->tos & DSCP_MASK)))
++                        r = TAILQ_NEXT(r, entries);
+ 		else if (r->rule_flag & PFRULE_FRAGMENT)
+ 			r = TAILQ_NEXT(r, entries);
+ 		else if (pd->proto == IPPROTO_TCP &&
+@@ -3655,6 +3658,9 @@ pf_test_fragment(struct pf_rule **rm, int direction, struct pfi_kif *kif,
+ 			r = r->skip[PF_SKIP_DST_ADDR].ptr;
+ 		else if (r->tos && !(r->tos == pd->tos))
+ 			r = TAILQ_NEXT(r, entries);
++		else if ((r->rule_flag & PFRULE_DSCP) && r->tos &&
++		    !(r->tos == (pd->tos & DSCP_MASK)))
++			r = TAILQ_NEXT(r, entries);
+ 		else if (r->os_fingerprint != PF_OSFP_ANY)
+ 			r = TAILQ_NEXT(r, entries);
+ 		else if (pd->proto == IPPROTO_UDP &&

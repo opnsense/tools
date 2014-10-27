@@ -1,0 +1,13 @@
+diff --git a/sys/dev/sfxge/sfxge_port.c b/sys/dev/sfxge/sfxge_port.c
+index aea677d..6fef249 100644
+--- a/sys/dev/sfxge/sfxge_port.c
++++ b/sys/dev/sfxge/sfxge_port.c
+@@ -220,7 +220,7 @@ sfxge_port_link_fc_handler(SYSCTL_HANDLER_ARGS)
+ 
+ #endif /* SFXGE_HAVE_PAUSE_MEDIAOPTS */
+ 
+-static const u_long sfxge_link_baudrate[EFX_LINK_NMODES] = {
++static const unsigned long long sfxge_link_baudrate[EFX_LINK_NMODES] = {
+ 	[EFX_LINK_10HDX]	= IF_Mbps(10),
+ 	[EFX_LINK_10FDX]	= IF_Mbps(10),
+ 	[EFX_LINK_100HDX]	= IF_Mbps(100),

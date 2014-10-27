@@ -1,0 +1,284 @@
+diff --git a/sbin/pfctl/parse.y b/sbin/pfctl/parse.y
+index b2a37a6..4c58219 100644
+--- a/sbin/pfctl/parse.y
++++ b/sbin/pfctl/parse.y
+@@ -235,6 +235,7 @@ struct filter_opts {
+ 	int			 fragment;
+ 	int			 allowopts;
+ 	char			*label;
++	char 			*schedule;
+ 	struct node_qassign	 queues;
+ 	char			*tag;
+ 	char			*match_tag;
+@@ -342,6 +343,7 @@ int		 expand_skip_interface(struct node_if *);
+ int	 check_rulestate(int);
+ int	 getservice(char *);
+ int	 rule_label(struct pf_rule *, char *);
++int	 rule_schedule(struct pf_rule *, char *);
+ int	 rt_tableid_max(void);
+ 
+ void	 mv_rules(struct pf_ruleset *, struct pf_ruleset *);
+@@ -444,7 +446,7 @@ int	parseport(char *, struct range *r, int);
+ %token	PASS BLOCK SCRUB RETURN IN OS OUT LOG QUICK ON FROM TO FLAGS
+ %token	RETURNRST RETURNICMP RETURNICMP6 PROTO INET INET6 ALL ANY ICMPTYPE
+ %token	ICMP6TYPE CODE KEEP MODULATE STATE PORT RDR NAT BINAT ARROW NODF
+-%token	MINTTL ERROR ALLOWOPTS FASTROUTE FILENAME ROUTETO DUPTO REPLYTO NO LABEL
++%token	MINTTL ERROR ALLOWOPTS FASTROUTE FILENAME ROUTETO DUPTO REPLYTO NO LABEL SCHEDULE
+ %token	NOROUTE URPFFAILED FRAGMENT USER GROUP MAXMSS MAXIMUM TTL TOS DSCP DROP TABLE
+ %token	REASSEMBLE FRAGDROP FRAGCROP ANCHOR NATANCHOR RDRANCHOR BINATANCHOR
+ %token	SET OPTIMIZATION TIMEOUT LIMIT LOGINTERFACE BLOCKPOLICY RANDOMID
+@@ -489,7 +491,7 @@ int	parseport(char *, struct range *r, int);
+ %type	<v.gid>			gids gid_list gid_item
+ %type	<v.route>		route
+ %type	<v.redirection>		redirection redirpool
+-%type	<v.string>		label stringall tag anchorname
++%type	<v.string>		label schedule stringall tag anchorname
+ %type	<v.string>		string varstring numberstring
+ %type	<v.keep_state>		keep
+ %type	<v.state_opt>		state_opt_spec state_opt_list state_opt_item
+@@ -1911,6 +1913,9 @@ pfrule		: action dir logquick interface route af proto fromto
+ 			if (rule_label(&r, $9.label))
+ 				YYERROR;
+ 			free($9.label);
++			if  (rule_schedule(&r, $9.schedule))
++				YYERROR;
++			free($9.schedule);
+ 			r.flags = $9.flags.b1;
+ 			r.flagset = $9.flags.b2;
+ 			if (($9.flags.b1 & $9.flags.b2) != $9.flags.b1) {
+@@ -2366,6 +2371,13 @@ filter_opt	: USER uids {
+ 			}
+ 			filter_opts.label = $1;
+ 		}
++		| schedule {
++			if (filter_opts.schedule) {
++				yyerror("schedule label cannot be redefined");
++				YYERROR;
++			}
++			filter_opts.schedule = $1;
++		}
+ 		| qname	{
+ 			if (filter_opts.queues.qname) {
+ 				yyerror("queue cannot be redefined");
+@@ -3708,6 +3720,11 @@ label		: LABEL STRING			{
+ 		}
+ 		;
+ 
++schedule	: SCHEDULE STRING 		{
++			$$ = $2;
++		}
++		;
++
+ qname		: QUEUE STRING				{
+ 			$$.qname = $2;
+ 			$$.pqname = NULL;
+@@ -5104,6 +5121,7 @@ expand_rule(struct pf_rule *r,
+ 	int			 added = 0, error = 0;
+ 	char			 ifname[IF_NAMESIZE];
+ 	char			 label[PF_RULE_LABEL_SIZE];
++	char			 schedule[PF_RULE_LABEL_SIZE];
+ 	char			 tagname[PF_TAG_NAME_SIZE];
+ 	char			 match_tagname[PF_TAG_NAME_SIZE];
+ 	struct pf_pooladdr	*pa;
+@@ -5112,6 +5130,8 @@ expand_rule(struct pf_rule *r,
+ 
+ 	if (strlcpy(label, r->label, sizeof(label)) >= sizeof(label))
+ 		errx(1, "expand_rule: strlcpy");
++	if (strlcpy(schedule, r->schedule, sizeof(schedule)) > sizeof(schedule))
++		errx(1, "expand_rule: strlcpy");
+ 	if (strlcpy(tagname, r->tagname, sizeof(tagname)) >= sizeof(tagname))
+ 		errx(1, "expand_rule: strlcpy");
+ 	if (strlcpy(match_tagname, r->match_tagname, sizeof(match_tagname)) >=
+@@ -5163,6 +5183,9 @@ expand_rule(struct pf_rule *r,
+ 		if (strlcpy(r->label, label, sizeof(r->label)) >=
+ 		    sizeof(r->label))
+ 			errx(1, "expand_rule: strlcpy");
++		if (strlcpy(r->schedule, schedule, sizeof(r->schedule)) >=
++			sizeof(r->schedule))
++			errx(1, "expand_rule: strlcpy");
+ 		if (strlcpy(r->tagname, tagname, sizeof(r->tagname)) >=
+ 		    sizeof(r->tagname))
+ 			errx(1, "expand_rule: strlcpy");
+@@ -5171,6 +5194,8 @@ expand_rule(struct pf_rule *r,
+ 			errx(1, "expand_rule: strlcpy");
+ 		expand_label(r->label, PF_RULE_LABEL_SIZE, r->ifname, r->af,
+ 		    src_host, src_port, dst_host, dst_port, proto->proto);
++		expand_label(r->schedule, PF_RULE_LABEL_SIZE, r->ifname, r->af,
++			src_host, src_port, dst_host, dst_port, proto->proto);
+ 		expand_label(r->tagname, PF_TAG_NAME_SIZE, r->ifname, r->af,
+ 		    src_host, src_port, dst_host, dst_port, proto->proto);
+ 		expand_label(r->match_tagname, PF_TAG_NAME_SIZE, r->ifname,
+@@ -5432,6 +5457,7 @@ lookup(char *s)
+ 		{ "rtable",		RTABLE},
+ 		{ "rule",		RULE},
+ 		{ "ruleset-optimization",	RULESET_OPTIMIZATION},
++		{ "schedule",		SCHEDULE},
+ 		{ "scrub",		SCRUB},
+ 		{ "set",		SET},
+ 		{ "set-tos",		SETTOS},
+@@ -6063,6 +6089,20 @@ rule_label(struct pf_rule *r, char *s)
+ 	return (0);
+ }
+ 
++int 
++rule_schedule(struct pf_rule *r, char *s)
++{
++	if (s) {
++		if (strlcpy(r->schedule, s, sizeof(r->label)) >=
++		   sizeof(r->label)) {
++			yyerror("rule schedule label too long (max %d chars)",
++				sizeof(r->label)-1);
++			return (-1);
++		}
++	}
++	return (0);
++}
++
+ u_int16_t
+ parseicmpspec(char *w, sa_family_t af)
+ {
+diff --git a/sbin/pfctl/pfctl.c b/sbin/pfctl/pfctl.c
+index 90a2bb5..377e0ae 100644
+--- a/sbin/pfctl/pfctl.c
++++ b/sbin/pfctl/pfctl.c
+@@ -77,6 +77,7 @@ void	 pfctl_addrprefix(char *, struct pf_addr *);
+ int	 pfctl_kill_src_nodes(int, const char *, int);
+ int	 pfctl_net_kill_states(int, const char *, int);
+ int	 pfctl_label_kill_states(int, const char *, int);
++int	 pfctl_kill_schedule(int, const char *, int);
+ int	 pfctl_id_kill_states(int, const char *, int);
+ void	 pfctl_init_options(struct pfctl *);
+ int	 pfctl_load_options(struct pfctl *);
+@@ -116,6 +117,7 @@ const char	*optiopt = NULL;
+ char		*pf_device = "/dev/pf";
+ char		*ifaceopt;
+ char		*tableopt;
++char		*schedule = NULL;
+ const char	*tblcmdopt;
+ int		 src_node_killers;
+ char		*src_node_kill[2];
+@@ -653,6 +655,25 @@ pfctl_net_kill_states(int dev, const char *iface, int opts)
+ }
+ 
+ int
++pfctl_kill_schedule(int dev, const char *sched, int opts)
++{
++	struct pfioc_schedule_kill psk;
++
++	memset(&psk, 0, sizeof(psk));
++	if (sched != NULL && strlcpy(psk.schedule, sched,
++	    sizeof(psk.schedule)) >= sizeof(psk.schedule))
++		errx(1, "invalid schedule label: %s", sched);
++
++	if (ioctl(dev, DIOCKILLSCHEDULE, &psk))
++		err(1, "DIOCKILLSCHEDULE");
++
++	if ((opts & PF_OPT_QUIET) == 0)
++		fprintf(stderr, "killed %d states from %s schedule label\n",
++			psk.numberkilled, sched);
++	return (0);
++}
++
++int
+ pfctl_label_kill_states(int dev, const char *iface, int opts)
+ {
+ 	struct pfioc_state_kill psk;
+@@ -2002,7 +2023,7 @@ main(int argc, char *argv[])
+ 		usage();
+ 
+ 	while ((ch = getopt(argc, argv,
+-	    "a:AdD:eqf:F:ghi:k:K:mnNOo:Pp:rRs:t:T:vx:z")) != -1) {
++	    "a:AdD:eqf:F:ghi:k:K:mnNOo:Pp:rRs:t:T:vx:y:z")) != -1) {
+ 		switch (ch) {
+ 		case 'a':
+ 			anchoropt = optarg;
+@@ -2116,6 +2137,12 @@ main(int argc, char *argv[])
+ 				opts |= PF_OPT_VERBOSE2;
+ 			opts |= PF_OPT_VERBOSE;
+ 			break;
++		case 'y':
++			if (schedule != NULL && strlen(schedule) > 64)
++				errx(1, "Schedule label cannot be more than 64 characters\n");
++			schedule = optarg;
++			mode = O_RDWR;
++			break;
+ 		case 'x':
+ 			debugopt = pfctl_lookup_option(optarg, debugopt_list);
+ 			if (debugopt == NULL) {
+@@ -2324,6 +2351,9 @@ main(int argc, char *argv[])
+ 	if (src_node_killers)
+ 		pfctl_kill_src_nodes(dev, ifaceopt, opts);
+ 
++	if (schedule)
++		pfctl_kill_schedule(dev, schedule, opts);
++
+ 	if (tblcmdopt != NULL) {
+ 		error = pfctl_command_tables(argc, argv, tableopt,
+ 		    tblcmdopt, rulesopt, anchorname, opts);
+diff --git a/sys/net/pfvar.h b/sys/net/pfvar.h
+index c4d6adc..b96758e 100644
+--- a/sys/net/pfvar.h
++++ b/sys/net/pfvar.h
+@@ -564,6 +564,7 @@ struct pf_rule {
+ 	union pf_rule_ptr	 skip[PF_SKIP_COUNT];
+ #define PF_RULE_LABEL_SIZE	 64
+ 	char			 label[PF_RULE_LABEL_SIZE];
++	char                     schedule[PF_RULE_LABEL_SIZE];
+ #define PF_QNAME_SIZE		 64
+ 	char			 ifname[IFNAMSIZ];
+ 	char			 qname[PF_QNAME_SIZE];
+@@ -1492,6 +1493,11 @@ struct pfioc_state_kill {
+ 	u_int			psk_killed;
+ };
+ 
++struct pfioc_schedule_kill {
++	int		numberkilled;
++	char		schedule[PF_RULE_LABEL_SIZE];
++};
++
+ struct pfioc_states {
+ 	int	ps_len;
+ 	union {
+@@ -1572,6 +1578,7 @@ struct pfioc_trans {
+ #endif
+ #define DIOCGETNAMEDALTQ	_IOWR('D', 94, struct pfioc_ruleset)
+ #define DIOCGETNAMEDTAG		_IOR('D', 95, u_int32_t)
++#define DIOCKILLSCHEDULE	_IOWR('D', 96, struct pfioc_schedule_kill)
+ 
+ struct pfioc_table {
+ 	struct pfr_table	 pfrio_table;
+diff --git a/sys/netpfil/pf/pf_ioctl.c b/sys/netpfil/pf/pf_ioctl.c
+index 1317477..cdea717 100644
+--- a/sys/netpfil/pf/pf_ioctl.c
++++ b/sys/netpfil/pf/pf_ioctl.c
+@@ -1682,6 +1682,30 @@ relock_DIOCKILLSTATES:
+ 		break;
+ 	}
+ 
++	case DIOCKILLSCHEDULE: {
++		struct pf_state         *state;
++		struct pfioc_schedule_kill *psk = (struct pfioc_schedule_kill *)addr;
++		int                      killed = 0;
++		u_int			 i;
++                    
++		for (i = 0; i <= V_pf_hashmask; i++) {
++			struct pf_idhash *ih = &V_pf_idhash[i];
++
++relock_DIOCKILLSCHEDULE:
++			PF_HASHROW_LOCK(ih);
++			LIST_FOREACH(state, &ih->states, entry) {
++			       if (!strcmp(psk->schedule, state->rule.ptr->schedule)) {
++					pf_unlink_state(state, PF_ENTER_LOCKED);
++					killed++;
++					goto relock_DIOCKILLSCHEDULE;
++				}
++			}
++			PF_HASHROW_UNLOCK(ih);
++               }
++               psk->numberkilled = killed;
++               break;
++       }
++
+ 	case DIOCADDSTATE: {
+ 		struct pfioc_state	*ps = (struct pfioc_state *)addr;
+ 		struct pfsync_state	*sp = &ps->state;

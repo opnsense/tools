@@ -1,0 +1,59 @@
+$Id: README,v 1.1.1.1 2008/03/25 19:58:15 sullrich Exp $
+
+This directory contains files and subdirectories related to the
+plugins'set.  Available plugins and a brief description of each
+follows.
+
+adduser			Add the user "freesbie" to the LiveCD (username can be
+				set using the FREESBIE_ADDUSER variable
+
+autologin		Enable autologin for the user "freesbie"
+
+backup			Add support for backup/restore files from a LiveCD
+
+buildmodules	Build modules listed in BUILDMODULES variable.  Useful
+				in minimalenvironments when NO_MODULES is set.
+
+comconsole		Enable serial console at boot in addition to video
+				console.  To use serial console only , the SERIAL_ONLY
+				variable should be set
+
+customroot		Install file in the customroot/ directory to the live
+				filesystem.  This directory has to be considered as a
+				/ filesystem.  Files are just copied to the livefs
+				directory after every other operation, just before
+				packing it into the final image.  If a file is already
+				present in the live fs it will be overrided.
+
+customscripts	Run scripts found in the customscripts/ directory in
+				the livefs chroot, right before the iso is packed.
+				Useful to do internal operations such as adding users
+				or editing files in an automatic way.
+
+etcmfs			Add support for a /etc memory filesystem
+
+installports	Remount the ports' tree under ${BASEDIR}/usr/ports
+				and install ports listed in the INSTALL_PORTS variable
+				in the usual category/portname
+
+l10n			Set localization.
+
+mountdisks		Mount any UFS, FAT, NTFS slice found 
+
+pf				Create basic PF rulesets at bootime
+
+rootmfs			Add support for a /root memory filesystem
+
+sound			Detect soundcard and load the correct kernel module.
+
+swapfind		Find swap partitions and use them.
+
+varmfs			Add support for a /var memory filesystem
+
+xautostart		Start X.org at bootime
+
+xconfig			Autoconfigure X.org at boottime using X.org
+				autoconfigure features
+
+xconfig-probe	Autoconfigure X.org at bootime using X.org -configure
+

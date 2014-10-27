@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# Copyright (c) 2006 Matteo Riondato
+#
+# See COPYING for licence terms
+#
+# $Id: restorebackup.rc,v 1.1.1.1 2008/03/25 19:58:15 sullrich Exp $
+#
+# PROVIDE: restorebackup
+# REQUIRE: etcmfs varmfs rootmfs
+# BEFORE: var mountdisks
+
+. /etc/rc.subr
+
+name="restorebackup"
+start_cmd="do_restore"
+stop_cmd=":"
+
+restorescript="/usr/local/sbin/restorebackup"
+
+do_restore()
+{
+	backup_dev=`kenv -q freesbie.backup`
+	if [ "${backup_dev}" != "NO" -o "${backup_dev}" != "no" ]; then
+		if [ -z ${backup_dev} ]; then
+			${restorescript}
+		else
+			${restorescript} -d ${backup_dev}
+		fi
+	fi
+}
+
+load_rc_config $name
+run_rc_command "$1"
+

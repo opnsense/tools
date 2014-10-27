@@ -1,0 +1,109 @@
+diff --git a/sys/netgraph/ng_eiface.c b/sys/netgraph/ng_eiface.c
+index 0f471bb..679eaa0 100644
+--- a/sys/netgraph/ng_eiface.c
++++ b/sys/netgraph/ng_eiface.c
+@@ -43,6 +43,7 @@
+ #include <net/if.h>
+ #include <net/if_media.h>
+ #include <net/if_types.h>
++#include <net/if_dl.h>
+ #include <net/netisr.h>
+ #include <net/route.h>
+ #include <net/vnet.h>
+@@ -66,6 +67,13 @@ static const struct ng_cmdlist ng_eiface_cmdlist[] = {
+ 	},
+ 	{
+ 	  NGM_EIFACE_COOKIE,
++	  NGM_EIFACE_SET_IFNAME,
++	  "setifname",
++	  &ng_parse_string_type,
++	  NULL
++	},
++	{
++	  NGM_EIFACE_COOKIE,
+ 	  NGM_EIFACE_SET,
+ 	  "set",
+ 	  &ng_parse_enaddr_type,
+@@ -470,6 +478,11 @@ ng_eiface_rcvmsg(node_p node, item_p item, hook_p lasthook)
+ 	struct ng_mesg *resp = NULL;
+ 	int error = 0;
+ 	struct ng_mesg *msg;
++	char *new_name;
++        size_t namelen, onamelen;
++        struct sockaddr_dl *sdl = NULL;
++        struct ifaddr *ifa = NULL;
++	node_p ethernode;
+ 
+ 	NGI_GET_MSG(item, msg);
+ 	switch (msg->header.typecookie) {
+@@ -496,6 +509,46 @@ ng_eiface_rcvmsg(node_p node, item_p item, hook_p lasthook)
+ 			}
+ 			strlcpy(resp->data, ifp->if_xname, IFNAMSIZ);
+ 			break;
++		case NGM_EIFACE_SET_IFNAME:
++			new_name = (char *)msg->data;
++                        
++                	/* Deny request if interface is UP */
++                	if ((ifp->if_flags & IFF_UP) != 0) {
++                  		error = EBUSY;
++                  		break;
++                        }
++                        
++                	EVENTHANDLER_INVOKE(ifnet_departure_event, ifp);
++
++			ethernode = ng_name2noderef(node, ifp->if_xname);
++                        if (ethernode != NULL)
++                                ng_name_node(ethernode, new_name);
++
++                	strlcpy(ifp->if_xname, new_name, sizeof(ifp->if_xname));
++                	ifa = ifp->if_addr;
++                	IFA_LOCK(ifa);
++                	sdl = (struct sockaddr_dl *)ifa->ifa_addr;
++                	namelen = strlen(new_name) + 1;
++                	onamelen = sdl->sdl_nlen;
++                	/*
++                 	* Move the address if needed.  This is safe because we
++                 	* allocate space for a name of length IFNAMSIZ when we
++                 	* create this in if_attach().
++                	 */
++        	        if (namelen != onamelen) {
++	                        bcopy(sdl->sdl_data + onamelen,
++                        	    sdl->sdl_data + namelen, sdl->sdl_alen);
++                	}
++        	        bcopy(new_name, sdl->sdl_data, namelen);
++	                sdl->sdl_nlen = namelen;
++                	sdl = (struct sockaddr_dl *)ifa->ifa_netmask;
++        	        bzero(sdl->sdl_data, onamelen);
++	                while (namelen != 0)
++                        	sdl->sdl_data[--namelen] = 0xff;
++                	IFA_UNLOCK(ifa);
++
++                	EVENTHANDLER_INVOKE(ifnet_arrival_event, ifp);
++			break;
+ 
+ 		case NGM_EIFACE_GET_IFADDRS:
+ 		    {
+diff --git a/sys/netgraph/ng_eiface.h b/sys/netgraph/ng_eiface.h
+index 6fc1c5b..9f1509b 100644
+--- a/sys/netgraph/ng_eiface.h
++++ b/sys/netgraph/ng_eiface.h
+@@ -54,6 +54,7 @@ enum {
+ 	NGM_EIFACE_GET_IFNAME = 1,	/* get the interface name */
+ 	NGM_EIFACE_GET_IFADDRS,		/* returns list of addresses */
+ 	NGM_EIFACE_SET,			/* set ethernet address */
++	NGM_EIFACE_SET_IFNAME,
+ };
+ 
+ #endif /* _NETGRAPH_NG_EIFACE_H_ */
+diff --git a/usr.sbin/ngctl/main.c b/usr.sbin/ngctl/main.c
+index 3581386..aae67df 100644
+--- a/usr.sbin/ngctl/main.c
++++ b/usr.sbin/ngctl/main.c
+@@ -218,7 +218,6 @@ ReadFile(FILE *fp)
+ 			continue;
+ 		if ((rtn = DoParseCommand(line)) != 0) {
+ 			warnx("line %d: error in file", num);
+-			return (rtn);
+ 		}
+ 	}
+ 	return (CMDRTN_OK);

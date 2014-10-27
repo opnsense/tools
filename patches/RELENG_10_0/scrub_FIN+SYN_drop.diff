@@ -1,0 +1,13 @@
+diff --git a/sys/netpfil/pf/pf_norm.c b/sys/netpfil/pf/pf_norm.c
+index e1e9d5d..c561728 100644
+--- a/sys/netpfil/pf/pf_norm.c
++++ b/sys/netpfil/pf/pf_norm.c
+@@ -1349,7 +1349,7 @@ pf_normalize_tcp(int dir, struct pfi_kif *kif, struct mbuf *m, int ipoff,
+ 			goto tcp_drop;
+ 
+ 		if (flags & TH_FIN)
+-			flags &= ~TH_FIN;
++			goto tcp_drop;
+ 	} else {
+ 		/* Illegal packet */
+ 		if (!(flags & (TH_ACK|TH_RST)))

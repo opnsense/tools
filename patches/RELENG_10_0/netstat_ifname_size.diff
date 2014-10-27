@@ -1,0 +1,40 @@
+diff --git a/usr.bin/netstat/if.c b/usr.bin/netstat/if.c
+index 854844f..adf0b5d 100644
+--- a/usr.bin/netstat/if.c
++++ b/usr.bin/netstat/if.c
+@@ -247,9 +247,9 @@ intpr(int interval1, u_long ifnetaddr, void (*pfunc)(char *))
+ 
+ 	if (!pfunc) {
+ 		if (Wflag)
+-			printf("%-7.7s", "Name");
++			printf("%-16.16s", "Name");
+ 		else
+-			printf("%-5.5s", "Name");
++			printf("%-16.16s", "Name");
+ 		printf(" %5.5s %-13.13s %-17.17s %8.8s %5.5s %5.5s",
+ 		    "Mtu", "Network", "Address", "Ipkts", "Ierrs", "Idrop");
+ 		if (bflag)
+@@ -313,9 +313,9 @@ intpr(int interval1, u_long ifnetaddr, void (*pfunc)(char *))
+ 
+ 		if (ifaddraddr == 0) {
+ 			if (Wflag)
+-				printf("%-7.7s", name);
++				printf("%-16.16s", name);
+ 			else
+-				printf("%-5.5s", name);
++				printf("%-16.16s", name);
+ 			printf(" %5lu ", ifnet.if_mtu);
+ 			printf("%-13.13s ", "none");
+ 			printf("%-17.17s ", "none");
+@@ -335,9 +335,9 @@ intpr(int interval1, u_long ifnetaddr, void (*pfunc)(char *))
+ 				continue;
+ 			}
+ 			if (Wflag)
+-				printf("%-7.7s", name);
++				printf("%-16.16s", name);
+ 			else
+-				printf("%-5.5s", name);
++				printf("%-16.16s", name);
+ 			printf(" %5lu ", ifnet.if_mtu);
+ 			switch (sa->sa_family) {
+ 			case AF_UNSPEC:

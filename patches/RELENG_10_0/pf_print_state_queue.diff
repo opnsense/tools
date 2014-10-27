@@ -1,0 +1,15 @@
+diff --git a/sbin/pfctl/pf_print_state.c b/sbin/pfctl/pf_print_state.c
+index f9dffbd..b1eb322 100644
+--- a/sbin/pfctl/pf_print_state.c
++++ b/sbin/pfctl/pf_print_state.c
+@@ -325,6 +325,10 @@ print_state(struct pfsync_state *s, int opts)
+ 			printf(", anchor %u", ntohl(s->anchor));
+ 		if (ntohl(s->rule) != -1)
+ 			printf(", rule %u", ntohl(s->rule));
++		if (s->pqid)
++			printf(", priqueue %u", s->pqid);
++		if (s->qid)
++			printf(", queue %u", s->qid);
+ 		if (s->pdnpipe)
+ 			printf(", pdnpipe %u", s->pdnpipe);
+ 		if (s->dnpipe)

@@ -1,0 +1,1876 @@
+diff --git a/sbin/pfctl/parse.y b/sbin/pfctl/parse.y
+index e0bde90..c7b5f41 100644
+--- a/sbin/pfctl/parse.y
++++ b/sbin/pfctl/parse.y
+@@ -48,6 +48,7 @@ __FBSDID("$FreeBSD: stable/10/sbin/pfctl/parse.y 240494 2012-09-14 11:51:49Z gle
+ #include <altq/altq_cbq.h>
+ #include <altq/altq_priq.h>
+ #include <altq/altq_hfsc.h>
++#include <altq/altq_fairq.h>
+ 
+ #include <stdio.h>
+ #include <unistd.h>
+@@ -306,6 +307,7 @@ struct pool_opts {
+ 
+ 
+ struct node_hfsc_opts	 hfsc_opts;
++struct node_fairq_opts	 fairq_opts;
+ struct node_state_opt	*keep_state_defaults = NULL;
+ 
+ int		 disallow_table(struct node_host *, const char *);
+@@ -429,6 +431,7 @@ typedef struct {
+ 		struct table_opts	 table_opts;
+ 		struct pool_opts	 pool_opts;
+ 		struct node_hfsc_opts	 hfsc_opts;
++		struct node_fairq_opts	fairq_opts;
+ 	} v;
+ 	int lineno;
+ } YYSTYPE;
+@@ -453,8 +456,8 @@ int	parseport(char *, struct range *r, int);
+ %token	REQUIREORDER SYNPROXY FINGERPRINTS NOSYNC DEBUG SKIP HOSTID
+ %token	ANTISPOOF FOR INCLUDE
+ %token	BITMASK RANDOM SOURCEHASH ROUNDROBIN STATICPORT PROBABILITY
+-%token	ALTQ CBQ PRIQ HFSC BANDWIDTH TBRSIZE LINKSHARE REALTIME UPPERLIMIT
+-%token	QUEUE PRIORITY QLIMIT RTABLE
++%token	ALTQ CBQ PRIQ HFSC FAIRQ BANDWIDTH TBRSIZE LINKSHARE REALTIME UPPERLIMIT
++%token	QUEUE PRIORITY QLIMIT HOGS BUCKETS RTABLE
+ %token  DNPIPE DNQUEUE 
+ %token	LOAD RULESET_OPTIMIZATION
+ %token	STICKYADDRESS MAXSRCSTATES MAXSRCNODES SOURCETRACK GLOBAL RULE
+@@ -503,6 +506,7 @@ int	parseport(char *, struct range *r, int);
+ %type	<v.number>		cbqflags_list cbqflags_item
+ %type	<v.number>		priqflags_list priqflags_item
+ %type	<v.hfsc_opts>		hfscopts_list hfscopts_item hfsc_opts
++%type	<v.fairq_opts>		fairqopts_list fairqopts_item fairq_opts
+ %type	<v.queue_bwspec>	bandwidth
+ %type	<v.filter_opts>		filter_opts filter_opt filter_opts_l
+ %type	<v.antispoof_opts>	antispoof_opts antispoof_opt antispoof_opts_l
+@@ -1675,6 +1679,15 @@ scheduler	: CBQ				{
+ 			$$.qtype = ALTQT_HFSC;
+ 			$$.data.hfsc_opts = $3;
+ 		}
++		| FAIRQ				{
++			$$.qtype = ALTQT_FAIRQ;
++			bzero(&$$.data.fairq_opts,
++				sizeof(struct node_fairq_opts));
++		}
++                | FAIRQ '(' fairq_opts ')'      {
++                        $$.qtype = ALTQT_FAIRQ;
++                        $$.data.fairq_opts = $3;
++                }
+ 		;
+ 
+ cbqflags_list	: cbqflags_item				{ $$ |= $1; }
+@@ -1823,6 +1836,61 @@ hfscopts_item	: LINKSHARE bandwidth				{
+ 		}
+ 		;
+ 
++fairq_opts	:	{
++				bzero(&fairq_opts,
++				    sizeof(struct node_fairq_opts));
++			}
++		    fairqopts_list				{
++			$$ = fairq_opts;
++		}
++		;
++
++fairqopts_list	: fairqopts_item
++		| fairqopts_list comma fairqopts_item
++		;
++
++fairqopts_item	: LINKSHARE bandwidth				{
++			if (fairq_opts.linkshare.used) {
++				yyerror("linkshare already specified");
++				YYERROR;
++			}
++			fairq_opts.linkshare.m2 = $2;
++			fairq_opts.linkshare.used = 1;
++		}
++		| LINKSHARE '(' bandwidth number bandwidth ')'	{
++			if (fairq_opts.linkshare.used) {
++				yyerror("linkshare already specified");
++				YYERROR;
++			}
++			fairq_opts.linkshare.m1 = $3;
++			fairq_opts.linkshare.d = $4;
++			fairq_opts.linkshare.m2 = $5;
++			fairq_opts.linkshare.used = 1;
++		}
++		| HOGS bandwidth {
++			fairq_opts.hogs_bw = $2;
++		}
++		| BUCKETS number {
++			fairq_opts.nbuckets = $2;
++		}
++		| STRING	{
++			if (!strcmp($1, "default"))
++				fairq_opts.flags |= FARF_DEFAULTCLASS;
++			else if (!strcmp($1, "red"))
++				fairq_opts.flags |= FARF_RED;
++			else if (!strcmp($1, "ecn"))
++				fairq_opts.flags |= FARF_RED|FARF_ECN;
++			else if (!strcmp($1, "rio"))
++				fairq_opts.flags |= FARF_RIO;
++			else {
++				yyerror("unknown fairq flag \"%s\"", $1);
++				free($1);
++				YYERROR;
++			}
++			free($1);
++		}
++		;
++
+ qassign		: /* empty */		{ $$ = NULL; }
+ 		| qassign_item		{ $$ = $1; }
+ 		| '{' optnl qassign_list '}'	{ $$ = $3; }
+@@ -4937,7 +5005,8 @@ expand_altq(struct pf_altq *a, struct node_if *interfaces,
+ 				if (n == NULL)
+ 					err(1, "expand_altq: calloc");
+ 				if (pa.scheduler == ALTQT_CBQ ||
+-				    pa.scheduler == ALTQT_HFSC)
++				    pa.scheduler == ALTQT_HFSC /* ||
++				    pa.scheduler == ALTQT_FAIRQ */)
+ 					if (strlcpy(n->parent, qname,
+ 					    sizeof(n->parent)) >=
+ 					    sizeof(n->parent))
+@@ -5372,6 +5441,7 @@ lookup(char *s)
+ 		{ "bitmask",		BITMASK},
+ 		{ "block",		BLOCK},
+ 		{ "block-policy",	BLOCKPOLICY},
++		{ "buckets",		BUCKETS},
+ 		{ "cbq",		CBQ},
+ 		{ "code",		CODE},
+ 		{ "crop",		FRAGCROP},
+@@ -5384,6 +5454,7 @@ lookup(char *s)
+ 		{ "drop-ovl",		FRAGDROP},
+ 		{ "dscp",		DSCP},
+ 		{ "dup-to",		DUPTO},
++		{ "fairq",		FAIRQ},
+ 		{ "fastroute",		FASTROUTE},
+ 		{ "file",		FILENAME},
+ 		{ "fingerprints",	FINGERPRINTS},
+@@ -5396,6 +5467,7 @@ lookup(char *s)
+ 		{ "global",		GLOBAL},
+ 		{ "group",		GROUP},
+ 		{ "hfsc",		HFSC},
++		{ "hogs",		HOGS},
+ 		{ "hostid",		HOSTID},
+ 		{ "icmp-type",		ICMPTYPE},
+ 		{ "icmp6-type",		ICMP6TYPE},
+diff --git a/sbin/pfctl/pfctl_altq.c b/sbin/pfctl/pfctl_altq.c
+index 27e9a0c..9156337 100644
+--- a/sbin/pfctl/pfctl_altq.c
++++ b/sbin/pfctl/pfctl_altq.c
+@@ -42,6 +42,7 @@ __FBSDID("$FreeBSD: stable/10/sbin/pfctl/pfctl_altq.c 240494 2012-09-14 11:51:49
+ #include <altq/altq_cbq.h>
+ #include <altq/altq_priq.h>
+ #include <altq/altq_hfsc.h>
++#include <altq/altq_fairq.h>
+ 
+ #include "pfctl_parser.h"
+ #include "pfctl.h"
+@@ -68,6 +69,11 @@ static int	check_commit_hfsc(int, int, struct pf_altq *);
+ static int	print_hfsc_opts(const struct pf_altq *,
+ 		    const struct node_queue_opt *);
+ 
++static int	eval_pfqueue_fairq(struct pfctl *, struct pf_altq *);
++static int	print_fairq_opts(const struct pf_altq *,
++		    const struct node_queue_opt *);
++static int	check_commit_fairq(int, int, struct pf_altq *);
++
+ static void		 gsc_add_sc(struct gen_sc *, struct service_curve *);
+ static int		 is_gsc_under_sc(struct gen_sc *,
+ 			     struct service_curve *);
+@@ -88,6 +94,8 @@ int		 eval_queue_opts(struct pf_altq *, struct node_queue_opt *,
+ u_int32_t	 eval_bwspec(struct node_queue_bw *, u_int32_t);
+ void		 print_hfsc_sc(const char *, u_int, u_int, u_int,
+ 		     const struct node_hfsc_sc *);
++void		 print_fairq_sc(const char *, u_int, u_int, u_int,
++		     const struct node_fairq_sc *);
+ 
+ void
+ pfaltq_store(struct pf_altq *a)
+@@ -173,6 +181,10 @@ print_altq(const struct pf_altq *a, unsigned int level,
+ 		if (!print_hfsc_opts(a, qopts))
+ 			printf("hfsc ");
+ 		break;
++	case ALTQT_FAIRQ:
++		if (!print_fairq_opts(a, qopts))
++			printf("fairq ");
++		break;
+ 	}
+ 
+ 	if (bw != NULL && bw->bw_percent > 0) {
+@@ -203,7 +215,8 @@ print_queue(const struct pf_altq *a, unsigned int level,
+ 	printf("%s ", a->qname);
+ 	if (print_interface)
+ 		printf("on %s ", a->ifname);
+-	if (a->scheduler == ALTQT_CBQ || a->scheduler == ALTQT_HFSC) {
++	if (a->scheduler == ALTQT_CBQ || a->scheduler == ALTQT_HFSC ||
++		a->scheduler == ALTQT_FAIRQ) {
+ 		if (bw != NULL && bw->bw_percent > 0) {
+ 			if (bw->bw_percent < 100)
+ 				printf("bandwidth %u%% ", bw->bw_percent);
+@@ -224,6 +237,9 @@ print_queue(const struct pf_altq *a, unsigned int level,
+ 	case ALTQT_HFSC:
+ 		print_hfsc_opts(a, qopts);
+ 		break;
++	case ALTQT_FAIRQ:
++		print_fairq_opts(a, qopts);
++		break;
+ 	}
+ }
+ 
+@@ -294,6 +310,9 @@ check_commit_altq(int dev, int opts)
+ 			case ALTQT_HFSC:
+ 				error = check_commit_hfsc(dev, opts, altq);
+ 				break;
++			case ALTQT_FAIRQ:
++				error = check_commit_fairq(dev, opts, altq);
++				break;
+ 			default:
+ 				break;
+ 			}
+@@ -342,7 +361,8 @@ eval_pfqueue(struct pfctl *pf, struct pf_altq *pa, struct node_queue_bw *bw,
+ 	if (pa->qlimit == 0)
+ 		pa->qlimit = DEFAULT_QLIMIT;
+ 
+-	if (pa->scheduler == ALTQT_CBQ || pa->scheduler == ALTQT_HFSC) {
++	if (pa->scheduler == ALTQT_CBQ || pa->scheduler == ALTQT_HFSC ||
++		pa->scheduler == ALTQT_FAIRQ) {
+ 		pa->bandwidth = eval_bwspec(bw,
+ 		    parent == NULL ? 0 : parent->bandwidth);
+ 
+@@ -388,6 +408,9 @@ eval_pfqueue(struct pfctl *pf, struct pf_altq *pa, struct node_queue_bw *bw,
+ 	case ALTQT_HFSC:
+ 		error = eval_pfqueue_hfsc(pf, pa);
+ 		break;
++	case ALTQT_FAIRQ:
++		error = eval_pfqueue_fairq(pf, pa);
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -800,6 +823,85 @@ err_ret:
+ 	return (-1);
+ }
+ 
++/*
++ * FAIRQ support functions
++ */
++static int
++eval_pfqueue_fairq(struct pfctl *pf __unused, struct pf_altq *pa)
++{
++	struct pf_altq		*altq, *parent;
++	struct fairq_opts	*opts;
++	struct service_curve	 sc;
++
++	opts = &pa->pq_u.fairq_opts;
++
++	if (pa->parent[0] == 0) {
++		/* root queue */
++		opts->lssc_m1 = pa->ifbandwidth;
++		opts->lssc_m2 = pa->ifbandwidth;
++		opts->lssc_d = 0;
++		return (0);
++	}
++
++	LIST_INIT(&lssc);
++
++	/* if link_share is not specified, use bandwidth */
++	if (opts->lssc_m2 == 0)
++		opts->lssc_m2 = pa->bandwidth;
++
++	/*
++	 * admission control:
++	 * for the real-time service curve, the sum of the service curves
++	 * should not exceed 80% of the interface bandwidth.  20% is reserved
++	 * not to over-commit the actual interface bandwidth.
++	 * for the link-sharing service curve, the sum of the child service
++	 * curve should not exceed the parent service curve.
++	 * for the upper-limit service curve, the assigned bandwidth should
++	 * be smaller than the interface bandwidth, and the upper-limit should
++	 * be larger than the real-time service curve when both are defined.
++	 */
++	parent = qname_to_pfaltq(pa->parent, pa->ifname);
++	if (parent == NULL)
++		errx(1, "parent %s not found for %s", pa->parent, pa->qname);
++
++	TAILQ_FOREACH(altq, &altqs, entries) {
++		if (strncmp(altq->ifname, pa->ifname, IFNAMSIZ) != 0)
++			continue;
++		if (altq->qname[0] == 0)  /* this is for interface */
++			continue;
++
++		if (strncmp(altq->parent, pa->parent, PF_QNAME_SIZE) != 0)
++			continue;
++
++		/* if the class has a link-sharing service curve, add it. */
++		if (opts->lssc_m2 != 0 && altq->pq_u.fairq_opts.lssc_m2 != 0) {
++			sc.m1 = altq->pq_u.fairq_opts.lssc_m1;
++			sc.d = altq->pq_u.fairq_opts.lssc_d;
++			sc.m2 = altq->pq_u.fairq_opts.lssc_m2;
++			gsc_add_sc(&lssc, &sc);
++		}
++	}
++
++	/* check the link-sharing service curve. */
++	if (opts->lssc_m2 != 0) {
++		sc.m1 = parent->pq_u.fairq_opts.lssc_m1;
++		sc.d = parent->pq_u.fairq_opts.lssc_d;
++		sc.m2 = parent->pq_u.fairq_opts.lssc_m2;
++		if (!is_gsc_under_sc(&lssc, &sc)) {
++			warnx("link-sharing sc exceeds parent's sc");
++			goto err_ret;
++		}
++	}
++
++	gsc_destroy(&lssc);
++
++	return (0);
++
++err_ret:
++	gsc_destroy(&lssc);
++	return (-1);
++}
++
+ static int
+ check_commit_hfsc(int dev, int opts, struct pf_altq *pa)
+ {
+@@ -840,6 +942,43 @@ check_commit_hfsc(int dev, int opts, struct pf_altq *pa)
+ }
+ 
+ static int
++check_commit_fairq(int dev __unused, int opts __unused, struct pf_altq *pa)
++{
++	struct pf_altq	*altq, *def = NULL;
++	int		 default_class;
++	int		 error = 0;
++
++	/* check if fairq has one default queue for this interface */
++	default_class = 0;
++	TAILQ_FOREACH(altq, &altqs, entries) {
++		if (strncmp(altq->ifname, pa->ifname, IFNAMSIZ) != 0)
++			continue;
++		if (altq->qname[0] == 0)  /* this is for interface */
++			continue;
++		if (altq->pq_u.fairq_opts.flags & FARF_DEFAULTCLASS) {
++			default_class++;
++			def = altq;
++		}
++	}
++	if (default_class != 1) {
++		warnx("should have one default queue on %s", pa->ifname);
++		return (1);
++	}
++	/* make sure the default queue is a leaf */
++	TAILQ_FOREACH(altq, &altqs, entries) {
++		if (strncmp(altq->ifname, pa->ifname, IFNAMSIZ) != 0)
++			continue;
++		if (altq->qname[0] == 0)  /* this is for interface */
++			continue;
++		if (strncmp(altq->parent, def->qname, PF_QNAME_SIZE) == 0) {
++			warnx("default queue is not a leaf");
++			error++;
++		}
++	}
++	return (error);
++}
++
++static int
+ print_hfsc_opts(const struct pf_altq *a, const struct node_queue_opt *qopts)
+ {
+ 	const struct hfsc_opts		*opts;
+@@ -885,6 +1024,43 @@ print_hfsc_opts(const struct pf_altq *a, const struct node_queue_opt *qopts)
+ 		return (0);
+ }
+ 
++static int
++print_fairq_opts(const struct pf_altq *a, const struct node_queue_opt *qopts)
++{
++	const struct fairq_opts		*opts;
++	const struct node_fairq_sc	*loc_lssc;
++
++	opts = &a->pq_u.fairq_opts;
++	if (qopts == NULL)
++		loc_lssc = NULL;
++	else
++		loc_lssc = &qopts->data.fairq_opts.linkshare;
++
++	if (opts->flags ||
++	    (opts->lssc_m2 != 0 && (opts->lssc_m2 != a->bandwidth ||
++	    opts->lssc_d != 0))) {
++		printf("fairq(");
++		if (opts->flags & FARF_RED)
++			printf(" red");
++		if (opts->flags & FARF_ECN)
++			printf(" ecn");
++		if (opts->flags & FARF_RIO)
++			printf(" rio");
++		if (opts->flags & FARF_CLEARDSCP)
++			printf(" cleardscp");
++		if (opts->flags & FARF_DEFAULTCLASS)
++			printf(" default");
++		if (opts->lssc_m2 != 0 && (opts->lssc_m2 != a->bandwidth ||
++		    opts->lssc_d != 0))
++			print_fairq_sc("linkshare", opts->lssc_m1, opts->lssc_d,
++			    opts->lssc_m2, loc_lssc);
++		printf(" ) ");
++
++		return (1);
++	} else
++		return (0);
++}
++
+ /*
+  * admission control using generalized service curve
+  */
+@@ -1204,6 +1380,23 @@ eval_queue_opts(struct pf_altq *pa, struct node_queue_opt *opts,
+ 			    opts->data.hfsc_opts.upperlimit.d;
+ 		}
+ 		break;
++	case ALTQT_FAIRQ:
++		pa->pq_u.fairq_opts.flags = opts->data.fairq_opts.flags;
++		pa->pq_u.fairq_opts.nbuckets = opts->data.fairq_opts.nbuckets;
++		pa->pq_u.fairq_opts.hogs_m1 =
++			eval_bwspec(&opts->data.fairq_opts.hogs_bw, ref_bw);
++
++		if (opts->data.fairq_opts.linkshare.used) {
++			pa->pq_u.fairq_opts.lssc_m1 =
++			    eval_bwspec(&opts->data.fairq_opts.linkshare.m1,
++			    ref_bw);
++			pa->pq_u.fairq_opts.lssc_m2 =
++			    eval_bwspec(&opts->data.fairq_opts.linkshare.m2,
++			    ref_bw);
++			pa->pq_u.fairq_opts.lssc_d =
++			    opts->data.fairq_opts.linkshare.d;
++		}
++		break;
+ 	default:
+ 		warnx("eval_queue_opts: unknown scheduler type %u",
+ 		    opts->qtype);
+@@ -1249,3 +1442,27 @@ print_hfsc_sc(const char *scname, u_int m1, u_int d, u_int m2,
+ 	if (d != 0)
+ 		printf(")");
+ }
++
++void
++print_fairq_sc(const char *scname, u_int m1, u_int d, u_int m2,
++    const struct node_fairq_sc *sc)
++{
++	printf(" %s", scname);
++
++	if (d != 0) {
++		printf("(");
++		if (sc != NULL && sc->m1.bw_percent > 0)
++			printf("%u%%", sc->m1.bw_percent);
++		else
++			printf("%s", rate2str((double)m1));
++		printf(" %u", d);
++	}
++
++	if (sc != NULL && sc->m2.bw_percent > 0)
++		printf(" %u%%", sc->m2.bw_percent);
++	else
++		printf(" %s", rate2str((double)m2));
++
++	if (d != 0)
++		printf(")");
++}
+diff --git a/sbin/pfctl/pfctl_parser.h b/sbin/pfctl/pfctl_parser.h
+index d2c44c2..7e4c414 100644
+--- a/sbin/pfctl/pfctl_parser.h
++++ b/sbin/pfctl/pfctl_parser.h
+@@ -150,12 +150,27 @@ struct node_hfsc_opts {
+ 	int			flags;
+ };
+ 
++struct node_fairq_sc {
++	struct node_queue_bw	m1;	/* slope of 1st segment; bps */
++	u_int			d;	/* x-projection of m1; msec */
++	struct node_queue_bw	m2;	/* slope of 2nd segment; bps */
++	u_int8_t		used;
++};
++
++struct node_fairq_opts {
++	struct node_fairq_sc	linkshare;
++	struct node_queue_bw	hogs_bw;
++	u_int			nbuckets;
++	int			flags;
++};
++
+ struct node_queue_opt {
+ 	int			 qtype;
+ 	union {
+ 		struct cbq_opts		cbq_opts;
+ 		struct priq_opts	priq_opts;
+ 		struct node_hfsc_opts	hfsc_opts;
++		struct node_fairq_opts	fairq_opts;
+ 	}			 data;
+ };
+ 
+diff --git a/sbin/pfctl/pfctl_qstats.c b/sbin/pfctl/pfctl_qstats.c
+index fe8b680..476c7b5 100644
+--- a/sbin/pfctl/pfctl_qstats.c
++++ b/sbin/pfctl/pfctl_qstats.c
+@@ -38,6 +38,7 @@ __FBSDID("$FreeBSD: stable/10/sbin/pfctl/pfctl_qstats.c 240494 2012-09-14 11:51:
+ #include <altq/altq_cbq.h>
+ #include <altq/altq_priq.h>
+ #include <altq/altq_hfsc.h>
++#include <altq/altq_fairq.h>
+ 
+ #include "pfctl.h"
+ #include "pfctl_parser.h"
+@@ -46,6 +47,7 @@ union class_stats {
+ 	class_stats_t		cbq_stats;
+ 	struct priq_classstats	priq_stats;
+ 	struct hfsc_classstats	hfsc_stats;
++	struct fairq_classstats fairq_stats;
+ };
+ 
+ #define AVGN_MAX	8
+@@ -77,6 +79,7 @@ void			 pfctl_print_altq_node(int, const struct pf_altq_node *,
+ void			 print_cbqstats(struct queue_stats);
+ void			 print_priqstats(struct queue_stats);
+ void			 print_hfscstats(struct queue_stats);
++void			 print_fairqstats(struct queue_stats);
+ void			 pfctl_free_altq_node(struct pf_altq_node *);
+ void			 pfctl_print_altq_nodestat(int,
+ 			    const struct pf_altq_node *);
+@@ -317,6 +320,9 @@ pfctl_print_altq_nodestat(int dev, const struct pf_altq_node *a)
+ 	case ALTQT_HFSC:
+ 		print_hfscstats(a->qstats);
+ 		break;
++	case ALTQT_FAIRQ:
++		print_fairqstats(a->qstats);
++		break;
+ 	}
+ }
+ 
+@@ -382,6 +388,26 @@ print_hfscstats(struct queue_stats cur)
+ }
+ 
+ void
++print_fairqstats(struct queue_stats cur)
++{
++	printf("  [ pkts: %10llu  bytes: %10llu  "
++	    "dropped pkts: %6llu bytes: %6llu ]\n",
++	    (unsigned long long)cur.data.fairq_stats.xmit_cnt.packets,
++	    (unsigned long long)cur.data.fairq_stats.xmit_cnt.bytes,
++	    (unsigned long long)cur.data.fairq_stats.drop_cnt.packets,
++	    (unsigned long long)cur.data.fairq_stats.drop_cnt.bytes);
++	printf("  [ qlength: %3d/%3d ]\n",
++	    cur.data.fairq_stats.qlength, cur.data.fairq_stats.qlimit);
++
++	if (cur.avgn < 2)
++		return;
++
++	printf("  [ measured: %7.1f packets/s, %s/s ]\n",
++	    cur.avg_packets / STAT_INTERVAL,
++	    rate2str((8 * cur.avg_bytes) / STAT_INTERVAL));
++}
++
++void
+ pfctl_free_altq_node(struct pf_altq_node *node)
+ {
+ 	while (node != NULL) {
+@@ -421,6 +447,10 @@ update_avg(struct pf_altq_node *a)
+ 		b = qs->data.hfsc_stats.xmit_cnt.bytes;
+ 		p = qs->data.hfsc_stats.xmit_cnt.packets;
+ 		break;
++	case ALTQT_FAIRQ:
++		b = qs->data.fairq_stats.xmit_cnt.bytes;
++		p = qs->data.fairq_stats.xmit_cnt.packets;
++		break;
+ 	default:
+ 		b = 0;
+ 		p = 0;
+diff --git a/sys/conf/NOTES b/sys/conf/NOTES
+index 8e2e2b2..16485c9 100644
+--- a/sys/conf/NOTES
++++ b/sys/conf/NOTES
+@@ -694,6 +694,7 @@ options 	ALTQ_CBQ	# Class Based Queueing
+ options 	ALTQ_RED	# Random Early Detection
+ options 	ALTQ_RIO	# RED In/Out
+ options 	ALTQ_HFSC	# Hierarchical Packet Scheduler
++options		ALTQ_FAIRQ	# Fair Packet Scheduler
+ options 	ALTQ_CDNR	# Traffic conditioner
+ options 	ALTQ_PRIQ	# Priority Queueing
+ options 	ALTQ_NOPCC	# Required if the TSC is unusable
+diff --git a/sys/conf/files b/sys/conf/files
+index 6453a10..72ba137 100644
+--- a/sys/conf/files
++++ b/sys/conf/files
+@@ -284,6 +284,7 @@ compat/freebsd32/freebsd32_sysent.c	optional compat_freebsd32
+ contrib/altq/altq/altq_cbq.c		optional altq
+ contrib/altq/altq/altq_cdnr.c		optional altq
+ contrib/altq/altq/altq_hfsc.c		optional altq
++contrib/altq/altq/altq_fairq.c		optional altq
+ contrib/altq/altq/altq_priq.c		optional altq
+ contrib/altq/altq/altq_red.c		optional altq
+ contrib/altq/altq/altq_rio.c		optional altq
+diff --git a/sys/conf/options b/sys/conf/options
+index 7030a17..0fa3758 100644
+--- a/sys/conf/options
++++ b/sys/conf/options
+@@ -379,6 +379,7 @@ ALTQ_CBQ		opt_altq.h
+ ALTQ_CDNR		opt_altq.h
+ ALTQ_DEBUG		opt_altq.h
+ ALTQ_HFSC		opt_altq.h
++ALTQ_FAIRQ		opt_altq.h
+ ALTQ_NOPCC		opt_altq.h
+ ALTQ_PRIQ		opt_altq.h
+ ALTQ_RED		opt_altq.h
+diff --git a/sys/contrib/altq/altq/altq.h b/sys/contrib/altq/altq/altq.h
+index b3b56e5..fd15b01 100644
+--- a/sys/contrib/altq/altq/altq.h
++++ b/sys/contrib/altq/altq/altq.h
+@@ -63,7 +63,8 @@
+ #define	ALTQT_BLUE		10	/* blue */
+ #define	ALTQT_PRIQ		11	/* priority queue */
+ #define	ALTQT_JOBS		12	/* JoBS */
+-#define	ALTQT_MAX		13	/* should be max discipline type + 1 */
++#define ALTQT_FAIRQ		13	/* fairq */
++#define	ALTQT_MAX		14	/* should be max discipline type + 1 */
+ 
+ #ifdef ALTQ3_COMPAT
+ struct	altqreq {
+diff --git a/sys/contrib/altq/altq/altq_fairq.c b/sys/contrib/altq/altq/altq_fairq.c
+new file mode 100644
+index 0000000..2267bfd
+--- /dev/null
++++ b/sys/contrib/altq/altq/altq_fairq.c
+@@ -0,0 +1,905 @@
++/*
++ * Copyright (c) 2008 The DragonFly Project.  All rights reserved.
++ * 
++ * This code is derived from software contributed to The DragonFly Project
++ * by Matthew Dillon <dillon@backplane.com>
++ * 
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in
++ *    the documentation and/or other materials provided with the
++ *    distribution.
++ * 3. Neither the name of The DragonFly Project nor the names of its
++ *    contributors may be used to endorse or promote products derived
++ *    from this software without specific, prior written permission.
++ * 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
++ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE
++ * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
++ * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
++ * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
++ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
++ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
++ * SUCH DAMAGE.
++ * 
++ * $DragonFly: src/sys/net/altq/altq_fairq.c,v 1.1 2008/04/06 18:58:15 dillon Exp $
++ */
++/*
++ * Matt: I gutted altq_priq.c and used it as a skeleton on which to build
++ * fairq.  The fairq algorithm is completely different then priq, of course,
++ * but because I used priq's skeleton I believe I should include priq's
++ * copyright.
++ *
++ * Copyright (C) 2000-2003
++ *	Sony Computer Science Laboratories Inc.  All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY SONY CSL AND CONTRIBUTORS ``AS IS'' AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED.  IN NO EVENT SHALL SONY CSL OR CONTRIBUTORS BE LIABLE
++ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
++ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
++ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
++ * SUCH DAMAGE.
++ */
++
++/*
++ * FAIRQ - take traffic classified by keep state (hashed into
++ * mbuf->m_pkthdr.altq_state_hash) and bucketize it.  Fairly extract
++ * the first packet from each bucket in a round-robin fashion.
++ *
++ * TODO - better overall qlimit support (right now it is per-bucket).
++ *	- NOTE: red etc is per bucket, not overall.
++ *	- better service curve support.
++ *
++ * EXAMPLE:
++ *
++ *  altq on em0 fairq bandwidth 650Kb queue { std, bulk }
++ *  queue std  priority 3 bandwidth 400Kb \
++ *	fairq (buckets 64, default, hogs 1Kb) qlimit 50
++ *  queue bulk priority 2 bandwidth 100Kb \
++ *	fairq (buckets 64, hogs 1Kb) qlimit 50
++ *
++ *  pass out on em0 from any to any keep state queue std
++ *  pass out on em0 inet proto tcp ..... port ... keep state queue bulk
++ */
++#include "opt_altq.h"
++#include "opt_inet.h"
++#include "opt_inet6.h"
++
++#ifdef ALTQ_FAIRQ  /* fairq is enabled in the kernel conf */
++
++#include <sys/param.h>
++#include <sys/malloc.h>
++#include <sys/mbuf.h>
++#include <sys/socket.h>
++#include <sys/sockio.h>
++#include <sys/systm.h>
++#include <sys/proc.h>
++#include <sys/errno.h>
++#include <sys/kernel.h>
++#include <sys/queue.h>
++
++#include <net/if.h>
++#include <netinet/in.h>
++
++#include <net/pfvar.h>
++#include <altq/altq.h>
++#include <altq/altq_fairq.h>
++
++/*
++ * function prototypes
++ */
++static int	fairq_clear_interface(struct fairq_if *);
++static int	fairq_request(struct ifaltq *, int, void *);
++static void	fairq_purge(struct fairq_if *);
++static struct fairq_class *fairq_class_create(struct fairq_if *, int, int, u_int, struct fairq_opts *, int);
++static int	fairq_class_destroy(struct fairq_class *);
++static int	fairq_enqueue(struct ifaltq *, struct mbuf *, struct altq_pktattr *);
++static struct mbuf *fairq_dequeue(struct ifaltq *, int);
++
++static int	fairq_addq(struct fairq_class *, struct mbuf *, u_int32_t);
++static struct mbuf *fairq_getq(struct fairq_class *, uint64_t);
++static struct mbuf *fairq_pollq(struct fairq_class *, uint64_t, int *);
++static fairq_bucket_t *fairq_selectq(struct fairq_class *, int);
++static void	fairq_purgeq(struct fairq_class *);
++
++static void	get_class_stats(struct fairq_classstats *, struct fairq_class *);
++static struct fairq_class *clh_to_clp(struct fairq_if *, uint32_t);
++
++int
++fairq_pfattach(struct pf_altq *a)
++{
++	struct ifnet *ifp;
++	int error;
++
++	if ((ifp = ifunit(a->ifname)) == NULL || a->altq_disc == NULL)
++		return (EINVAL);
++
++	error = altq_attach(&ifp->if_snd, ALTQT_FAIRQ, a->altq_disc,
++	    fairq_enqueue, fairq_dequeue, fairq_request, NULL, NULL);
++
++	return (error);
++}
++
++int
++fairq_add_altq(struct pf_altq *a)
++{
++	struct fairq_if *pif;
++	struct ifnet *ifp;
++
++	if ((ifp = ifunit(a->ifname)) == NULL)
++		return (EINVAL);
++	if (!ALTQ_IS_READY(&ifp->if_snd))
++		return (ENODEV);
++
++
++	MALLOC(pif, struct fairq_if *, sizeof(struct fairq_if),
++		M_DEVBUF, M_WAITOK);
++	if (pif == NULL)
++		return (ENOMEM);
++	bzero(pif, sizeof(struct fairq_if));
++	pif->pif_bandwidth = a->ifbandwidth;
++	pif->pif_maxpri = -1;
++	pif->pif_ifq = &ifp->if_snd;
++
++	/* keep the state in pf_altq */
++	a->altq_disc = pif;
++
++	return (0);
++}
++
++int
++fairq_remove_altq(struct pf_altq *a)
++{
++	struct fairq_if *pif;
++
++	if ((pif = a->altq_disc) == NULL)
++		return (EINVAL);
++	a->altq_disc = NULL;
++
++	fairq_clear_interface(pif);
++
++	FREE(pif, M_DEVBUF);
++	return (0);
++}
++
++int
++fairq_add_queue(struct pf_altq *a)
++{
++	struct fairq_if *pif;
++	struct fairq_class *cl;
++
++	if ((pif = a->altq_disc) == NULL)
++		return (EINVAL);
++
++	/* check parameters */
++	if (a->priority >= FAIRQ_MAXPRI)
++		return (EINVAL);
++	if (a->qid == 0)
++		return (EINVAL);
++	if (pif->pif_classes[a->priority] != NULL)
++		return (EBUSY);
++	if (clh_to_clp(pif, a->qid) != NULL)
++		return (EBUSY);
++
++	cl = fairq_class_create(pif, a->priority, a->qlimit, a->bandwidth,
++			       &a->pq_u.fairq_opts, a->qid);
++	if (cl == NULL)
++		return (ENOMEM);
++
++	return (0);
++}
++
++int
++fairq_remove_queue(struct pf_altq *a)
++{
++	struct fairq_if *pif;
++	struct fairq_class *cl;
++
++	if ((pif = a->altq_disc) == NULL)
++		return (EINVAL);
++
++	if ((cl = clh_to_clp(pif, a->qid)) == NULL)
++		return (EINVAL);
++
++	return (fairq_class_destroy(cl));
++}
++
++int
++fairq_getqstats(struct pf_altq *a, void *ubuf, int *nbytes)
++{
++	struct fairq_if *pif;
++	struct fairq_class *cl;
++	struct fairq_classstats stats;
++	int error = 0;
++
++	if ((pif = altq_lookup(a->ifname, ALTQT_FAIRQ)) == NULL)
++		return (EBADF);
++
++	if ((cl = clh_to_clp(pif, a->qid)) == NULL)
++		return (EINVAL);
++
++	if (*nbytes < sizeof(stats))
++		return (EINVAL);
++
++	get_class_stats(&stats, cl);
++
++	if ((error = copyout((caddr_t)&stats, ubuf, sizeof(stats))) != 0)
++		return (error);
++	*nbytes = sizeof(stats);
++	return (0);
++}
++
++/*
++ * bring the interface back to the initial state by discarding
++ * all the filters and classes.
++ */
++static int
++fairq_clear_interface(struct fairq_if *pif)
++{
++	struct fairq_class *cl;
++	int pri;
++
++	/* clear out the classes */
++	for (pri = 0; pri <= pif->pif_maxpri; pri++) {
++		if ((cl = pif->pif_classes[pri]) != NULL)
++			fairq_class_destroy(cl);
++	}
++
++	return (0);
++}
++
++static int
++fairq_request(struct ifaltq *ifq, int req, void *arg)
++{
++	struct fairq_if *pif = (struct fairq_if *)ifq->altq_disc;
++
++	IFQ_LOCK_ASSERT(ifq);
++
++	switch (req) {
++	case ALTRQ_PURGE:
++		fairq_purge(pif);
++		break;
++	}
++	return (0);
++}
++
++/* discard all the queued packets on the interface */
++static void
++fairq_purge(struct fairq_if *pif)
++{
++	struct fairq_class *cl;
++	int pri;
++
++	for (pri = 0; pri <= pif->pif_maxpri; pri++) {
++		if ((cl = pif->pif_classes[pri]) != NULL && cl->cl_head)
++			fairq_purgeq(cl);
++	}
++	if (ALTQ_IS_ENABLED(pif->pif_ifq))
++		pif->pif_ifq->ifq_len = 0;
++}
++
++static struct fairq_class *
++fairq_class_create(struct fairq_if *pif, int pri, int qlimit,
++		   u_int bandwidth, struct fairq_opts *opts, int qid)
++{
++	struct fairq_class *cl;
++	int flags = opts->flags;
++	u_int nbuckets = opts->nbuckets;
++	int i, s;
++
++#ifndef ALTQ_RED
++	if (flags & FARF_RED) {
++#ifdef ALTQ_DEBUG
++		printf("fairq_class_create: RED not configured for FAIRQ!\n");
++#endif
++		return (NULL);
++	}
++#endif
++	if (nbuckets == 0)
++		nbuckets = 256;
++	if (nbuckets > FAIRQ_MAX_BUCKETS)
++		nbuckets = FAIRQ_MAX_BUCKETS;
++	/* enforce power-of-2 size */
++	while ((nbuckets ^ (nbuckets - 1)) != ((nbuckets << 1) - 1))
++		++nbuckets;
++
++	if ((cl = pif->pif_classes[pri]) != NULL) {
++		/* modify the class instead of creating a new one */
++		s = splimp();
++		IFQ_LOCK(cl->cl_pif->pif_ifq);
++		if (cl->cl_head)
++			fairq_purgeq(cl);
++		IFQ_UNLOCK(cl->cl_pif->pif_ifq);
++		splx(s);
++#ifdef ALTQ_RIO
++		if (cl->cl_qtype == Q_RIO)
++			rio_destroy((rio_t *)cl->cl_red);
++#endif
++#ifdef ALTQ_RED
++		if (cl->cl_qtype == Q_RED)
++			red_destroy(cl->cl_red);
++#endif
++	} else {
++		MALLOC(cl, struct fairq_class *, sizeof(struct fairq_class),
++			M_DEVBUF, M_WAITOK);
++		if (cl == NULL)
++			goto err_ret;
++		bzero(cl, sizeof(struct fairq_class));
++		cl->cl_nbuckets = nbuckets;
++		cl->cl_nbucket_mask = nbuckets - 1;
++
++		MALLOC(cl->cl_buckets, struct fairq_bucket *, 
++			sizeof(struct fairq_bucket) * cl->cl_nbuckets,
++			M_DEVBUF, M_WAITOK);
++		if (cl->cl_buckets == NULL)
++			goto err_buckets;
++		bzero(cl->cl_buckets, sizeof(struct fairq_bucket) *
++			cl->cl_nbuckets);
++		cl->cl_head = NULL;
++	}
++
++	pif->pif_classes[pri] = cl;
++	if (flags & FARF_DEFAULTCLASS)
++		pif->pif_default = cl;
++	if (qlimit == 0)
++		qlimit = 50;  /* use default */
++	cl->cl_qlimit = qlimit;
++	for (i = 0; i < cl->cl_nbuckets; ++i) {
++		qlimit(&cl->cl_buckets[i].queue) = qlimit;
++	}
++	cl->cl_bandwidth = bandwidth / 8;
++	cl->cl_qtype = Q_DROPTAIL;
++	cl->cl_flags = flags & FARF_USERFLAGS;
++	cl->cl_pri = pri;
++	if (pri > pif->pif_maxpri)
++		pif->pif_maxpri = pri;
++	cl->cl_pif = pif;
++	cl->cl_handle = qid;
++	cl->cl_hogs_m1 = opts->hogs_m1 / 8;
++	cl->cl_lssc_m1 = opts->lssc_m1 / 8;	/* NOT YET USED */
++
++#ifdef ALTQ_RED
++	if (flags & (FARF_RED|FARF_RIO)) {
++		int red_flags, red_pkttime;
++
++		red_flags = 0;
++		if (flags & FARF_ECN)
++			red_flags |= REDF_ECN;
++#ifdef ALTQ_RIO
++		if (flags & FARF_CLEARDSCP)
++			red_flags |= RIOF_CLEARDSCP;
++#endif
++		if (pif->pif_bandwidth < 8)
++			red_pkttime = 1000 * 1000 * 1000; /* 1 sec */
++		else
++			red_pkttime = (int64_t)pif->pif_ifq->altq_ifp->if_mtu
++			  * 1000 * 1000 * 1000 / (pif->pif_bandwidth / 8);
++#ifdef ALTQ_RIO
++		if (flags & FARF_RIO) {
++			cl->cl_red = (red_t *)rio_alloc(0, NULL,
++						red_flags, red_pkttime);
++			if (cl->cl_red != NULL)
++				cl->cl_qtype = Q_RIO;
++		} else
++#endif
++		if (flags & FARF_RED) {
++			cl->cl_red = red_alloc(0, 0,
++			    cl->cl_qlimit * 10/100,
++			    cl->cl_qlimit * 30/100,
++			    red_flags, red_pkttime);
++			if (cl->cl_red != NULL)
++				cl->cl_qtype = Q_RED;
++		}
++	}
++#endif /* ALTQ_RED */
++
++	return (cl);
++
++err_buckets:
++	if (cl->cl_buckets != NULL)
++		FREE(cl->cl_buckets, M_DEVBUF);
++err_ret:
++        if (cl->cl_red != NULL) {
++#ifdef ALTQ_RIO
++                if (cl->cl_qtype == Q_RIO)
++                        rio_destroy((rio_t *)cl->cl_red);
++#endif
++#ifdef ALTQ_RED
++               if (cl->cl_qtype == Q_RED)
++                       red_destroy(cl->cl_red);
++#endif
++        }
++        if (cl != NULL)
++                FREE(cl, M_DEVBUF);
++        return (NULL);
++}
++
++static int
++fairq_class_destroy(struct fairq_class *cl)
++{
++	struct fairq_if *pif;
++	int pri, s;
++
++	s = splimp();
++	IFQ_LOCK(cl->cl_pif->pif_ifq);
++
++	if (cl->cl_head)
++		fairq_purgeq(cl);
++
++	pif = cl->cl_pif;
++	pif->pif_classes[cl->cl_pri] = NULL;
++	if (pif->pif_poll_cache == cl)
++		pif->pif_poll_cache = NULL;
++	if (pif->pif_maxpri == cl->cl_pri) {
++		for (pri = cl->cl_pri; pri >= 0; pri--)
++			if (pif->pif_classes[pri] != NULL) {
++				pif->pif_maxpri = pri;
++				break;
++			}
++		if (pri < 0)
++			pif->pif_maxpri = -1;
++	}
++	IFQ_UNLOCK(cl->cl_pif->pif_ifq);
++	splx(s);
++
++	if (cl->cl_red != NULL) {
++#ifdef ALTQ_RIO
++		if (cl->cl_qtype == Q_RIO)
++			rio_destroy((rio_t *)cl->cl_red);
++#endif
++#ifdef ALTQ_RED
++		if (cl->cl_qtype == Q_RED)
++			red_destroy(cl->cl_red);
++#endif
++	}
++	FREE(cl->cl_buckets, M_DEVBUF);
++	cl->cl_head = NULL;	/* sanity */
++	cl->cl_polled = NULL;	/* sanity */
++	cl->cl_buckets = NULL;	/* sanity */
++	FREE(cl, M_DEVBUF);
++
++	return (0);
++}
++
++/*
++ * fairq_enqueue is an enqueue function to be registered to
++ * (*altq_enqueue) in struct ifaltq.
++ */
++static int
++fairq_enqueue(struct ifaltq *ifq, struct mbuf *m, struct altq_pktattr *pktattr)
++{
++	struct fairq_if *pif = (struct fairq_if *)ifq->altq_disc;
++	struct fairq_class *cl = NULL; /* Make compiler happy */
++	struct pf_mtag *t;
++	u_int32_t qid_hash = 0;
++	int len;
++
++	IFQ_LOCK_ASSERT(ifq);
++
++	/* grab class set by classifier */
++	if ((m->m_flags & M_PKTHDR) == 0) {
++		/* should not happen */
++		printf("altq: packet for %s does not have pkthdr\n",
++			ifq->altq_ifp->if_xname);
++		m_freem(m);
++		return (ENOBUFS);
++	}
++
++	if ((t = pf_find_mtag(m)) != NULL) {
++		cl = clh_to_clp(pif, t->qid);
++		qid_hash = t->qid_hash;
++	}
++	if (cl == NULL) {
++		cl = pif->pif_default;
++		if (cl == NULL) {
++			m_freem(m);
++			return (ENOBUFS);
++		}
++	}
++	cl->cl_flags |= FARF_HAS_PACKETS;
++	cl->cl_pktattr = NULL;
++	len = m_pktlen(m);
++	if (fairq_addq(cl, m, qid_hash) != 0) {
++		/* drop occurred.  mbuf was freed in fairq_addq. */
++		PKTCNTR_ADD(&cl->cl_dropcnt, len);
++		return (ENOBUFS);
++	}
++	IFQ_INC_LEN(ifq);
++
++	return (0);
++}
++
++/*
++ * fairq_dequeue is a dequeue function to be registered to
++ * (*altq_dequeue) in struct ifaltq.
++ *
++ * note: ALTDQ_POLL returns the next packet without removing the packet
++ *	from the queue.  ALTDQ_REMOVE is a normal dequeue operation.
++ *	ALTDQ_REMOVE must return the same packet if called immediately
++ *	after ALTDQ_POLL.
++ */
++static struct mbuf *
++fairq_dequeue(struct ifaltq *ifq, int op)
++{
++	struct fairq_if *pif = (struct fairq_if *)ifq->altq_disc;
++	struct fairq_class *cl;
++	struct fairq_class *best_cl;
++	struct mbuf *best_m;
++	struct mbuf *m = NULL;
++	uint64_t cur_time = read_machclk();
++	int pri;
++	int hit_limit;
++
++	IFQ_LOCK_ASSERT(ifq);
++
++	if (IFQ_IS_EMPTY(ifq)) {
++		return (NULL);
++	}
++
++	if (pif->pif_poll_cache && op == ALTDQ_REMOVE) {
++		best_cl = pif->pif_poll_cache;
++		m = fairq_getq(best_cl, cur_time);
++		pif->pif_poll_cache = NULL;
++		if (m) {
++			IFQ_DEC_LEN(ifq);
++			PKTCNTR_ADD(&best_cl->cl_xmitcnt, m_pktlen(m));
++			return (m);
++		}
++	} else {
++		best_cl = NULL;
++		best_m = NULL;
++
++		for (pri = pif->pif_maxpri;  pri >= 0; pri--) {
++			if ((cl = pif->pif_classes[pri]) == NULL)
++				continue;
++			if ((cl->cl_flags & FARF_HAS_PACKETS) == 0)
++				continue;
++			m = fairq_pollq(cl, cur_time, &hit_limit);
++			if (m == NULL) {
++				cl->cl_flags &= ~FARF_HAS_PACKETS;
++				continue;
++			}
++
++			/*
++			 * Only override the best choice if we are under
++			 * the BW limit.
++			 */
++			if (hit_limit == 0 || best_cl == NULL) {
++				best_cl = cl;
++				best_m = m;
++			}
++
++			/*
++			 * Remember the highest priority mbuf in case we
++			 * do not find any lower priority mbufs.
++			 */
++			if (hit_limit)
++				continue;
++			break;
++		}
++		if (op == ALTDQ_POLL) {
++			pif->pif_poll_cache = best_cl;
++			m = best_m;
++		} else if (best_cl) {
++			m = fairq_getq(best_cl, cur_time);
++			if (m != NULL) {
++				IFQ_DEC_LEN(ifq);
++				PKTCNTR_ADD(&best_cl->cl_xmitcnt, m_pktlen(m));
++			}
++		} 
++		return (m);
++	}
++	return (NULL);
++}
++
++static int
++fairq_addq(struct fairq_class *cl, struct mbuf *m, u_int32_t bucketid)
++{
++	fairq_bucket_t *b;
++	u_int hindex;
++	uint64_t bw;
++
++	/*
++	 * If the packet doesn't have any keep state put it on the end of
++	 * our queue.  XXX this can result in out of order delivery.
++	 */
++	if (bucketid == 0) {
++		if (cl->cl_head)
++			b = cl->cl_head->prev;
++		else
++			b = &cl->cl_buckets[0];
++	} else {
++		hindex = bucketid & cl->cl_nbucket_mask;
++		b = &cl->cl_buckets[hindex];
++	}
++
++	/*
++	 * Add the bucket to the end of the circular list of active buckets.
++	 *
++	 * As a special case we add the bucket to the beginning of the list
++	 * instead of the end if it was not previously on the list and if
++	 * its traffic is less then the hog level.
++	 */
++	if (b->in_use == 0) {
++		b->in_use = 1;
++		if (cl->cl_head == NULL) {
++			cl->cl_head = b;
++			b->next = b;
++			b->prev = b;
++		} else {
++			b->next = cl->cl_head;
++			b->prev = cl->cl_head->prev;
++			b->prev->next = b;
++			b->next->prev = b;
++
++			if (b->bw_delta && cl->cl_hogs_m1) {
++				bw = b->bw_bytes * machclk_freq / b->bw_delta;
++				if (bw < cl->cl_hogs_m1)
++					cl->cl_head = b;
++			}
++		}
++	}
++
++#ifdef ALTQ_RIO
++	if (cl->cl_qtype == Q_RIO)
++		return rio_addq((rio_t *)cl->cl_red, &b->queue, m, cl->cl_pktattr);
++#endif
++#ifdef ALTQ_RED
++	if (cl->cl_qtype == Q_RED)
++		return red_addq(cl->cl_red, &b->queue, m, cl->cl_pktattr);
++#endif
++	if (qlen(&b->queue) >= qlimit(&b->queue)) {
++		m_freem(m);
++		return (-1);
++	}
++
++	if (cl->cl_flags & FARF_CLEARDSCP)
++		write_dsfield(m, cl->cl_pktattr, 0);
++
++	_addq(&b->queue, m);
++
++	return (0);
++}
++
++static struct mbuf *
++fairq_getq(struct fairq_class *cl, uint64_t cur_time)
++{
++	fairq_bucket_t *b;
++	struct mbuf *m;
++
++	b = fairq_selectq(cl, 0);
++	if (b == NULL)
++		m = NULL;
++#ifdef ALTQ_RIO
++	else if (cl->cl_qtype == Q_RIO)
++		m = rio_getq((rio_t *)cl->cl_red, &b->queue);
++#endif
++#ifdef ALTQ_RED
++	else if (cl->cl_qtype == Q_RED)
++		m = red_getq(cl->cl_red, &b->queue);
++#endif
++	else
++		m = _getq(&b->queue);
++
++	/*
++	 * Calculate the BW change
++	 */
++	if (m != NULL) {
++		uint64_t delta;
++
++		/*
++		 * Per-class bandwidth calculation
++		 */
++		delta = (cur_time - cl->cl_last_time);
++		if (delta > machclk_freq * 8)
++			delta = machclk_freq * 8;
++		cl->cl_bw_delta += delta;
++		cl->cl_bw_bytes += m->m_pkthdr.len;
++		cl->cl_last_time = cur_time;
++		cl->cl_bw_delta -= cl->cl_bw_delta >> 3;
++		cl->cl_bw_bytes -= cl->cl_bw_bytes >> 3;
++
++		/*
++		 * Per-bucket bandwidth calculation
++		 */
++		delta = (cur_time - b->last_time);
++		if (delta > machclk_freq * 8)
++			delta = machclk_freq * 8;
++		b->bw_delta += delta;
++		b->bw_bytes += m->m_pkthdr.len;
++		b->last_time = cur_time;
++		b->bw_delta -= b->bw_delta >> 3;
++		b->bw_bytes -= b->bw_bytes >> 3;
++	}
++	return(m);
++}
++
++/*
++ * Figure out what the next packet would be if there were no limits.  If
++ * this class hits its bandwidth limit *hit_limit is set to no-zero, otherwise
++ * it is set to 0.  A non-NULL mbuf is returned either way.
++ */
++static struct mbuf *
++fairq_pollq(struct fairq_class *cl, uint64_t cur_time, int *hit_limit)
++{
++	fairq_bucket_t *b;
++	struct mbuf *m;
++	uint64_t delta;
++	uint64_t bw;
++
++	*hit_limit = 0;
++	b = fairq_selectq(cl, 1);
++	if (b == NULL)
++		return(NULL);
++	m = qhead(&b->queue);
++
++	/*
++	 * Did this packet exceed the class bandwidth?  Calculate the
++	 * bandwidth component of the packet.
++	 *
++	 * - Calculate bytes per second
++	 */
++	delta = cur_time - cl->cl_last_time;
++	if (delta > machclk_freq * 8)
++		delta = machclk_freq * 8;
++	cl->cl_bw_delta += delta;
++	cl->cl_last_time = cur_time;
++	if (cl->cl_bw_delta) {
++		bw = cl->cl_bw_bytes * machclk_freq / cl->cl_bw_delta;
++
++		if (bw > cl->cl_bandwidth)
++			*hit_limit = 1;
++#if 0
++		printf("BW %6lld relative to %6u %d queue %p\n",
++			bw, cl->cl_bandwidth, *hit_limit, b);
++#endif
++	}
++	return(m);
++}
++
++/*
++ * Locate the next queue we want to pull a packet out of.  This code
++ * is also responsible for removing empty buckets from the circular list.
++ */
++static
++fairq_bucket_t *
++fairq_selectq(struct fairq_class *cl, int ispoll)
++{
++	fairq_bucket_t *b;
++	uint64_t bw;
++
++	if (ispoll == 0 && cl->cl_polled) {
++		b = cl->cl_polled;
++		cl->cl_polled = NULL;
++		return(b);
++	}
++
++	while ((b = cl->cl_head) != NULL) {
++		/*
++		 * Remove empty queues from consideration
++		 */
++		if (qempty(&b->queue)) {
++			b->in_use = 0;
++			cl->cl_head = b->next;
++			if (cl->cl_head == b) {
++				cl->cl_head = NULL;
++			} else {
++				b->next->prev = b->prev;
++				b->prev->next = b->next;
++			}
++			continue;
++		}
++
++		/*
++		 * Advance the round robin.  Queues with bandwidths less
++		 * then the hog bandwidth are allowed to burst.
++		 */
++		if (cl->cl_hogs_m1 == 0) {
++			cl->cl_head = b->next;
++		} else if (b->bw_delta) {
++			bw = b->bw_bytes * machclk_freq / b->bw_delta;
++			if (bw >= cl->cl_hogs_m1) {
++				cl->cl_head = b->next;
++			}
++			/*
++			 * XXX TODO - 
++			 */
++		}
++
++		/*
++		 * Return bucket b.
++		 */
++		break;
++	}
++	if (ispoll)
++		cl->cl_polled = b;
++	return(b);
++}
++
++static void
++fairq_purgeq(struct fairq_class *cl)
++{
++	fairq_bucket_t *b;
++	struct mbuf *m;
++
++	while ((b = fairq_selectq(cl, 0)) != NULL) {
++		while ((m = _getq(&b->queue)) != NULL) {
++			PKTCNTR_ADD(&cl->cl_dropcnt, m_pktlen(m));
++			m_freem(m);
++		}
++		ASSERT(qlen(&b->queue) == 0);
++	}
++}
++
++static void
++get_class_stats(struct fairq_classstats *sp, struct fairq_class *cl)
++{
++	fairq_bucket_t *b;
++
++	sp->class_handle = cl->cl_handle;
++	sp->qlimit = cl->cl_qlimit;
++	sp->xmit_cnt = cl->cl_xmitcnt;
++	sp->drop_cnt = cl->cl_dropcnt;
++	sp->qtype = cl->cl_qtype;
++	sp->qlength = 0;
++
++	if (cl->cl_head) {
++		b = cl->cl_head;
++		do {
++			sp->qlength += qlen(&b->queue);
++			b = b->next;
++		} while (b != cl->cl_head);
++	}
++
++#ifdef ALTQ_RED
++	if (cl->cl_qtype == Q_RED)
++		red_getstats(cl->cl_red, &sp->red[0]);
++#endif
++#ifdef ALTQ_RIO
++	if (cl->cl_qtype == Q_RIO)
++		rio_getstats((rio_t *)cl->cl_red, &sp->red[0]);
++#endif
++}
++
++/* convert a class handle to the corresponding class pointer */
++static struct fairq_class *
++clh_to_clp(struct fairq_if *pif, uint32_t chandle)
++{
++	struct fairq_class *cl;
++	int idx;
++
++	if (chandle == 0)
++		return (NULL);
++
++	for (idx = pif->pif_maxpri; idx >= 0; idx--)
++		if ((cl = pif->pif_classes[idx]) != NULL &&
++		    cl->cl_handle == chandle)
++			return (cl);
++
++	return (NULL);
++}
++
++#endif /* ALTQ_FAIRQ */
+diff --git a/sys/contrib/altq/altq/altq_fairq.h b/sys/contrib/altq/altq/altq_fairq.h
+new file mode 100644
+index 0000000..e4675e0
+--- /dev/null
++++ b/sys/contrib/altq/altq/altq_fairq.h
+@@ -0,0 +1,136 @@
++/*
++ * Copyright (c) 2008 The DragonFly Project.  All rights reserved.
++ * 
++ * This code is derived from software contributed to The DragonFly Project
++ * by Matthew Dillon <dillon@backplane.com>
++ * 
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in
++ *    the documentation and/or other materials provided with the
++ *    distribution.
++ * 3. Neither the name of The DragonFly Project nor the names of its
++ *    contributors may be used to endorse or promote products derived
++ *    from this software without specific, prior written permission.
++ * 
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
++ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE
++ * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
++ * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING,
++ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
++ * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
++ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
++ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
++ * SUCH DAMAGE.
++ * 
++ * $DragonFly: src/sys/net/altq/altq_fairq.h,v 1.1 2008/04/06 18:58:15 dillon Exp $
++ */
++
++#ifndef _ALTQ_ALTQ_FAIRQ_H_
++#define	_ALTQ_ALTQ_FAIRQ_H_
++
++#include <altq/altq.h>
++#include <altq/altq_classq.h>
++#include <altq/altq_red.h>
++#include <altq/altq_rio.h>
++#include <altq/altq_rmclass.h>
++
++#define	FAIRQ_MAX_BUCKETS	2048	/* maximum number of sorting buckets */
++#define	FAIRQ_MAXPRI		RM_MAXPRIO
++#define FAIRQ_BITMAP_WIDTH	(sizeof(fairq_bitmap_t)*8)
++#define FAIRQ_BITMAP_MASK	(FAIRQ_BITMAP_WIDTH - 1)
++
++/* fairq class flags */
++#define	FARF_RED		0x0001	/* use RED */
++#define	FARF_ECN		0x0002  /* use RED/ECN */
++#define	FARF_RIO		0x0004  /* use RIO */
++#define	FARF_CLEARDSCP		0x0010  /* clear diffserv codepoint */
++#define	FARF_DEFAULTCLASS	0x1000	/* default class */
++
++#define FARF_HAS_PACKETS	0x2000	/* might have queued packets */
++
++#define FARF_USERFLAGS		(FARF_RED|FARF_ECN|FARF_RIO|FARF_CLEARDSCP| \
++				 FARF_DEFAULTCLASS)
++
++/* special class handles */
++#define	FAIRQ_NULLCLASS_HANDLE	0
++
++typedef u_int	fairq_bitmap_t;
++
++struct fairq_classstats {
++	uint32_t		class_handle;
++
++	u_int			qlength;
++	u_int			qlimit;
++	struct pktcntr		xmit_cnt;  /* transmitted packet counter */
++	struct pktcntr		drop_cnt;  /* dropped packet counter */
++
++	/* red and rio related info */
++	int			qtype;
++	struct redstats		red[3];	/* rio has 3 red stats */
++};
++
++#ifdef _KERNEL
++
++typedef struct fairq_bucket {
++	struct fairq_bucket *next;	/* circular list */
++	struct fairq_bucket *prev;	/* circular list */
++	class_queue_t	queue;		/* the actual queue */
++	uint64_t	bw_bytes;	/* statistics used to calculate bw */
++	uint64_t	bw_delta;	/* statistics used to calculate bw */
++	uint64_t	last_time;
++	int		in_use;
++} fairq_bucket_t;
++
++struct fairq_class {
++	uint32_t	cl_handle;	/* class handle */
++	u_int		cl_nbuckets;	/* (power of 2) */
++	u_int		cl_nbucket_mask; /* bucket mask */
++	fairq_bucket_t	*cl_buckets;
++	fairq_bucket_t	*cl_head;	/* head of circular bucket list */
++	fairq_bucket_t	*cl_polled;
++	struct red	*cl_red;	/* RED state */
++	u_int		cl_hogs_m1;
++	u_int		cl_lssc_m1;
++	u_int		cl_bandwidth;
++	uint64_t	cl_bw_bytes;
++	uint64_t	cl_bw_delta;
++	uint64_t	cl_last_time;
++	int		cl_qtype;	/* rollup */
++	int		cl_qlimit;
++	int		cl_pri;		/* priority */
++	int		cl_flags;	/* class flags */
++	struct fairq_if	*cl_pif;	/* back pointer to pif */
++	struct altq_pktattr *cl_pktattr; /* saved header used by ECN */
++
++	/* round robin index */
++
++	/* statistics */
++	struct pktcntr  cl_xmitcnt;	/* transmitted packet counter */
++	struct pktcntr  cl_dropcnt;	/* dropped packet counter */
++};
++
++/*
++ * fairq interface state
++ */
++struct fairq_if {
++	struct fairq_if		*pif_next;	/* interface state list */
++	struct ifaltq		*pif_ifq;	/* backpointer to ifaltq */
++	u_int			pif_bandwidth;	/* link bandwidth in bps */
++	int			pif_maxpri;	/* max priority in use */
++	struct fairq_class	*pif_poll_cache;/* cached poll */
++	struct fairq_class	*pif_default;	/* default class */
++	struct fairq_class	*pif_classes[FAIRQ_MAXPRI]; /* classes */
++};
++
++#endif /* _KERNEL */
++
++#endif /* _ALTQ_ALTQ_FAIRQ_H_ */
+diff --git a/sys/contrib/altq/altq/altq_subr.c b/sys/contrib/altq/altq/altq_subr.c
+index 07e6087..139698e 100644
+--- a/sys/contrib/altq/altq/altq_subr.c
++++ b/sys/contrib/altq/altq/altq_subr.c
+@@ -535,6 +535,11 @@ altq_pfattach(struct pf_altq *a)
+ 		error = hfsc_pfattach(a);
+ 		break;
+ #endif
++#ifdef ALTQ_FAIRQ
++	case ALTQT_FAIRQ:
++		error = fairq_pfattach(a);
++		break;
++#endif
+ 	default:
+ 		error = ENXIO;
+ 	}
+@@ -610,6 +615,11 @@ altq_add(struct pf_altq *a)
+ 		error = hfsc_add_altq(a);
+ 		break;
+ #endif
++#ifdef ALTQ_FAIRQ
++        case ALTQT_FAIRQ:
++                error = fairq_add_altq(a);
++                break;
++#endif
+ 	default:
+ 		error = ENXIO;
+ 	}
+@@ -646,6 +656,11 @@ altq_remove(struct pf_altq *a)
+ 		error = hfsc_remove_altq(a);
+ 		break;
+ #endif
++#ifdef ALTQ_FAIRQ
++        case ALTQT_FAIRQ:
++                error = fairq_remove_altq(a);
++                break;
++#endif
+ 	default:
+ 		error = ENXIO;
+ 	}
+@@ -679,6 +694,11 @@ altq_add_queue(struct pf_altq *a)
+ 		error = hfsc_add_queue(a);
+ 		break;
+ #endif
++#ifdef ALTQ_FAIRQ
++        case ALTQT_FAIRQ:
++                error = fairq_add_queue(a);
++                break;
++#endif
+ 	default:
+ 		error = ENXIO;
+ 	}
+@@ -712,6 +732,11 @@ altq_remove_queue(struct pf_altq *a)
+ 		error = hfsc_remove_queue(a);
+ 		break;
+ #endif
++#ifdef ALTQ_FAIRQ
++        case ALTQT_FAIRQ:
++                error = fairq_remove_queue(a);
++                break;
++#endif
+ 	default:
+ 		error = ENXIO;
+ 	}
+@@ -745,6 +770,11 @@ altq_getqstats(struct pf_altq *a, void *ubuf, int *nbytes)
+ 		error = hfsc_getqstats(a, ubuf, nbytes);
+ 		break;
+ #endif
++#ifdef ALTQ_FAIRQ
++        case ALTQT_FAIRQ:
++                error = fairq_getqstats(a, ubuf, nbytes);
++                break;
++#endif
+ 	default:
+ 		error = ENXIO;
+ 	}
+diff --git a/sys/contrib/altq/altq/altq_var.h b/sys/contrib/altq/altq/altq_var.h
+index 3950222..e30d2df 100644
+--- a/sys/contrib/altq/altq/altq_var.h
++++ b/sys/contrib/altq/altq/altq_var.h
+@@ -257,5 +257,12 @@ int	hfsc_add_queue(struct pf_altq *);
+ int	hfsc_remove_queue(struct pf_altq *);
+ int	hfsc_getqstats(struct pf_altq *, void *, int *);
+ 
++int	fairq_pfattach(struct pf_altq *);
++int	fairq_add_altq(struct pf_altq *);
++int	fairq_remove_altq(struct pf_altq *);
++int	fairq_add_queue(struct pf_altq *);
++int	fairq_remove_queue(struct pf_altq *);
++int	fairq_getqstats(struct pf_altq *, void *, int *);
++
+ #endif /* _KERNEL */
+ #endif /* _ALTQ_ALTQ_VAR_H_ */
+diff --git a/sys/net/pf_mtag.h b/sys/net/pf_mtag.h
+index 5d5d3ae..78a57c4 100644
+--- a/sys/net/pf_mtag.h
++++ b/sys/net/pf_mtag.h
+@@ -43,9 +43,11 @@
+ struct pf_mtag {
+ 	void		*hdr;		/* saved hdr pos in mbuf, for ECN */
+ 	u_int32_t	 qid;		/* queue id */
++	u_int32_t	 qid_hash;	/* queue hashid used by WFQ like algos */
+ 	u_int16_t	 tag;		/* tag id */
+ 	u_int8_t	 flags;
+ 	u_int8_t	 routed;
++	u_int8_t	 af;		/* for ECN */
+ };
+ 
+ static __inline struct pf_mtag *
+diff --git a/sys/net/pfvar.h b/sys/net/pfvar.h
+index 874818c..b9b2e6f 100644
+--- a/sys/net/pfvar.h
++++ b/sys/net/pfvar.h
+@@ -1389,6 +1389,20 @@ struct hfsc_opts {
+ 	int		flags;
+ };
+ 
++/*
++ * XXX this needs some work
++ */
++struct fairq_opts {
++	u_int		nbuckets;
++	u_int		hogs_m1;
++	int		flags;
++
++	/* link sharing service curve */
++	u_int		lssc_m1;
++	u_int		lssc_d;
++	u_int		lssc_m2;
++};
++
+ struct pf_altq {
+ 	char			 ifname[IFNAMSIZ];
+ 
+@@ -1415,6 +1429,7 @@ struct pf_altq {
+ 		struct cbq_opts		 cbq_opts;
+ 		struct priq_opts	 priq_opts;
+ 		struct hfsc_opts	 hfsc_opts;
++		struct fairq_opts	 fairq_opts;
+ 	} pq_u;
+ 
+ 	u_int32_t		 qid;		/* return value */
+diff --git a/sys/netpfil/pf/pf.c b/sys/netpfil/pf/pf.c
+index 1ef30a7..c11f224 100644
+--- a/sys/netpfil/pf/pf.c
++++ b/sys/netpfil/pf/pf.c
+@@ -552,6 +552,21 @@ pf_hashsrc(struct pf_addr *addr, sa_family_t af)
+ 	return (h & V_pf_srchashmask);
+ }
+ 
++#ifdef ALTQ
++/* XXX: revisit this with ALTQ_WFQ/dummynet */
++static int
++pf_state_hash(struct pf_state *s)
++{
++	u_int32_t hv = (intptr_t)s / sizeof(*s);
++
++	hv ^= crc32(&s->src, sizeof(s->src));
++	hv ^= crc32(&s->dst, sizeof(s->dst));
++	if (hv == 0)
++		hv = 1;
++	return (hv);
++}
++#endif
++
+ #ifdef INET6
+ void
+ pf_addrcpy(struct pf_addr *dst, struct pf_addr *src, sa_family_t af)
+@@ -6118,6 +6133,8 @@ done:
+ 			action = PF_DROP;
+ 			REASON_SET(&reason, PFRES_MEMORY);
+ 		}
++		if (s)
++			pd.pf_mtag->qid_hash = pf_state_hash(s);
+ 		if (pqid || (pd.tos & IPTOS_LOWDELAY))
+ 			pd.pf_mtag->qid = r->pqid;
+ 		else
+@@ -6605,6 +6622,8 @@ done:
+ 			action = PF_DROP;
+ 			REASON_SET(&reason, PFRES_MEMORY);
+ 		}
++		if (s)
++			pd.pf_mtag->qid_hash = pf_state_hash(s);
+ 		if (pd.tos & IPTOS_LOWDELAY)
+ 			pd.pf_mtag->qid = r->pqid;
+ 		else

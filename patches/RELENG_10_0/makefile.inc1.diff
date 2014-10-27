@@ -1,0 +1,11 @@
+--- Makefile.inc1.orig	2013-11-14 03:53:38.000000000 -0600
++++ Makefile.inc1	2013-11-14 14:07:04.000000000 -0600
+@@ -748,7 +748,7 @@
+ ITOOLS=	[ awk cap_mkdb cat chflags chmod chown \
+ 	date echo egrep find grep id install ${_install-info} \
+ 	ln lockf make mkdir mtree ${_nmtree_itools} mv pwd_mkdb \
+-	rm sed sh sysctl test true uname wc ${_zoneinfo}
++	rm sed sh sysctl test true uname wc ${_zoneinfo} uuencode uudecode ex
+ 
+ #
+ # distributeworld

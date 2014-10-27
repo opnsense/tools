@@ -1,0 +1,26 @@
+diff --git a/sys/contrib/altq/altq/altq_cbq.h b/sys/contrib/altq/altq/altq_cbq.h
+index 30a15c7..76096af 100644
+--- a/sys/contrib/altq/altq/altq_cbq.h
++++ b/sys/contrib/altq/altq/altq_cbq.h
+@@ -186,7 +186,7 @@ struct cbq_getstats {
+ #define	CBQ_TIMEOUT		10
+ #define	CBQ_LS_TIMEOUT		(20 * hz / 1000)
+ 
+-#define	CBQ_MAX_CLASSES	256
++#define	CBQ_MAX_CLASSES	2048
+ 
+ #ifdef ALTQ3_COMPAT
+ #define	CBQ_MAX_FILTERS 256
+diff --git a/sys/contrib/altq/altq/altq_hfsc.h b/sys/contrib/altq/altq/altq_hfsc.h
+index d04b378..e5595cb 100644
+--- a/sys/contrib/altq/altq/altq_hfsc.h
++++ b/sys/contrib/altq/altq/altq_hfsc.h
+@@ -49,7 +49,7 @@ struct service_curve {
+ 
+ /* special class handles */
+ #define	HFSC_NULLCLASS_HANDLE	0
+-#define	HFSC_MAX_CLASSES	64
++#define	HFSC_MAX_CLASSES	2048
+ 
+ /* hfsc class flags */
+ #define	HFCF_RED		0x0001	/* use RED */
