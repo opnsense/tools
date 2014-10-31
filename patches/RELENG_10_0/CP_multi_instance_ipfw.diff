@@ -6,8 +6,8 @@ index 1acd4b7..7c83361 100644
  # $FreeBSD: stable/10/sbin/ipfw/Makefile 204869 2010-03-08 14:43:55Z luigi $
  
  PROG=	ipfw
--SRCS=	ipfw2.c dummynet.c ipv6.c main.c nat.c
-+SRCS=	ipfw2.c dummynet.c ipv6.c main.c nat.c context.c
+-SRCS=	ipfw2.c dummynet.c ipv6.c main.c nat.c altq.c
++SRCS=	ipfw2.c dummynet.c ipv6.c main.c nat.c altq.c context.c
  WARNS?=	2
  DPADD=	${LIBUTIL}
  LDADD=	-lutil
@@ -323,10 +323,10 @@ index 5ec8969..8d83945 100644
  } ip_fw3_opheader;
  
  
-@@ -73,3 +73,9 @@ #define IP_FW_TABLE_XADD        86      /* add entry */
- #define IP_FW_TABLE_XDEL        87      /* delete entry */
- #define IP_FW_TABLE_XGETSIZE    88      /* get table size */
- #define IP_FW_TABLE_XLIST       89      /* list table contents */
+@@ -76,6 +77,12 @@ typedef struct _ip_fw3_opheader {
+ #define	IP_FW_TABLE_XLIST	89	/* list table contents */
+ #define	IP_FW_TABLE_XLISTENTRY	90	/* list one table entry contents */
+ #define	IP_FW_TABLE_XZEROENTRY	91	/* zero one table entry stats */
 +#define	IP_FW_CTX_GET		92	
 +#define	IP_FW_CTX_ADD		93	
 +#define	IP_FW_CTX_DEL		94	

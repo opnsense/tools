@@ -41,10 +41,6 @@ checkout_freebsd_source() {
 # Apply opnSense patches 
 #
 apply_patches(){
-#	TODO : remove?
-#	echo ">>> Fix freebsd source includes..." 
-#	fixup_freebsd_sources
-
 	echo -n ">>> Applying patches from $OSPATCHFILE please wait..."
 	# Loop through and patch files
 	for LINE in `cat ${OSPATCHFILE} | grep -v "^#"`
@@ -102,22 +98,5 @@ apply_patches(){
 	fi
 	
 	
-}
-
-#
-# copy some headers to prevent build issues 
-# ( for example, multiple versions of the same lib in searchpath)
-#
-fixup_freebsd_sources(){
-	cp $SRCDIR/lib/libnetbsd/sys/cdefs.h $SRCDIR/contrib/mtree/
-	cp $SRCDIR/contrib/libarchive/libarchive_fe/err.h $SRCDIR/contrib/libarchive/cpio/
-	cp $SRCDIR/contrib/libarchive/libarchive_fe/err.h $SRCDIR/contrib/libarchive/tar/
-	cp $SRCDIR/contrib/nvi/common/multibyte.h $SRCDIR/contrib/nvi/regex/
-	cp $SRCDIR/contrib/wpa/src/utils/uuid.h  $SRCDIR/contrib/wpa/wpa_supplicant/
-	cp $SRCDIR/contrib/wpa/src/utils/uuid.h $SRCDIR/contrib/wpa/src/wps/
-	cp $SRCDIR/lib/libnetbsd/sys/cdefs.h $SRCDIR/contrib/mtree/
-	cp $SRCDIR/gnu/lib/libregex/regex.h $SRCDIR/gnu/usr.bin/grep/regex.h 
-	cp $SRCDIR/gnu/lib/libregex/regex.h  $SRCDIR/contrib/diff/src/
-	cp $SRCDIR/usr.bin/ar/ar.h $SRCDIR/usr.bin/ar/ar_cpy.h
 }
 

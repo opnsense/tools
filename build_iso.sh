@@ -10,7 +10,7 @@ do
 	. $module
 done
 
-(	
+(
 	echo "[`date`] start ( $ARCH )"
 
 	# setup/configure build environment ( modules/configure.sh ) 
