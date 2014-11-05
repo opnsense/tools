@@ -124,15 +124,16 @@ index f52cd1a..6cefe22 100644
  		struct pfioc_state_kill *psk = (struct pfioc_state_kill *)addr;
  		u_int			 i, killed = 0;
  
-@@ -1587,6 +1590,7 @@ DIOCCHANGERULE_error:
+@@ -1587,6 +1591,8 @@ DIOCCHANGERULE_error:
  relock_DIOCCLRSTATES:
  			PF_HASHROW_LOCK(ih);
  			LIST_FOREACH(s, &ih->states, entry)
++				{
 +				sk = s->key[PF_SK_WIRE];
  				if (!psk->psk_ifname[0] ||
  				    !strcmp(psk->psk_ifname,
  				    s->kif->pfik_name)) {
-@@ -1598,6 +1602,20 @@ relock_DIOCCLRSTATES:
+@@ -1598,6 +1603,21 @@ relock_DIOCCLRSTATES:
  					pf_unlink_state(s, PF_ENTER_LOCKED);
  					killed++;
  					goto relock_DIOCCLRSTATES;
@@ -150,6 +151,7 @@ index f52cd1a..6cefe22 100644
 +					pf_unlink_state(s, PF_ENTER_LOCKED);
 +					killed++;
 +					goto relock_DIOCCLRSTATES;
++				}
  				}
  			PF_HASHROW_UNLOCK(ih);
  		}
