@@ -1,0 +1,219 @@
+
+include         GENERIC
+
+options		KDB
+nooptions       KDB_TRACE 
+options		DDB                     # Support DDB.
+options       	GDB                     # Support remote GDB.
+nooptions       DEADLKRES
+nooptions	INVARIANTS
+nooptions	INVARIANT_SUPPORT
+nooptions	WITNESS
+nooptions	WITNESS_SKIPSPIN
+nooptions       MALLOC_DEBUG_MAXZONES
+
+#nomakeoptions	DEBUG
+makeoptions    DEBUG=-g                # Build kernel with gdb(1) debug symbols
+
+ident           opnSense10_SMP
+
+nooptions	MAC                     # TrustedBSD MAC Framework
+nooptions       COMPAT_43TTY            # BSD 4.3 TTY compat (sgtty)
+nooptions       COMPAT_FREEBSD4         # Compatible with FreeBSD4
+nooptions       COMPAT_FREEBSD5         # Compatible with FreeBSD5
+nooptions       COMPAT_FREEBSD6         # Compatible with FreeBSD6
+nooptions	FLOWTABLE
+nooptions	SCHED_4BSD
+###options		SCHED_ULE	# add inULE scheduler
+
+# IPSEC filtering interface
+device		enc
+
+options 	GEOM_MIRROR
+options		GEOM_UZIP
+options		GEOM_LABEL
+nooption	GEOM_MBR
+options		GEOM_PART_MBR
+options		GEOM_PART_BSD
+options		GEOM_ELI
+options		GEOM_BDE
+
+# Need for LiveCD's
+options 	CD9660
+
+# Wireless
+device		wlan
+device		wlan_wep
+device		wlan_ccmp
+device		wlan_tkip
+device		wlan_xauth
+device		wlan_acl
+device		wlan_amrr
+device		iwi		# Intel PRO/Wireless 2200BG/2225BG/2915ABG IEEE 802.11 driver
+device		ipw		# Intel PRO/Wireless 2100 IEEE 802.11 driver
+device		ipwfw		# Firmware for Intel PRO/Wireless 2100 IEEE 802.11 driver
+device		wpi		# Intel 3945ABG Wireless LAN IEEE 802.11 driver
+device		wpifw		# Firmware for Intel 3945ABG Wireless LAN IEEE 802.11 driver
+device		iwn		# Intel Wireless WiFi Link 4965AGN IEEE 802.11n driver
+device		iwnfw		# Firmware for Intel Wireless WiFi Link 4965AGN IEEE 802.11n driver
+device		alc		# Atheros IEEE 802.11 wireless network driver
+device		ath		# Atheros IEEE 802.11 wireless network driver
+device		ath_hal
+options		AH_SUPPORT_AR5416
+device		ath_rate_sample
+device		uath		# Atheros USB IEEE 802.11a/b/g wireless network device
+device		an		# Aironet 4500/4800 802.11 wireless NICs.
+device		ral		# Ralink Technology RT2500 wireless NICs.
+device		ralfw		# Firmware for Ralink Technology RT2500 wireless NICs.
+device		ural		# Ralink Technology RT2500USB IEEE 802.11 driver
+device		urtw		# Realtek RTL8187B/L USB IEEE 802.11b/g wireless network device
+device		wi		# WaveLAN/Intersil/Symbol 802.11 wireless NICs.
+device		rum		# Ralink Technology USB IEEE 802.11a/b/g wireless network device
+device		mwl		# Marvell 88W8363 IEEE 802.11n wireless network driver
+device		mwlfw		# Firmware for Marvell 88W8363 IEEE 802.11n wireless network driver
+device		zyd		# ZyDAS ZD1211/ZD1211B USB IEEE 802.11b/g wireless network device
+device		malo		# Marvell Libertas IEEE 802.11b/g wireless network driver
+device		upgt		# Conexant/Intersil PrismGT SoftMAC USB IEEE 802.11b/g wireless
+device		bwi		# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
+# Only for 8.1+
+device		siba_bwn	# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
+device		bwn		# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
+device		run		# Ralink RT2700U/RT2800U/RT3000U USB 802.11agn
+
+options         UNIONFS                 # Union filesystem
+
+options         IPFIREWALL_DEFAULT_TO_ACCEPT
+options         IPFIREWALL_VERBOSE
+options         IPFIREWALL_VERBOSE_LIMIT
+
+##device		bpf
+device          carp
+device          pf
+device          pflog
+device          pfsync
+device          vlan
+device          gre
+
+options         IPSTEALTH
+options         INCLUDE_CONFIG_FILE
+
+options		NETGRAPH                #netgraph(4) system
+options		NETGRAPH_VLAN
+options		NETGRAPH_L2TP
+options		NETGRAPH_ASYNC
+options		NETGRAPH_BPF
+options		NETGRAPH_BRIDGE
+options		NETGRAPH_CISCO
+options		NETGRAPH_ECHO
+options		NETGRAPH_ETHER
+options		NETGRAPH_FRAME_RELAY
+options		NETGRAPH_HOLE
+options		NETGRAPH_IFACE
+options		NETGRAPH_EIFACE
+options		NETGRAPH_KSOCKET
+options		NETGRAPH_LMI
+options		NETGRAPH_MPPC_ENCRYPTION
+options		NETGRAPH_ONE2MANY
+options		NETGRAPH_PPP
+options		NETGRAPH_PPPOE
+options		NETGRAPH_PPTPGRE
+options		NETGRAPH_RFC1490
+options		NETGRAPH_SOCKET
+options		NETGRAPH_TEE
+options		NETGRAPH_TTY
+options		NETGRAPH_UI
+options		NETGRAPH_VJC
+options		NETGRAPH_TCPMSS
+options		NETGRAPH_PIPE
+options		NETGRAPH_CAR
+options		NETGRAPH_DEFLATE
+options		NETGRAPH_PRED1
+
+# 3G devices
+device		ubsa
+device		ufoma
+#device		umsm
+device          ucom
+device          uplcom
+device          ubsa
+device          umct
+device          uvisor
+device          uark
+device          uftdi
+device          uvscom
+device          umodem
+device		ufoma
+device		u3g
+device		ucom
+
+options         IPSEC
+options         IPSEC_NAT_T
+
+options         TCP_SIGNATURE           #include support for RFC 2385
+
+options         ALTQ
+options         ALTQ_CBQ
+options         ALTQ_RED
+options         ALTQ_RIO
+options         ALTQ_HFSC
+options         ALTQ_PRIQ
+options		ALTQ_NOPCC
+options		ALTQ_FAIRQ
+
+# Bridging
+device          if_bridge
+
+# Squid related settings
+options         MSGMNB=8192     # max # of bytes in a queue
+options         MSGMNI=40       # number of message queue identifiers
+options         MSGSEG=512      # number of message segments per queue
+options         MSGSSZ=32       # size of a message segment
+options         MSGTQL=2048     # max messages in system
+
+device          tap
+device          hme
+
+# Needed for FreeSBIE 2
+options         NULLFS
+
+device          speaker
+
+options         DEVICE_POLLING
+
+device          lagg
+
+options		MROUTING
+
+# Additional cards
+device		bktr			# bktr -- Brooktree Bt848/849/878/879 and Pinnacle PCTV video capture
+device		ale				# ale -- Atheros AR8121/AR8113/AR8114 Gigabit/Fast Ethernet driver
+device		safe			# safe -- SafeNet crypto accelerator
+device		et				# et(4) for AGERE ET1310 fastE and gigE
+device		ed				# NE[12]000, SMC Ultra, 3c503, DS8390 cards
+device		mxge			# mxge - Myricom Myri10GE 10 Gigabit Ethernet adapter driver
+device		cxgb			# cxgb -- Chelsio T3 10 Gigabit Ethernet adapter driver
+device		igb				# igb -- Intel(R) PRO/1000 PCI Express Gigabit Ethernet adapter driver
+device		ixgbe 			# http://www.nabble.com/kern-130476:-Error-in-compiling-kernel-with-device-ixgbe-td21424560.html
+device		ae				# ae -- Attansic/Atheros L2 FastEthernet controller driver
+device		cas		# Sun Cassini/Cassini+ and National Semiconductor DP83065 Saturn
+device		crypto          # core crypto support
+device		cryptodev       # /dev/crypto for access to h/w
+device		hifn            # Hifn 7951, 7781, etc.
+device		ubsec           # Broadcom 5501, 5601, 58xx
+device		udav            # Davicom DM9601 USB Ethernet driver
+#options	HIFN_DEBUG      # enable debugging support: hw.hifn.debug
+#options	HIFN_RNDTEST    # enable rndtest support
+#device		rndtest         # FIPS 140-2 entropy tester
+
+options		IPSEC_NAT_T
+#options		ALTQ_FAIRQ
+
+options 	COMPAT_FREEBSD7
+
+#options PRINTF_BUFR_SIZE	# fights garble printf on shutdown
+
+#options 	FLOWTABLE
+
+device 		padlock
+
+options		PPS_SYNC

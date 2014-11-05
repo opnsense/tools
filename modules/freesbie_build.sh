@@ -561,4 +561,52 @@ create_md5_summary_file() {
 	echo "Done."
 }
 
+#
+# create a memory stick image from the files in our clone directory   
+#
+create_memstick_image() {
+	
+	WORKDIR="/tmp/memstick/usbmnt.$$"
+	
+	OLDPWD=`pwd`
+	
+	dd if=/dev/zero of=$MEMSTICKPATH bs=63b count=0 seek=8048
+	mkdir -p ${WORKDIR}
+	MD=`mdconfig -f $MEMSTICKPATH -x 63 -y 16`
+	bsdlabel -Bw $MD auto
+	
+	# Labels must be alphanumeric only and less than 32 chars
+	FREESBIE_LABEL=`echo ${FREESBIE_LABEL} | /usr/bin/tr -cd '[:alnum:]' | /usr/bin/cut -c1-31`
+	newfs -L $FREESBIE_LABEL /dev/${MD}a
+	mount /dev/${MD}a ${WORKDIR}
+		
+	cd $CLONEDIR && \
+		find . -print | cpio -dump ${WORKDIR}/
+	rm $WORKDIR/etc/fstab
+	
+	echo "/dev/ufs/${FREESBIE_LABEL} / ufs ro 0 0" > ${WORKDIR}/etc/fstab
+
+	# 
+	# Activate serial console boot
+	echo "-D" > ${WORKDIR}/boot.config
+	
+	
+	# loader.conf(.local) options
+	echo "kern.cam.boot_delay=10000" >> ${WORKDIR}/boot/loader.conf
+	echo 'boot_multicons="YES"' >> ${WORKDIR}/boot/loader.conf
+	echo 'boot_serial="YES"' >> ${WORKDIR}/boot/loader.conf
+	echo 'console="comconsole,vidconsole"' >> ${WORKDIR}/boot/loader.conf.local
+	
+	# Activate serial console TTY
+	sed -i "" -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${WORKDIR}/etc/ttys
+	
+	cd $OLDPWD
+	umount ${WORKDIR}
+	mdconfig -d -u $MD
+	rm -r ${WORKDIR}
+	gzip -f $MEMSTICKPATH
+	
+	echo ">>> Created memory stick image $MEMSTICKPATH.gz"
+		
+}
 

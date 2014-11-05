@@ -52,6 +52,9 @@ done
 
 	# build iso file
 	freesbie_build_iso
+	
+	# build memory stick image
+	create_memstick_image	
 
 	# list missing opnSense ports 
 	echo ">>> List missing opnsense ports "
