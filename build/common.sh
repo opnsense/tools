@@ -26,18 +26,26 @@
 
 set -e
 
-. ./common.sh
+export SETSDIR=/tmp/sets
+export SRCDIR=/usr/src
+export CPUS=`sysctl kern.smp.cpus | awk '{ print $2 }'`
 
-mkdir -p ${SETSDIR}
-rm -rf ${SETSDIR}/kernel.txz
+# print environment to showcase all of our variables                            
+env
 
-git_clear ${SRCDIR}
+git_clear()
+{
+	# Reset the git repository into a known state by
+	# enforcing a hard-reset to HEAD (so you keep your
+	# selected commit, but no manual changes) and all
+	# unknown files are cleared (so it looks like a
+	# freshly cloned repository).
 
-# XXX needs KERNCONF and TARGET_ARCH
-MAKEARGS=""
+	echo -n ">>> Resetting ${1}... "
 
-make -C${SRCDIR} -j${CPUS} buildkernel ${MAKEARGS} NO_KERNELCLEAN=yes
-make -C${SRCDIR}/release obj ${MAKEARGS}
-make -C${SRCDIR}/release kernel.txz ${MAKEARGS}
-
-mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${SETSDIR}/kernel.txz
+	# set used here to avoid errors when git isn't bootstrapped
+	set +e
+	git -C ${1} reset --hard HEAD
+	git -C ${1} clean -xdqf .
+	set -e
+}

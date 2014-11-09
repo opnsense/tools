@@ -26,15 +26,12 @@
 
 set -e
 
-# XXX move to common location
-SETSDIR=/tmp/sets
-SRCDIR=/usr/src
-CPUS=1
+. ./common.sh
 
 mkdir -p ${SETSDIR}
 rm -rf ${SETSDIR}/base.txz
 
-# XXX wipe git repostory to avoid dirty build
+git_clear ${SRCDIR}
 
 # XXX needs SRCCONF
 MAKEARGS="__MAKE_CONF="
