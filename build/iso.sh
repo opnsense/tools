@@ -38,7 +38,7 @@ setup_kernel ${STAGEDIR}
 
 echo -n ">>> Building ISO image... "
 
-mtree -Pcp ${STAGEDIR} | bzip2 -9 > root.dist.bz2
+mtree -Pcp ${STAGEDIR} | bzip2 -9 > root.dist.bz2
 mkdir -p ${STAGEDIR}/dist
 mv root.dist.bz2 ${STAGEDIR}/dist/
 
