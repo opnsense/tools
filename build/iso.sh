@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Copyright (c) 2004-2009 Scott Ullrich
 # Copyright (c) 2014 Franco Fichtner <franco@lastsummer.de>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -27,57 +28,31 @@
 
 set -e
 
-# build directories
-export STAGEDIR="/usr/local/stage"
-export IMAGESDIR="/tmp/images"
-export SETSDIR="/tmp/sets"
+. ./common.sh
 
-# target files
-export ISOPATH="${IMAGESDIR}/LiveCD.iso"
+mkdir -p ${IMAGESDIR}
 
-# code reositories
-export SRCDIR="/usr/src"
+setup_stage ${STAGEDIR}
+setup_base ${STAGEDIR}
+setup_kernel ${STAGEDIR}
 
-# misc. foo
-export CPUS=`sysctl kern.smp.cpus | awk '{ print $2 }'`
+echo -n ">>> Building ISO image... "
 
-# print environment to showcase all of our variables
-env
+mtree -Pcp ${STAGEDIR} | bzip2 -9 > root.dist.bz2
+mkdir -p ${STAGEDIR}/dist
+mv root.dist.bz2 ${STAGEDIR}/dist/
 
-git_clear()
-{
-	# Reset the git repository into a known state by
-	# enforcing a hard-reset to HEAD (so you keep your
-	# selected commit, but no manual changes) and all
-	# unknown files are cleared (so it looks like a
-	# freshly cloned repository).
+WORKDIR=/tmp/iso.$$
+# must be upper case:
+ISOLABEL=LIVECD
 
-	echo -n ">>> Resetting ${1}... "
+mkdir -p ${WORKDIR}/etc
+echo "/dev/iso9660/${ISOLABEL} / cd9660 ro 0 0" > ${WORKDIR}/etc/fstab
 
-	# set used here to avoid errors when git isn't bootstrapped
-	set +e
-	git -C ${1} reset --hard HEAD
-	git -C ${1} clean -xdqf .
-	set -e
-}
+makefs -t cd9660 -o bootimage="i386;${STAGEDIR}/boot/cdboot" \
+    -o no-emul-boot -o label=${ISOLABEL} -o rockridge \
+    ${ISOPATH} ${STAGEDIR} ${WORKDIR}
 
-setup_base()
-{
-	echo ">>> Setting up world in ${1}"
+rm -rf ${WORKDIR}
 
-	(cd ${1} && tar -Jxpf ${SETSDIR}/base.txz)
-}
-
-setup_kernel()
-{
-	echo ">>> Setting up kernel in ${1}"
-
-	(cd ${1} && tar -Jxpf ${SETSDIR}/kernel.txz)
-}
-
-setup_stage()
-{
-	rm -rf "${1}" 2>/dev/null ||
-	    (chflags -R noschg "${1}"; rm -rf "${1}" 2>/dev/null)
-	mkdir -p "${1}"
-}
+echo "done"
