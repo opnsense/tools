@@ -27,33 +27,9 @@
 
 set -e
 
-export SETSDIR=/tmp/sets
-export SRCDIR=/usr/src
-export CPUS=`sysctl kern.smp.cpus | awk '{ print $2 }'`
+. ./common.sh
 
-# print environment to showcase all of our variables
-env
+git_clear ${SRCDIR}
 
-git_clear()
-{
-	# Reset the git repository into a known state by
-	# enforcing a hard-reset to HEAD (so you keep your
-	# selected commit, but no manual changes) and all
-	# unknown files are cleared (so it looks like a
-	# freshly cloned repository).
-
-	echo -n ">>> Resetting ${1}... "
-
-	# set used here to avoid errors when git isn't bootstrapped
-	set +e
-	git -C ${1} reset --hard HEAD
-	git -C ${1} clean -xdqf .
-	set -e
-}
-
-setup_stage()
-{
-	rm -rf "${1}" 2>/dev/null ||
-	    (chflags -R noschg "${1}"; rm -rf "${1}" 2>/dev/null)
-	mkdir -p "${1}"
-}
+# kernel and base build cleanup:
+setup_stage /usr/obj
