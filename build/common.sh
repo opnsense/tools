@@ -8,6 +8,7 @@
 #
 # 1. Redistributions of source code must retain the above copyright
 #    notice, this list of conditions and the following disclaimer.
+#
 # 2. Redistributions in binary form must reproduce the above copyright
 #    notice, this list of conditions and the following disclaimer in the
 #    documentation and/or other materials provided with the distribution.
@@ -30,7 +31,7 @@ export SETSDIR=/tmp/sets
 export SRCDIR=/usr/src
 export CPUS=`sysctl kern.smp.cpus | awk '{ print $2 }'`
 
-# print environment to showcase all of our variables                            
+# print environment to showcase all of our variables
 env
 
 git_clear()
