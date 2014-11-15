@@ -27,14 +27,14 @@
 
 set -e
 
+# important build settings
+export PRODUCT_NAME="OPNsense"
+
 # build directories
 export STAGEDIR="/usr/local/stage"
 export PACKAGESDIR="/tmp/packages"
 export IMAGESDIR="/tmp/images"
 export SETSDIR="/tmp/sets"
-
-# target files
-export ISOPATH="${IMAGESDIR}/LiveCD.iso"
 
 # code reositories
 export TOOLSDIR="/usr/tools"
@@ -47,6 +47,9 @@ export CPUS=`sysctl kern.smp.cpus | awk '{ print $2 }'`
 export ARCH=${ARCH:-"`uname -m`"}
 export TARGETARCH=${ARCH}
 export TARGET_ARCH=${ARCH}
+
+# target files
+export ISOPATH="${IMAGESDIR}/${PRODUCT_NAME}-LiveCD-${ARCH}-`date '+%Y%m%d-%H%M'`.iso"
 
 # print environment to showcase all of our variables
 env
