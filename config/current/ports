@@ -29,7 +29,6 @@ miniupnpd			net
 mpd4				opnsense
 mpd5				net
 pftop				sysutils
-libevent			devel
 relayd				net
 fping				net
 minicron			sysutils
