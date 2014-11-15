@@ -28,6 +28,7 @@ expiretable			security
 filterdns			opnsense
 filterlog			opnsense
 fping				net
+git				devel		build
 gzsig				opnsense
 ifstated			net
 igmpproxy			net
@@ -97,6 +98,7 @@ sshlockout_pf			opnsense
 strongswan			security
 # syslog-ng			sysutils
 syslogd				opnsense
+vim-lite			editors		build
 voucher				opnsense
 wol				net
 zip				archivers
