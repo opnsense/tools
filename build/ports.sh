@@ -71,6 +71,13 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 	# user configs linger somewhere else and override the override  :(
 	make -C "${PORTSDIR}/${PORT_CAT}/${PORT_NAME}" rmconfig-recursive
 	make -C "${PORTSDIR}/${PORT_CAT}/${PORT_NAME}" clean all install
+
+	if pkg query %n ${PORT_NAME} > /dev/null; then
+		# ok
+	else
+		echo "${PORT_NAME}: package names don't match"
+		exit 1
+	fi
 done < ${PORT_LIST}
 
 echo ">>> Creating binary packages..."
