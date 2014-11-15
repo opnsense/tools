@@ -76,7 +76,7 @@ ntp-devel			net
 rate				net-mgmt
 wol				net
 dhcp6				net
-3gstat_um175			opnsense
+3gstat				opnsense
 b43-fwcutter			sysutils
 bwi-firmware-kmod		net
 voucher				opnsense
