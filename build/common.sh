@@ -29,6 +29,7 @@ set -e
 
 # build directories
 export STAGEDIR="/usr/local/stage"
+export PACKAGESDIR="/tmp/packages"
 export IMAGESDIR="/tmp/images"
 export SETSDIR="/tmp/sets"
 
@@ -36,6 +37,8 @@ export SETSDIR="/tmp/sets"
 export ISOPATH="${IMAGESDIR}/LiveCD.iso"
 
 # code reositories
+export TOOLSDIR="/usr/tools"
+export PORTSDIR="/usr/ports"
 export SRCDIR="/usr/src"
 
 # misc. foo
