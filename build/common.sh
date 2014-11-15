@@ -69,6 +69,10 @@ setup_base()
 {
 	echo ">>> Setting up world in ${1}"
 
+	# XXX The installer is hardwired to copy
+	# /home and will bail if it can't be found!
+	mkdir -p ${1}/home
+
 	(cd ${1} && tar -Jxpf ${SETSDIR}/base.txz)
 }
 
@@ -100,9 +104,10 @@ setup_platform()
 
 	echo ">>> Setting up core in ${1}..."
 
-	# XXX horribe stuff
+	# XXX horribe stuff follows...
 	rm -rf ${1}/usr/sbin/pc-sysinstall
 	cd ${COREDIR} && cp -r * ${1}
+	mkdir ${1}/conf
 }
 
 setup_stage()
