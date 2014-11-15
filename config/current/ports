@@ -12,6 +12,7 @@ dhcpleases6			opnsense
 filterdns			opnsense
 apinger				net
 rrdtool12			databases
+clog				opnsense
 cpdup				sysutils
 cpustats			opnsense
 beep				opnsense
