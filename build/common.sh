@@ -39,6 +39,7 @@ export ISOPATH="${IMAGESDIR}/LiveCD.iso"
 # code reositories
 export TOOLSDIR="/usr/tools"
 export PORTSDIR="/usr/ports"
+export COREDIR="/usr/core"
 export SRCDIR="/usr/src"
 
 # misc. foo
@@ -91,6 +92,17 @@ setup_packages()
 	pkg -c ${1} add -f ${PACKAGESDIR}/*.txz
 
 	rm -r ${1}/${PACKAGESDIR}
+}
+
+setup_platform()
+{
+	git_clear ${COREDIR}
+
+	echo ">>> Setting up core in ${1}..."
+
+	# XXX horribe stuff
+	rm -rf ${1}/usr/sbin/pc-sysinstall
+	cd ${COREDIR} && cp -r * ${1}
 }
 
 setup_stage()
