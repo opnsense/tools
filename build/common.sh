@@ -92,8 +92,9 @@ setup_packages()
 	mkdir -p ${1}/${PACKAGESDIR}
 	cp ${PACKAGESDIR}/* ${1}/${PACKAGESDIR}
 
-	# XXX upstream for for -f is in pkg 1.4 onwards
-	pkg -c ${1} add -f ${PACKAGESDIR}/*.txz
+	pkg -c ${1} add ${PACKAGESDIR}/pkg-*.txz
+	# opnsense has all required ports embedded as dependencies
+	pkg -c ${1} add ${PACKAGESDIR}/opnsense-*.txz
 
 	rm -r ${1}/${PACKAGESDIR}
 }

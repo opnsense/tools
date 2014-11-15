@@ -109,3 +109,6 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 
 	pkg_resolve_deps "$(pkg info -E ${PORT_NAME})"
 done < ${PORT_LIST}
+
+# also build the meta-package
+cd ${TOOLSDIR}/build && ./core.sh
