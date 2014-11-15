@@ -44,6 +44,9 @@ export SRCDIR="/usr/src"
 
 # misc. foo
 export CPUS=`sysctl kern.smp.cpus | awk '{ print $2 }'`
+export ARCH=${ARCH:-"`uname -m`"}
+export TARGETARCH=${ARCH}
+export TARGET_ARCH=${ARCH}
 
 # print environment to showcase all of our variables
 env

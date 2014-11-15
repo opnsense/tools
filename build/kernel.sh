@@ -34,8 +34,12 @@ rm -rf ${SETSDIR}/kernel.txz
 
 git_clear ${SRCDIR}
 
-# XXX needs KERNCONF and TARGET_ARCH
-MAKEARGS=""
+BUILD_KERNEL="SMP"
+
+# XXX move config to src.git
+cp ${TOOLSDIR}/config/current/${BUILD_KERNEL} ${SRCDIR}/sys/${TARGET_ARCH}/conf/${BUILD_KERNEL}
+
+MAKEARGS="TARGET_ARCH=${ARCH} KERNCONF=${BUILD_KERNEL}"
 
 make -C${SRCDIR} -j${CPUS} buildkernel ${MAKEARGS} NO_KERNELCLEAN=yes
 make -C${SRCDIR}/release obj ${MAKEARGS}
