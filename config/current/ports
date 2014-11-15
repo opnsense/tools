@@ -1,11 +1,11 @@
 # NAME				CATEGORY	OPTIONAL
 pkg				ports-mgmt
 # pkg(1) must be the first package
-docbook				textproc
-docbook-xsl			textproc
-# COMPATpfflowd-0.8		net
+# docbook			textproc
+# docbook-xsl			textproc
+# pfflowd-0.8			net
 strongswan			security
-# COMPATopeniked		security
+# openiked			security
 ipfw-classifyd			opnsense
 dhcpleases			opnsense
 dhcpleases6			opnsense
@@ -34,7 +34,6 @@ relayd				net
 fping				net
 minicron			sysutils
 php55				lang
-##OLDpecl-APC			www
 php55-bcmath			math
 php55-bz2			archivers
 php55-ctype			textproc
@@ -51,6 +50,7 @@ php55-posix			sysutils
 php55-pdo			databases
 php55-pdo_sqlite		databases
 pecl-radius			net
+pecl-ssh2			security
 php55-readline			devel
 php55-session			www
 php55-simplexml			textproc
@@ -62,41 +62,38 @@ php55-sysvshm			devel
 php55-sqlite			databases
 php55-tokenizer			devel
 php55-xml			textproc
-php55-zlib			archivers
 php55-xmlreader			textproc
 php55-xmlwriter			textproc
-# OLDpecl-inclued		devel
-zmq				net
+php55-zlib			archivers
+php55-json			devel
 php55-zmq			devel
+php55-sqlite3			databases
+php55-filter			security
 php-pfSense			opnsense
-php-xdebug			devel
 php-suhosin			security
+php-xdebug			devel
 openvpn				security
 syslog-ng			sysutils
-zip				archivers
 links				www
 elinks				www
 ntp-devel			net
-php55-json			devel
 rate				net-mgmt
 wol				net
 dhcp6				net
 3gstat_um175			opnsense
-# OLDwrapalixresetbutton	sysutils
 b43-fwcutter			sysutils
 bwi-firmware-kmod		net
 voucher				opnsense
 gzsig				opnsense
-# COMPATssh_tunnel_shell	sysutils
-# COMPATsshlockout_pf		sysutils
+# ssh_tunnel_shell		sysutils
+# sshlockout_pf			sysutils
 smartmontools			sysutils
 ataidle				sysutils
 syslogd				opnsense
 clog				opnsense
-pecl-ssh2			security
 autoconf-wrapper		devel
 rsync				net
-# DEFECTqstats			sysutils
+# qstats			sysutils
 gogoc 				net
 radvd				net
 ca_root_nss			security
@@ -107,6 +104,6 @@ filterlog			opnsense
 ipmitool			sysutils
 dmidecode			sysutils
 check_reload_status		opnsense
-php55-sqlite3			databases
-php55-filter			security
 python2				lang
+zip				archivers
+zmq				net
