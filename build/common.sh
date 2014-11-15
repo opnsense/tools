@@ -109,6 +109,8 @@ setup_platform()
 	echo ">>> Setting up core in ${1}..."
 
 	# XXX horribe stuff follows...
+	mkdir ${1}/scripts
+	cp ${TOOLSDIR}/installer/scripts/* ${1}/scripts/
 	cp ${TOOLSDIR}/freesbie2/extra/varmfs/varmfs.rc ${1}/etc/rc.d/varmfs
 	cp ${TOOLSDIR}/freesbie2/extra/etcmfs/etcmfs.rc ${1}/etc/rc.d/etcmfs
 	rm -rf ${1}/usr/sbin/pc-sysinstall
