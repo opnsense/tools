@@ -71,9 +71,7 @@ php-pfSense			opnsense
 php-suhosin			security
 php-xdebug			devel
 openvpn				security
-syslog-ng			sysutils
-links				www
-elinks				www
+# syslog-ng			sysutils
 ntp-devel			net
 rate				net-mgmt
 wol				net
@@ -89,14 +87,11 @@ smartmontools			sysutils
 ataidle				sysutils
 syslogd				opnsense
 autoconf-wrapper		devel
-rsync				net
 qstats				opnsense
-gogoc 				net
 radvd				net
 ca_root_nss			security
 bsnmp-ucd			net-mgmt
 bsnmp-regex			net-mgmt
-svnup				net
 filterlog			opnsense
 ipmitool			sysutils
 dmidecode			sysutils
