@@ -1,8 +1,7 @@
-
 include         GENERIC
 
 options		KDB
-nooptions       KDB_TRACE 
+nooptions	KDB_TRACE
 options		DDB                     # Support DDB.
 nooptions       GDB                     # Support remote GDB.
 nooptions       DEADLKRES
@@ -15,7 +14,7 @@ nooptions       MALLOC_DEBUG_MAXZONES
 nomakeoptions	DEBUG
 #makeoptions    DEBUG=-g                # Build kernel with gdb(1) debug symbols
 
-ident           pfSense8_SMP
+ident           SMP
 
 nooptions	MAC                     # TrustedBSD MAC Framework
 nooptions       COMPAT_43TTY            # BSD 4.3 TTY compat (sgtty)
@@ -24,7 +23,6 @@ nooptions       COMPAT_FREEBSD5         # Compatible with FreeBSD5
 nooptions       COMPAT_FREEBSD6         # Compatible with FreeBSD6
 nooptions	FLOWTABLE
 nooptions	SCHED_4BSD
-options		SCHED_ULE	# add inULE scheduler
 
 # IPSEC filtering interface
 device		enc
@@ -37,9 +35,6 @@ options		GEOM_PART_MBR
 options		GEOM_PART_BSD
 options		GEOM_ELI
 options		GEOM_BDE
-
-# Need for LiveCD's
-options 	CD9660
 
 # Wireless
 device		wlan
@@ -80,7 +75,8 @@ device		siba_bwn	# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
 device		bwn		# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
 device		run		# Ralink RT2700U/RT2800U/RT3000U USB 802.11agn
 
-options         UNIONFS                 # Union filesystem
+options         NULLFS
+options         UNIONFS
 
 options         IPFIREWALL_DEFAULT_TO_ACCEPT
 options         IPFIREWALL_VERBOSE
@@ -171,9 +167,6 @@ options         MSGTQL=2048     # max messages in system
 device          tap
 device          hme
 
-# Needed for FreeSBIE 2
-options         NULLFS
-
 device          speaker
 
 options         DEVICE_POLLING
@@ -183,34 +176,24 @@ device          lagg
 options		MROUTING
 
 # Additional cards
-device		bktr			# bktr -- Brooktree Bt848/849/878/879 and Pinnacle PCTV video capture
-device		ale				# ale -- Atheros AR8121/AR8113/AR8114 Gigabit/Fast Ethernet driver
-device		safe			# safe -- SafeNet crypto accelerator
-device		et				# et(4) for AGERE ET1310 fastE and gigE
-device		ed				# NE[12]000, SMC Ultra, 3c503, DS8390 cards
-device		mxge			# mxge - Myricom Myri10GE 10 Gigabit Ethernet adapter driver
-device		cxgb			# cxgb -- Chelsio T3 10 Gigabit Ethernet adapter driver
-device		igb				# igb -- Intel(R) PRO/1000 PCI Express Gigabit Ethernet adapter driver
-device		ixgbe 			# http://www.nabble.com/kern-130476:-Error-in-compiling-kernel-with-device-ixgbe-td21424560.html
-device		ae				# ae -- Attansic/Atheros L2 FastEthernet controller driver
+device		bktr		# bktr -- Brooktree Bt848/849/878/879 and Pinnacle PCTV video capture
+device		ale		# ale -- Atheros AR8121/AR8113/AR8114 Gigabit/Fast Ethernet driver
+device		safe		# safe -- SafeNet crypto accelerator
+device		et		# et(4) for AGERE ET1310 fastE and gigE
+device		ed		# NE[12]000, SMC Ultra, 3c503, DS8390 cards
+device		mxge		# mxge - Myricom Myri10GE 10 Gigabit Ethernet adapter driver
+device		cxgb		# cxgb -- Chelsio T3 10 Gigabit Ethernet adapter driver
+device		igb		# igb -- Intel(R) PRO/1000 PCI Express Gigabit Ethernet adapter driver
+device		ixgbe 		# http://www.nabble.com/kern-130476:-Error-in-compiling-kernel-with-device-ixgbe-td21424560.html
+device		ae		# ae -- Attansic/Atheros L2 FastEthernet controller driver
 device		cas		# Sun Cassini/Cassini+ and National Semiconductor DP83065 Saturn
 device		crypto          # core crypto support
 device		cryptodev       # /dev/crypto for access to h/w
 device		hifn            # Hifn 7951, 7781, etc.
 device		ubsec           # Broadcom 5501, 5601, 58xx
 device		udav            # Davicom DM9601 USB Ethernet driver
-#options	HIFN_DEBUG      # enable debugging support: hw.hifn.debug
-#options	HIFN_RNDTEST    # enable rndtest support
-#device		rndtest         # FIPS 140-2 entropy tester
 
 options		IPSEC_NAT_T
-#options		ALTQ_FAIRQ
-
-options 	COMPAT_FREEBSD7
-
-#options PRINTF_BUFR_SIZE	# fights garble printf on shutdown
-
-#options 	FLOWTABLE
 
 device 		padlock
 
