@@ -78,6 +78,9 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 		echo "${PORT_NAME}: package names don't match"
 		exit 1
 	fi
+
+	# when ports have been rebuild clear them from PACKAGESDIR
+	rm -rf ${PACKAGESDIR}/${PORT_NAME}-*.txz
 done < ${PORT_LIST}
 
 echo ">>> Creating binary packages..."
