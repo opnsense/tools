@@ -108,7 +108,8 @@ setup_platform()
 
 	echo ">>> Setting up core in ${1}..."
 
-	# XXX horribe stuff follows...
+	# XXX horrible stuff follows... (core.git rework!)
+	cp ${1}/usr/local/sbin/syslogd ${1}/usr/sbin/
 	mkdir ${1}/scripts
 	cp ${TOOLSDIR}/installer/scripts/* ${1}/scripts/
 	cp ${TOOLSDIR}/installer/cleargpt.sh ${1}/scripts/
