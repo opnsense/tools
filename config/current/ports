@@ -86,7 +86,6 @@ sshlockout_pf			opnsense
 smartmontools			sysutils
 ataidle				sysutils
 syslogd				opnsense
-autoconf-wrapper		devel
 qstats				opnsense
 radvd				net
 ca_root_nss			security
@@ -96,5 +95,5 @@ filterlog			opnsense
 ipmitool			sysutils
 dmidecode			sysutils
 check_reload_status		opnsense
-python2				lang
+python27			lang
 zip				archivers
