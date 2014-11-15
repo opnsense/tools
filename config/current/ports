@@ -83,8 +83,8 @@ b43-fwcutter			sysutils
 bwi-firmware-kmod		net
 voucher				opnsense
 gzsig				opnsense
-# ssh_tunnel_shell		sysutils
-# sshlockout_pf			sysutils
+ssh_tunnel_shell		opnsense
+sshlockout_pf			opnsense
 smartmontools			sysutils
 ataidle				sysutils
 syslogd				opnsense
