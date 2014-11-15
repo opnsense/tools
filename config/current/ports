@@ -93,7 +93,7 @@ syslogd				opnsense
 clog				opnsense
 autoconf-wrapper		devel
 rsync				net
-# qstats			sysutils
+qstats				opnsense
 gogoc 				net
 radvd				net
 ca_root_nss			security
