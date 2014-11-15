@@ -58,7 +58,6 @@ php55-shmop			devel
 php55-sysvmsg			devel
 php55-sysvsem			devel
 php55-sysvshm			devel
-php55-sqlite			databases
 php55-tokenizer			devel
 php55-xml			textproc
 php55-xmlreader			textproc
