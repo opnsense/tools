@@ -64,7 +64,7 @@ php55-xmlreader			textproc
 php55-xmlwriter			textproc
 php55-zlib			archivers
 php55-json			devel
-php55-zmq			devel
+# php55-zmq			devel
 php55-sqlite3			databases
 php55-filter			security
 php-pfSense			opnsense
@@ -88,7 +88,6 @@ sshlockout_pf			opnsense
 smartmontools			sysutils
 ataidle				sysutils
 syslogd				opnsense
-clog				opnsense
 autoconf-wrapper		devel
 rsync				net
 qstats				opnsense
@@ -104,4 +103,3 @@ dmidecode			sysutils
 check_reload_status		opnsense
 python2				lang
 zip				archivers
-zmq				net
