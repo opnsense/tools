@@ -1,61 +1,80 @@
 # NAME				CATEGORY	OPTIONAL
 pkg				ports-mgmt
 # pkg(1) must be the first package
-# docbook			textproc
-# docbook-xsl			textproc
-# pfflowd-0.8			net
-strongswan			security
-# openiked			security
-ipfw-classifyd			opnsense
-dhcpleases			opnsense
-dhcpleases6			opnsense
-filterdns			opnsense
+3gstat				opnsense
 apinger				net
-rrdtool12			databases
+ataidle				sysutils
+b43-fwcutter			sysutils
+beep				opnsense
+bind99				dns
+bsnmp-regex			net-mgmt
+bsnmp-ucd			net-mgmt
+bwi-firmware-kmod		net
+ca_root_nss			security
+check_reload_status		opnsense
+choparp				net-mgmt
 clog				opnsense
 cpdup				sysutils
 cpustats			opnsense
-beep				opnsense
-choparp				net-mgmt
+dhcp6				net
+dhcpleases			opnsense
+dhcpleases6			opnsense
+dmidecode			sysutils
 dnsmasq				dns
+# docbook			textproc
+# docbook-xsl			textproc
 expiretable			security
+filterdns			opnsense
+filterlog			opnsense
+fping				net
+gzsig				opnsense
 ifstated			net
 igmpproxy			net
-bind99				dns
-isc-dhcp42-server		net
+ipfw-classifyd			opnsense
+ipmitool			sysutils
 isc-dhcp42-client		net
 isc-dhcp42-relay		net
+isc-dhcp42-server		net
 lighttpd			www
+minicron			opnsense
 miniupnpd			net
 mpd4				opnsense
 mpd5				net
+ntp-devel			net
+# openiked			security
+openvpn				security
+# pfflowd-0.8			net
 pftop				sysutils
-relayd				net
-fping				net
-minicron			opnsense
+# php base package up here for satefy reasons
 php55				lang
+pecl-radius			net
+pecl-ssh2			security
+php-pfSense			opnsense
+php-suhosin			security
+php-xdebug			devel
 php55-bcmath			math
 php55-bz2			archivers
 php55-ctype			textproc
 php55-curl			ftp
+php55-filter			security
 php55-gettext			devel
 php55-hash			security
+php55-json			devel
 php55-ldap			net
 php55-mbstring			converters
 php55-mcrypt			security
 php55-mysql			databases
 php55-openssl			security
 php55-pcntl			devel
-php55-posix			sysutils
 php55-pdo			databases
 php55-pdo_sqlite		databases
-pecl-radius			net
-pecl-ssh2			security
+php55-posix			sysutils
 php55-readline			devel
 php55-session			www
+php55-shmop			devel
 php55-simplexml			textproc
 php55-sockets			net
-php55-shmop			devel
+php55-sqlite3			databases
 php55-sysvmsg			devel
 php55-sysvsem			devel
 php55-sysvshm			devel
@@ -64,37 +83,19 @@ php55-xml			textproc
 php55-xmlreader			textproc
 php55-xmlwriter			textproc
 php55-zlib			archivers
-php55-json			devel
 # php55-zmq			devel
-php55-sqlite3			databases
-php55-filter			security
-php-pfSense			opnsense
-php-suhosin			security
-php-xdebug			devel
-openvpn				security
-# syslog-ng			sysutils
-ntp-devel			net
-rate				net-mgmt
-wol				net
-dhcp6				net
-3gstat				opnsense
-b43-fwcutter			sysutils
-bwi-firmware-kmod		net
-voucher				opnsense
-gzsig				opnsense
-ssh_tunnel_shell		opnsense
-sshlockout_pf			opnsense
-smartmontools			sysutils
-ataidle				sysutils
-syslogd				opnsense
+python27			lang
 qstats				opnsense
 radvd				net
-ca_root_nss			security
-bsnmp-ucd			net-mgmt
-bsnmp-regex			net-mgmt
-filterlog			opnsense
-ipmitool			sysutils
-dmidecode			sysutils
-check_reload_status		opnsense
-python27			lang
+rate				net-mgmt
+relayd				net
+rrdtool12			databases
+smartmontools			sysutils
+ssh_tunnel_shell		opnsense
+sshlockout_pf			opnsense
+strongswan			security
+# syslog-ng			sysutils
+syslogd				opnsense
+voucher				opnsense
+wol				net
 zip				archivers
