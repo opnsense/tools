@@ -31,7 +31,7 @@ mpd5				net
 pftop				sysutils
 relayd				net
 fping				net
-minicron			sysutils
+minicron			opnsense
 php55				lang
 php55-bcmath			math
 php55-bz2			archivers
