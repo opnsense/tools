@@ -35,6 +35,7 @@ mkdir -p ${IMAGESDIR}
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
+setup_packages ${STAGEDIR}
 
 echo -n ">>> Building ISO image... "
 

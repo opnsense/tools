@@ -78,6 +78,21 @@ setup_kernel()
 	(cd ${1} && tar -Jxpf ${SETSDIR}/kernel.txz)
 }
 
+setup_packages()
+{
+	echo ">>> Setting up packages in ${1}..."
+
+	ASSUME_ALWAYS_YES=yes pkg bootstrap
+
+	mkdir -p ${1}/${PACKAGESDIR}
+	cp ${PACKAGESDIR}/* ${1}/${PACKAGESDIR}
+
+	# XXX upstream for for -f is in pkg 1.4 onwards
+	pkg -c ${1} add -f ${PACKAGESDIR}/*.txz
+
+	rm -r ${1}/${PACKAGESDIR}
+}
+
 setup_stage()
 {
 	rm -rf "${1}" 2>/dev/null ||
