@@ -57,4 +57,6 @@ makefs -t cd9660 -o bootimage="i386;${STAGEDIR}/boot/cdboot" \
 
 rm -rf ${WORKDIR}
 
-echo "done"
+echo "done:"
+
+ls -lah ${IMAGESDIR}/*
