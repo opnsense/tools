@@ -123,6 +123,22 @@ setup_platform()
 	mkdir ${1}/conf
 }
 
+setup_mtree()
+{
+	echo ">>> Creating mtree summary of files present..."
+
+	cat > ${1}/tmp/installed_filesystem.mtree.exclude <<EOF
+./dev
+./tmp
+EOF
+	chroot ${1} /bin/sh -s <<EOF
+/usr/sbin/mtree -c -k uid,gid,mode,size,sha256digest -p / -X /tmp/installed_filesystem.mtree.exclude > /tmp/installed_filesystem.mtree
+/bin/chmod 600 /tmp/installed_filesystem.mtree
+/bin/mv /tmp/installed_filesystem.mtree /etc/
+/bin/rm /tmp/installed_filesystem.mtree.exclude
+EOF
+}
+
 setup_stage()
 {
 	rm -rf "${1}" 2>/dev/null ||

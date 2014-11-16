@@ -37,6 +37,8 @@ setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR}
 setup_platform ${STAGEDIR}
+# XXX mtree before platform when core.git is in packages
+setup_mtree ${STAGEDIR}
 
 echo -n ">>> Building ISO image... "
 
