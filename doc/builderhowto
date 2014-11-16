@@ -62,3 +62,22 @@ Build all the ports and wrap them into a single package:
 A bootable LiveCD image is created using:
 
     # ./iso
+
+Some more random information
+============================
+
+* During the ports build you won't be able to operate git(1),
+  but the ports build will eventually rebuild the port so
+  everything will be back to normal when the ports build ends.
+
+* For very fast ports rebuilding of already installed packages
+  the following works:
+
+    # pkg delete -fy <packagename>
+    # cd /usr/tools/build && ./ports quick
+
+* All packages are stored under /tmp/packages
+
+* Kernel and base sets are stored under /tmp/sets
+
+* All final images are stored under /tmp/images
