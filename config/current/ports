@@ -83,7 +83,6 @@ php55-xml			textproc
 php55-xmlreader			textproc
 php55-xmlwriter			textproc
 php55-zlib			archivers
-# php55-zmq			devel
 python27			lang
 qstats				opnsense
 radvd				net
