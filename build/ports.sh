@@ -36,9 +36,12 @@ PORT_LIST="${TOOLSDIR}/config/current/ports"
 # If `quick' is given, do not safely strip the system,
 # so that we don't have to wait to rebuild any package.
 if [ "x${1}" != "xquick" ]; then
+	echo ">>> Bootstrapping pkg(8)..."
 	if pkg -N; then
 		pkg delete -fy pkg
 	fi
+	make -C "${PORTSDIR}/ports-mgmt/pkg" rmconfig-recursive
+	make -C "${PORTSDIR}/ports-mgmt/pkg" clean all install
 	rm -rf ${PACKAGESDIR}
 fi
 
@@ -54,18 +57,9 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 
 	echo -n ">>> Building ${PORT_NAME}... "
 
-	# bootstrapping pkg(1) is a little tricky
-	# without pkg-query(1) to query for pkg...
-	if [ "${PORT_NAME}" != "pkg" ]; then
-		if pkg query %n ${PORT_NAME} > /dev/null; then
-			echo "skipped."
-			continue
-		fi
-	else
-		if pkg -N; then
-			echo "skipped."
-			continue;
-		fi
+	if pkg query %n ${PORT_NAME} > /dev/null; then
+		echo "skipped."
+		continue
 	fi
 
 	# user configs linger somewhere else and override the override  :(
@@ -104,6 +98,8 @@ pkg_resolve_deps()
 		pkg create -no ${PACKAGESDIR} -f txz ${PORT}
 	done
 }
+
+pkg_resolve_deps pkg
 
 while read PORT_NAME PORT_CAT PORT_OPT; do
 	if [ "${PORT_NAME}" = "#" ]; then

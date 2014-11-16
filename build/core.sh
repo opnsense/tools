@@ -54,10 +54,6 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 	if [ "${PORT_NAME}" = "#" -o -n "${PORT_OPT}" ]; then
 		continue
 	fi
-	if [ "${PORT_NAME}" = "pkg" ]; then
-		# pkg(8) dependency is implied
-		continue
-	fi
 
 	pkg query "  %n: { version: \"%v\", origin: %o }" \
 		${PORT_NAME} >> ${STAGEDIR}/+MANIFEST

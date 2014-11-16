@@ -1,6 +1,4 @@
 # NAME				CATEGORY	OPTIONAL
-pkg				ports-mgmt
-# pkg(1) must be the first package
 3gstat				opnsense
 apinger				net
 ataidle				sysutils
