@@ -1,0 +1,64 @@
+Setting up a fresh build system
+===============================
+
+Install FreeBSD 10.0 amd64 release on a machine with at least
+10GB of hard disk + 2GB of RAM, UFS works better than ZFS).
+All other tasks require a root user.  Do the following to grab
+the repositories:
+
+    # pkg install git
+    # cd /usr
+    # git clone <username>@git.opnsense.org:repo/ports
+    # git clone <username>@git.opnsense.org:repo/tools
+    # git clone <username>@git.opnsense.org:repo/core
+    # git clone <username>@git.opnsense.org:repo/src
+
+Bootstrapping the build system
+==============================
+
+As root bootstrap an OPNsense GENERIC system (<cpus> is the
+number of available threads + 1):
+
+    # cd /usr/src
+    # make -j<cpus> buildworld
+    # make -j<cpus> buildkernel
+    # make installkernel
+    # make installworld
+    # reboot
+
+The object directory must be cleaned before continuing:
+
+    # cd /usr/tools/build && ./clean.sh
+
+These changes may need to be carried out again when src.git
+changes.
+
+Running the actual build
+========================
+
+The build is broken down into individual stages: base,
+kernel and ports can be build separately and repeatedly
+without affecting the others.  All stages can be reinvoked
+and continue building without cleaning the previous progress.
+A final stage assembles all three stages into a target image.
+
+Go to the build directory:
+
+    # cd /usr/tools/build
+
+Build the userland binaries, bootloader and administrative
+files:
+
+    # ./base.sh
+
+Build the kernel and loadable kernel modules:
+
+    # ./kernel.sh
+
+Build all the ports and wrap them into a single package:
+
+    # ./ports
+
+A bootable LiveCD image is created using:
+
+    # ./iso
