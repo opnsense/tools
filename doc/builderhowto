@@ -37,7 +37,7 @@ Running the actual build
 ========================
 
 The build is broken down into individual stages: base,
-kernel and ports can be build separately and repeatedly
+kernel and ports can be built separately and repeatedly
 without affecting the others.  All stages can be reinvoked
 and continue building without cleaning the previous progress.
 A final stage assembles all three stages into a target image.
@@ -57,11 +57,12 @@ Build the kernel and loadable kernel modules:
 
 Build all the ports and wrap them into a single package:
 
-    # ./ports
+    # pkg delete -fya
+    # ./ports.sh
 
 A bootable LiveCD image is created using:
 
-    # ./iso
+    # ./iso.sh
 
 Some more random information
 ============================
