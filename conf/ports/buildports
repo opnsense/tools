@@ -65,7 +65,6 @@ php55-xmlreader			/usr/ports/textproc/php55-xmlreader		/usr/local/lib/php/201212
 php55-xmlwriter			/usr/ports/textproc/php55-xmlwriter		/usr/local/lib/php/20121212/xmlwriter.so
 ##OLDpecl-inclued			/usr/ports/devel/pecl-inclued			/usr/local/lib/php/20121212/inclued.so
 zmq				/usr/ports/net/libzmq2				/usr/local/lib/libzmq.so.1
-php55-zmq			/usr/ports/devel/php55-zmq			/usr/local/lib/php/20121212/zmq.so
 php-xdebug			/usr/ports/devel/php-xdebug			/usr/local/lib/php/20121212/xdebug.so
 php-suhosin			/usr/ports/security/php-suhosin			/usr/local/lib/php/20121212/suhosin.so
 openvpn				/usr/ports/security/openvpn			/usr/local/sbin/openvpn

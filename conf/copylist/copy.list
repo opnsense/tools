@@ -107,7 +107,6 @@ usr/local/lib/php/20121212/zlib.so
 usr/local/lib/php/20121212/xmlreader.so
 usr/local/lib/php/20121212/xmlwriter.so
 usr/local/lib/php/20121212/xdebug.so
-usr/local/lib/php/20121212/zmq.so
 usr/local/lib/php/20121212/pdo_pgsql.so
 usr/local/lib/php/20121212/ioncube/ioncube_loader.so
 usr/local/lib/php/20121212/ioncube/ioncube_loader_ts.so
