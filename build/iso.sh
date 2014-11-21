@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# Copyright (c) 2004-2009 Scott Ullrich
 # Copyright (c) 2014 Franco Fichtner <franco@lastsummer.de>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -41,10 +40,6 @@ setup_platform ${STAGEDIR}
 setup_mtree ${STAGEDIR}
 
 echo -n ">>> Building ISO image... "
-
-mtree -Pcp ${STAGEDIR} | bzip2 -9 > root.dist.bz2
-mkdir -p ${STAGEDIR}/dist
-mv root.dist.bz2 ${STAGEDIR}/dist/
 
 WORKDIR=/tmp/iso.$$
 # must be upper case:
