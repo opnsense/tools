@@ -34,7 +34,7 @@ rm -rf ${SETSDIR}/base.txz
 
 git_clear ${SRCDIR}
 
-MAKEARGS="SRCCONF=${TOOLSDIR}/config/current/src.conf __MAKE_CONF="
+MAKEARGS="SRCCONF=${TOOLSDIR}/config/current/src.conf COMPILER_TYPE=clang __MAKE_CONF="
 
 make -C${SRCDIR} -j${CPUS} buildworld ${MAKEARGS} NO_CLEAN=yes
 make -C${SRCDIR}/release obj ${MAKEARGS}

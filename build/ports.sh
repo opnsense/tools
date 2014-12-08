@@ -29,6 +29,9 @@ set -e
 
 . ./common.sh
 
+# unbreaks gettext-runtime
+unset STAGEDIR
+
 cp ${TOOLSDIR}/config/current/make.conf /etc/make.conf
 
 PORT_LIST="${TOOLSDIR}/config/current/ports"
