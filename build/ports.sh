@@ -33,6 +33,8 @@ cp ${TOOLSDIR}/config/current/make.conf /etc/make.conf
 
 PORT_LIST="${TOOLSDIR}/config/current/ports"
 
+git_clear ${PORTSDIR}
+
 # If `quick' is given, do not safely strip the system,
 # so that we don't have to wait to rebuild any package.
 if [ "x${1}" != "xquick" ]; then
@@ -46,7 +48,6 @@ if [ "x${1}" != "xquick" ]; then
 fi
 
 mkdir -p ${PACKAGESDIR}
-git_clear ${PORTSDIR}
 
 echo ">>> Building packages..."
 
