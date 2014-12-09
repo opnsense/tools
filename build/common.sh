@@ -121,6 +121,7 @@ setup_platform()
 	rm -rf ${1}/usr/sbin/pc-sysinstall
 	cd ${COREDIR} && cp -r * ${1}
 	mkdir ${1}/conf
+	rm -f ${1}/boot/*_wrap
 }
 
 setup_mtree()
