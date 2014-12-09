@@ -112,16 +112,13 @@ setup_platform()
 	echo ">>> Setting up core in ${1}..."
 
 	# XXX horrible stuff follows... (core.git rework!)
-	cp ${1}/usr/local/sbin/syslogd ${1}/usr/sbin/
 	mkdir ${1}/scripts
 	cp ${TOOLSDIR}/installer/scripts/* ${1}/scripts/
 	cp ${TOOLSDIR}/installer/cleargpt.sh ${1}/scripts/
 	cp ${TOOLSDIR}/freesbie2/extra/varmfs/varmfs.rc ${1}/etc/rc.d/varmfs
 	cp ${TOOLSDIR}/freesbie2/extra/etcmfs/etcmfs.rc ${1}/etc/rc.d/etcmfs
-	rm -rf ${1}/usr/sbin/pc-sysinstall
 	cd ${COREDIR} && cp -r * ${1}
 	mkdir ${1}/conf
-	rm -f ${1}/boot/*_wrap
 }
 
 setup_mtree()
