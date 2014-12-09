@@ -31,13 +31,14 @@ set -e
 
 PORT_LIST="${TOOLSDIR}/config/current/ports"
 
-git_clear ${COREDIR}
-
 rm -f ${PACKAGESDIR}/opnsense-*.txz
 mkdir -p ${PACKAGESDIR}
 setup_stage ${STAGEDIR}
 
-cd ${COREDIR} && cp -r * ${STAGEDIR}
+git_clear ${COREDIR}
+
+# no compiling needed; simply install
+make -C ${COREDIR} DESTDIR=${STAGEDIR} install
 
 (cd ${STAGEDIR}; find * -type f ! -name plist) > ${STAGEDIR}/plist
 
