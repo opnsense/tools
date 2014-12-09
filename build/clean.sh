@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014 Franco Fichtner <franco@lastsummer.de>
+# Copyright (c) 2014 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
