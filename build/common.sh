@@ -115,7 +115,8 @@ setup_platform()
 	cp ${TOOLSDIR}/freesbie2/extra/varmfs/varmfs.rc ${1}/etc/rc.d/varmfs
 	cp ${TOOLSDIR}/freesbie2/extra/etcmfs/etcmfs.rc ${1}/etc/rc.d/etcmfs
 	cd ${COREDIR} && cp -r * ${1}
-	mkdir ${1}/conf
+	mkdir -p ${1}/conf ${1}/cf/conf
+	touch ${1}/cf/conf/trigger_initial_wizard
 }
 
 setup_mtree()
