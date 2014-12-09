@@ -112,9 +112,6 @@ setup_platform()
 	echo ">>> Setting up core in ${1}..."
 
 	# XXX horrible stuff follows... (core.git rework!)
-	mkdir ${1}/scripts
-	cp ${TOOLSDIR}/installer/scripts/* ${1}/scripts/
-	cp ${TOOLSDIR}/installer/cleargpt.sh ${1}/scripts/
 	cp ${TOOLSDIR}/freesbie2/extra/varmfs/varmfs.rc ${1}/etc/rc.d/varmfs
 	cp ${TOOLSDIR}/freesbie2/extra/etcmfs/etcmfs.rc ${1}/etc/rc.d/etcmfs
 	cd ${COREDIR} && cp -r * ${1}
