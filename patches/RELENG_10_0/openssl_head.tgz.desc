@@ -1,8 +1,0 @@
-RELENG_10_0/openssl_head.tgz
-
-insert new version of openssl into sourcedir.
-
-To create this file:
--	check out freebsd source @2014/09/09 
--	git clone --branch master --single-branch https://github.com/freebsd/freebsd.git /tmp/freebsdsrc
--	tar secure/lib/libcrypto and crypto/openssl into openssl_head.tgz

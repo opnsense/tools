@@ -1,5 +1,0 @@
-You can put here your custom scripts that override the default ones.
-For example, if you copy buildkernel.sh into this directory, or even
-into a subdirectory called ${ARCH} (e.g custom/i386/buildkernel.sh),
-during the `buildkernel' phase your script will be called instead of
-default.
