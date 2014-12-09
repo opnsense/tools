@@ -107,16 +107,13 @@ setup_packages()
 
 setup_platform()
 {
-	git_clear ${COREDIR}
+	echo ">>> Setting up platform in ${1}..."
 
-	echo ">>> Setting up core in ${1}..."
-
-	# XXX horrible stuff follows... (core.git rework!)
-	cp ${TOOLSDIR}/freesbie2/extra/varmfs/varmfs.rc ${1}/etc/rc.d/varmfs
-	cp ${TOOLSDIR}/freesbie2/extra/etcmfs/etcmfs.rc ${1}/etc/rc.d/etcmfs
-	cd ${COREDIR} && cp -r * ${1}
+	# XXX clean this up
 	mkdir -p ${1}/conf ${1}/cf/conf
 	touch ${1}/cf/conf/trigger_initial_wizard
+	cp ${TOOLSDIR}/freesbie2/extra/varmfs/varmfs.rc ${1}/etc/rc.d/varmfs
+	cp ${TOOLSDIR}/freesbie2/extra/etcmfs/etcmfs.rc ${1}/etc/rc.d/etcmfs
 }
 
 setup_mtree()
