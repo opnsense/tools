@@ -24,9 +24,9 @@
 #   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #   POSSIBILITY OF SUCH DAMAGE.
 
-product=`cat /etc/inc/globals.inc | grep product_name | cut -d'"' -f4`
-factory_shipped_password=`cat /etc/inc/globals.inc | grep factory_shipped_password | cut -d'"' -f4`
-factory_shipped_username=`cat /etc/inc/globals.inc | grep factory_shipped_username | cut -d'"' -f4`
+product=`cat /usr/local/etc/inc/globals.inc | grep product_name | cut -d'"' -f4`
+factory_shipped_password=`cat /usr/local/etc/inc/globals.inc | grep factory_shipped_password | cut -d'"' -f4`
+factory_shipped_username=`cat /usr/local/etc/inc/globals.inc | grep factory_shipped_username | cut -d'"' -f4`
 
 echo
 echo "Launching ${product} Installer config.xml rescue..."
