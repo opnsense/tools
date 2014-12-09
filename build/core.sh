@@ -37,6 +37,39 @@ setup_stage ${STAGEDIR}
 
 (cd ${STAGEDIR}; find * -type f ! -name plist) > ${STAGEDIR}/plist
 
+update_etc_shell()
+{
+	cat >> ${STAGEDIR}/+POST_INSTALL <<EOF
+echo "Updating /etc/shells"
+cp /etc/shells /etc/shells.bak
+(grep -v ${1} /etc/shells.bak; echo ${1}) >/etc/shells
+rm -f /etc/shells.bak
+EOF
+
+	cat >> ${STAGEDIR}/+PRE_DEINSTALL <<EOF
+echo "Updating /etc/shells"
+cp /etc/shells /etc/shells.bak
+(grep -v ${1} /etc/shells.bak) >/etc/shells
+rm -f /etc/shells.bak
+EOF
+}
+
+# !!! BEGIN ORDERING IS IMPORTANT !!!
+
+cat >> ${STAGEDIR}/+PRE_DEINSTALL <<EOF
+echo "Resetting root shell"
+pw usermod -n root -s /bin/csh
+EOF
+
+update_etc_shell /usr/local/etc/rc.initial
+
+cat >> ${STAGEDIR}/+POST_INSTALL <<EOF
+echo "Registering root shell"
+pw usermod -n root -s /usr/local/etc/rc.initial
+EOF
+
+# !!! END ORDERING IS IMPORTANT !!!
+
 cat > ${STAGEDIR}/+MANIFEST <<EOF
 name: opnsense
 version: current
