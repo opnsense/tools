@@ -114,6 +114,7 @@ setup_platform()
 	touch ${1}/cf/conf/trigger_initial_wizard
 	cp ${TOOLSDIR}/freesbie2/extra/varmfs/varmfs.rc ${1}/etc/rc.d/varmfs
 	cp ${TOOLSDIR}/freesbie2/extra/etcmfs/etcmfs.rc ${1}/etc/rc.d/etcmfs
+	echo cdrom > ${1}/usr/local/etc/platform
 }
 
 setup_mtree()
