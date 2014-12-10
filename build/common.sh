@@ -109,12 +109,22 @@ setup_platform()
 {
 	echo ">>> Setting up platform in ${1}..."
 
-	# XXX clean this up
+	# XXX clean this up:
 	mkdir -p ${1}/conf ${1}/cf/conf
 	touch ${1}/cf/conf/trigger_initial_wizard
-	cp ${TOOLSDIR}/freesbie2/extra/varmfs/varmfs.rc ${1}/etc/rc.d/varmfs
-	cp ${TOOLSDIR}/freesbie2/extra/etcmfs/etcmfs.rc ${1}/etc/rc.d/etcmfs
 	echo cdrom > ${1}/usr/local/etc/platform
+
+	# Set sane defaults via rc.conf(5)
+	cat > ${1}/etc/rc.conf <<EOF
+tmpmfs="YES"
+tmpsize="128m"
+EOF
+
+	DEFAULT_PW=`cat ${1}/usr/local/etc/inc/globals.inc | grep factory_shipped_password | cut -d'"' -f4`
+	echo ">>> Setting up initial root password: ${DEFAULT_PW}"
+	chroot ${1} /bin/sh -s <<EOF
+echo ${DEFAULT_PW} | pw usermod -n root -h 0
+EOF
 }
 
 setup_mtree()
