@@ -53,8 +53,21 @@ export ISOPATH="${IMAGESDIR}/${PRODUCT_NAME}-LiveCD-${ARCH}-`date '+%Y%m%d-%H%M'
 export MEMSTICKPATH="${IMAGESDIR}/${PRODUCT_NAME}-memstick-${ARCH}-`date '+%Y%m%d-%H%M'`.img"
 export MEMSTICKSERIALPATH="${IMAGESDIR}/${PRODUCT_NAME}-memstick-serial-${ARCH}-`date '+%Y%m%d-%H%M'`.img"
 
+# must clear lingering configs to be safe
+rm -f /etc/make.conf
+
 # print environment to showcase all of our variables
 env
+
+git_bootstrap()
+{
+	if which git > /dev/null; then
+		# All's good in the State of Denmark
+	else
+		ASSUME_ALWAYS_YES=yes pkg bootstrap
+		pkg install -y git
+	fi
+}
 
 git_clear()
 {
@@ -71,6 +84,22 @@ git_clear()
 	git -C ${1} reset --hard HEAD
 	git -C ${1} clean -xdqf .
 	set -e
+}
+
+git_describe()
+{
+	git_bootstrap
+
+	VERSION=$(git -C ${1} describe --abbrev=0)
+	REVISION=$(git -C ${1} rev-list ${VERSION}.. --count)
+	COMMENT=$(git -C ${1} rev-list HEAD --max-count=1)
+	if [ "${REVISION}" != "0" ]; then
+		# must construct full version string manually
+		VERSION=${VERSION}_${REVISION}
+	fi
+
+	export REPO_VERSION=${VERSION}
+	export REPO_COMMENT=${COMMENT}
 }
 
 setup_base()
@@ -100,7 +129,6 @@ setup_packages()
 	mkdir -p ${1}/${PACKAGESDIR}
 	cp ${PACKAGESDIR}/* ${1}/${PACKAGESDIR}
 
-	pkg -c ${1} add ${PACKAGESDIR}/pkg-*.txz
 	# opnsense has all required ports embedded as dependencies
 	pkg -c ${1} add ${PACKAGESDIR}/opnsense-*.txz
 

@@ -36,6 +36,7 @@ mkdir -p ${PACKAGESDIR}
 setup_stage ${STAGEDIR}
 
 git_clear ${COREDIR}
+git_describe ${COREDIR}
 
 # no compiling needed; simply install
 make -C ${COREDIR} DESTDIR=${STAGEDIR} install
@@ -77,9 +78,9 @@ EOF
 
 cat > ${STAGEDIR}/+MANIFEST <<EOF
 name: opnsense
-version: current
+version: ${REPO_VERSION}
 origin: opnsense/opnsense
-comment: "XXX needs versioning"
+comment: "${REPO_COMMENT}"
 desc: "OPNsense core package"
 maintainer: franco@opnsense.org
 www: https://opnsense.org
