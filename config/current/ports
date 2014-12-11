@@ -20,8 +20,6 @@ dhcpleases			opnsense
 dhcpleases6			opnsense
 dmidecode			sysutils
 dnsmasq				dns
-# docbook			textproc
-# docbook-xsl			textproc
 expiretable			security
 filterdns			opnsense
 filterlog			opnsense
@@ -35,20 +33,20 @@ ipmitool			sysutils
 isc-dhcp42-client		net
 isc-dhcp42-relay		net
 isc-dhcp42-server		net
+joe				editors		build
 lighttpd			www
 minicron			opnsense
 miniupnpd			net
 mpd4				opnsense
 mpd5				net
 ntp-devel			net
-# openiked			security
 openvpn				security
-# pfflowd-0.8			net
 pftop				sysutils
 # php base package up here for satefy reasons
 php56				lang
 pecl-radius			net
 pecl-ssh2			security
+phalcon				www
 php-pfSense			opnsense
 php-suhosin			security
 php-xdebug			devel
@@ -93,7 +91,6 @@ smartmontools			sysutils
 ssh_tunnel_shell		opnsense
 sshlockout_pf			opnsense
 strongswan			security
-# syslog-ng			sysutils
 syslogd				opnsense
 vim-lite			editors		build
 voucher				opnsense
