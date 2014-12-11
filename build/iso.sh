@@ -35,21 +35,20 @@ setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR}
-setup_platform ${STAGEDIR}
-# XXX mtree before platform when core.git is in packages
 setup_mtree ${STAGEDIR}
+setup_platform ${STAGEDIR}
 
 echo -n ">>> Building ISO image... "
 
 WORKDIR=/tmp/iso.$$
 # must be upper case:
-ISOLABEL=LIVECD
+LABEL=OPNSENSE
 
 mkdir -p ${WORKDIR}/etc
-echo "/dev/iso9660/${ISOLABEL} / cd9660 ro 0 0" > ${WORKDIR}/etc/fstab
+echo "/dev/iso9660/${LABEL} / cd9660 ro 0 0" > ${WORKDIR}/etc/fstab
 
 makefs -t cd9660 -o bootimage="i386;${STAGEDIR}/boot/cdboot" \
-    -o no-emul-boot -o label=${ISOLABEL} -o rockridge \
+    -o no-emul-boot -o label=${LABEL} -o rockridge \
     ${ISOPATH} ${STAGEDIR} ${WORKDIR}
 
 rm -rf ${WORKDIR}

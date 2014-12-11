@@ -50,6 +50,8 @@ export TARGET_ARCH=${ARCH}
 
 # target files
 export ISOPATH="${IMAGESDIR}/${PRODUCT_NAME}-LiveCD-${ARCH}-`date '+%Y%m%d-%H%M'`.iso"
+export MEMSTICKPATH="${IMAGESDIR}/${PRODUCT_NAME}-memstick-${ARCH}-`date '+%Y%m%d-%H%M'`.img"
+export MEMSTICKSERIALPATH="${IMAGESDIR}/${PRODUCT_NAME}-memstick-serial-${ARCH}-`date '+%Y%m%d-%H%M'`.img"
 
 # print environment to showcase all of our variables
 env
