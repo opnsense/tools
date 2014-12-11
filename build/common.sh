@@ -112,7 +112,8 @@ setup_platform()
 	echo ">>> Setting up platform in ${1}..."
 
 	# XXX clean this up:
-	mkdir -p ${1}/conf ${1}/cf/conf
+	mkdir -p ${1}/cf/conf
+	chroot ${1} /bin/ln -s /cf/conf /conf
 	touch ${1}/cf/conf/trigger_initial_wizard
 	echo cdrom > ${1}/usr/local/etc/platform
 
