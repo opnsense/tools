@@ -60,9 +60,17 @@ Build all the ports and wrap them into a single package:
     # pkg delete -fya
     # ./ports.sh
 
+The OPNsense core package can be rebuilt on its own via:
+
+    # ./core.sh
+
 A bootable LiveCD image is created using:
 
     # ./iso.sh
+
+Or you can create memstick images for VGA and serial:
+
+    # ./memstick.sh
 
 Some more random information
 ============================
