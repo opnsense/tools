@@ -72,6 +72,10 @@ Or you can create memstick images for VGA and serial:
 
     # ./memstick.sh
 
+Additionally, a pkg(8) mirror set can be generated using:
+
+    # ./packages.sh
+
 Some more random information
 ============================
 
