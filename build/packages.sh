@@ -42,7 +42,7 @@ mkdir -p ${STAGEDIR}/All
 cp ${PACKAGESDIR}/* ${STAGEDIR}/All
 
 # needed bootstrap glue when no packages are on the system
-cd ${STAGEDIR}/Latest && ln -s ../pkg-*.txz pkg.txz
+cd ${STAGEDIR}/Latest && ln -s ../All/pkg-*.txz pkg.txz
 
 # generate index files
 cd ${STAGEDIR} && pkg repo .
