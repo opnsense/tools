@@ -30,7 +30,7 @@ set -e
 . ./common.sh
 
 mkdir -p ${SETSDIR}
-rm -f ${SETSDIR}/packages-*.txz
+rm -f ${SETSDIR}/packages-*.tar
 
 setup_stage ${STAGEDIR}
 
@@ -49,6 +49,6 @@ cd ${STAGEDIR} && pkg repo .
 
 echo -n ">>> Creating packages set... "
 
-tar -Jcf ${SETSDIR}/packages-`date '+%Y%m%d'`.txz *
+tar -cf ${SETSDIR}/packages-`date '+%Y%m%d'`.tar *
 
 echo "done"
