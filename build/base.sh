@@ -30,9 +30,10 @@ set -e
 . ./common.sh
 
 mkdir -p ${SETSDIR}
-rm -rf ${SETSDIR}/base.txz
+rm -f ${SETSDIR}/base-*.txz
 
 git_clear ${SRCDIR}
+git_describe ${SRCDIR}
 
 MAKEARGS="SRCCONF=${TOOLSDIR}/config/current/src.conf COMPILER_TYPE=clang __MAKE_CONF="
 
@@ -40,4 +41,4 @@ make -C${SRCDIR} -j${CPUS} buildworld ${MAKEARGS} NO_CLEAN=yes
 make -C${SRCDIR}/release obj ${MAKEARGS}
 make -C${SRCDIR}/release base.txz ${MAKEARGS}
 
-mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${SETSDIR}/base.txz
+mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${SETSDIR}/base-${REPO_VERSION}.txz

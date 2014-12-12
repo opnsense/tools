@@ -30,9 +30,10 @@ set -e
 . ./common.sh
 
 mkdir -p ${SETSDIR}
-rm -rf ${SETSDIR}/kernel.txz
+rm -f ${SETSDIR}/kernel-*.txz
 
 git_clear ${SRCDIR}
+git_describe ${SRCDIR}
 
 BUILD_KERNEL="SMP"
 
@@ -45,4 +46,4 @@ make -C${SRCDIR} -j${CPUS} buildkernel ${MAKEARGS} NO_KERNELCLEAN=yes
 make -C${SRCDIR}/release obj ${MAKEARGS}
 make -C${SRCDIR}/release kernel.txz ${MAKEARGS}
 
-mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${SETSDIR}/kernel.txz
+mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${SETSDIR}/kernel-${REPO_VERSION}.txz
