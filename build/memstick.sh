@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Copyright (C) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 # Copyright (c) 2014 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
