@@ -115,3 +115,6 @@ done < ${PORT_LIST}
 
 # also build the meta-package
 cd ${TOOLSDIR}/build && ./core.sh
+
+# bundle all packages into a ready-to-use set
+cd ${TOOLSDIR}/build && ./packages.sh
