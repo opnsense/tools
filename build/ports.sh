@@ -40,17 +40,19 @@ git_clear ${PORTSDIR}
 
 # If `quick' is given, do not safely strip the system,
 # so that we don't have to wait to rebuild any package.
-if [ "x${1}" != "xquick" ]; then
-	echo ">>> Bootstrapping pkg(8)..."
-	if pkg -N; then
-		pkg delete -fy pkg
-	fi
-	make -C "${PORTSDIR}/ports-mgmt/pkg" rmconfig-recursive
-	make -C "${PORTSDIR}/ports-mgmt/pkg" clean all install
-	rm -rf ${PACKAGESDIR}
-fi
+[ "${1}" != "quick" ] && rm -rf ${PACKAGESDIR}
 
 mkdir -p ${PACKAGESDIR}
+
+# make sure pkg(8) is installed or pull if from ports
+if pkg -N; then
+	# no need to rebuild
+else
+	echo ">>> Bootstrapping pkg(8)..."
+	rm -rf ${PACKAGESDIR}/pkg-*.txz
+	make -C "${PORTSDIR}/ports-mgmt/pkg" rmconfig-recursive
+	make -C "${PORTSDIR}/ports-mgmt/pkg" clean all install
+fi
 
 echo ">>> Building packages..."
 
@@ -66,6 +68,9 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 		continue
 	fi
 
+	# when ports are rebuilt clear them from PACKAGESDIR
+	rm -rf ${PACKAGESDIR}/${PORT_NAME}-*.txz
+
 	# user configs linger somewhere else and override the override  :(
 	make -C "${PORTSDIR}/${PORT_CAT}/${PORT_NAME}" rmconfig-recursive
 	make -C "${PORTSDIR}/${PORT_CAT}/${PORT_NAME}" clean all install
@@ -76,9 +81,6 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 		echo "${PORT_NAME}: package names don't match"
 		exit 1
 	fi
-
-	# when ports have been rebuild clear them from PACKAGESDIR
-	rm -rf ${PACKAGESDIR}/${PORT_NAME}-*.txz
 done < ${PORT_LIST}
 
 echo ">>> Creating binary packages..."
