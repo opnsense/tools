@@ -35,12 +35,7 @@ git_clear ${PORTSDIR}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
-
-echo ">>> Setting up chroot in ${STAGEDIR}"
-
-cp /etc/resolv.conf ${STAGEDIR}/etc
-mount -t devfs devfs ${STAGEDIR}/dev
-chroot ${STAGEDIR} /etc/rc.d/ldconfig start
+setup_chroot ${STAGEDIR}
 
 echo ">>> Setting up ports in ${STAGEDIR}"
 

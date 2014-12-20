@@ -102,6 +102,15 @@ git_describe()
 	export REPO_COMMENT=${COMMENT}
 }
 
+setup_chroot()
+{
+	echo ">>> Setting up chroot in ${1}"
+
+	cp /etc/resolv.conf ${1}/etc
+	mount -t devfs devfs ${1}/dev
+	chroot ${1} /etc/rc.d/ldconfig start
+}
+
 setup_base()
 {
 	echo ">>> Setting up world in ${1}"
