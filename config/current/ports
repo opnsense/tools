@@ -39,7 +39,7 @@ minicron			opnsense
 miniupnpd			net
 mpd4				opnsense
 mpd5				net
-ntp-devel			net
+ntp				net
 openvpn				security
 pftop				sysutils
 # php base package up here for satefy reasons
