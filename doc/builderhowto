@@ -13,28 +13,8 @@ the repositories:
     # git clone <username>@git.opnsense.org:repo/core
     # git clone <username>@git.opnsense.org:repo/src
 
-Bootstrapping the build system
-==============================
-
-As root bootstrap an OPNsense GENERIC system (<cpus> is the
-number of available threads + 1):
-
-    # cd /usr/src
-    # make -j<cpus> buildworld
-    # make -j<cpus> buildkernel
-    # make installkernel
-    # make installworld
-    # reboot
-
-The object directory must be cleaned before continuing:
-
-    # cd /usr/tools/build && ./clean.sh
-
-These changes may need to be carried out again when src.git
-changes.
-
-Running the actual build
-========================
+Running the build
+=================
 
 The build is broken down into individual stages: base,
 kernel and ports can be built separately and repeatedly
@@ -57,7 +37,6 @@ Build the kernel and loadable kernel modules:
 
 Build all the ports and wrap them into a single set:
 
-    # pkg delete -fya
     # ./ports.sh
 
 The OPNsense core package can be rebuilt on its own via:
@@ -82,8 +61,8 @@ Some more random information
 * For very fast ports rebuilding of already installed packages
   the following works:
 
-    # pkg delete -fy <packagename>
-    # cd /usr/tools/build && ./ports quick
+    # rm /tmp/packages/<packagename>-*.txz
+    # cd /usr/tools/build && ./ports.sh
 
 * All individual ports packages are stored under /tmp/packages
 
