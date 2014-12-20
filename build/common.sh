@@ -176,7 +176,11 @@ EOF
 
 setup_stage()
 {
-	rm -rf "${1}" 2>/dev/null ||
-	    (chflags -R noschg "${1}"; rm -rf "${1}" 2>/dev/null)
-	mkdir -p "${1}"
+	# might have been a chroot
+	umount ${1}/dev 2> /dev/null || true
+	# remove base system files
+	rm -rf ${1} 2> /dev/null ||
+	    (chflags -R noschg ${1}; rm -rf ${1} 2> /dev/null)
+	# revive directory for next run
+	mkdir -p ${1}
 }
