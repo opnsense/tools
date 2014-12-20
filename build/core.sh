@@ -65,7 +65,6 @@ EOF
 cat >> ${STAGEDIR}/+PRE_DEINSTALL <<EOF
 echo "Resetting root shell"
 pw usermod -n root -s /bin/csh
-echo "${REPO_VERSION}-${REPO_COMMENT}" > /usr/local/etc/version
 EOF
 
 update_etc_shell /usr/local/etc/rc.initial
@@ -73,6 +72,7 @@ update_etc_shell /usr/local/etc/rc.initial
 cat >> ${STAGEDIR}/+POST_INSTALL <<EOF
 echo "Registering root shell"
 pw usermod -n root -s /usr/local/etc/rc.initial
+echo "${REPO_VERSION}-${REPO_COMMENT}" > /usr/local/etc/version
 EOF
 
 # !!! END ORDERING IS IMPORTANT !!!
