@@ -29,7 +29,7 @@ set -e
 
 . ./common.sh
 
-PORT_LIST="${TOOLSDIR}/config/current/ports"
+PORT_LIST=$(cat ${TOOLSDIR}/config/current/ports)
 
 rm -f ${PACKAGESDIR}/opnsense-*.txz
 mkdir -p ${PACKAGESDIR}
@@ -42,6 +42,12 @@ git_describe ${COREDIR}
 make -C ${COREDIR} DESTDIR=${STAGEDIR} install
 
 (cd ${STAGEDIR}; find * -type f ! -name plist) > ${STAGEDIR}/plist
+
+setup_base ${STAGEDIR}
+
+mkdir -p ${PACKAGESDIR} ${STAGEDIR}${PACKAGESDIR}
+cp ${PACKAGESDIR}/* ${STAGEDIR}${PACKAGESDIR}
+pkg -c ${STAGEDIR} add -f ${PACKAGESDIR}/* || true
 
 update_etc_shell()
 {
@@ -77,7 +83,8 @@ EOF
 
 # !!! END ORDERING IS IMPORTANT !!!
 
-cat > ${STAGEDIR}/+MANIFEST <<EOF
+chroot ${STAGEDIR} /bin/sh -xes <<EOF
+cat > /+MANIFEST <<EOG
 name: opnsense
 version: ${REPO_VERSION}
 origin: opnsense/opnsense
@@ -86,23 +93,27 @@ desc: "OPNsense core package"
 maintainer: franco@opnsense.org
 www: https://opnsense.org
 prefix: /
-EOF
+EOG
 
-echo "deps: {" >> ${STAGEDIR}/+MANIFEST
+echo "deps: {" >> /+MANIFEST
 
+echo "${PORT_LIST}" | {
 while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "${PORT_NAME}" = "#" -o -n "${PORT_OPT}" ]; then
+	if [ "\${PORT_NAME}" = "#" -o -n "\${PORT_OPT}" ]; then
 		continue
 	fi
 
 	pkg query "  %n: { version: \"%v\", origin: %o }" \
-		${PORT_NAME} >> ${STAGEDIR}/+MANIFEST
-done < ${PORT_LIST}
+		\${PORT_NAME} >> /+MANIFEST
+done
+}
 
-echo "}" >> ${STAGEDIR}/+MANIFEST
+echo "}" >> /+MANIFEST
+EOF
 
 echo -n ">>> Creating custom package for ${COREDIR}... "
 
+# XXX uses non-chroot pkg version?
 pkg create -m ${STAGEDIR} -r ${STAGEDIR} -p ${STAGEDIR}/plist -o ${PACKAGESDIR}
 
 echo "done"
