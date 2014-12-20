@@ -136,22 +136,8 @@ done
 }
 EOF
 
-# in non-quick more we wipe all results
-[ "${1}" != "quick" ] && rm -rf ${PACKAGESDIR}/*
-
-echo "${PORT_LIST}" | {
-while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "${PORT_NAME}" = "#" ]; then
-		continue
-	fi
-
-	PORT_FILE=$(ls ${STAGEDIR}${PACKAGESDIR}/${PORT_NAME}-*.txz)
-	if [ -f ${PORT_FILE} ]; then
-		rm -rf ${PACKAGESDIR}/${PORT_NAME}-*.txz
-		mv ${PORT_FILE} ${PACKAGESDIR}
-	fi
-done
-}
+rm -rf ${PACKAGESDIR}/*
+mv ${STAGEDIR}${PACKAGESDIR}/* ${PACKAGESDIR}
 
 # also build the meta-package
 cd ${TOOLSDIR}/build && ./core.sh
