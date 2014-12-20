@@ -55,7 +55,7 @@ Build the kernel and loadable kernel modules:
 
     # ./kernel.sh
 
-Build all the ports and wrap them into a single package:
+Build all the ports and wrap them into a single set:
 
     # pkg delete -fya
     # ./ports.sh
@@ -72,10 +72,6 @@ Or you can create memstick images for VGA and serial:
 
     # ./memstick.sh
 
-Additionally, a pkg(8) mirror set can be generated using:
-
-    # ./packages.sh
-
 Some more random information
 ============================
 
@@ -89,8 +85,8 @@ Some more random information
     # pkg delete -fy <packagename>
     # cd /usr/tools/build && ./ports quick
 
-* All packages are stored under /tmp/packages
+* All individual ports packages are stored under /tmp/packages
 
-* Kernel and base sets are stored under /tmp/sets
+* Kernel, base and ports sets are stored under /tmp/sets
 
 * All final images are stored under /tmp/images
