@@ -71,6 +71,8 @@ EOF
 cat >> ${STAGEDIR}/+PRE_DEINSTALL <<EOF
 echo "Resetting root shell"
 pw usermod -n root -s /bin/csh
+echo "Enabling FreeBSD mirror"
+sed -i "" -e "s/^  enabled: no$/  enabled: yes/" /etc/pkg/FreeBSD.conf
 EOF
 
 update_etc_shell /usr/local/etc/rc.initial
@@ -78,6 +80,9 @@ update_etc_shell /usr/local/etc/rc.initial
 cat >> ${STAGEDIR}/+POST_INSTALL <<EOF
 echo "Registering root shell"
 pw usermod -n root -s /usr/local/etc/rc.initial
+echo "Disabling FreeBSD mirror"
+sed -i "" -e "s/^  enabled: yes$/  enabled: no/" /etc/pkg/FreeBSD.conf
+echo "Writing OPNsense version"
 echo "${REPO_VERSION}-${REPO_COMMENT}" > /usr/local/etc/version
 EOF
 
