@@ -57,7 +57,7 @@ tar -C/ -cf - --exclude=.${SRCDIR}/.git .${SRCDIR} | \
 mkdir -p ${PACKAGESDIR} ${STAGEDIR}${PACKAGESDIR}
 cp ${PACKAGESDIR}/* ${STAGEDIR}${PACKAGESDIR} || true
 
-echo "${PORT_LIST}" | {
+(echo "pkg ports-mgmt"; echo "${PORT_LIST}") | {
 while read PORT_NAME PORT_CAT PORT_OPT; do
 	if [ "${PORT_NAME}" = "#" ]; then
 		continue
