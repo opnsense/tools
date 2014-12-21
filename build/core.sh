@@ -60,12 +60,15 @@ rm -f /etc/shells.bak
 
 echo "Unhooking from /etc/rc"
 cp /etc/rc /etc/rc.bak
-LINES=\$(wc -l /etc/rc.bak)
+LINES=\$(cat /etc/rc | wc -l)
 tail -n \$(expr \${LINES} - 3) /etc/rc.bak > /etc/rc
 rm -f /etc/rc.bak
 
 echo "Enabling FreeBSD mirror"
 sed -i "" -e "s/^  enabled: no$/  enabled: yes/" /etc/pkg/FreeBSD.conf
+
+echo "Removing OPNsense version"
+rm -f /usr/local/etc/version
 EOF
 
 cat >> ${STAGEDIR}/+POST_INSTALL <<EOF
@@ -95,7 +98,7 @@ echo "Writing OPNsense version"
 echo "${REPO_VERSION}-${REPO_COMMENT}" > /usr/local/etc/version
 EOF
 
-chroot ${STAGEDIR} /bin/sh -xes <<EOF
+chroot ${STAGEDIR} /bin/sh -es <<EOF
 cat > /+MANIFEST <<EOG
 name: opnsense
 version: ${REPO_VERSION}
