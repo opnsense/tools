@@ -50,12 +50,18 @@ Or you can create memstick images for VGA and serial:
 Some more random information
 ============================
 
-* The OPNsense core package can be rebuilt on its own via:
+The OPNsense core package can be rebuilt on its own via:
+
     # cd /usr/tools/build && ./core.sh
-* For very fast ports rebuilding of already installed packages
-  the following works:
+
+For very fast ports rebuilding of already installed packages
+the following works:
+
     # rm /tmp/packages/<packagename>-*.txz
     # cd /usr/tools/build && ./ports.sh
-* All individual ports packages are stored under /tmp/packages
-* Kernel, base and ports sets are stored under /tmp/sets
-* All final images are stored under /tmp/images
+
+All individual ports packages are stored under /tmp/packages
+
+Kernel, base and ports sets are stored under /tmp/sets
+
+All final images are stored under /tmp/images
