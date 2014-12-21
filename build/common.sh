@@ -59,16 +59,6 @@ rm -f /etc/make.conf
 # print environment to showcase all of our variables
 env
 
-git_bootstrap()
-{
-	if which git > /dev/null; then
-		# All's good in the State of Denmark
-	else
-		ASSUME_ALWAYS_YES=yes pkg bootstrap
-		pkg install -y git
-	fi
-}
-
 git_clear()
 {
 	# Reset the git repository into a known state by
@@ -79,17 +69,12 @@ git_clear()
 
 	echo -n ">>> Resetting ${1}... "
 
-	# set used here to avoid errors when git isn't bootstrapped
-	set +e
 	git -C ${1} reset --hard HEAD
 	git -C ${1} clean -xdqf .
-	set -e
 }
 
 git_describe()
 {
-	git_bootstrap
-
 	VERSION=$(git -C ${1} describe --abbrev=0)
 	REVISION=$(git -C ${1} rev-list ${VERSION}.. --count)
 	COMMENT=$(git -C ${1} rev-list HEAD --max-count=1 | cut -c1-9)
@@ -132,8 +117,6 @@ setup_kernel()
 setup_packages()
 {
 	echo ">>> Setting up packages in ${1}..."
-
-	ASSUME_ALWAYS_YES=yes pkg bootstrap
 
 	mkdir -p ${1}/${PACKAGESDIR}
 	cp ${PACKAGESDIR}/* ${1}/${PACKAGESDIR}
