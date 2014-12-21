@@ -121,6 +121,9 @@ setup_packages()
 	mkdir -p ${1}/${PACKAGESDIR}
 	cp ${PACKAGESDIR}/* ${1}/${PACKAGESDIR}
 
+	# bootstrap pkg manually, not sure why...
+	pkg -c ${1} add ${PACKAGESDIR}/pkg-*.txz
+
 	# opnsense has all required ports embedded as dependencies
 	pkg -c ${1} add ${PACKAGESDIR}/opnsense-*.txz
 
