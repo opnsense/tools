@@ -47,6 +47,11 @@ fi
 tar -C/ -cf - --exclude=.${PORTSDIR}/.git .${PORTSDIR} | \
     tar -C${STAGEDIR} -pxf -
 
+echo ">>> Setting up src in ${STAGEDIR}"
+
+tar -C/ -cf - --exclude=.${SRCDIR}/.git .${SRCDIR} | \
+    tar -C${STAGEDIR} -pxf -
+
 # bootstrap all available packages to save time
 mkdir -p ${PACKAGESDIR} ${STAGEDIR}${PACKAGESDIR}
 cp ${PACKAGESDIR}/* ${STAGEDIR}${PACKAGESDIR} || true
