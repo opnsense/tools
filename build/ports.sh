@@ -64,17 +64,14 @@ rm -rf ${STAGEDIR}${PACKAGESDIR}/*
 
 echo ">>> Building packages..."
 
-# make sure pkg(8) is installed or pull if from ports
-chroot ${STAGEDIR} /bin/sh -es <<EOF
+chroot ${STAGEDIR} /bin/sh -es <<EOF || true
 if pkg -N; then
 	# no need to rebuild
 else
 	make -C ${PORTSDIR}/ports-mgmt/pkg rmconfig-recursive
 	make -C ${PORTSDIR}/ports-mgmt/pkg clean all install
 fi
-EOF
 
-chroot ${STAGEDIR} /bin/sh -es <<EOF
 echo "${PORT_LIST}" | {
 while read PORT_NAME PORT_CAT PORT_OPT; do
 	if [ "\${PORT_NAME}" = "#" ]; then
@@ -87,9 +84,6 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 		echo "skipped."
 		continue
 	fi
-
-	# when ports are rebuilt clear them from PACKAGESDIR
-	rm -rf ${PACKAGESDIR}/\${PORT_NAME}-*.txz
 
 	# user configs linger somewhere else and override the override  :(
 	make -C ${PORTSDIR}/\${PORT_CAT}/\${PORT_NAME} rmconfig-recursive
@@ -107,7 +101,7 @@ EOF
 
 echo ">>> Creating binary packages..."
 
-chroot ${STAGEDIR} /bin/sh -es <<EOF
+chroot ${STAGEDIR} /bin/sh -es <<EOF || true
 pkg_resolve_deps()
 {
 	local PORTS
