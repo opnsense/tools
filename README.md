@@ -1,9 +1,39 @@
-Setting up a fresh build system
-===============================
+About the OPNsense tools
+========================
+
+In conjunction with src.git, ports.git and core.git it creates
+sets, packages and images for the OPNsense project.  The license
+is a standard BSD 2-Clause as reproduced here for your convenience:
+
+    # Redistribution and use in source and binary forms, with or without
+    # modification, are permitted provided that the following conditions
+    # are met:
+    #
+    # 1. Redistributions of source code must retain the above copyright
+    #    notice, this list of conditions and the following disclaimer.
+    #
+    # 2. Redistributions in binary form must reproduce the above copyright
+    #    notice, this list of conditions and the following disclaimer in the
+    #    documentation and/or other materials provided with the distribution.
+    #
+    # THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+    # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+    # ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+    # FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+    # DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+    # OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    # HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+    # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+    # SUCH DAMAGE.
+
+Setting up a build system
+=========================
 
 Install FreeBSD 10.0 amd64 release on a machine with at least
-10GB of hard disk + 2GB of RAM, UFS works better than ZFS).
-All tasks require a root user.  Do the following to grab
+10GB of hard disk (UFS works better than ZFS) and at least 2GB
+of RAM.  All tasks require a root user.  Do the following to grab
 the repositories:
 
     # pkg install git
@@ -13,8 +43,8 @@ the repositories:
     # git clone <username>@git.opnsense.org:repo/core
     # git clone <username>@git.opnsense.org:repo/src
 
-Running the build
-=================
+Running the actual build
+========================
 
 The build is broken down into individual stages: base,
 kernel and ports can be built separately and repeatedly
