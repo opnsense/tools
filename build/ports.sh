@@ -63,7 +63,7 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 		continue
 	fi
 
-	PACKAGE=$(ls ${PACKAGESDIR}/${PORT_NAME}-*.txz 2> /dev/null)
+	PACKAGE=$(ls ${PACKAGESDIR}/${PORT_NAME}-*.txz 2> /dev/null || true)
 	if [ -f "${PACKAGE}" ]; then
 		# may fail for missing dependencies and
 		# that's what we need: rebuild chain  :)
