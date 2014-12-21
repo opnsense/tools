@@ -3,7 +3,7 @@ Setting up a fresh build system
 
 Install FreeBSD 10.0 amd64 release on a machine with at least
 10GB of hard disk + 2GB of RAM, UFS works better than ZFS).
-All other tasks require a root user.  Do the following to grab
+All tasks require a root user.  Do the following to grab
 the repositories:
 
     # pkg install git
