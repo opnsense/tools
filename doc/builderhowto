@@ -39,10 +39,6 @@ Build all the ports and wrap them into a single set:
 
     # ./ports.sh
 
-The OPNsense core package can be rebuilt on its own via:
-
-    # ./core.sh
-
 A bootable LiveCD image is created using:
 
     # ./iso.sh
@@ -54,9 +50,9 @@ Or you can create memstick images for VGA and serial:
 Some more random information
 ============================
 
-* During the ports build you won't be able to operate git(1),
-  but the ports build will eventually rebuild the port so
-  everything will be back to normal when the ports build ends.
+* The OPNsense core package can be rebuilt on its own via:
+
+    # cd /usr/tools/build && ./core.sh
 
 * For very fast ports rebuilding of already installed packages
   the following works:
