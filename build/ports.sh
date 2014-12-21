@@ -55,11 +55,16 @@ tar -C/ -cf - --exclude=.${SRCDIR}/.git .${SRCDIR} | \
 # bootstrap all available packages to save time
 mkdir -p ${PACKAGESDIR} ${STAGEDIR}${PACKAGESDIR}
 cp ${PACKAGESDIR}/* ${STAGEDIR}${PACKAGESDIR} || true
-for PACKAGE in "$(ls ${PACKAGESDIR}/*.txz)"; do
-	# may fail for missing dependencies and
-	# that's what we need: rebuild chain  :)
-	pkg -c ${STAGEDIR} add ${PACKAGE} || true
+
+for PACKAGE in "${PORT_LIST}"; do
+	PACKAGEFILE=$(ls ${PACKAGESDIR}/${PACKAGE}-*.txz)
+	if [ -f "${PACKAGEFILE}" ]; then
+		# may fail for missing dependencies and
+		# that's what we need: rebuild chain  :)
+		pkg -c ${STAGEDIR} add ${PACKAGEFILE} || true
+	fi
 done
+
 rm -rf ${STAGEDIR}${PACKAGESDIR}/*
 
 echo ">>> Building packages..."
