@@ -49,35 +49,23 @@ mkdir -p ${PACKAGESDIR} ${STAGEDIR}${PACKAGESDIR}
 cp ${PACKAGESDIR}/* ${STAGEDIR}${PACKAGESDIR}
 pkg -c ${STAGEDIR} add -f ${PACKAGESDIR}/* || true
 
-update_etc_shell()
-{
-	cat >> ${STAGEDIR}/+POST_INSTALL <<EOF
-echo "Updating /etc/shells"
-cp /etc/shells /etc/shells.bak
-(grep -v ${1} /etc/shells.bak; echo ${1}) >/etc/shells
-rm -f /etc/shells.bak
-EOF
-
-	cat >> ${STAGEDIR}/+PRE_DEINSTALL <<EOF
-echo "Updating /etc/shells"
-cp /etc/shells /etc/shells.bak
-(grep -v ${1} /etc/shells.bak) >/etc/shells
-rm -f /etc/shells.bak
-EOF
-}
-
-# !!! BEGIN ORDERING IS IMPORTANT !!!
-
 cat >> ${STAGEDIR}/+PRE_DEINSTALL <<EOF
 echo "Resetting root shell"
 pw usermod -n root -s /bin/csh
+echo "Updating /etc/shells"
+cp /etc/shells /etc/shells.bak
+(grep -v /usr/local/etc/rc.initial /etc/shells.bak) > /etc/shells
+rm -f /etc/shells.bak
 echo "Enabling FreeBSD mirror"
 sed -i "" -e "s/^  enabled: no$/  enabled: yes/" /etc/pkg/FreeBSD.conf
 EOF
 
-update_etc_shell /usr/local/etc/rc.initial
-
 cat >> ${STAGEDIR}/+POST_INSTALL <<EOF
+echo "Updating /etc/shells"
+cp /etc/shells /etc/shells.bak
+(grep -v /usr/local/etc/rc.initial /etc/shells.bak; \
+    echo /usr/local/etc/rc.initial) > /etc/shells
+rm -f /etc/shells.bak
 echo "Registering root shell"
 pw usermod -n root -s /usr/local/etc/rc.initial
 echo "Disabling FreeBSD mirror"
@@ -85,8 +73,6 @@ sed -i "" -e "s/^  enabled: yes$/  enabled: no/" /etc/pkg/FreeBSD.conf
 echo "Writing OPNsense version"
 echo "${REPO_VERSION}-${REPO_COMMENT}" > /usr/local/etc/version
 EOF
-
-# !!! END ORDERING IS IMPORTANT !!!
 
 chroot ${STAGEDIR} /bin/sh -xes <<EOF
 cat > /+MANIFEST <<EOG
