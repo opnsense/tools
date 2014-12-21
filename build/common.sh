@@ -168,6 +168,8 @@ EOF
 
 setup_stage()
 {
+	echo ">>> Setting up stage in ${1}"
+
 	# might have been a chroot
 	umount ${1}/dev 2> /dev/null || true
 	# remove base system files

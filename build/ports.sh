@@ -32,6 +32,7 @@ set -e
 PORT_LIST=$(cat ${TOOLSDIR}/config/current/ports)
 
 git_clear ${PORTSDIR}
+git_clear ${SRCDIR}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
@@ -56,14 +57,20 @@ tar -C/ -cf - --exclude=.${SRCDIR}/.git .${SRCDIR} | \
 mkdir -p ${PACKAGESDIR} ${STAGEDIR}${PACKAGESDIR}
 cp ${PACKAGESDIR}/* ${STAGEDIR}${PACKAGESDIR} || true
 
-for PACKAGE in "${PORT_LIST}"; do
-	PACKAGEFILE=$(ls ${PACKAGESDIR}/${PACKAGE}-*.txz)
-	if [ -f "${PACKAGEFILE}" ]; then
+echo "${PORT_LIST}" | {
+while read PORT_NAME PORT_CAT PORT_OPT; do
+	if [ "${PORT_NAME}" = "#" ]; then
+		continue
+	fi
+
+	PACKAGE=$(ls ${PACKAGESDIR}/${PORT_NAME}-*.txz 2> /dev/null)
+	if [ -f "${PACKAGE}" ]; then
 		# may fail for missing dependencies and
 		# that's what we need: rebuild chain  :)
-		pkg -c ${STAGEDIR} add ${PACKAGEFILE} || true
+		pkg -c ${STAGEDIR} add ${PACKAGE} || true
 	fi
 done
+}
 
 rm -rf ${STAGEDIR}${PACKAGESDIR}/*
 
