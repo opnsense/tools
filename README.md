@@ -34,10 +34,12 @@ Setting up a build system
 Install FreeBSD 10.0 amd64 release on a machine with at least
 10GB of hard disk (UFS works better than ZFS) and at least 2GB
 of RAM.  All tasks require a root user.  Do the following to grab
-the repositories:
+the repositories (overwriting standard ports and src):
 
     # pkg install git
     # cd /usr
+    # rm -rf /usr/ports
+    # rm -rf /usr/src
     # git clone https://github.com/opnsense/ports
     # git clone https://github.com/opnsense/tools
     # git clone https://github.com/opnsense/core
