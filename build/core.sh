@@ -29,25 +29,19 @@ set -e
 
 . ./common.sh
 
-PORT_LIST=$(cat ${TOOLSDIR}/config/current/ports)
-
-rm -f ${PACKAGESDIR}/opnsense-*.txz
-mkdir -p ${PACKAGESDIR}
 setup_stage ${STAGEDIR}
+setup_base ${STAGEDIR}
 
 git_clear ${COREDIR}
 git_describe ${COREDIR}
 
 # no compiling needed; simply install
-make -C ${COREDIR} DESTDIR=${STAGEDIR} install
+make -C ${COREDIR} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
 
-(cd ${STAGEDIR}; find * -type f ! -name plist) > ${STAGEDIR}/plist
-
-setup_base ${STAGEDIR}
-
+rm -f ${PACKAGESDIR}/opnsense-*.txz
 mkdir -p ${PACKAGESDIR} ${STAGEDIR}${PACKAGESDIR}
 cp ${PACKAGESDIR}/* ${STAGEDIR}${PACKAGESDIR}
-pkg -c ${STAGEDIR} add -f ${PACKAGESDIR}/* || true
+pkg -c ${STAGEDIR} add -f ${PACKAGESDIR}/*
 
 cat >> ${STAGEDIR}/+PRE_DEINSTALL <<EOF
 echo "Resetting root shell"
@@ -98,8 +92,7 @@ echo "Writing OPNsense version"
 echo "${REPO_VERSION}-${REPO_COMMENT}" > /usr/local/etc/version
 EOF
 
-chroot ${STAGEDIR} /bin/sh -es <<EOF
-cat > /+MANIFEST <<EOG
+cat >> ${STAGEDIR}/+MANIFEST <<EOF
 name: opnsense
 version: ${REPO_VERSION}
 origin: opnsense/opnsense
@@ -108,27 +101,27 @@ desc: "OPNsense core package"
 maintainer: franco@opnsense.org
 www: https://opnsense.org
 prefix: /
-EOG
+deps: {
+EOF
 
-echo "deps: {" >> /+MANIFEST
-
-echo "${PORT_LIST}" | {
 while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "\${PORT_NAME}" = "#" -o -n "\${PORT_OPT}" ]; then
+	if [ "${PORT_NAME}" = "#" -o -n "${PORT_OPT}" ]; then
 		continue
 	fi
 
-	pkg query "  %n: { version: \"%v\", origin: %o }" \
-		\${PORT_NAME} >> /+MANIFEST
-done
-}
+	pkg -c ${STAGEDIR} query "  %n: { version: \"%v\", origin: %o }" \
+		${PORT_NAME} >> ${STAGEDIR}/+MANIFEST
+done < ${TOOLSDIR}/config/current/ports
 
-echo "}" >> /+MANIFEST
+cat >> ${STAGEDIR}/+MANIFEST <<EOF
+}
 EOF
 
 echo -n ">>> Creating custom package for ${COREDIR}... "
 
-# XXX uses non-chroot pkg version?
-pkg create -m ${STAGEDIR} -r ${STAGEDIR} -p ${STAGEDIR}/plist -o ${PACKAGESDIR}
+pkg -c ${STAGEDIR} create -m ${STAGEDIR} -r ${STAGEDIR} \
+    -p ${STAGEDIR}/plist -o ${PACKAGESDIR}
+
+mv ${STAGEDIR}${PACKAGESDIR}/opnsense-*.txz ${PACKAGESDIR}
 
 echo "done"
