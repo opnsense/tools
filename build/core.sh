@@ -119,8 +119,7 @@ EOF
 
 echo -n ">>> Creating custom package for ${COREDIR}... "
 
-pkg -c ${STAGEDIR} create -m ${STAGEDIR} -r ${STAGEDIR} \
-    -p ${STAGEDIR}/plist -o ${PACKAGESDIR}
+pkg -c ${STAGEDIR} create -m / -r / -p /plist -o ${PACKAGESDIR}
 
 mv ${STAGEDIR}${PACKAGESDIR}/opnsense-*.txz ${PACKAGESDIR}
 
