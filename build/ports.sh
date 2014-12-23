@@ -30,12 +30,27 @@ set -e
 . ./common.sh
 
 PORT_LIST=$(cat ${TOOLSDIR}/config/current/ports)
+PORT_REUSE=
+
+echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
+	if [ "${PORT_NAME}" = "#" ]; then
+		continue
+	fi
+
+	PACKAGE=$(ls ${PACKAGESDIR}/${PORT_NAME}-*.txz 2> /dev/null || true)
+	if [ -f "${PACKAGE}" ]; then
+		# may fail for missing dependencies and
+		# that's what we need: rebuild chain  :)
+		PORT_REUSE="${PORT_REUSE} ${PORT_NAME}"
+	fi
+done }
 
 git_clear ${PORTSDIR}
 git_clear ${SRCDIR}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
+setup_packages ${STAGEDIR} ${PACKAGES}
 setup_chroot ${STAGEDIR}
 
 echo ">>> Setting up ports in ${STAGEDIR}"
@@ -53,27 +68,6 @@ echo ">>> Setting up src in ${STAGEDIR}"
 tar -C/ -cf - --exclude=.${SRCDIR}/.git .${SRCDIR} | \
     tar -C${STAGEDIR} -pxf -
 
-# bootstrap all available packages to save time
-mkdir -p ${PACKAGESDIR} ${STAGEDIR}${PACKAGESDIR}
-cp ${PACKAGESDIR}/* ${STAGEDIR}${PACKAGESDIR} || true
-
-(echo "pkg ports-mgmt"; echo "${PORT_LIST}") | {
-while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "${PORT_NAME}" = "#" ]; then
-		continue
-	fi
-
-	PACKAGE=$(ls ${PACKAGESDIR}/${PORT_NAME}-*.txz 2> /dev/null || true)
-	if [ -f "${PACKAGE}" ]; then
-		# may fail for missing dependencies and
-		# that's what we need: rebuild chain  :)
-		pkg -c ${STAGEDIR} add ${PACKAGE} || true
-	fi
-done
-}
-
-rm -rf ${STAGEDIR}${PACKAGESDIR}/*
-
 echo ">>> Building packages..."
 
 chroot ${STAGEDIR} /bin/sh -es <<EOF || true
@@ -84,8 +78,7 @@ else
 	make -C ${PORTSDIR}/ports-mgmt/pkg clean all install
 fi
 
-echo "${PORT_LIST}" | {
-while read PORT_NAME PORT_CAT PORT_OPT; do
+echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
 	if [ "\${PORT_NAME}" = "#" ]; then
 		continue
 	fi
@@ -107,8 +100,7 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 		echo "\${PORT_NAME}: package names don't match"
 		exit 1
 	fi
-done
-}
+done }
 EOF
 
 echo ">>> Creating binary packages..."
@@ -136,22 +128,17 @@ pkg_resolve_deps()
 
 pkg_resolve_deps pkg
 
-echo "${PORT_LIST}" | {
-while read PORT_NAME PORT_CAT PORT_OPT; do
+echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
 	if [ "\${PORT_NAME}" = "#" ]; then
 		continue
 	fi
 
 	pkg_resolve_deps "\$(pkg info -E \${PORT_NAME})"
-done
-}
+done }
 EOF
 
 rm -rf ${PACKAGESDIR}/*
 mv ${STAGEDIR}${PACKAGESDIR}/* ${PACKAGESDIR}
 
-# also build the meta-package
 cd ${TOOLSDIR}/build && ./core.sh
-
-# bundle all packages into a ready-to-use set
 cd ${TOOLSDIR}/build && ./packages.sh

@@ -118,16 +118,27 @@ setup_packages()
 {
 	echo ">>> Setting up packages in ${1}..."
 
-	mkdir -p ${1}/${PACKAGESDIR}
-	cp ${PACKAGESDIR}/* ${1}/${PACKAGESDIR}
+	BASEDIR=${1}
+	shift
+	PKGLIST=${@}
 
-	# bootstrap pkg manually, not sure why...
-	pkg -c ${1} add ${PACKAGESDIR}/pkg-*.txz
+	mkdir -p ${PACKAGESDIR} ${BASEDIR}/${PACKAGESDIR}
+	cp ${PACKAGESDIR}/* ${BASEDIR}/${PACKAGESDIR} || true
 
-	# opnsense has all required ports embedded as dependencies
-	pkg -c ${1} add ${PACKAGESDIR}/opnsense-*.txz
+	if [ -z "${PKGLIST}" ]; then
+		# forcefully add all available packages
+		pkg -c ${BASEDIR} add -f ${PACKAGESDIR}/*.txz || true
+	else
+		# always bootstrap pkg
+		PKGLIST="pkg ${PKGLIST}"
 
-	rm -r ${1}/${PACKAGESDIR}
+		for PKG in ${PKGLIST}; do
+			# must fail if packages aren't there
+			pkg -c ${BASEDIR} add ${PACKAGESDIR}/${PKG}-*.txz
+		done
+	fi
+
+	rm -rf ${BASEDIR}/${PACKAGESDIR}/*
 }
 
 setup_platform()

@@ -29,19 +29,17 @@ set -e
 
 . ./common.sh
 
-setup_stage ${STAGEDIR}
-setup_base ${STAGEDIR}
+rm -f ${PACKAGESDIR}/opnsense-*.txz
 
 git_clear ${COREDIR}
 git_describe ${COREDIR}
 
+setup_stage ${STAGEDIR}
+setup_base ${STAGEDIR}
+setup_packages ${STAGEDIR}
+
 # no compiling needed; simply install
 make -C ${COREDIR} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
-
-rm -f ${PACKAGESDIR}/opnsense-*.txz
-mkdir -p ${PACKAGESDIR} ${STAGEDIR}${PACKAGESDIR}
-cp ${PACKAGESDIR}/* ${STAGEDIR}${PACKAGESDIR}
-pkg -c ${STAGEDIR} add -f ${PACKAGESDIR}/*
 
 cat >> ${STAGEDIR}/+PRE_DEINSTALL <<EOF
 echo "Resetting root shell"
@@ -120,7 +118,6 @@ EOF
 echo -n ">>> Creating custom package for ${COREDIR}... "
 
 pkg -c ${STAGEDIR} create -m / -r / -p /plist -o ${PACKAGESDIR}
-
 mv ${STAGEDIR}${PACKAGESDIR}/opnsense-*.txz ${PACKAGESDIR}
 
 echo "done"
