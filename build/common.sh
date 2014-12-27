@@ -53,9 +53,6 @@ export ISOPATH="${IMAGESDIR}/${PRODUCT_NAME}-LiveCD-${ARCH}-`date '+%Y%m%d-%H%M'
 export MEMSTICKPATH="${IMAGESDIR}/${PRODUCT_NAME}-memstick-${ARCH}-`date '+%Y%m%d-%H%M'`.img"
 export MEMSTICKSERIALPATH="${IMAGESDIR}/${PRODUCT_NAME}-memstick-serial-${ARCH}-`date '+%Y%m%d-%H%M'`.img"
 
-# must clear lingering configs to be safe
-rm -f /etc/make.conf
-
 # print environment to showcase all of our variables
 env
 
