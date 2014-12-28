@@ -82,7 +82,13 @@ Or you can create memstick images for VGA and serial:
 Some more random information
 ============================
 
-The OPNsense core package can be rebuilt on its own via:
+Before building images, you can run the regression tests
+to check the integrity of your core.git modifications plus
+generate output for the style checker:
+
+    # cd /usr/tools/build && ./regress.sh
+
+The OPNsense core package can then be rebuilt on its own via:
 
     # cd /usr/tools/build && ./core.sh
 
