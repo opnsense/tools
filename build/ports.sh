@@ -51,24 +51,16 @@ git_clear ${SRCDIR}
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_packages ${STAGEDIR} ${PACKAGES}
+setup_clone ${STAGEDIR} ${PORTSDIR}
+setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
 
-echo ">>> Setting up ports in ${STAGEDIR}"
+echo ">>> Building packages..."
 
 MAKE_CONF="${TOOLSDIR}/config/current/make.conf"
 if [ -f ${MAKE_CONF} ]; then
 	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
 fi
-
-tar -C/ -cf - --exclude=.${PORTSDIR}/.git .${PORTSDIR} | \
-    tar -C${STAGEDIR} -pxf -
-
-echo ">>> Setting up src in ${STAGEDIR}"
-
-tar -C/ -cf - --exclude=.${SRCDIR}/.git .${SRCDIR} | \
-    tar -C${STAGEDIR} -pxf -
-
-echo ">>> Building packages..."
 
 chroot ${STAGEDIR} /bin/sh -es <<EOF || true
 if pkg -N; then

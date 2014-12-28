@@ -84,6 +84,14 @@ git_describe()
 	export REPO_COMMENT=${COMMENT}
 }
 
+setup_clone()
+{
+	echo ">>> Setting up ${2} in ${1}"
+
+	# excludes git history on purpose...
+	tar -C/ -cf - --exclude=.${2}/.git .${2} | tar -C${1} -pxf -
+}
+
 setup_chroot()
 {
 	echo ">>> Setting up chroot in ${1}"
