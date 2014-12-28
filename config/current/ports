@@ -41,11 +41,12 @@ mpd4				opnsense
 mpd5				net
 ntp				net
 openvpn				security
-pftop				sysutils
 # php base package up here for satefy reasons
 php56				lang
+pear-PHP_CodeSniffer		devel
 pecl-radius			net
 pecl-ssh2			security
+pftop				sysutils
 phalcon				www
 php-pfSense			opnsense
 php-suhosin			security
