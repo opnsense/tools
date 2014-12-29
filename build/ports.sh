@@ -63,6 +63,9 @@ if [ -f ${MAKE_CONF} ]; then
 fi
 
 chroot ${STAGEDIR} /bin/sh -es <<EOF || true
+# overwrites the ports tree variable, behaviour is unwanted...
+unset STAGEDIR
+
 if pkg -N; then
 	# no need to rebuild
 else
