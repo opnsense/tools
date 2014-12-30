@@ -40,18 +40,13 @@ setup_platform ${STAGEDIR}
 
 echo -n ">>> Building ISO image... "
 
-WORKDIR=/tmp/iso.$$
 # must be upper case:
 LABEL=OPNSENSE
 
-mkdir -p ${WORKDIR}/etc
-echo "/dev/iso9660/${LABEL} / cd9660 ro 0 0" > ${WORKDIR}/etc/fstab
+echo "/dev/iso9660/${LABEL} / cd9660 ro 0 0" > ${STAGEDIR}/etc/fstab
 
 makefs -t cd9660 -o bootimage="i386;${STAGEDIR}/boot/cdboot" \
-    -o no-emul-boot -o label=${LABEL} -o rockridge \
-    ${ISOPATH} ${STAGEDIR} ${WORKDIR}
-
-rm -rf ${WORKDIR}
+    -o no-emul-boot -o label=${LABEL} -o rockridge ${ISOPATH} ${STAGEDIR}
 
 echo "done:"
 
