@@ -62,6 +62,9 @@ if [ -f ${MAKE_CONF} ]; then
 	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
 fi
 
+# block SIGINT to allow for collecting port progress (use with care)
+trap : 2
+
 chroot ${STAGEDIR} /bin/sh -es <<EOF || true
 # overwrites the ports tree variable, behaviour is unwanted...
 unset STAGEDIR
@@ -97,6 +100,9 @@ echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
 	fi
 done }
 EOF
+
+# unblock SIGINT
+trap - 2
 
 echo ">>> Creating binary packages..."
 
