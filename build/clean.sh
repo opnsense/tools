@@ -31,11 +31,6 @@ set -e
 
 for ARG in ${@}; do
 	case ${ARG} in
-	git)	# TOOLSDIR is allowed to be dirty
-		git_clear ${PORTSDIR}
-		git clear ${COREDIR}
-		git_clear ${SRCDIR}
-		;;
 	obj)	# previous staging cleanup
 		setup_stage ${STAGEDIR}
 		;;

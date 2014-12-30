@@ -113,7 +113,6 @@ Available options are:
 
 * stage: reset the main staging area
 * obj: reset the kernel/base build directory
-* git: reset core.git, src.git and ports.git
 * images: remove all available images
 * sets: remove all available sets
 * packages: remove all available packages
