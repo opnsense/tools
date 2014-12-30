@@ -43,22 +43,12 @@ echo ">>> Building memstick image(s)..."
 
 LABEL="OPNsense"
 
-WORKDIR=/tmp/memstick.$$
+echo "/dev/ufs/${LABEL} / ufs ro 0 0" > ${STAGEDIR}/etc/fstab
 
-rm -rf ${WORKDIR}
-mkdir -p ${WORKDIR}
-
-mkdir ${WORKDIR}/etc
-echo "/dev/ufs/${LABEL} / ufs ro 0 0" > ${WORKDIR}/etc/fstab
-
-makefs -t ffs -B little -o label=${LABEL} ${MEMSTICKPATH} ${STAGEDIR} ${WORKDIR}
-
-# Now create serial memstick by reusing the above
-# modifications in WORKDIR to avoid a mount call,
-# which doesn't work in jails...
+makefs -t ffs -B little -o label=${LABEL} ${MEMSTICKPATH} ${STAGEDIR}
 
 # Activate serial console boot
-echo "-D" > ${WORKDIR}/boot.config
+echo "-D" > ${STAGEDIR}/boot.config
 
 # Activate serial console in config.xml
 DEFAULTCONF=${STAGEDIR}/usr/local/etc/config.xml
@@ -67,24 +57,17 @@ if ! grep -q -F "<enableserial/>" ${DEFAULTCONF}; then
 	sed -i "" -e "s:</system>:<enableserial/></system>:" ${DEFAULTCONF}
 fi
 
-# XXX setup of initial config should be done at boot time
-cp ${DEFAULTCONF} ${STAGEDIR}/cf/conf/config.xml
-
 # Activate serial console+video console
-mkdir -p ${WORKDIR}/boot
-cat > ${WORKDIR}/boot/loader.conf <<EOF
+cat > ${STAGEDIR}/boot/loader.conf <<EOF
 boot_multicons="YES"
 boot_serial="YES"
 console="comconsole,vidconsole"
 EOF
 
 # Activate serial console TTY
-mv ${STAGEDIR}/etc/ttys ${WORKDIR}/etc/ttys
-sed -i "" -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${WORKDIR}/etc/ttys
+sed -i "" -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${STAGEDIR}/etc/ttys
 
-makefs -t ffs -B little -o label=${LABEL} ${MEMSTICKSERIALPATH} ${STAGEDIR} ${WORKDIR}
-
-rm -r "${WORKDIR}"
+makefs -t ffs -B little -o label=${LABEL} ${MEMSTICKSERIALPATH} ${STAGEDIR}
 
 setup_bootcode()
 {
