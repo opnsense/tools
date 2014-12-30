@@ -29,13 +29,27 @@ set -e
 
 . ./common.sh
 
-# TOOLSDIR is allowed to be dirty
-git_clear ${PORTSDIR}
-git_clear ${COREDIR}
-git_clear ${SRCDIR}
-
-# previous staging cleanup:
-setup_stage ${STAGEDIR}
-
-# kernel and base build cleanup:
-setup_stage /usr/obj
+for ARG in ${@}; do
+	case ${ARG} in
+	git)	# TOOLSDIR is allowed to be dirty
+		git_clear ${PORTSDIR}
+		git clear ${COREDIR}
+		git_clear ${SRCDIR}
+		;;
+	obj)	# previous staging cleanup
+		setup_stage ${STAGEDIR}
+		;;
+	stage)	# kernel and base build cleanup
+		setup_stage /usr/obj
+		;;
+	images)
+		rm -rf ${IMAGESDIR}
+		;;
+	sets)
+		rm -rf ${SETSDIR}
+		;;
+	packages)
+		rm -rf ${PACKAGESDIR}
+		;;
+	esac
+done

@@ -103,3 +103,17 @@ All individual ports packages are stored under /tmp/packages
 Kernel, base and ports sets are stored under /tmp/sets
 
 All final images are stored under /tmp/images
+
+A couple of build machine cleanup helpers are available
+via the clean script:
+
+    # cd /usr/tools/build && ./clean.sh what
+
+Available options are:
+
+* stage: reset the main staging area
+* obj: reset the kernel/base build directory
+* git: reset core.git, src.git and ports.git
+* images: remove all available images
+* sets: remove all available sets
+* packages: remove all available packages
