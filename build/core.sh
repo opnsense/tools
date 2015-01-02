@@ -92,7 +92,7 @@ EOF
 
 cat >> ${STAGEDIR}/+MANIFEST <<EOF
 name: opnsense
-version: ${REPO_VERSION}
+version: "${REPO_VERSION}"
 origin: opnsense/opnsense
 comment: "${REPO_COMMENT}"
 desc: "OPNsense core package"
