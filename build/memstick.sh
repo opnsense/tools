@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# Copyright (C) 2010-2011 Scott Ullrich <sullrich@gmail.com>
-# Copyright (c) 2014 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
+# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -48,7 +48,7 @@ echo "/dev/ufs/${LABEL} / ufs ro 0 0" > ${STAGEDIR}/etc/fstab
 makefs -t ffs -B little -o label=${LABEL} ${MEMSTICKPATH} ${STAGEDIR}
 
 # Activate serial console boot
-echo "-D" > ${STAGEDIR}/boot.config
+echo "-S115200 -D" > ${STAGEDIR}/boot.config
 
 # Activate serial console in config.xml
 DEFAULTCONF=${STAGEDIR}/usr/local/etc/config.xml
@@ -62,6 +62,7 @@ cat > ${STAGEDIR}/boot/loader.conf <<EOF
 boot_multicons="YES"
 boot_serial="YES"
 console="comconsole,vidconsole"
+comconsole_speed="115200"
 EOF
 
 # Activate serial console TTY
