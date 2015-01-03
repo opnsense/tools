@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,10 +31,10 @@ set -e
 
 for ARG in ${@}; do
 	case ${ARG} in
-	obj)	# previous staging cleanup
+	stage)	# kernel and base build cleanup
 		setup_stage ${STAGEDIR}
 		;;
-	stage)	# kernel and base build cleanup
+	obj)	# previous staging cleanup
 		setup_stage /usr/obj
 		;;
 	images)
