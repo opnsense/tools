@@ -29,7 +29,7 @@ set -e
 
 . ./common.sh
 
-rm -f ${PACKAGESDIR}/opnsense-*.txz
+rm -f ${PACKAGESDIR}/${ARCH}/opnsense-*.txz
 
 git_clear ${COREDIR}
 git_describe ${COREDIR}
@@ -118,6 +118,6 @@ EOF
 echo -n ">>> Creating custom package for ${COREDIR}... "
 
 pkg -c ${STAGEDIR} create -m / -r / -p /plist -o ${PACKAGESDIR}
-mv ${STAGEDIR}${PACKAGESDIR}/opnsense-*.txz ${PACKAGESDIR}
+mv ${STAGEDIR}${PACKAGESDIR}/opnsense-*.txz ${PACKAGESDIR}/${ARCH}
 
 echo "done"

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -37,7 +37,7 @@ echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
 		continue
 	fi
 
-	PACKAGE=$(ls ${PACKAGESDIR}/${PORT_NAME}-*.txz 2> /dev/null || true)
+	PACKAGE=$(ls ${PACKAGESDIR}/${ARCH}/${PORT_NAME}-*.txz 2> /dev/null || true)
 	if [ -f "${PACKAGE}" ]; then
 		# may fail for missing dependencies and
 		# that's what we need: rebuild chain  :)
@@ -138,8 +138,8 @@ echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
 done }
 EOF
 
-rm -rf ${PACKAGESDIR}/*
-mv ${STAGEDIR}${PACKAGESDIR}/* ${PACKAGESDIR}
+rm -rf ${PACKAGESDIR}/${ARCH}/*
+cp ${STAGEDIR}${PACKAGESDIR}/* ${PACKAGESDIR}/${ARCH}/
 
 cd ${TOOLSDIR}/build && ./core.sh
 cd ${TOOLSDIR}/build && ./packages.sh

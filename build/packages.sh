@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -39,7 +39,7 @@ mkdir -p ${STAGEDIR}/Latest
 mkdir -p ${STAGEDIR}/All
 
 # push packages to home location
-cp ${PACKAGESDIR}/* ${STAGEDIR}/All
+cp ${PACKAGESDIR}/${ARCH}/* ${STAGEDIR}/All
 
 # needed bootstrap glue when no packages are on the system
 cd ${STAGEDIR}/Latest && ln -s ../All/pkg-*.txz pkg.txz

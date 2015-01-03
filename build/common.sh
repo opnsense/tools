@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -127,8 +127,8 @@ setup_packages()
 	shift
 	PKGLIST=${@}
 
-	mkdir -p ${PACKAGESDIR} ${BASEDIR}/${PACKAGESDIR}
-	cp ${PACKAGESDIR}/* ${BASEDIR}/${PACKAGESDIR} || true
+	mkdir -p ${PACKAGESDIR}/${ARCH} ${BASEDIR}/${PACKAGESDIR}
+	cp ${PACKAGESDIR}/${ARCH}/* ${BASEDIR}/${PACKAGESDIR} || true
 
 	if [ -z "${PKGLIST}" ]; then
 		# forcefully add all available packages
@@ -143,7 +143,7 @@ setup_packages()
 		done
 	fi
 
-	rm -rf ${BASEDIR}/${PACKAGESDIR}/*
+	rm -rf ${BASEDIR}/${PACKAGESDIR}
 }
 
 setup_platform()
