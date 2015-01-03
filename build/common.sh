@@ -127,8 +127,8 @@ setup_packages()
 	shift
 	PKGLIST=${@}
 
-	mkdir -p ${PACKAGESDIR}/${ARCH} ${BASEDIR}/${PACKAGESDIR}
-	cp ${PACKAGESDIR}/${ARCH}/* ${BASEDIR}/${PACKAGESDIR} || true
+	mkdir -p ${PACKAGESDIR}/${ARCH} ${BASEDIR}${PACKAGESDIR}
+	cp ${PACKAGESDIR}/${ARCH}/* ${BASEDIR}${PACKAGESDIR} || true
 
 	if [ -z "${PKGLIST}" ]; then
 		# forcefully add all available packages
@@ -143,7 +143,8 @@ setup_packages()
 		done
 	fi
 
-	rm -rf ${BASEDIR}/${PACKAGESDIR}
+	# keep the directory!
+	rm -rf ${BASEDIR}${PACKAGESDIR}/*
 }
 
 setup_platform()
