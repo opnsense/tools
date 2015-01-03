@@ -30,7 +30,7 @@ set -e
 . ./common.sh
 
 mkdir -p ${SETSDIR}
-rm -f ${SETSDIR}/base-*.txz
+rm -f ${SETSDIR}/base-*-${ARCH}.txz
 
 git_clear ${SRCDIR}
 git_describe ${SRCDIR}
@@ -41,4 +41,4 @@ make -C${SRCDIR} -j${CPUS} buildworld ${MAKEARGS} NO_CLEAN=yes
 make -C${SRCDIR}/release obj ${MAKEARGS}
 make -C${SRCDIR}/release base.txz ${MAKEARGS}
 
-mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${SETSDIR}/base-${REPO_VERSION}.txz
+mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${SETSDIR}/base-${REPO_VERSION}-${ARCH}.txz

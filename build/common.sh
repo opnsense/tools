@@ -109,14 +109,14 @@ setup_base()
 	# /home and will bail if it can't be found!
 	mkdir -p ${1}/home
 
-	(cd ${1} && tar -Jxpf ${SETSDIR}/base-*.txz)
+	(cd ${1} && tar -Jxpf ${SETSDIR}/base-*-${ARCH}.txz)
 }
 
 setup_kernel()
 {
 	echo ">>> Setting up kernel in ${1}"
 
-	(cd ${1} && tar -Jxpf ${SETSDIR}/kernel-*.txz)
+	(cd ${1} && tar -Jxpf ${SETSDIR}/kernel-*-${ARCH}.txz)
 }
 
 setup_packages()
