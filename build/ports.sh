@@ -123,7 +123,7 @@ pkg_resolve_deps()
 	done
 
 	for PORT in \${PORTS}; do
-		pkg create -no ${PACKAGESDIR} -f txz \${PORT}
+		pkg create -no ${PACKAGESDIR}/${ARCH} -f txz \${PORT}
 	done
 }
 
@@ -139,7 +139,7 @@ done }
 EOF
 
 rm -rf ${PACKAGESDIR}/${ARCH}/*
-cp ${STAGEDIR}${PACKAGESDIR}/* ${PACKAGESDIR}/${ARCH}/
+cp ${STAGEDIR}${PACKAGESDIR}/${ARCH}/* ${PACKAGESDIR}/${ARCH}/
 
 cd ${TOOLSDIR}/build && ./core.sh
 cd ${TOOLSDIR}/build && ./packages.sh

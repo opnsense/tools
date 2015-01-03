@@ -127,24 +127,24 @@ setup_packages()
 	shift
 	PKGLIST=${@}
 
-	mkdir -p ${PACKAGESDIR}/${ARCH} ${BASEDIR}${PACKAGESDIR}
-	cp ${PACKAGESDIR}/${ARCH}/* ${BASEDIR}${PACKAGESDIR} || true
+	mkdir -p ${PACKAGESDIR}/${ARCH} ${BASEDIR}${PACKAGESDIR}/${ARCH}
+	cp ${PACKAGESDIR}/${ARCH}/* ${BASEDIR}${PACKAGESDIR}/${ARCH} || true
 
 	if [ -z "${PKGLIST}" ]; then
 		# forcefully add all available packages
-		pkg -c ${BASEDIR} add -f ${PACKAGESDIR}/*.txz || true
+		pkg -c ${BASEDIR} add -f ${PACKAGESDIR}/${ARCH}/*.txz || true
 	else
 		# always bootstrap pkg
 		PKGLIST="pkg ${PKGLIST}"
 
 		for PKG in ${PKGLIST}; do
 			# must fail if packages aren't there
-			pkg -c ${BASEDIR} add ${PACKAGESDIR}/${PKG}-*.txz
+			pkg -c ${BASEDIR} add ${PACKAGESDIR}/${ARCH}/${PKG}-*.txz
 		done
 	fi
 
 	# keep the directory!
-	rm -rf ${BASEDIR}${PACKAGESDIR}/*
+	rm -rf ${BASEDIR}${PACKAGESDIR}/${ARCH}/*
 }
 
 setup_platform()
