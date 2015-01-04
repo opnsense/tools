@@ -25,6 +25,7 @@ filterdns			opnsense
 filterlog			opnsense
 fping				net
 git				devel		build
+gnu-watch			misc		build
 gzsig				opnsense
 ifstated			net
 igmpproxy			net
@@ -34,11 +35,13 @@ isc-dhcp42-client		net
 isc-dhcp42-relay		net
 isc-dhcp42-server		net
 joe				editors		build
+libtool				devel		sync
 lighttpd			www
 minicron			opnsense
 miniupnpd			net
 mpd4				opnsense
 mpd5				net
+nmap				security	build
 ntp				net
 openvpn				security
 # php base package up here for satefy reasons
@@ -82,17 +85,20 @@ php56-xml			textproc
 php56-xmlreader			textproc
 php56-xmlwriter			textproc
 php56-zlib			archivers
+portlint			ports-mgmt	sync
 python27			lang
 qstats				opnsense
 radvd				net
 rate				net-mgmt
 relayd				net
 rrdtool12			databases
+screen				sysutils	build
 smartmontools			sysutils
 ssh_tunnel_shell		opnsense
 sshlockout_pf			opnsense
 strongswan			security
 syslogd				opnsense
+tmux				sysutils	build
 vim-lite			editors		build
 voucher				opnsense
 wol				net

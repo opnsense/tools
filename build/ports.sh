@@ -33,7 +33,7 @@ PORT_LIST=$(cat ${TOOLSDIR}/config/current/ports)
 PORT_REUSE=
 
 echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "${PORT_NAME}" = "#" ]; then
+	if [ "${PORT_NAME}" = "#" -o "${PORT_OPT}" = "sync" ]; then
 		continue
 	fi
 
@@ -68,6 +68,8 @@ trap : 2
 chroot ${STAGEDIR} /bin/sh -es <<EOF || true
 # overwrites the ports tree variable, behaviour is unwanted...
 unset STAGEDIR
+# ...and this unbreaks the nmap build
+unset TARGET_ARCH
 
 if pkg -N; then
 	# no need to rebuild
@@ -77,7 +79,7 @@ else
 fi
 
 echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "\${PORT_NAME}" = "#" ]; then
+	if [ "\${PORT_NAME}" = "#" -o "\${PORT_OPT}" = "sync" ]; then
 		continue
 	fi
 
@@ -130,7 +132,7 @@ pkg_resolve_deps()
 pkg_resolve_deps pkg
 
 echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "\${PORT_NAME}" = "#" ]; then
+	if [ "\${PORT_NAME}" = "#" -o "\${PORT_OPT}" = "sync" ]; then
 		continue
 	fi
 
