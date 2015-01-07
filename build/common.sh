@@ -190,7 +190,7 @@ setup_stage()
 {
 	echo ">>> Setting up stage in ${1}"
 
-	local MOUNTDIRS="/dev /usr/src /usr/ports"
+	local MOUNTDIRS="/dev /usr/src /usr/ports /usr/core"
 
 	# might have been a chroot
 	for DIR in ${MOUNTDIRS}; do
