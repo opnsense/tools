@@ -88,8 +88,8 @@ setup_clone()
 {
 	echo ">>> Setting up ${2} in ${1}"
 
-	# excludes git history on purpose...
-	tar -C/ -cf - --exclude=.${2}/.git .${2} | tar -C${1} -pxf -
+	# repositories may be huge so avoid the copy :)
+	mkdir -p ${1}${2} && mount_unionfs -o below ${2} ${1}${2}
 }
 
 setup_chroot()
@@ -190,11 +190,19 @@ setup_stage()
 {
 	echo ">>> Setting up stage in ${1}"
 
+	local MOUNTDIRS="/dev /usr/src /usr/ports"
+
 	# might have been a chroot
-	umount ${1}/dev 2> /dev/null || true
+	for DIR in ${MOUNTDIRS}; do
+		if [ -d ${1}${DIR} ]; then
+			umount ${1}${DIR} 2> /dev/null || true
+		fi
+	done
+
 	# remove base system files
 	rm -rf ${1} 2> /dev/null ||
 	    (chflags -R noschg ${1}; rm -rf ${1} 2> /dev/null)
+
 	# revive directory for next run
 	mkdir -p ${1}
 }
