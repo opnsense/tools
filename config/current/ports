@@ -87,6 +87,7 @@ php56-xmlwriter			textproc
 php56-zlib			archivers
 portlint			ports-mgmt	sync
 python27			lang
+py27-Jinja2 			devel		build
 qstats				opnsense
 radvd				net
 rate				net-mgmt
