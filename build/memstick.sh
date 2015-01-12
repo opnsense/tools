@@ -41,9 +41,7 @@ setup_platform ${STAGEDIR}
 
 echo ">>> Building memstick image(s)..."
 
-LABEL="OPNsense"
-
-echo "/dev/ufs/${LABEL} / ufs ro 0 0" > ${STAGEDIR}/etc/fstab
+echo "/dev/ufs/${LABEL} / ufs ro,noatime 1 1" > ${STAGEDIR}/etc/fstab
 
 makefs -t ffs -B little -o label=${LABEL} ${MEMSTICKPATH} ${STAGEDIR}
 

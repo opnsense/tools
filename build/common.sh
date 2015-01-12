@@ -45,8 +45,9 @@ export SRCDIR="/usr/src"
 # misc. foo
 export CPUS=`sysctl kern.smp.cpus | awk '{ print $2 }'`
 export ARCH=${ARCH:-"`uname -m`"}
-export TARGETARCH=${ARCH}
 export TARGET_ARCH=${ARCH}
+export TARGETARCH=${ARCH}
+export LABEL="OPNsense_Install"
 
 # target files
 export ISOPATH="${IMAGESDIR}/${PRODUCT_NAME}-LiveCD-${ARCH}-`date '+%Y%m%d-%H%M'`.iso"

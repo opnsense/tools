@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -41,7 +41,7 @@ setup_platform ${STAGEDIR}
 echo -n ">>> Building ISO image... "
 
 # must be upper case:
-LABEL=OPNSENSE
+LABEL=`echo ${LABEL} | tr '[:lower:]' '[:upper:]'`
 
 echo "/dev/iso9660/${LABEL} / cd9660 ro 0 0" > ${STAGEDIR}/etc/fstab
 
