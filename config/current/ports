@@ -35,6 +35,7 @@ isc-dhcp42-client		net
 isc-dhcp42-relay		net
 isc-dhcp42-server		net
 joe				editors		build
+libressl			security	sync
 libtool				devel		sync
 lighttpd			www
 minicron			opnsense
@@ -43,6 +44,7 @@ mpd4				opnsense
 mpd5				net
 nmap				security	build
 ntp				net
+openssl				security	sync
 openvpn				security
 # php base package up here for satefy reasons
 php56				lang
