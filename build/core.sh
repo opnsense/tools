@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -109,7 +109,7 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 
 	pkg -c ${STAGEDIR} query "  %n: { version: \"%v\", origin: %o }" \
 		${PORT_NAME} >> ${STAGEDIR}/+MANIFEST
-done < ${TOOLSDIR}/config/current/ports
+done < ${TOOLSDIR}/config/current/ports.conf
 
 cat >> ${STAGEDIR}/+MANIFEST <<EOF
 }

@@ -29,7 +29,7 @@ set -e
 
 . ./common.sh
 
-PORT_LIST=$(cat ${TOOLSDIR}/config/current/ports)
+PORT_LIST=$(cat ${TOOLSDIR}/config/current/ports.conf)
 PORT_REUSE=
 
 echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
