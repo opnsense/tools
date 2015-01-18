@@ -38,12 +38,15 @@ for ARG in ${@}; do
 		setup_stage /usr/obj
 		;;
 	images)
+		echo ">>> Removing ${IMAGESDIR}"
 		rm -rf ${IMAGESDIR}
 		;;
 	sets)
+		echo ">>> Removing ${SETSDIR}"
 		rm -rf ${SETSDIR}
 		;;
 	packages)
+		echo ">>> Removing ${PACKAGESDIR}"
 		rm -rf ${PACKAGESDIR}
 		;;
 	esac
