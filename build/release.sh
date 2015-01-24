@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,28 +27,41 @@
 
 set -e
 
+if [ -n "${1}" ]; then
+	# pull in a real release tag
+	PRODUCT_VERSION=${1}
+fi
+
 . ./common.sh
 
-mkdir -p ${SETSDIR}
-rm -f ${SETSDIR}/packages-*-${ARCH}.tar
+rm -f ${SETSDIR}/release-*-${ARCH}.tar
+
+echo ">>> Creating packages for ${PRODUCT_VERSION}"
+
+cd ${TOOLSDIR}/build && ./packages.sh
+
+echo ">>> Creating images for ${PRODUCT_VERSION}"
+
+cd ${TOOLSDIR}/build && ./clean.sh images
+cd ${TOOLSDIR}/build && ./memstick.sh
+cd ${TOOLSDIR}/build && ./iso.sh
 
 setup_stage ${STAGEDIR}
 
-# rebuild expected FreeBSD structure
-mkdir -p ${STAGEDIR}/Latest
-mkdir -p ${STAGEDIR}/All
+echo ">>> Compressing images for ${PRODUCT_VERSION}"
 
-# push packages to home location
-cp ${PACKAGESDIR}/${ARCH}/* ${STAGEDIR}/All
+mv ${IMAGESDIR}/${PRODUCT_NAME}-* ${STAGEDIR}
+bzip2 ${STAGEDIR}/${PRODUCT_NAME}-*
+mkdir -p ${STAGEDIR}/tmp
 
-# needed bootstrap glue when no packages are on the system
-cd ${STAGEDIR}/Latest && ln -s ../All/pkg-*.txz pkg.txz
+echo ">>> Checksumming images for ${PRODUCT_VERSION}"
 
-# generate index files
-cd ${STAGEDIR} && pkg repo .
+cd ${STAGEDIR} && sha256 ${PRODUCT_NAME}-* > tmp/${PRODUCT_NAME}-${PRODUCT_VERSION}-checksums.sha256
+cd ${STAGEDIR} && md5 ${PRODUCT_NAME}-* > tmp/${PRODUCT_NAME}-${PRODUCT_VERSION}-checksums.md5
 
-echo -n ">>> Creating packages set... "
+mv tmp/* .
+rm -rf tmp
 
-tar -cf ${SETSDIR}/packages-${PRODUCT_VERSION}-${ARCH}.tar .
+echo ">>> Bundling images for ${PRODUCT_VERSION}"
 
-echo "done"
+tar -cf ${SETSDIR}/release-${PRODUCT_VERSION}-${ARCH}.tar .

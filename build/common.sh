@@ -29,6 +29,7 @@ set -e
 
 # important build settings
 export PRODUCT_NAME="OPNsense"
+export PRODUCT_VERSION=${PRODUCT_VERSION:-"`date '+%Y%m%d%H%M'`"}
 
 # build directories
 export STAGEDIR="/usr/local/stage"
@@ -50,9 +51,9 @@ export TARGETARCH=${ARCH}
 export LABEL="OPNsense_Install"
 
 # target files
-export ISOPATH="${IMAGESDIR}/${PRODUCT_NAME}-LiveCD-${ARCH}-`date '+%Y%m%d-%H%M'`.iso"
-export MEMSTICKPATH="${IMAGESDIR}/${PRODUCT_NAME}-memstick-${ARCH}-`date '+%Y%m%d-%H%M'`.img"
-export MEMSTICKSERIALPATH="${IMAGESDIR}/${PRODUCT_NAME}-memstick-serial-${ARCH}-`date '+%Y%m%d-%H%M'`.img"
+export ISOPATH="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-LiveCD-${ARCH}.iso"
+export MEMSTICKPATH="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-memstick-${ARCH}.img"
+export MEMSTICKSERIALPATH="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-memstick-serial-${ARCH}.img"
 
 # print environment to showcase all of our variables
 env
