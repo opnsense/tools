@@ -103,7 +103,7 @@ deps: {
 EOF
 
 while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "${PORT_NAME}" = "#" -o -n "${PORT_OPT}" ]; then
+	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" -o -n "${PORT_OPT}" ]; then
 		continue
 	fi
 

@@ -33,7 +33,7 @@ PORT_LIST=$(cat ${TOOLSDIR}/config/current/ports.conf)
 PORT_REUSE=
 
 echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "${PORT_NAME}" = "#" -o "${PORT_OPT}" = "sync" ]; then
+	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" -o "${PORT_OPT}" = "sync" ]; then
 		continue
 	fi
 
@@ -79,7 +79,7 @@ else
 fi
 
 echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "\${PORT_NAME}" = "#" -o "\${PORT_OPT}" = "sync" ]; then
+	if [ "\$(echo \${PORT_NAME} | colrm 2)" = "#" -o "\${PORT_OPT}" = "sync" ]; then
 		continue
 	fi
 
@@ -132,7 +132,7 @@ pkg_resolve_deps()
 pkg_resolve_deps pkg
 
 echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "\${PORT_NAME}" = "#" -o "\${PORT_OPT}" = "sync" ]; then
+	if [ "\$(echo \${PORT_NAME} | colrm 2)" = "#" -o "\${PORT_OPT}" = "sync" ]; then
 		continue
 	fi
 
