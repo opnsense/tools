@@ -56,8 +56,8 @@ mkdir -p ${STAGEDIR}/tmp
 
 echo ">>> Checksumming images for ${PRODUCT_VERSION}"
 
-cd ${STAGEDIR} && sha256 ${PRODUCT_NAME}-* > tmp/${PRODUCT_NAME}-${PRODUCT_VERSION}-checksums.sha256
-cd ${STAGEDIR} && md5 ${PRODUCT_NAME}-* > tmp/${PRODUCT_NAME}-${PRODUCT_VERSION}-checksums.md5
+cd ${STAGEDIR} && sha256 ${PRODUCT_NAME}-* > tmp/${PRODUCT_NAME}-${PRODUCT_VERSION}-checksums-${ARCH}.sha256
+cd ${STAGEDIR} && md5 ${PRODUCT_NAME}-* > tmp/${PRODUCT_NAME}-${PRODUCT_VERSION}-checksums-${ARCH}.md5
 
 mv tmp/* .
 rm -rf tmp
