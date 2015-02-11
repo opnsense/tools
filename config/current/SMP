@@ -16,13 +16,7 @@ nomakeoptions	DEBUG
 
 ident           SMP
 
-nooptions	MAC                     # TrustedBSD MAC Framework
-nooptions       COMPAT_43TTY            # BSD 4.3 TTY compat (sgtty)
-nooptions       COMPAT_FREEBSD4         # Compatible with FreeBSD4
-nooptions       COMPAT_FREEBSD5         # Compatible with FreeBSD5
-nooptions       COMPAT_FREEBSD6         # Compatible with FreeBSD6
 nooptions	FLOWTABLE
-nooptions	SCHED_4BSD
 
 # IPSEC filtering interface
 device		enc
