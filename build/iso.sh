@@ -46,7 +46,7 @@ LABEL=`echo ${LABEL} | tr '[:lower:]' '[:upper:]'`
 echo "/dev/iso9660/${LABEL} / cd9660 ro 0 0" > ${STAGEDIR}/etc/fstab
 
 makefs -t cd9660 -o bootimage="i386;${STAGEDIR}/boot/cdboot" \
-    -o no-emul-boot -o label=${LABEL} -o rockridge ${ISOPATH} ${STAGEDIR}
+    -o no-emul-boot -o label=${LABEL} -o rockridge ${CDROM} ${STAGEDIR}
 
 echo "done:"
 

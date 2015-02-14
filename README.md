@@ -71,7 +71,7 @@ Build all the ports and wrap them into a single set:
 
     # ./ports.sh
 
-A bootable LiveCD image is created using:
+A cdrom live image is created using:
 
     # ./iso.sh
 

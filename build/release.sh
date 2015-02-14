@@ -60,7 +60,10 @@ setup_stage ${STAGEDIR}
 echo ">>> Compressing images for ${PRODUCT_VERSION}"
 
 mv ${IMAGESDIR}/${PRODUCT_NAME}-* ${STAGEDIR}
-bzip2 ${STAGEDIR}/${PRODUCT_NAME}-*
+bzip2 ${STAGEDIR}/${PRODUCT_NAME}-*-cdrom-* &
+bzip2 ${STAGEDIR}/${PRODUCT_NAME}-*-serial-* &
+bzip2 ${STAGEDIR}/${PRODUCT_NAME}-*-vga-* &
+wait
 mkdir -p ${STAGEDIR}/tmp
 
 echo ">>> Checksumming images for ${PRODUCT_VERSION}"

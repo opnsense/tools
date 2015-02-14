@@ -43,7 +43,7 @@ echo ">>> Building memstick image(s)..."
 
 echo "/dev/ufs/${LABEL} / ufs ro,noatime 1 1" > ${STAGEDIR}/etc/fstab
 
-makefs -t ffs -B little -o label=${LABEL} ${MEMSTICKPATH} ${STAGEDIR}
+makefs -t ffs -B little -o label=${LABEL} ${VGAIMG} ${STAGEDIR}
 
 # Activate serial console boot
 echo "-S115200 -D" > ${STAGEDIR}/boot.config
@@ -66,7 +66,7 @@ EOF
 # Activate serial console TTY
 sed -i "" -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${STAGEDIR}/etc/ttys
 
-makefs -t ffs -B little -o label=${LABEL} ${MEMSTICKSERIALPATH} ${STAGEDIR}
+makefs -t ffs -B little -o label=${LABEL} ${SERIALIMG} ${STAGEDIR}
 
 setup_bootcode()
 {
@@ -79,8 +79,8 @@ setup_bootcode()
 	mdconfig -d -u "${dev}"
 }
 
-setup_bootcode ${MEMSTICKPATH}
-setup_bootcode ${MEMSTICKSERIALPATH}
+setup_bootcode ${VGAIMG}
+setup_bootcode ${SERIALIMG}
 
 echo "done:"
 

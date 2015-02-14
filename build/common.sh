@@ -51,9 +51,9 @@ export TARGETARCH=${ARCH}
 export LABEL="OPNsense_Install"
 
 # target files
-export ISOPATH="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-LiveCD-${ARCH}.iso"
-export MEMSTICKPATH="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-memstick-${ARCH}.img"
-export MEMSTICKSERIALPATH="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-memstick-serial-${ARCH}.img"
+export CDROM="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-cdrom-${ARCH}.iso"
+export SERIALIMG="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-serial-${ARCH}.img"
+export VGAIMG="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-vga-${ARCH}.img"
 
 # print environment to showcase all of our variables
 env
