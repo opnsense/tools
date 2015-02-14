@@ -34,6 +34,15 @@ fi
 
 . ./common.sh
 
+if [ -n "${1}" ]; then
+	# make sure the all-encompassing package is a release, too
+	if [ ! -f ${PACKAGESDIR}/${ARCH}/opnsense-${1}.txz ]; then
+		echo "Release version mismatch:"
+		ls ${PACKAGESDIR}/${ARCH}/opnsense-*.txz
+		exit 1
+	fi
+fi
+
 rm -f ${SETSDIR}/release-*-${ARCH}.tar
 
 echo ">>> Creating packages for ${PRODUCT_VERSION}"
