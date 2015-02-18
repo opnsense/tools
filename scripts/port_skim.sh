@@ -73,7 +73,7 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 done < ${PORT_LIST}
 
 for PORT in $PORTS_CHANGED; do
-	(diff -ru ${OPNSENSE}/${PORT} ${FREEBSD}/${PORT} \
+	(clear && diff -ru ${OPNSENSE}/${PORT} ${FREEBSD}/${PORT} \
 	    2>/dev/null || true;) | less -r
 
 	echo -n "replace ${PORT} [y/N]: "
@@ -99,7 +99,7 @@ for ENTRY in ${FREEBSD}/*; do
 done
 
 if [ -n "${ENTRIES}" ]; then
-	(for ENTRY in ${ENTRIES}; do
+	(clear && for ENTRY in ${ENTRIES}; do
 		diff -ru ${OPNSENSE}/${ENTRY} ${FREEBSD}/${ENTRY} \
 		    2>/dev/null || true;
 	done) | less -r
