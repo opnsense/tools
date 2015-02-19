@@ -143,6 +143,14 @@ setup_packages()
 			# must fail if packages aren't there
 			pkg -c ${BASEDIR} add ${PACKAGESDIR}/${ARCH}/${PKG}-*.txz
 		done
+
+		# collect all installed packages
+		PKGLIST="$(pkg -c ${BASEDIR} query %n)"
+
+		for PKG in ${PKGLIST}; do
+			# add, unlike install, is not aware of repositories :(
+			pkg -c ${BASEDIR} annotate -A ${PKG} repository OPNsense
+		done
 	fi
 
 	# keep the directory!
