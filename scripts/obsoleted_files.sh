@@ -27,10 +27,10 @@
 
 set -e
 
-rm -f /tmp/setdiff.*
-
 tar -tf ${1} | sort > /tmp/setdiff.old.${$}
 tar -tf ${2} | sort > /tmp/setdiff.new.${$}
 
 diff -u /tmp/setdiff.old.${$} /tmp/setdiff.new.${$} | \
     grep '^-\.' | grep -v '/$' | cut -b 3-
+
+rm -f /tmp/setdiff.*
