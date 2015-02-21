@@ -142,6 +142,3 @@ EOF
 
 rm -rf ${PACKAGESDIR}/${ARCH}/*
 cp ${STAGEDIR}${PACKAGESDIR}/${ARCH}/* ${PACKAGESDIR}/${ARCH}/
-
-cd ${TOOLSDIR}/build && ./core.sh
-cd ${TOOLSDIR}/build && ./packages.sh

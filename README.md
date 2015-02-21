@@ -67,9 +67,13 @@ Build the kernel and loadable kernel modules:
 
     # ./kernel.sh
 
-Build all the ports and wrap them into a single set:
+Build all the third-party ports:
 
     # ./ports.sh
+
+Wrap up our core as a package:
+
+    # ./core.sh
 
 A cdrom live image is created using:
 
