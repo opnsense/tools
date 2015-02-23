@@ -149,7 +149,7 @@ setup_packages()
 
 		for PKG in ${PKGLIST}; do
 			# add, unlike install, is not aware of repositories :(
-			pkg -c ${BASEDIR} annotate -A ${PKG} repository OPNsense
+			pkg -c ${BASEDIR} annotate -qyA ${PKG} repository OPNsense
 		done
 	fi
 
