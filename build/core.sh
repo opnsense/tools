@@ -42,49 +42,12 @@ setup_packages ${STAGEDIR}
 make -C ${COREDIR} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
 
 cat >> ${STAGEDIR}/+PRE_DEINSTALL <<EOF
-echo "Resetting root shell"
-pw usermod -n root -s /bin/csh
-
-echo "Updating /etc/shells"
-cp /etc/shells /etc/shells.bak
-(grep -v /usr/local/etc/rc.initial /etc/shells.bak) > /etc/shells
-rm -f /etc/shells.bak
-
-echo "Unhooking from /etc/rc"
-cp /etc/rc /etc/rc.bak
-LINES=\$(cat /etc/rc | wc -l)
-tail -n \$(expr \${LINES} - 3) /etc/rc.bak > /etc/rc
-rm -f /etc/rc.bak
-
-echo "Enabling FreeBSD mirror"
-sed -i "" -e "s/^  enabled: no$/  enabled: yes/" /etc/pkg/FreeBSD.conf
 
 echo "Removing OPNsense version"
 rm -f /usr/local/etc/version
 EOF
 
 cat >> ${STAGEDIR}/+POST_INSTALL <<EOF
-echo "Updating /etc/shells"
-cp /etc/shells /etc/shells.bak
-(grep -v /usr/local/etc/rc.initial /etc/shells.bak; \
-    echo /usr/local/etc/rc.initial) > /etc/shells
-rm -f /etc/shells.bak
-
-echo "Registering root shell"
-pw usermod -n root -s /usr/local/etc/rc.initial
-
-echo "Disabling FreeBSD mirror"
-sed -i "" -e "s/^  enabled: yes$/  enabled: no/" /etc/pkg/FreeBSD.conf
-
-echo "Hooking into /etc/rc"
-cp /etc/rc /etc/rc.bak
-cat > /etc/rc <<EOG
-#!/bin/sh
-# OPNsense rc(8) hook was automatically installed:
-if [ -f /usr/local/etc/rc ]; then /usr/local/etc/rc; exit 0; fi
-EOG
-cat /etc/rc.bak >> /etc/rc
-rm -f /etc/rc.bak
 
 echo "Writing OPNsense version"
 echo "${REPO_VERSION}-${REPO_COMMENT}" > /usr/local/etc/version
