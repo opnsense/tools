@@ -41,42 +41,27 @@ setup_packages ${STAGEDIR}
 # no compiling needed; simply install
 make -C ${COREDIR} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
 
-cat >> ${STAGEDIR}/+PRE_DEINSTALL <<EOF
-
-echo "Removing OPNsense version"
-rm -f /usr/local/etc/version
-EOF
-
-cat >> ${STAGEDIR}/+POST_INSTALL <<EOF
-
-echo "Writing OPNsense version"
-echo "${REPO_VERSION}-${REPO_COMMENT}" > /usr/local/etc/version
-EOF
-
-cat >> ${STAGEDIR}/+MANIFEST <<EOF
-name: opnsense
-version: "${REPO_VERSION}"
-origin: opnsense/opnsense
-comment: "${REPO_COMMENT}"
-desc: "OPNsense core package"
-maintainer: franco@opnsense.org
-www: https://opnsense.org
-prefix: /
-deps: {
-EOF
+for PKGFILE in $(ls ${STAGEDIR}/+*); do
+	# fill in the blanks that come from the build
+	sed -i "" -e "s/%%REPO_VERSION%%/${REPO_VERSION}/g" ${PKGFILE}
+	sed -i "" -e "s/%%REPO_COMMENT%%/${REPO_COMMENT}/g" ${PKGFILE}
+done
 
 while read PORT_NAME PORT_CAT PORT_OPT; do
 	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" -o -n "${PORT_OPT}" ]; then
 		continue
 	fi
 
-	pkg -c ${STAGEDIR} query "  %n: { version: \"%v\", origin: %o }" \
-		${PORT_NAME} >> ${STAGEDIR}/+MANIFEST
+	# fill in the direct ports dependencies
+
+	cat >> ${STAGEDIR}/deps << EOF
+  $(pkg -c ${STAGEDIR} query '%n: { version: "%v", origin: "%o" }' ${PORT_NAME})
+EOF
 done < ${TOOLSDIR}/config/current/ports.conf
 
-cat >> ${STAGEDIR}/+MANIFEST <<EOF
-}
-EOF
+# remove placeholder now that all dependencies are in place
+sed -i "" -e "/%%REPO_DEPENDS%%/r ${STAGEDIR}/deps" ${STAGEDIR}/+MANIFEST
+sed -i "" -e '/%%REPO_DEPENDS%%/d' ${STAGEDIR}/+MANIFEST
 
 echo -n ">>> Creating custom package for ${COREDIR}... "
 
