@@ -27,10 +27,22 @@
 
 set -e
 
-tar -tf ${1} | sort > /tmp/setdiff.old.${$}
-tar -tf ${2} | sort > /tmp/setdiff.new.${$}
+if [ ${#} -lt 2 ]; then
+	echo "Usage: ${0} old.txz new.txz [old.obsolete]"
+	exit 1
+fi
 
-diff -u /tmp/setdiff.old.${$} /tmp/setdiff.new.${$} | \
-    grep '^-\.' | grep -v '/$' | cut -b 3-
+tar -tf ${1} | sed -e 's/^\.//g' -e '/\/$/d' | sort > /tmp/setdiff.old.${$}
+tar -tf ${2} | sed -e 's/^\.//g' -e '/\/$/d' | sort > /tmp/setdiff.new.${$}
+
+: > /tmp/setdiff.tmp.${$}
+if [ -n "${3}" ]; then
+	# reinstated files need to be removed from old.obsolete
+	diff -u ${3} /tmp/setdiff.new.${$} | grep '^-/' | \
+	    cut -b 2- > /tmp/setdiff.tmp.${$}
+fi
+
+(cat /tmp/setdiff.tmp.${$}; diff -u /tmp/setdiff.old.${$} \
+    /tmp/setdiff.new.${$} | grep '^-/' | cut -b 2-) | sort -u
 
 rm -f /tmp/setdiff.*
