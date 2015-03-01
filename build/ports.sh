@@ -30,27 +30,13 @@ set -e
 . ./common.sh
 
 PORT_LIST=$(cat ${TOOLSDIR}/config/current/ports.conf)
-PORT_REUSE=
-
-echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" -o "${PORT_OPT}" = "sync" ]; then
-		continue
-	fi
-
-	PACKAGE=$(ls ${PACKAGESDIR}/${ARCH}/${PORT_NAME}-*.txz 2> /dev/null || true)
-	if [ -f "${PACKAGE}" ]; then
-		# may fail for missing dependencies and
-		# that's what we need: rebuild chain  :)
-		PORT_REUSE="${PORT_REUSE} ${PORT_NAME}"
-	fi
-done }
 
 git_clear ${PORTSDIR}
 git_clear ${SRCDIR}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
-setup_packages ${STAGEDIR} ${PACKAGES}
+setup_packages ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
