@@ -30,9 +30,17 @@ set -e
 . ./common.sh
 
 PORT_LIST=$(cat ${TOOLSDIR}/config/current/ports.conf)
+PORT_JOBS=${@}
 
 git_clear ${PORTSDIR}
 git_clear ${SRCDIR}
+
+if [ -n "${PORT_JOBS}" ]; then
+	for PORT_JOB in ${PORT_JOBS}; do
+		# clear out the ports that ought to be rebuilt
+		rm -f ${PACKAGESDIR}/${ARCH}/${PORT_JOB}-*.txz
+	done
+fi
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
@@ -51,7 +59,7 @@ fi
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
-chroot ${STAGEDIR} /bin/sh -es <<EOF || true
+chroot ${STAGEDIR} /bin/sh -es << EOF || true
 # overwrites the ports tree variable, behaviour is unwanted...
 unset STAGEDIR
 # ...and this unbreaks the nmap build
@@ -94,7 +102,7 @@ trap - 2
 
 echo ">>> Creating binary packages..."
 
-chroot ${STAGEDIR} /bin/sh -es <<EOF || true
+chroot ${STAGEDIR} /bin/sh -es << EOF || true
 pkg_resolve_deps()
 {
 	local PORTS
@@ -127,4 +135,4 @@ done }
 EOF
 
 rm -rf ${PACKAGESDIR}/${ARCH}/*
-cp ${STAGEDIR}${PACKAGESDIR}/${ARCH}/* ${PACKAGESDIR}/${ARCH}/
+mv ${STAGEDIR}${PACKAGESDIR}/${ARCH}/* ${PACKAGESDIR}/${ARCH}/
