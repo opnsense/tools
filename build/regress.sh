@@ -41,8 +41,6 @@ setup_chroot ${STAGEDIR}
 echo ">>> Running ${COREDIR} test suite..."
 
 chroot ${STAGEDIR} /bin/sh -es <<EOF
-# XXX not so nice to bootstrap the config here
-cp /usr/local/etc/config.xml /conf
 make -C${COREDIR} setup
 make -C${COREDIR} lint
 make -C${COREDIR} health
