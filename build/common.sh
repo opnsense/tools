@@ -177,12 +177,6 @@ setup_platform()
 tmpmfs="YES"
 tmpsize="128m"
 EOF
-
-	DEFAULT_PW=`cat ${1}/usr/local/etc/inc/globals.inc | grep factory_shipped_password | cut -d'"' -f4`
-	echo ">>> Setting up initial root password: ${DEFAULT_PW}"
-	chroot ${1} /bin/sh -s <<EOF
-echo ${DEFAULT_PW} | pw usermod -n root -h 0
-EOF
 }
 
 setup_mtree()
