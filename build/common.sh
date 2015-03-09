@@ -165,6 +165,11 @@ setup_platform()
 	mkdir -p ${1}/conf
 	touch ${1}/conf/trigger_initial_wizard
 
+	# Let opnsense-update(8) know it's up to date
+	local MARKER="/usr/local/opnsense/version/os-update"
+	mkdir -p ${1}$(dirname ${MARKER})
+	echo ${PRODUCT_VERSION}-${ARCH} > ${1}${MARKER}
+
 	echo cdrom > ${1}/usr/local/etc/platform
 
 	# Set sane defaults via rc.conf(5)
