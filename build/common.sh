@@ -107,8 +107,8 @@ setup_base()
 {
 	echo ">>> Setting up world in ${1}"
 
-	# XXX The installer is hardwired to copy
-	# /home and will bail if it can't be found!
+	# /home is needed for LiveCD images, and since it
+	# belongs to the base system, we create it from here.
 	mkdir -p ${1}/home
 
 	(cd ${1} && tar -Jxpf ${SETSDIR}/base-*-${ARCH}.txz)
