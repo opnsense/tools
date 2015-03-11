@@ -41,7 +41,11 @@ setup_platform ${STAGEDIR}
 
 echo ">>> Building memstick image(s)..."
 
-echo "/dev/ufs/${LABEL} / ufs ro,noatime 1 1" > ${STAGEDIR}/etc/fstab
+cat > ${STAGEDIR}/etc/fstab << EOF
+# Device	Mountpoint	FStype	Options	Dump	Pass#
+/dev/ufs/${LABEL}	/	ufs	ro,noatime	1	1
+tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
+EOF
 
 makefs -t ffs -B little -o label=${LABEL} ${VGAIMG} ${STAGEDIR}
 

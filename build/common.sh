@@ -194,12 +194,6 @@ setup_platform()
 
 	# XXX clean this up further maybe?
 	mkdir -p ${1}/conf
-
-	# Set sane defaults via rc.conf(5)
-	cat > ${1}/etc/rc.conf <<EOF
-tmpmfs="YES"
-tmpsize="128m"
-EOF
 }
 
 setup_mtree()

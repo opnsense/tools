@@ -43,7 +43,11 @@ echo -n ">>> Building ISO image... "
 # must be upper case:
 LABEL=`echo ${LABEL} | tr '[:lower:]' '[:upper:]'`
 
-echo "/dev/iso9660/${LABEL} / cd9660 ro 0 0" > ${STAGEDIR}/etc/fstab
+cat > ${STAGEDIR}/etc/fstab << EOF
+# Device	Mountpoint	FStype	Options	Dump	Pass #
+/dev/iso9660/${LABEL}	/	cd9660	ro	0	0
+tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
+EOF
 
 makefs -t cd9660 -o bootimage="i386;${STAGEDIR}/boot/cdboot" \
     -o no-emul-boot -o label=${LABEL} -o rockridge ${CDROM} ${STAGEDIR}
