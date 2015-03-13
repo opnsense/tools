@@ -103,22 +103,53 @@ setup_chroot()
 	chroot ${1} /etc/rc.d/ldconfig start
 }
 
+setup_marker()
+{
+	# Let opnsense-update(8) know it's up to date
+	local MARKER="/usr/local/opnsense/version/os-update"
+
+	if [ ! -f ${1}${MARKER} ]; then
+		# first call means bootstrap the marker file
+		mkdir -p ${1}$(dirname ${MARKER})
+		echo ${2} > ${1}${MARKER}
+	else
+		# subsequent call means make sure version matches
+		# (base and kernel must be in sync at all times)
+		if [ $(cat ${1}${MARKER}) != ${2} ]; then
+			echo "base/kernel version mismatch"
+			exit 1
+		fi
+	fi
+}
+
 setup_base()
 {
 	echo ">>> Setting up world in ${1}"
+
+	local BASE_SET=$(ls ${SETSDIR}/base-*-${ARCH}.txz)
 
 	# /home is needed for LiveCD images, and since it
 	# belongs to the base system, we create it from here.
 	mkdir -p ${1}/home
 
-	(cd ${1} && tar -Jxpf ${SETSDIR}/base-*-${ARCH}.txz)
+	tar -C ${1} -Jxpf ${BASE_SET}
+
+	local BASE_VER=${BASE_SET##${SETSDIR}/base-}
+
+	setup_marker ${1} ${BASE_VER%%.txz}
 }
 
 setup_kernel()
 {
 	echo ">>> Setting up kernel in ${1}"
 
-	(cd ${1} && tar -Jxpf ${SETSDIR}/kernel-*-${ARCH}.txz)
+	local KERNEL_SET=$(ls ${SETSDIR}/kernel-*-${ARCH}.txz)
+
+	tar -C ${1} -Jxpf ${KERNEL_SET}
+
+	local KERNEL_VER=${KERNEL_SET##${SETSDIR}/kernel-}
+
+	setup_marker ${1} ${KERNEL_VER%%.txz}
 }
 
 setup_packages()
@@ -164,11 +195,6 @@ setup_platform()
 	# XXX clean this up further maybe?
 	mkdir -p ${1}/conf
 	touch ${1}/conf/trigger_initial_wizard
-
-	# Let opnsense-update(8) know it's up to date
-	local MARKER="/usr/local/opnsense/version/os-update"
-	mkdir -p ${1}$(dirname ${MARKER})
-	echo ${PRODUCT_VERSION}-${ARCH} > ${1}${MARKER}
 
 	echo cdrom > ${1}/usr/local/etc/platform
 
