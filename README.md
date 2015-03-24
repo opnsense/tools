@@ -5,6 +5,10 @@ In conjunction with src.git, ports.git and core.git they create
 sets, packages and images for the OPNsense project.  The license
 is a standard BSD 2-Clause as reproduced here for your convenience:
 
+    Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
+    Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
+    All rights reserved.
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions
     are met:
