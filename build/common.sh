@@ -196,8 +196,6 @@ setup_platform()
 	mkdir -p ${1}/conf
 	touch ${1}/conf/trigger_initial_wizard
 
-	echo cdrom > ${1}/usr/local/etc/platform
-
 	# Set sane defaults via rc.conf(5)
 	cat > ${1}/etc/rc.conf <<EOF
 tmpmfs="YES"
