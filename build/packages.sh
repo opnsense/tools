@@ -44,8 +44,14 @@ cp ${PACKAGESDIR}/${ARCH}/* ${STAGEDIR}/All
 # needed bootstrap glue when no packages are on the system
 cd ${STAGEDIR}/Latest && ln -s ../All/pkg-*.txz pkg.txz
 
+SIGNARGS=
+if [ -n "$(${TOOLSDIR}/scripts/pkg_fingerprint.sh)" ]; then
+	# XXX check if fingerprint is in core.git
+	SIGNARGS="signing_command: ${TOOLSDIR}/scripts/pkg_sign.sh"
+fi
+
 # generate index files
-cd ${STAGEDIR} && pkg repo .
+cd ${STAGEDIR} && pkg repo . ${SIGNARGS}
 
 echo -n ">>> Creating packages set... "
 
