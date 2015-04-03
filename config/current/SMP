@@ -69,9 +69,6 @@ device		siba_bwn	# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
 device		bwn		# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
 device		run		# Ralink RT2700U/RT2800U/RT3000U USB 802.11agn
 
-options         NULLFS
-options         UNIONFS
-
 options         IPFIREWALL_DEFAULT_TO_ACCEPT
 options         IPFIREWALL_VERBOSE
 options         IPFIREWALL_VERBOSE_LIMIT
@@ -177,6 +174,7 @@ device		et		# et(4) for AGERE ET1310 fastE and gigE
 device		ed		# NE[12]000, SMC Ultra, 3c503, DS8390 cards
 device		mxge		# mxge - Myricom Myri10GE 10 Gigabit Ethernet adapter driver
 device		cxgb		# cxgb -- Chelsio T3 10 Gigabit Ethernet adapter driver
+device		cxgbe		# cxgbe -- Chelsio T4 and T5 based 40Gb, 10Gb, and 1Gb Ethernet adapter driver
 device		igb		# igb -- Intel(R) PRO/1000 PCI Express Gigabit Ethernet adapter driver
 device		ixgbe 		# http://www.nabble.com/kern-130476:-Error-in-compiling-kernel-with-device-ixgbe-td21424560.html
 device		ae		# ae -- Attansic/Atheros L2 FastEthernet controller driver
