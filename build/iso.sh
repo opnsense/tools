@@ -36,7 +36,6 @@ setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR} opnsense
 setup_mtree ${STAGEDIR}
-setup_platform ${STAGEDIR}
 
 echo -n ">>> Building ISO image... "
 

@@ -35,7 +35,6 @@ setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_packages ${STAGEDIR} opnsense
 setup_clone ${STAGEDIR} ${COREDIR}
-setup_platform ${STAGEDIR}
 setup_chroot ${STAGEDIR}
 
 echo ">>> Running ${COREDIR} test suite..."

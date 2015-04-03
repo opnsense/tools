@@ -132,6 +132,12 @@ setup_base()
 	# belongs to the base system, we create it from here.
 	mkdir -p ${1}/home
 
+	# /conf is needed for the config subsystem at this
+	# point as the storage location.  We ought to add
+	# this here, because otherwise read-only install
+	# media wouldn't be able to bootstrap the directory.
+	mkdir -p ${1}/conf
+
 	tar -C ${1} -Jxpf ${BASE_SET}
 
 	local BASE_VER=${BASE_SET##${SETSDIR}/base-}
@@ -186,14 +192,6 @@ setup_packages()
 
 	# keep the directory!
 	rm -rf ${BASEDIR}${PACKAGESDIR}/${ARCH}/*
-}
-
-setup_platform()
-{
-	echo ">>> Setting up platform in ${1}..."
-
-	# XXX clean this up further maybe?
-	mkdir -p ${1}/conf
 }
 
 setup_mtree()
