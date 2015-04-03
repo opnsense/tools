@@ -51,7 +51,7 @@ if [ -n "$(${TOOLSDIR}/scripts/pkg_fingerprint.sh)" ]; then
 fi
 
 # generate index files
-cd ${STAGEDIR} && pkg repo . ${SIGNARGS}
+pkg repo ${STAGEDIR} ${SIGNARGS}
 
 echo -n ">>> Creating packages set... "
 
