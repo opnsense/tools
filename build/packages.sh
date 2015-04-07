@@ -55,6 +55,6 @@ pkg repo ${STAGEDIR} ${SIGNARGS}
 
 echo -n ">>> Creating packages set... "
 
-tar -cf ${SETSDIR}/packages-${PRODUCT_VERSION}-${ARCH}.tar .
+tar -C ${STAGEDIR} -cf ${SETSDIR}/packages-${PRODUCT_VERSION}-${ARCH}.tar .
 
 echo "done"
