@@ -1,5 +1,7 @@
 [build opnSense in debug mode and enable GDB]
-1) build opnsense using the .debug kernel configuration
+1) build opnsense using a kernel with GDB debug options enabled,
++	options        GDB                     # Support remote GDB.
++	makeoptions    DEBUG=-g	
 2) make sure the target device.hints contains  hint.uart.0.flags="0xc0" 
 3) setup serial config baudrate in boot/loader.conf
 	comconsole_speed="115200"
