@@ -31,11 +31,13 @@ set -e
 
 rm -f ${PACKAGESDIR}/${ARCH}/opnsense-*.txz
 
+git_clear ${PORTSDIR}
 git_clear ${COREDIR}
 git_describe ${COREDIR}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
+setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_packages ${STAGEDIR}
 
 # no compiling needed; simply install
