@@ -51,6 +51,8 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 		PORT_DEPS=${PORT}
 	fi
 
+	PORT_MODS="${PORT_MODS} ${PORT_DEPS}"
+
 	for PORT in ${PORT_DEPS}; do
 		if [ ! -d ${FREEBSD}/${PORT} ]; then
 			continue;
@@ -72,6 +74,55 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 	done
 done < ${PORT_LIST}
 
+if [ "${@}" = "sync" ]; then
+	for ENTRY in ${OPNSENSE}/*; do
+		ENTRY=${ENTRY##"${OPNSENSE}/"}
+
+		case "$(echo ${ENTRY} | colrm 2)" in
+		[[:upper:]])
+			continue
+			;;
+		*)
+			;;
+		esac
+
+		if [ ! -d ${FREEBSD}/${ENTRY} ]; then
+			continue;
+		fi
+
+		for PORT in ${OPNSENSE}/${ENTRY}/*; do
+			PORT=${PORT##"${OPNSENSE}/"}
+
+			if [ -e ${FREEBSD}/${PORT} ]; then
+				continue;
+			fi
+
+			rm -fr ${OPNSENSE}/${PORT}
+		done
+
+		for PORT in ${FREEBSD}/${ENTRY}/*; do
+			PORT=${PORT##"${FREEBSD}/"}
+
+			UNUSED=1
+			for PORT_MOD in ${PORT_MODS}; do
+				if [ ${PORT_MOD} = ${PORT} ]; then
+					UNUSED=0
+				fi
+			done
+
+			if [ ${UNUSED} = 0 ]; then
+				continue;
+			fi
+
+			rm -fr ${OPNSENSE}/${PORT}
+			cp -r ${FREEBSD}/${PORT} ${OPNSENSE}/${PORT}
+		done
+	done
+
+	# ends here
+	exit 0
+fi
+
 for PORT in ${PORTS_CHANGED}; do
 	(clear && diff -ru ${OPNSENSE}/${PORT} ${FREEBSD}/${PORT} \
 	    2>/dev/null || true;) | less -r
@@ -84,32 +135,6 @@ for PORT in ${PORTS_CHANGED}; do
 		cp -a ${FREEBSD}/${PORT} ${OPNSENSE}/${PORT}
 		;;
 	esac
-done
-
-for ENTRY in ${OPNSENSE}/*; do
-	ENTRY=${ENTRY##"${OPNSENSE}/"}
-
-	case "$(echo ${ENTRY} | colrm 2)" in
-	[[:upper:]])
-		continue
-		;;
-	*)
-		;;
-	esac
-
-	if [ ! -d ${FREEBSD}/${ENTRY} ]; then
-		continue;
-	fi
-
-	for SUBENTRY in ${OPNSENSE}/${ENTRY}/*; do
-		SUBENTRY=${SUBENTRY##"${OPNSENSE}/"}
-
-		if [ -e ${FREEBSD}/${SUBENTRY} ]; then
-			continue;
-		fi
-
-		rm -fr ${OPNSENSE}/${SUBENTRY}
-	done
 done
 
 for ENTRY in ${FREEBSD}/*; do
