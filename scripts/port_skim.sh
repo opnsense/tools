@@ -44,7 +44,7 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 	fi
 
 	if [ "${PORT_OPT}" != "sync" ]; then
-		PORT_DEPS=$(echo $PORT; make -C ${SOURCE}/${PORT} \
+		PORT_DEPS=$(echo ${PORT}; make -C ${SOURCE}/${PORT} \
 		    PORTSDIR=${SOURCE} all-depends-list | \
 		    awk -F"${SOURCE}/" '{print $2}')
 	else
@@ -72,26 +72,55 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 	done
 done < ${PORT_LIST}
 
-for PORT in $PORTS_CHANGED; do
+for PORT in ${PORTS_CHANGED}; do
 	(clear && diff -ru ${OPNSENSE}/${PORT} ${FREEBSD}/${PORT} \
 	    2>/dev/null || true;) | less -r
 
 	echo -n "replace ${PORT} [y/N]: "
-	read yn
-	case $yn in
-	[yY] )
+	read YN
+	case ${YN} in
+	[yY])
 		rm -fr ${OPNSENSE}/${PORT}
 		cp -a ${FREEBSD}/${PORT} ${OPNSENSE}/${PORT}
 		;;
 	esac
 done
 
+for ENTRY in ${OPNSENSE}/*; do
+	ENTRY=${ENTRY##"${OPNSENSE}/"}
+
+	case "$(echo ${ENTRY} | colrm 2)" in
+	[[:upper:]])
+		continue
+		;;
+	*)
+		;;
+	esac
+
+	if [ ! -d ${FREEBSD}/${ENTRY} ]; then
+		continue;
+	fi
+
+	for SUBENTRY in ${OPNSENSE}/${ENTRY}/*; do
+		SUBENTRY=${SUBENTRY##"${OPNSENSE}/"}
+
+		if [ -e ${FREEBSD}/${SUBENTRY} ]; then
+			continue;
+		fi
+
+		rm -fr ${OPNSENSE}/${SUBENTRY}
+	done
+done
+
 for ENTRY in ${FREEBSD}/*; do
 	ENTRY=${ENTRY##"${FREEBSD}/"}
 
 	case "$(echo ${ENTRY} | colrm 2)" in
-		[[:upper:]] ) ;;
-		* ) continue;;
+	[[:upper:]])
+		;;
+	*)
+		continue
+		;;
 	esac
 
 	diff -rq ${OPNSENSE}/${ENTRY} ${FREEBSD}/${ENTRY} \
@@ -105,9 +134,9 @@ if [ -n "${ENTRIES}" ]; then
 	done) | less -r
 
 	echo -n "replace Infrastructure [y/N]: "
-	read yn
-	case $yn in
-	[yY] )
+	read YN
+	case ${YN} in
+	[yY])
 		for ENTRY in ${ENTRIES}; do
 			rm -r ${OPNSENSE}/${ENTRY}
 			cp -a ${FREEBSD}/${ENTRY} ${OPNSENSE}/
