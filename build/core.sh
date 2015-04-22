@@ -54,11 +54,11 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 		continue
 	fi
 
-	# fill in the direct ports dependencies
+	# catch dependecy error in shell execution
+	PORT_DEP=$(pkg -c ${STAGEDIR} query '%n: { version: "%v", origin: "%o" }' ${PORT_NAME})
 
-	cat >> ${STAGEDIR}/deps << EOF
-  $(pkg -c ${STAGEDIR} query '%n: { version: "%v", origin: "%o" }' ${PORT_NAME})
-EOF
+	# fill in the direct ports dependencies
+	echo "  ${PORT_DEP}" >> ${STAGEDIR}/deps
 done < ${TOOLSDIR}/config/current/ports.conf
 
 # remove placeholder now that all dependencies are in place
