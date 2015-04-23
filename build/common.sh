@@ -54,6 +54,7 @@ export LABEL="OPNsense_Install"
 export CDROM="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-cdrom-${ARCH}.iso"
 export SERIALIMG="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-serial-${ARCH}.img"
 export VGAIMG="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-vga-${ARCH}.img"
+export NANOIMG="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-nano-${ARCH}.img"
 
 # print environment to showcase all of our variables
 env

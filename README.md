@@ -6,7 +6,8 @@ sets, packages and images for the OPNsense project.  The license
 is a standard BSD 2-Clause as reproduced here for your convenience:
 
     Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
-    Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
+    Copyright (c) 2004-2011 Scott Ullrich <sullrich@gmail.com>
+    Copyright (c) 2005 Poul-Henning Kamp <phk@FreeBSD.org>
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
