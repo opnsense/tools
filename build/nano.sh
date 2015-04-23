@@ -31,8 +31,11 @@ set -e
 
 . ./common.sh
 
+# rewrite the disk label, because we're not install media
+LABEL=OPNsense
+
 . ${SRCDIR}/tools/tools/nanobsd/FlashDevice.sub
-sub_FlashDevice sandisk 1g
+sub_FlashDevice sandisk 2g
 
 mkdir -p ${IMAGESDIR}
 
@@ -40,8 +43,6 @@ setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR} opnsense
-
-echo "/dev/ufs/OPNsense0 / ufs rw,async,noatime 1 1" > ${STAGEDIR}/etc/fstab
 
 # Activate serial console boot
 echo "-S115200 -D" > ${STAGEDIR}/boot.config
@@ -67,7 +68,7 @@ sed -i "" -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' 
 MD=`mdconfig -a -t swap -s ${NANO_MEDIASIZE} -x ${NANO_SECTS} -y ${NANO_HEADS}`
 
 # NanoBSD knobs; do not change lightly
-NANO_IMAGES=1
+NANO_IMAGES=2
 NANO_CODESIZE=0
 NANO_DATASIZE=0
 NANO_CONFSIZE=102400
@@ -140,25 +141,37 @@ awk '
 }
 ' | fdisk -i -f - ${MD}
 
-# Bootstrap the boot loader and boot0 for convenience
 boot0cfg -B -b ${STAGEDIR}/boot/boot0sio -o packet -s 1 -m 3 ${MD}
-bsdlabel -w -B -b ${STAGEDIR}/boot/boot ${MD}s1
-
 MNT=/tmp/nanobsd.${$}
 mkdir -p ${MNT}
 
-# We only ever set up one slice and ignore everything else
-newfs -b 4096 -f 512 -i 8192 -O1 -U /dev/${MD}s1a
-tunefs -L OPNsense0 /dev/${MD}s1a
-mount -o async /dev/${MD}s1a ${MNT}
-df -i ${MNT}
-cd ${STAGEDIR} && find . -print | cpio -dump ${MNT}
-df -i ${MNT}
-umount ${MNT}
+setup_partition()
+{
+	# args 1:slice 2:label 3:mount
+
+	echo "/dev/ufs/${2} / ufs rw,async,noatime 1 1" > ${STAGEDIR}/etc/fstab
+
+	bsdlabel -w -B -b ${STAGEDIR}/boot/boot ${1}
+	newfs -b 4096 -f 512 -i 8192 -O1 -U ${1}a
+	tunefs -L ${2} ${1}a
+	mount -o async ${1}a ${3}
+	df -i ${3}
+	(cd ${STAGEDIR}; find . -print | cpio -dump ${3})
+	df -i ${3}
+	umount ${3}
+}
+
+setup_partition /dev/${MD}s1 ${LABEL}0 ${MNT}
+
+if [ ${NANO_IMAGES} -gt 1 ]; then
+	setup_partition /dev/${MD}s2 ${LABEL}1 ${MNT}
+fi
 
 rm -rf /tmp/nanobsd.*
 
+# move image from RAM to output file
 dd if=/dev/${MD} of=${NANOIMG} bs=64k
+
 mdconfig -d -u ${MD}
 
 echo "done:"
