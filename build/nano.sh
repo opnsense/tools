@@ -147,24 +147,24 @@ mkdir -p ${MNT}
 
 setup_partition()
 {
-	# args 1:slice 2:label 3:mount
+	# args 1:slice 2:label 3:mount 4:root
 
-	echo "/dev/ufs/${2} / ufs rw,async,noatime 1 1" > ${STAGEDIR}/etc/fstab
+	echo "/dev/ufs/${2} / ufs rw,async,noatime 1 1" > ${4}/etc/fstab
 
-	bsdlabel -w -B -b ${STAGEDIR}/boot/boot ${1}
+	bsdlabel -w -B -b ${4}/boot/boot ${1}
 	newfs -b 4096 -f 512 -i 8192 -O1 -U ${1}a
 	tunefs -L ${2} ${1}a
 	mount -o async ${1}a ${3}
 	df -i ${3}
-	(cd ${STAGEDIR}; find . -print | cpio -dump ${3})
+	(cd ${4}; find . -print | cpio -dump ${3})
 	df -i ${3}
 	umount ${3}
 }
 
-setup_partition /dev/${MD}s1 ${LABEL}0 ${MNT}
+setup_partition /dev/${MD}s1 ${LABEL}0 ${MNT} ${STAGEDIR}
 
 if [ ${NANO_IMAGES} -gt 1 ]; then
-	setup_partition /dev/${MD}s2 ${LABEL}1 ${MNT}
+	setup_partition /dev/${MD}s2 ${LABEL}1 ${MNT} ${STAGEDIR}
 fi
 
 rm -rf /tmp/nanobsd.*
