@@ -172,7 +172,7 @@ setup_packages()
 
 	if [ -z "${PKGLIST}" ]; then
 		# forcefully add all available packages
-		pkg -c ${BASEDIR} add -f ${PACKAGESDIR}/${ARCH}/*.txz || true
+		pkg -c ${BASEDIR} add ${PACKAGESDIR}/${ARCH}/*.txz
 	else
 		# always bootstrap pkg
 		PKGLIST="pkg ${PKGLIST}"
