@@ -167,29 +167,34 @@ setup_packages()
 	shift
 	PKGLIST=${@}
 
-	mkdir -p ${PACKAGESDIR}/${ARCH} ${BASEDIR}${PACKAGESDIR}/${ARCH}
-	cp ${PACKAGESDIR}/${ARCH}/* ${BASEDIR}${PACKAGESDIR}/${ARCH} || true
+	mkdir -p ${PACKAGESDIR}/${ARCH} ${BASEDIR}${PACKAGESDIR}
+	cp -r ${PACKAGESDIR}/${ARCH} ${BASEDIR}${PACKAGESDIR}
 
 	if [ -z "${PKGLIST}" ]; then
 		# forcefully add all available packages
-		pkg -c ${BASEDIR} add ${PACKAGESDIR}/${ARCH}/*.txz
+		PKGLIST=$(ls ${PACKAGESDIR}/${ARCH}/*.txz || true)
 	else
 		# always bootstrap pkg
 		PKGLIST="pkg ${PKGLIST}"
-
-		for PKG in ${PKGLIST}; do
-			# must fail if packages aren't there
-			pkg -c ${BASEDIR} add ${PACKAGESDIR}/${ARCH}/${PKG}-*.txz
-		done
-
-		# collect all installed packages
-		PKGLIST="$(pkg -c ${BASEDIR} query %n)"
-
-		for PKG in ${PKGLIST}; do
-			# add, unlike install, is not aware of repositories :(
-			pkg -c ${BASEDIR} annotate -qyA ${PKG} repository OPNsense
+		# and transform the list into files
+		_PKGLIST=${PKGLIST}
+		PKGLIST=
+		for PKG in ${_PKGLIST}; do
+			PKGLIST="$PKGLIST $(ls ${PACKAGESDIR}/${ARCH}/${PKG}-*.txz)"
 		done
 	fi
+
+	for PKG in ${PKGLIST}; do
+		pkg -c ${BASEDIR} add ${PKG}
+	done
+
+	# collect all installed packages
+	PKGLIST="$(pkg -c ${BASEDIR} query %n)"
+
+	for PKG in ${PKGLIST}; do
+		# add, unlike install, is not aware of repositories :(
+		pkg -c ${BASEDIR} annotate -qyA ${PKG} repository OPNsense
+	done
 
 	# keep the directory!
 	rm -rf ${BASEDIR}${PACKAGESDIR}/${ARCH}/*
