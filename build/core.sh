@@ -54,8 +54,10 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 		continue
 	fi
 
+	echo -n "Collecting depencency for ${PORT_CAT}/${PORT_NAME}... "
 	# catch dependecy error in shell execution
 	PORT_DEP=$(pkg -c ${STAGEDIR} query '%n: { version: "%v", origin: "%o" }' ${PORT_NAME})
+	echo "ok"
 
 	# fill in the direct ports dependencies
 	echo "  ${PORT_DEP}" >> ${STAGEDIR}/deps
