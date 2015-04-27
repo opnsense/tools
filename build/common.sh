@@ -44,11 +44,12 @@ export COREDIR="/usr/core"
 export SRCDIR="/usr/src"
 
 # misc. foo
+export CONFIG_XML="${STAGEDIR}/usr/local/etc/config.xml"
 export CPUS=`sysctl kern.smp.cpus | awk '{ print $2 }'`
 export ARCH=${ARCH:-"`uname -m`"}
+export LABEL="OPNsense_Install"
 export TARGET_ARCH=${ARCH}
 export TARGETARCH=${ARCH}
-export LABEL="OPNsense_Install"
 
 # target files
 export CDROM="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-cdrom-${ARCH}.iso"

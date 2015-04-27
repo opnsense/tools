@@ -44,15 +44,11 @@ setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR} opnsense
 
-# Activate serial console boot
+# Activate serial console for bootup
 echo "-S115200 -D" > ${STAGEDIR}/boot.config
 
-# Activate serial console in config.xml
-DEFAULTCONF=${STAGEDIR}/usr/local/etc/config.xml
-# If it wasn't there before, enable serial in the config:
-if ! grep -q -F "<enableserial/>" ${DEFAULTCONF}; then
-	sed -i "" -e "s:</system>:<enableserial/></system>:" ${DEFAULTCONF}
-fi
+# Activate serial console in standard config
+sed -i '' -e 's:</system>:<enableserial/><use_mfs_tmpvar/></system>:' ${CONFIG_XML}
 
 # Activate serial console+video console
 cat > ${STAGEDIR}/boot/loader.conf <<EOF
