@@ -84,9 +84,13 @@ A cdrom live image is created using:
 
     # ./iso.sh
 
-Or you can create memstick images for VGA and serial:
+A memstick image for VGA and serial is created using:
 
     # ./memstick.sh
+
+A direct disk image in NanoBSD style is created using:
+
+    # ./nano.sh
 
 Some more random information
 ============================
@@ -104,12 +108,21 @@ The OPNsense core package can then be rebuilt on its own via:
 For very fast ports rebuilding of already installed packages
 the following works:
 
-    # rm /tmp/packages/<packagename>-*.txz
-    # cd /usr/tools/build && ./ports.sh
+    # cd /usr/tools/build && ./ports.sh [packagename ...]
+
+Package sets (may be signed depending on whether the key is
+found under /root) ready for web server deployment can be
+built using:
+
+    # cd /usr/tools/build && ./packages.sh
+
+Release sets can be built using:
+
+    # cd /usr/tools/build && ./release.sh [version]
 
 All individual ports packages are stored under /tmp/packages
 
-Kernel, base and ports sets are stored under /tmp/sets
+Kernel, base, packages and release sets are stored under /tmp/sets
 
 All final images are stored under /tmp/images
 
