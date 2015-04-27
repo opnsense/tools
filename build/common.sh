@@ -171,22 +171,22 @@ setup_packages()
 	cp -r ${PACKAGESDIR}/${ARCH} ${BASEDIR}${PACKAGESDIR}
 
 	if [ -z "${PKGLIST}" ]; then
-		# forcefully add all available packages
 		PKGLIST=$(ls ${PACKAGESDIR}/${ARCH}/*.txz || true)
+		for PKG in ${PKGLIST}; do
+			# Adds all available packages but ignores the
+			# ones that cannot be installed due to missing
+			# dependencies.  This behaviour is desired.
+			pkg -c ${BASEDIR} add ${PKG} || true
+		done
 	else
-		# always bootstrap pkg
-		PKGLIST="pkg ${PKGLIST}"
-		# and transform the list into files
-		_PKGLIST=${PKGLIST}
-		PKGLIST=
-		for PKG in ${_PKGLIST}; do
-			PKGLIST="$PKGLIST $(ls ${PACKAGESDIR}/${ARCH}/${PKG}-*.txz)"
+		# always bootstrap pkg as the first package
+		for PKG in pkg ${PKGLIST}; do
+			# Adds all selected packages and fails if
+			# one cannot be installed.  Used to build
+			# final images or regression test systems.
+			pkg -c ${BASEDIR} add ${PACKAGESDIR}/${ARCH}/${PKG}-*.txz
 		done
 	fi
-
-	for PKG in ${PKGLIST}; do
-		pkg -c ${BASEDIR} add ${PKG}
-	done
 
 	# collect all installed packages
 	PKGLIST="$(pkg -c ${BASEDIR} query %n)"
