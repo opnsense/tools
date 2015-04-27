@@ -53,6 +53,7 @@ echo ">>> Creating images for ${PRODUCT_VERSION}"
 
 cd ${TOOLSDIR}/build && ./clean.sh images
 cd ${TOOLSDIR}/build && ./memstick.sh
+cd ${TOOLSDIR}/build && ./nano.sh
 cd ${TOOLSDIR}/build && ./iso.sh
 
 setup_stage ${STAGEDIR}
@@ -60,9 +61,9 @@ setup_stage ${STAGEDIR}
 echo ">>> Compressing images for ${PRODUCT_VERSION}"
 
 mv ${IMAGESDIR}/${PRODUCT_NAME}-* ${STAGEDIR}
-bzip2 ${STAGEDIR}/${PRODUCT_NAME}-*-cdrom-* &
-bzip2 ${STAGEDIR}/${PRODUCT_NAME}-*-serial-* &
-bzip2 ${STAGEDIR}/${PRODUCT_NAME}-*-vga-* &
+for IMAGE in $(ls ${STAGEDIR}/${PRODUCT_NAME}-*); do
+	bzip2 ${IMAGE} &
+done
 wait
 mkdir -p ${STAGEDIR}/tmp
 
