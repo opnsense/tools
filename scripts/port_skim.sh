@@ -51,6 +51,14 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 		PORT_DEPS=${PORT}
 	fi
 
+	for PORT in ${PORT_DEPS}; do
+		PORT_MASTER=$(make -C ${SOURCE}/${PORT} -V MASTER_PORT)
+		if [ -n "${PORT_MASTER}" ]; then
+			PORT_DEPS="${PORT_DEPS} ${PORT_MASTER}"
+		fi
+	done
+
+	PORT_DEPS=$(echo ${PORT_DEPS} | tr ' ' '\n' | sort -u)
 	PORT_MODS="${PORT_MODS} ${PORT_DEPS}"
 
 	for PORT in ${PORT_DEPS}; do
@@ -99,6 +107,8 @@ if [ "${@}" = "sync" ]; then
 
 			rm -fr ${OPNSENSE}/${PORT}
 		done
+
+		PORT_MODS=$(echo ${PORT_MODS} | tr ' ' '\n' | sort -u)
 
 		for PORT in ${FREEBSD}/${ENTRY}/*; do
 			PORT=${PORT##"${FREEBSD}/"}
