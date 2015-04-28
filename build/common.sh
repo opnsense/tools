@@ -140,7 +140,7 @@ setup_base()
 	# media wouldn't be able to bootstrap the directory.
 	mkdir -p ${1}/conf
 
-	tar -C ${1} -Jxpf ${BASE_SET}
+	tar -C ${1} -xpf ${BASE_SET}
 
 	local BASE_VER=${BASE_SET##${SETSDIR}/base-}
 
@@ -153,7 +153,7 @@ setup_kernel()
 
 	local KERNEL_SET=$(ls ${SETSDIR}/kernel-*-${ARCH}.txz)
 
-	tar -C ${1} -Jxpf ${KERNEL_SET}
+	tar -C ${1} -xpf ${KERNEL_SET}
 
 	local KERNEL_VER=${KERNEL_SET##${SETSDIR}/kernel-}
 
