@@ -38,7 +38,6 @@ git_describe ${COREDIR}
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
-setup_packages ${STAGEDIR}
 
 # no compiling needed; simply install
 make -C ${COREDIR} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
@@ -54,14 +53,20 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 		continue
 	fi
 
-	echo -n "Collecting depencency for ${PORT_CAT}/${PORT_NAME}... "
+	PORT_LIST="${PORT_LIST} ${PORT_NAME}"
+done < ${TOOLSDIR}/config/current/ports.conf
+
+setup_packages ${STAGEDIR} ${PORT_LIST}
+
+for PORT_NAME in ${PORT_LIST}; do
+	echo -n ">>> Collecting depencency for ${PORT_NAME}... "
 	# catch dependecy error in shell execution
 	PORT_DEP=$(pkg -c ${STAGEDIR} query '%n: { version: "%v", origin: "%o" }' ${PORT_NAME})
-	echo "ok"
+	echo "done"
 
 	# fill in the direct ports dependencies
 	echo "  ${PORT_DEP}" >> ${STAGEDIR}/deps
-done < ${TOOLSDIR}/config/current/ports.conf
+done
 
 # remove placeholder now that all dependencies are in place
 sed -i "" -e "/%%REPO_DEPENDS%%/r ${STAGEDIR}/deps" ${STAGEDIR}/+MANIFEST
