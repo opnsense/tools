@@ -82,7 +82,7 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 	done
 done < ${PORT_LIST}
 
-if [ "${@}" = "sync" ]; then
+if [ "x${@}" = "xsync" ]; then
 	for ENTRY in ${OPNSENSE}/*; do
 		ENTRY=${ENTRY##"${OPNSENSE}/"}
 
