@@ -209,7 +209,7 @@ setup_mtree()
 ./dev
 ./tmp
 EOF
-	chroot ${1} /bin/sh -s <<EOF
+	chroot ${1} /bin/sh -es <<EOF
 /usr/sbin/mtree -c -k uid,gid,mode,size,sha256digest -p / -X /tmp/installed_filesystem.mtree.exclude > /tmp/installed_filesystem.mtree
 /bin/chmod 600 /tmp/installed_filesystem.mtree
 /bin/mv /tmp/installed_filesystem.mtree /etc/

@@ -102,7 +102,7 @@ trap - 2
 
 echo ">>> Creating binary packages..."
 
-chroot ${STAGEDIR} /bin/sh -es << EOF || true
+if ! chroot ${STAGEDIR} /bin/sh -es << EOF; then PORT_ABORT=1; fi
 pkg_resolve_deps()
 {
 	local PORTS DEPS PORT DEP
