@@ -59,7 +59,7 @@ fi
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
-chroot ${STAGEDIR} /bin/sh -es << EOF || true
+if ! chroot ${STAGEDIR} /bin/sh -es << EOF; then PORT_ABORT=1; fi
 # overwrites the ports tree variable, behaviour is unwanted...
 unset STAGEDIR
 # ...and this unbreaks the nmap build
@@ -105,10 +105,7 @@ echo ">>> Creating binary packages..."
 chroot ${STAGEDIR} /bin/sh -es << EOF || true
 pkg_resolve_deps()
 {
-	local PORTS
-	local DEPS
-	local PORT
-	local DEP
+	local PORTS DEPS PORT DEP
 
 	DEPS="\$(pkg info -qd \${1})"
 	PORTS="\${1} \${DEPS}"
@@ -136,3 +133,8 @@ EOF
 
 rm -rf ${PACKAGESDIR}/${ARCH}/*
 mv ${STAGEDIR}${PACKAGESDIR}/${ARCH}/* ${PACKAGESDIR}/${ARCH}/
+
+if [ -n "${PORT_ABORT}" ]; then
+	echo ">>> The ports build failed. Please inspect the log."
+	exit 1
+fi
