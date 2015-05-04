@@ -33,7 +33,7 @@ git_clear ${COREDIR}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
-setup_packages ${STAGEDIR} opnsense
+setup_packages ${STAGEDIR} opnsense pear-PHP_CodeSniffer
 setup_clone ${STAGEDIR} ${COREDIR}
 setup_chroot ${STAGEDIR}
 
