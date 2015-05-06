@@ -44,22 +44,15 @@ setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR} opnsense
 
-# Activate serial console for bootup
-echo "-S115200 -D" > ${STAGEDIR}/boot.config
+cat > ${STAGEDIR}/boot/loader.conf << EOF
+kern.vty="vt"
+EOF
 
-# Activate serial console in standard config
+echo "-S115200 -h" > ${STAGEDIR}/boot.config
+
 sed -i '' -e 's:</system>:<enableserial/><use_mfs_tmpvar/></system>:' \
     ${STAGEDIR}${CONFIG_XML}
 
-# Activate serial console+video console
-cat > ${STAGEDIR}/boot/loader.conf <<EOF
-boot_multicons="YES"
-boot_serial="YES"
-console="comconsole,vidconsole"
-comconsole_speed="115200"
-EOF
-
-# Activate serial console TTY
 sed -i "" -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${STAGEDIR}/etc/ttys
 
 MD=`mdconfig -a -t swap -s ${NANO_MEDIASIZE} -x ${NANO_SECTS} -y ${NANO_HEADS}`

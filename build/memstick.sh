@@ -46,25 +46,18 @@ cat > ${STAGEDIR}/etc/fstab << EOF
 tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
+cat > ${STAGEDIR}/boot/loader.conf << EOF
+kern.vty="vt"
+EOF
+
 makefs -t ffs -B little -o label=${LABEL} ${VGAIMG} ${STAGEDIR}
 
-# Activate serial console for bootup
-echo "-S115200 -D" > ${STAGEDIR}/boot.config
+echo "-S115200 -h" > ${STAGEDIR}/boot.config
 
-# Activate serial console in standard config
 sed -i '' -e 's:</system>:<enableserial/></system>:' \
     ${STAGEDIR}${CONFIG_XML}
 
-# Activate serial console+video console
-cat > ${STAGEDIR}/boot/loader.conf <<EOF
-boot_multicons="YES"
-boot_serial="YES"
-console="comconsole,vidconsole"
-comconsole_speed="115200"
-EOF
-
-# Activate serial console TTY
-sed -i "" -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${STAGEDIR}/etc/ttys
+sed -i '' -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${STAGEDIR}/etc/ttys
 
 makefs -t ffs -B little -o label=${LABEL} ${SERIALIMG} ${STAGEDIR}
 
