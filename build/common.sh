@@ -28,9 +28,9 @@
 set -e
 
 # important build settings
-export PRODUCT_NAME="OPNsense"
-export PRODUCT_FLAVOUR="OpenSSL"
 export PRODUCT_VERSION=${PRODUCT_VERSION:-"`date '+%Y%m%d%H%M'`"}
+export PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR:-"OpenSSL"}
+export PRODUCT_NAME="OPNsense"
 
 # build directories
 export STAGEDIR="/usr/local/stage"
