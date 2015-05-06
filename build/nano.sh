@@ -48,7 +48,8 @@ setup_packages ${STAGEDIR} opnsense
 echo "-S115200 -D" > ${STAGEDIR}/boot.config
 
 # Activate serial console in standard config
-sed -i '' -e 's:</system>:<enableserial/><use_mfs_tmpvar/></system>:' ${CONFIG_XML}
+sed -i '' -e 's:</system>:<enableserial/><use_mfs_tmpvar/></system>:' \
+    ${STAGEDIR}${CONFIG_XML}
 
 # Activate serial console+video console
 cat > ${STAGEDIR}/boot/loader.conf <<EOF

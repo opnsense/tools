@@ -48,6 +48,13 @@ for PKGFILE in $(ls ${STAGEDIR}/+*); do
 	sed -i "" -e "s/%%REPO_COMMENT%%/${REPO_COMMENT}/g" ${PKGFILE}
 done
 
+REPO_FLAVOUR="latest"
+if [ ${PRODUCT_FLAVOUR} = "LibreSSL" ]; then
+	REPO_FLAVOUR="libressl"
+fi
+sed -i '' -e "s/%%REPO_FLAVOUR%%/${REPO_FLAVOUR}/g" \
+    ${STAGEDIR}${CONFIG_PKG}
+
 while read PORT_NAME PORT_CAT PORT_OPT; do
 	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" -o -n "${PORT_OPT}" ]; then
 		continue

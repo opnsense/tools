@@ -29,6 +29,7 @@ set -e
 
 # important build settings
 export PRODUCT_NAME="OPNsense"
+export PRODUCT_FLAVOUR="OpenSSL"
 export PRODUCT_VERSION=${PRODUCT_VERSION:-"`date '+%Y%m%d%H%M'`"}
 
 # build directories
@@ -44,7 +45,8 @@ export COREDIR="/usr/core"
 export SRCDIR="/usr/src"
 
 # misc. foo
-export CONFIG_XML="${STAGEDIR}/usr/local/etc/config.xml"
+export CONFIG_PKG="/usr/local/etc/pkg/repos/OPNsense.conf"
+export CONFIG_XML="/usr/local/etc/config.xml"
 export CPUS=`sysctl kern.smp.cpus | awk '{ print $2 }'`
 export ARCH=${ARCH:-"`uname -m`"}
 export LABEL="OPNsense_Install"

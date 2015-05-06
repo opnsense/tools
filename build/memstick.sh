@@ -52,7 +52,8 @@ makefs -t ffs -B little -o label=${LABEL} ${VGAIMG} ${STAGEDIR}
 echo "-S115200 -D" > ${STAGEDIR}/boot.config
 
 # Activate serial console in standard config
-sed -i '' -e 's:</system>:<enableserial/></system>:' ${CONFIG_XML}
+sed -i '' -e 's:</system>:<enableserial/></system>:' \
+    ${STAGEDIR}${CONFIG_XML}
 
 # Activate serial console+video console
 cat > ${STAGEDIR}/boot/loader.conf <<EOF
