@@ -84,7 +84,7 @@ git_clear()
 
 git_describe()
 {
-	VERSION=$(git -C ${1} describe --abbrev=0)
+	VERSION=$(git -C ${1} describe --abbrev=0 --always)
 	REVISION=$(git -C ${1} rev-list ${VERSION}.. --count)
 	COMMENT=$(git -C ${1} rev-list HEAD --max-count=1 | cut -c1-9)
 	if [ "${REVISION}" != "0" ]; then
