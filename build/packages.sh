@@ -29,7 +29,7 @@ set -e
 
 . ./common.sh
 
-rm -f ${SETSDIR}/packages-*-${ARCH}.tar
+rm -f ${SETSDIR}/packages-*_${PRODUCT_FLAVOUR}-${ARCH}.tar
 
 setup_stage ${STAGEDIR}
 
@@ -52,8 +52,9 @@ fi
 # generate index files
 pkg repo ${STAGEDIR} ${SIGNARGS}
 
-echo -n ">>> Creating packages set... "
+echo -n ">>> Creating package mirror set for ${PRODUCT_RELEASE}... "
 
-tar -C ${STAGEDIR} -cf ${SETSDIR}/packages-${PRODUCT_VERSION}-${ARCH}.tar .
+tar -C ${STAGEDIR} -cf \
+    ${SETSDIR}/packages-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}-${ARCH}.tar .
 
 echo "done"

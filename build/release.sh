@@ -43,13 +43,13 @@ if [ -n "${1}" ]; then
 	fi
 fi
 
-rm -f ${SETSDIR}/release-*-${ARCH}.tar
+rm -f ${SETSDIR}/release-*_${PRODUCT_FLAVOUR}-${ARCH}.tar
 
-echo ">>> Creating packages for ${PRODUCT_VERSION}"
+echo ">>> Creating packages for ${PRODUCT_RELEASE}"
 
 cd ${TOOLSDIR}/build && ./packages.sh
 
-echo ">>> Creating images for ${PRODUCT_VERSION}"
+echo ">>> Creating images for ${PRODUCT_RELEASE}"
 
 cd ${TOOLSDIR}/build && ./clean.sh images
 cd ${TOOLSDIR}/build && ./memstick.sh
@@ -58,23 +58,28 @@ cd ${TOOLSDIR}/build && ./iso.sh
 
 setup_stage ${STAGEDIR}
 
-echo ">>> Compressing images for ${PRODUCT_VERSION}"
+echo -n ">>> Compressing images for ${PRODUCT_RELEASE}... "
 
-mv ${IMAGESDIR}/${PRODUCT_NAME}-* ${STAGEDIR}
-for IMAGE in $(ls ${STAGEDIR}/${PRODUCT_NAME}-*); do
+mv ${IMAGESDIR}/${PRODUCT_RELEASE}-* ${STAGEDIR}
+for IMAGE in $(ls ${STAGEDIR}/${PRODUCT_RELEASE}-*); do
 	bzip2 ${IMAGE} &
 done
 wait
+
+echo "done"
+
+echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
+
 mkdir -p ${STAGEDIR}/tmp
-
-echo ">>> Checksumming images for ${PRODUCT_VERSION}"
-
-cd ${STAGEDIR} && sha256 ${PRODUCT_NAME}-* > tmp/${PRODUCT_NAME}-${PRODUCT_VERSION}-checksums-${ARCH}.sha256
-cd ${STAGEDIR} && md5 ${PRODUCT_NAME}-* > tmp/${PRODUCT_NAME}-${PRODUCT_VERSION}-checksums-${ARCH}.md5
+cd ${STAGEDIR} && sha256 ${PRODUCT_RELEASE}-* > tmp/${PRODUCT_RELEASE}-checksums-${ARCH}.sha256
+cd ${STAGEDIR} && md5 ${PRODUCT_RELEASE}-* > tmp/${PRODUCT_RELEASE}-checksums-${ARCH}.md5
 
 mv tmp/* .
 rm -rf tmp
 
-echo ">>> Bundling images for ${PRODUCT_VERSION}"
+echo "done"
 
-tar -cf ${SETSDIR}/release-${PRODUCT_VERSION}-${ARCH}.tar .
+echo -n ">>> Bundling images for ${PRODUCT_RELEASE}... "
+
+tar -cf ${SETSDIR}/release-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}-${ARCH}.tar .
+echo "done"

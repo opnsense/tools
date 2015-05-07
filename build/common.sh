@@ -32,6 +32,9 @@ export PRODUCT_VERSION=${PRODUCT_VERSION:-"`date '+%Y%m%d%H%M'`"}
 export PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR:-"OpenSSL"}
 export PRODUCT_NAME="OPNsense"
 
+# full name for easy use
+export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}"
+
 # code reositories
 export TOOLSDIR="/usr/tools"
 export PORTSDIR="/usr/ports"
@@ -57,10 +60,10 @@ export SETSDIR="/tmp/sets"
 mkdir -p ${STAGEDIR} ${PACKAGESDIR} ${IMAGESDIR} ${SETSDIR}
 
 # target files
-export CDROM="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-cdrom-${ARCH}.iso"
-export SERIALIMG="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-serial-${ARCH}.img"
-export VGAIMG="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-vga-${ARCH}.img"
-export NANOIMG="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-nano-${ARCH}.img"
+export CDROM="${IMAGESDIR}/${PRODUCT_RELEASE}-cdrom-${ARCH}.iso"
+export SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${ARCH}.img"
+export VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
+export NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${ARCH}.img"
 
 # print environment to showcase all of our variables
 env
