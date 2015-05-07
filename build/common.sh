@@ -134,9 +134,13 @@ setup_marker()
 
 setup_base()
 {
+	local BASE_SET BASE_VER
+
 	echo ">>> Setting up world in ${1}"
 
-	local BASE_SET=$(ls ${SETSDIR}/base-*-${ARCH}.txz)
+	BASE_SET=$(ls ${SETSDIR}/base-*-${ARCH}.txz)
+
+	tar -C ${1} -xpf ${BASE_SET}
 
 	# setup vt(4) consistently
 	cat > ${1}/boot/loader.conf << EOF
@@ -153,22 +157,21 @@ EOF
 	# media wouldn't be able to bootstrap the directory.
 	mkdir -p ${1}/conf
 
-	tar -C ${1} -xpf ${BASE_SET}
-
-	local BASE_VER=${BASE_SET##${SETSDIR}/base-}
+	BASE_VER=${BASE_SET##${SETSDIR}/base-}
 
 	setup_marker ${1} ${BASE_VER%%.txz}
 }
 
 setup_kernel()
 {
+	local KERNEL_SET KERNEL_VER
 	echo ">>> Setting up kernel in ${1}"
 
-	local KERNEL_SET=$(ls ${SETSDIR}/kernel-*-${ARCH}.txz)
+	KERNEL_SET=$(ls ${SETSDIR}/kernel-*-${ARCH}.txz)
 
 	tar -C ${1} -xpf ${KERNEL_SET}
 
-	local KERNEL_VER=${KERNEL_SET##${SETSDIR}/kernel-}
+	KERNEL_VER=${KERNEL_SET##${SETSDIR}/kernel-}
 
 	setup_marker ${1} ${KERNEL_VER%%.txz}
 }
