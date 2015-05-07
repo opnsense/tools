@@ -29,7 +29,6 @@ set -e
 
 . ./common.sh
 
-mkdir -p ${SETSDIR}
 rm -f ${SETSDIR}/packages-*-${ARCH}.tar
 
 setup_stage ${STAGEDIR}

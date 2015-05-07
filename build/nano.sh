@@ -34,8 +34,6 @@ set -e
 . ${SRCDIR}/tools/tools/nanobsd/FlashDevice.sub
 sub_FlashDevice sandisk 2g
 
-mkdir -p ${IMAGESDIR}
-
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}

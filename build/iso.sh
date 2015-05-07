@@ -32,8 +32,6 @@ set -e
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
 
-mkdir -p ${IMAGESDIR}
-
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}

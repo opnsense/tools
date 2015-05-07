@@ -29,7 +29,6 @@ set -e
 
 . ./common.sh
 
-mkdir -p ${SETSDIR}
 rm -f ${SETSDIR}/base-*-${ARCH}.txz
 
 git_clear ${SRCDIR}

@@ -32,11 +32,14 @@ export PRODUCT_VERSION=${PRODUCT_VERSION:-"`date '+%Y%m%d%H%M'`"}
 export PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR:-"OpenSSL"}
 export PRODUCT_NAME="OPNsense"
 
-# build directories
+# define target directories
 export STAGEDIR="/usr/local/stage"
 export PACKAGESDIR="/tmp/packages"
 export IMAGESDIR="/tmp/images"
 export SETSDIR="/tmp/sets"
+
+# bootstrap target directories
+mkdir -p ${STAGEDIR} ${PACKAGESDIR} ${IMAGESDIR} ${SETSDIR}
 
 # code reositories
 export TOOLSDIR="/usr/tools"
