@@ -45,11 +45,11 @@ export COREDIR="/usr/core"
 export SRCDIR="/usr/src"
 
 # misc. foo
-export CONFIG_PKG="/usr/local/etc/pkg/repos/OPNsense.conf"
-export CONFIG_XML="/usr/local/etc/config.xml"
+export CONFIG_PKG="/usr/local/etc/pkg/repos/${PRODUCT_NAME}.conf"
 export CPUS=`sysctl kern.smp.cpus | awk '{ print $2 }'`
+export CONFIG_XML="/usr/local/etc/config.xml"
 export ARCH=${ARCH:-"`uname -m`"}
-export LABEL="OPNsense_Install"
+export LABEL=${PRODUCT_NAME}
 export TARGET_ARCH=${ARCH}
 export TARGETARCH=${ARCH}
 
@@ -196,7 +196,8 @@ setup_packages()
 
 	for PKG in ${PKGLIST}; do
 		# add, unlike install, is not aware of repositories :(
-		pkg -c ${BASEDIR} annotate -qyA ${PKG} repository OPNsense
+		pkg -c ${BASEDIR} annotate -qyA ${PKG} \
+		    repository ${PRODUCT_NAME}
 	done
 
 	# keep the directory!

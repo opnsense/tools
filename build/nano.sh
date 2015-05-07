@@ -31,9 +31,6 @@ set -e
 
 . ./common.sh
 
-# rewrite the disk label, because we're not install media
-LABEL=OPNsense
-
 . ${SRCDIR}/tools/tools/nanobsd/FlashDevice.sub
 sub_FlashDevice sandisk 2g
 

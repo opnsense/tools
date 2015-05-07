@@ -29,6 +29,9 @@ set -e
 
 . ./common.sh
 
+# rewrite the disk label, because we're install media
+LABEL="${LABEL}_Install"
+
 mkdir -p ${IMAGESDIR}
 
 setup_stage ${STAGEDIR}
