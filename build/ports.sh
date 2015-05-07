@@ -38,7 +38,7 @@ git_clear ${SRCDIR}
 if [ -n "${PORT_JOBS}" ]; then
 	for PORT_JOB in ${PORT_JOBS}; do
 		# clear out the ports that ought to be rebuilt
-		rm -f ${PACKAGESDIR}/${ARCH}/${PORT_JOB}-*.txz
+		rm -f ${PACKAGESDIR}/${PORT_JOB}-*.txz
 	done
 fi
 
@@ -116,7 +116,7 @@ pkg_resolve_deps()
 	done
 
 	for PORT in \${PORTS}; do
-		pkg create -no ${PACKAGESDIR}/${ARCH} -f txz \${PORT}
+		pkg create -no ${PACKAGESDIR} -f txz \${PORT}
 	done
 }
 
@@ -131,8 +131,8 @@ echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
 done }
 EOF
 
-rm -rf ${PACKAGESDIR}/${ARCH}/*
-mv ${STAGEDIR}${PACKAGESDIR}/${ARCH}/* ${PACKAGESDIR}/${ARCH}/
+rm -rf ${PACKAGESDIR}/*
+mv ${STAGEDIR}${PACKAGESDIR}/* ${PACKAGESDIR}
 
 if [ -n "${PORT_ABORT}" ]; then
 	echo ">>> The ports build failed. Please inspect the log."

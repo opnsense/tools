@@ -36,9 +36,9 @@ fi
 
 if [ -n "${1}" ]; then
 	# make sure the all-encompassing package is a release, too
-	if [ ! -f ${PACKAGESDIR}/${ARCH}/opnsense-${1}.txz ]; then
+	if [ ! -f ${PACKAGESDIR}/opnsense-${1}.txz ]; then
 		echo "Release version mismatch:"
-		ls ${PACKAGESDIR}/${ARCH}/opnsense-*.txz
+		ls ${PACKAGESDIR}/opnsense-*.txz
 		exit 1
 	fi
 fi

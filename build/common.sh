@@ -32,15 +32,6 @@ export PRODUCT_VERSION=${PRODUCT_VERSION:-"`date '+%Y%m%d%H%M'`"}
 export PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR:-"OpenSSL"}
 export PRODUCT_NAME="OPNsense"
 
-# define target directories
-export STAGEDIR="/usr/local/stage"
-export PACKAGESDIR="/tmp/packages"
-export IMAGESDIR="/tmp/images"
-export SETSDIR="/tmp/sets"
-
-# bootstrap target directories
-mkdir -p ${STAGEDIR} ${PACKAGESDIR} ${IMAGESDIR} ${SETSDIR}
-
 # code reositories
 export TOOLSDIR="/usr/tools"
 export PORTSDIR="/usr/ports"
@@ -55,6 +46,15 @@ export ARCH=${ARCH:-"`uname -m`"}
 export LABEL=${PRODUCT_NAME}
 export TARGET_ARCH=${ARCH}
 export TARGETARCH=${ARCH}
+
+# define target directories
+export PACKAGESDIR="/tmp/packages/${ARCH}/${PRODUCT_FLAVOUR}"
+export STAGEDIR="/usr/local/stage"
+export IMAGESDIR="/tmp/images"
+export SETSDIR="/tmp/sets"
+
+# bootstrap target directories
+mkdir -p ${STAGEDIR} ${PACKAGESDIR} ${IMAGESDIR} ${SETSDIR}
 
 # target files
 export CDROM="${IMAGESDIR}/${PRODUCT_NAME}-${PRODUCT_VERSION}-cdrom-${ARCH}.iso"
@@ -173,11 +173,12 @@ setup_packages()
 	shift
 	PKGLIST=${@}
 
-	mkdir -p ${PACKAGESDIR}/${ARCH} ${BASEDIR}${PACKAGESDIR}
-	cp -r ${PACKAGESDIR}/${ARCH} ${BASEDIR}${PACKAGESDIR}
+	mkdir -p ${BASEDIR}${PACKAGESDIR}
+	tar -C ${PACKAGESDIR} -cf - . | \
+	    tar -C ${BASEDIR}${PACKAGESDIR} -xpf -
 
 	if [ -z "${PKGLIST}" ]; then
-		PKGLIST=$(ls ${PACKAGESDIR}/${ARCH}/*.txz || true)
+		PKGLIST=$(ls ${PACKAGESDIR}/*.txz || true)
 		for PKG in ${PKGLIST}; do
 			# Adds all available packages but ignores the
 			# ones that cannot be installed due to missing
@@ -190,7 +191,7 @@ setup_packages()
 			# Adds all selected packages and fails if
 			# one cannot be installed.  Used to build
 			# final images or regression test systems.
-			pkg -c ${BASEDIR} add ${PACKAGESDIR}/${ARCH}/${PKG}-*.txz
+			pkg -c ${BASEDIR} add ${PACKAGESDIR}/${PKG}-*.txz
 		done
 	fi
 
@@ -204,7 +205,7 @@ setup_packages()
 	done
 
 	# keep the directory!
-	rm -rf ${BASEDIR}${PACKAGESDIR}/${ARCH}/*
+	rm -rf ${BASEDIR}${PACKAGESDIR}/*
 }
 
 setup_mtree()

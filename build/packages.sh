@@ -38,7 +38,7 @@ mkdir -p ${STAGEDIR}/Latest
 mkdir -p ${STAGEDIR}/All
 
 # push packages to home location
-cp ${PACKAGESDIR}/${ARCH}/* ${STAGEDIR}/All
+cp ${PACKAGESDIR}/* ${STAGEDIR}/All
 
 # needed bootstrap glue when no packages are on the system
 cd ${STAGEDIR}/Latest && ln -s ../All/pkg-*.txz pkg.txz

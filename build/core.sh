@@ -29,7 +29,7 @@ set -e
 
 . ./common.sh
 
-rm -f ${PACKAGESDIR}/${ARCH}/opnsense-*.txz
+rm -f ${PACKAGESDIR}/opnsense-*.txz
 
 git_clear ${PORTSDIR}
 git_clear ${COREDIR}
@@ -81,7 +81,7 @@ sed -i "" -e '/%%REPO_DEPENDS%%/d' ${STAGEDIR}/+MANIFEST
 
 echo -n ">>> Creating custom package for ${COREDIR}... "
 
-pkg -c ${STAGEDIR} create -m / -r / -p /plist -o ${PACKAGESDIR}/${ARCH}
-mv ${STAGEDIR}${PACKAGESDIR}/${ARCH}/opnsense-*.txz ${PACKAGESDIR}/${ARCH}
+pkg -c ${STAGEDIR} create -m / -r / -p /plist -o ${PACKAGESDIR}
+mv ${STAGEDIR}${PACKAGESDIR}/opnsense-*.txz ${PACKAGESDIR}
 
 echo "done"
