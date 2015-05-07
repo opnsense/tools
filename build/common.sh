@@ -28,7 +28,7 @@
 set -e
 
 # important build settings
-export PRODUCT_VERSION=${PRODUCT_VERSION:-"`date '+%Y%m%d%H%M'`"}
+export PRODUCT_VERSION=${PRODUCT_VERSION:-$(date '+%Y%m%d%H%M')}
 export PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR:-"OpenSSL"}
 export PRODUCT_NAME="OPNsense"
 
@@ -43,9 +43,9 @@ export SRCDIR="/usr/src"
 
 # misc. foo
 export CONFIG_PKG="/usr/local/etc/pkg/repos/${PRODUCT_NAME}.conf"
-export CPUS=`sysctl kern.smp.cpus | awk '{ print $2 }'`
+export CPUS=$(sysctl kern.smp.cpus | awk '{ print $2 }')
 export CONFIG_XML="/usr/local/etc/config.xml"
-export ARCH=${ARCH:-"`uname -m`"}
+export ARCH=${ARCH:-$(uname -m)}
 export LABEL=${PRODUCT_NAME}
 export TARGET_ARCH=${ARCH}
 export TARGETARCH=${ARCH}
@@ -142,11 +142,6 @@ setup_base()
 
 	tar -C ${1} -xpf ${BASE_SET}
 
-	# setup vt(4) consistently
-	cat > ${1}/boot/loader.conf << EOF
-kern.vty="vt"
-EOF
-
 	# /home is needed for LiveCD images, and since it
 	# belongs to the base system, we create it from here.
 	mkdir -p ${1}/home
@@ -165,6 +160,7 @@ EOF
 setup_kernel()
 {
 	local KERNEL_SET KERNEL_VER
+
 	echo ">>> Setting up kernel in ${1}"
 
 	KERNEL_SET=$(ls ${SETSDIR}/kernel-*-${ARCH}.txz)

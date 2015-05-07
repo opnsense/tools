@@ -41,7 +41,7 @@ setup_mtree ${STAGEDIR}
 echo -n ">>> Building ISO image... "
 
 # must be upper case:
-LABEL=`echo ${LABEL} | tr '[:lower:]' '[:upper:]'`
+LABEL=$(echo ${LABEL} | tr '[:lower:]' '[:upper:]')
 
 cat > ${STAGEDIR}/etc/fstab << EOF
 # Device	Mountpoint	FStype	Options	Dump	Pass #
