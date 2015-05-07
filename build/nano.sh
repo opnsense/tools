@@ -39,10 +39,6 @@ setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR} opnsense
 
-cat > ${STAGEDIR}/boot/loader.conf << EOF
-kern.vty="vt"
-EOF
-
 echo "-S115200 -h" > ${STAGEDIR}/boot.config
 
 sed -i '' -e 's:</system>:<enableserial/><use_mfs_tmpvar/></system>:' \

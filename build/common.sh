@@ -138,6 +138,11 @@ setup_base()
 
 	local BASE_SET=$(ls ${SETSDIR}/base-*-${ARCH}.txz)
 
+	# setup vt(4) consistently
+	cat > ${1}/boot/loader.conf << EOF
+kern.vty="vt"
+EOF
+
 	# /home is needed for LiveCD images, and since it
 	# belongs to the base system, we create it from here.
 	mkdir -p ${1}/home

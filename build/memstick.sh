@@ -47,10 +47,6 @@ cat > ${STAGEDIR}/etc/fstab << EOF
 tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
-cat > ${STAGEDIR}/boot/loader.conf << EOF
-kern.vty="vt"
-EOF
-
 makefs -t ffs -B little -o label=${LABEL} ${VGAIMG} ${STAGEDIR}
 
 echo "-S115200 -h" > ${STAGEDIR}/boot.config
