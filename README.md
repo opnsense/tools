@@ -111,16 +111,12 @@ the following works:
     # cd /usr/tools/build && ./ports.sh [packagename ...]
 
 Package sets (may be signed depending on whether the key is
-found under /root) ready for web server deployment can be
-built using:
-
-    # cd /usr/tools/build && ./packages.sh
+found under /root) ready for web server deployment are automatically
+generated and modified by ports.sh and core.sh.
 
 Release sets can be built using:
 
     # cd /usr/tools/build && ./release.sh [version]
-
-All individual ports packages are stored under /tmp/packages
 
 Kernel, base, packages and release sets are stored under /tmp/sets
 
@@ -137,4 +133,3 @@ Available options are:
 * obj: reset the kernel/base build directory
 * images: remove all available images
 * sets: remove all available sets
-* packages: remove all available packages

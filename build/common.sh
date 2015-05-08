@@ -57,7 +57,7 @@ export IMAGESDIR="/tmp/images"
 export SETSDIR="/tmp/sets"
 
 # bootstrap target directories
-mkdir -p ${STAGEDIR} ${PACKAGESDIR} ${IMAGESDIR} ${SETSDIR}
+mkdir -p ${STAGEDIR} ${IMAGESDIR} ${SETSDIR}
 
 # target files
 export CDROM="${IMAGESDIR}/${PRODUCT_RELEASE}-cdrom-${ARCH}.iso"
@@ -172,7 +172,31 @@ setup_kernel()
 	setup_marker ${1} ${KERNEL_VER%%.txz}
 }
 
-setup_packages()
+extract_packages()
+{
+	echo ">>> Extracting packages in ${1}"
+
+	BASEDIR=${1}
+	shift
+	PKGLIST=${@}
+
+	rm -rf ${BASEDIR}${PACKAGESDIR}/All
+	mkdir -p ${BASEDIR}${PACKAGESDIR}/All
+
+	PACKAGESET=$(ls ${SETSDIR}/packages-*_${PRODUCT_FLAVOUR}-${ARCH}.tar || true)
+	if [ -f "${PACKAGESET}" ]; then
+		tar -C ${BASEDIR}${PACKAGESDIR} -xpf ${PACKAGESET}
+	fi
+
+	if [ -n "${PKGLIST}" ]; then
+		for PKG in ${PKGLIST}; do
+			# clear out the ports that ought to be rebuilt
+			rm -f ${BASEDIR}${PACKAGESDIR}/All/${PKG}-*.txz
+		done
+	fi
+}
+
+install_packages()
 {
 	echo ">>> Setting up packages in ${1}..."
 
@@ -180,17 +204,13 @@ setup_packages()
 	shift
 	PKGLIST=${@}
 
-	mkdir -p ${BASEDIR}${PACKAGESDIR}
-	tar -C ${PACKAGESDIR} -cf - . | \
-	    tar -C ${BASEDIR}${PACKAGESDIR} -xpf -
-
 	if [ -z "${PKGLIST}" ]; then
-		PKGLIST=$(ls ${PACKAGESDIR}/*.txz || true)
+		PKGLIST=$(cd ${BASEDIR}${PACKAGESDIR}/All; ls *.txz || true)
 		for PKG in ${PKGLIST}; do
 			# Adds all available packages but ignores the
 			# ones that cannot be installed due to missing
 			# dependencies.  This behaviour is desired.
-			pkg -c ${BASEDIR} add ${PKG} || true
+			pkg -c ${BASEDIR} add ${PACKAGESDIR}/All/${PKG} || true
 		done
 	else
 		# always bootstrap pkg as the first package
@@ -198,7 +218,8 @@ setup_packages()
 			# Adds all selected packages and fails if
 			# one cannot be installed.  Used to build
 			# final images or regression test systems.
-			pkg -c ${BASEDIR} add ${PACKAGESDIR}/${PKG}-*.txz
+			PKG=$(chroot ${BASEDIR} /bin/sh -ec "cd ${PACKAGESDIR}/All; ls ${PKG}-*.txz")
+			pkg -c ${BASEDIR} add ${PACKAGESDIR}/All/${PKG}
 		done
 	fi
 
@@ -210,9 +231,50 @@ setup_packages()
 		pkg -c ${BASEDIR} annotate -qyA ${PKG} \
 		    repository ${PRODUCT_NAME}
 	done
+}
 
+bundle_packages()
+{
+	rm -f ${SETSDIR}/packages-*_${PRODUCT_FLAVOUR}-${ARCH}.tar
+
+	# rebuild expected FreeBSD structure
+	mkdir -p ${1}/pkg-repo/Latest
+	mkdir -p ${1}/pkg-repo/All
+
+	# push packages to home location
+	cp ${1}${PACKAGESDIR}/All/* ${1}/pkg-repo/All
+
+	# needed bootstrap glue when no packages are on the system
+	(cd ${1}/pkg-repo/Latest; ln -s ../All/pkg-*.txz pkg.txz)
+
+	local SIGNARGS=
+	if [ -n "$(${TOOLSDIR}/scripts/pkg_fingerprint.sh)" ]; then
+		# XXX check if fingerprint is in core.git
+		SIGNARGS="signing_command: ${TOOLSDIR}/scripts/pkg_sign.sh"
+	fi
+
+	# generate index files
+	pkg repo ${1}/pkg-repo ${SIGNARGS}
+
+	echo -n ">>> Creating package mirror set for ${PRODUCT_RELEASE}... "
+
+	tar -C ${STAGEDIR}/pkg-repo -cf \
+	    ${SETSDIR}/packages-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}-${ARCH}.tar .
+
+	echo "done"
+}
+
+clean_packages()
+{
 	# keep the directory!
-	rm -rf ${BASEDIR}${PACKAGESDIR}/*
+	rm -rf ${1}${PACKAGESDIR}/All/*
+}
+
+setup_packages()
+{
+	extract_packages ${1}
+	install_packages ${@}
+	clean_packages ${1}
 }
 
 setup_mtree()

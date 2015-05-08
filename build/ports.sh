@@ -30,24 +30,20 @@ set -e
 . ./common.sh
 
 PORT_LIST=$(cat ${TOOLSDIR}/config/current/ports.conf)
-PORT_JOBS=${@}
 
 git_clear ${PORTSDIR}
 git_clear ${SRCDIR}
 
-if [ -n "${PORT_JOBS}" ]; then
-	for PORT_JOB in ${PORT_JOBS}; do
-		# clear out the ports that ought to be rebuilt
-		rm -f ${PACKAGESDIR}/${PORT_JOB}-*.txz
-	done
-fi
-
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
-setup_packages ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
+
+# bootstrap the stage with the avilable set (minus opnsense and args)
+extract_packages ${STAGEDIR} opnsense ${@}
+install_packages ${STAGEDIR}
+clean_packages ${STAGEDIR}
 
 echo ">>> Building packages..."
 
@@ -116,7 +112,7 @@ pkg_resolve_deps()
 	done
 
 	for PORT in \${PORTS}; do
-		pkg create -no ${PACKAGESDIR} -f txz \${PORT}
+		pkg create -no ${PACKAGESDIR}/All -f txz \${PORT}
 	done
 }
 
@@ -131,10 +127,9 @@ echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
 done }
 EOF
 
-rm -rf ${PACKAGESDIR}/*
-mv ${STAGEDIR}${PACKAGESDIR}/* ${PACKAGESDIR}
-
 if [ -n "${PORT_ABORT}" ]; then
 	echo ">>> The ports build failed. Please inspect the log."
 	exit 1
 fi
+
+bundle_packages ${STAGEDIR}

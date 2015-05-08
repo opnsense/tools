@@ -29,8 +29,6 @@ set -e
 
 . ./common.sh
 
-rm -f ${PACKAGESDIR}/opnsense-*.txz
-
 git_clear ${PORTSDIR}
 git_clear ${COREDIR}
 git_describe ${COREDIR}
@@ -63,7 +61,8 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 	PORT_LIST="${PORT_LIST} ${PORT_NAME}"
 done < ${TOOLSDIR}/config/current/ports.conf
 
-setup_packages ${STAGEDIR} ${PORT_LIST}
+extract_packages ${STAGEDIR} opnsense
+install_packages ${STAGEDIR} ${PORT_LIST}
 
 for PORT_NAME in ${PORT_LIST}; do
 	echo -n ">>> Collecting depencency for ${PORT_NAME}... "
@@ -81,7 +80,8 @@ sed -i "" -e '/%%REPO_DEPENDS%%/d' ${STAGEDIR}/+MANIFEST
 
 echo -n ">>> Creating custom package for ${COREDIR}... "
 
-pkg -c ${STAGEDIR} create -m / -r / -p /plist -o ${PACKAGESDIR}
-mv ${STAGEDIR}${PACKAGESDIR}/opnsense-*.txz ${PACKAGESDIR}
+pkg -c ${STAGEDIR} create -m / -r / -p /plist -o ${PACKAGESDIR}/All
 
 echo "done"
+
+bundle_packages ${STAGEDIR}

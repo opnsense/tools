@@ -36,25 +36,23 @@ fi
 
 if [ -n "${1}" ]; then
 	# make sure the all-encompassing package is a release, too
-	if [ ! -f ${PACKAGESDIR}/opnsense-${1}.txz ]; then
+	setup_stage ${STAGEDIR}
+	extract_packages ${STAGEDIR}
+	if [ ! -f ${STAGEDIR}${PACKAGESDIR}/All/opnsense-${1}.txz ]; then
 		echo "Release version mismatch:"
-		ls ${PACKAGESDIR}/opnsense-*.txz
+		(cd ${STAGEDIR}${PACKAGESDIR}/All; ls opnsense-*.txz)
 		exit 1
 	fi
 fi
 
 rm -f ${SETSDIR}/release-*_${PRODUCT_FLAVOUR}-${ARCH}.tar
 
-echo ">>> Creating packages for ${PRODUCT_RELEASE}"
-
-cd ${TOOLSDIR}/build && ./packages.sh
-
 echo ">>> Creating images for ${PRODUCT_RELEASE}"
 
-cd ${TOOLSDIR}/build && ./clean.sh images
-cd ${TOOLSDIR}/build && ./memstick.sh
-cd ${TOOLSDIR}/build && ./nano.sh
-cd ${TOOLSDIR}/build && ./iso.sh
+./clean.sh images
+./memstick.sh
+./nano.sh
+./iso.sh
 
 setup_stage ${STAGEDIR}
 

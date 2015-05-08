@@ -45,9 +45,5 @@ for ARG in ${@}; do
 		echo ">>> Removing ${SETSDIR}"
 		rm -rf ${SETSDIR}
 		;;
-	packages)
-		echo ">>> Removing ${PACKAGESDIR}"
-		rm -rf ${PACKAGESDIR}
-		;;
 	esac
 done
