@@ -98,7 +98,7 @@ trap - 2
 
 echo ">>> Creating binary packages..."
 
-if ! chroot ${STAGEDIR} /bin/sh -es << EOF; then PORT_ABORT=1; fi
+chroot ${STAGEDIR} /bin/sh -es << EOF && bundle_packages ${STAGEDIR}
 pkg_resolve_deps()
 {
 	local PORTS DEPS PORT DEP
@@ -128,8 +128,6 @@ done }
 EOF
 
 if [ -n "${PORT_ABORT}" ]; then
-	echo ">>> The ports build failed. Please inspect the log."
+	echo ">>> The ports build quit unexpectedly :("
 	exit 1
 fi
-
-bundle_packages ${STAGEDIR}
