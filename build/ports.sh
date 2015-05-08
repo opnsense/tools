@@ -116,6 +116,9 @@ pkg_resolve_deps()
 	done
 }
 
+# sometimes stuck in an endless loop
+trap 'exit 0' 2
+
 pkg_resolve_deps pkg
 
 echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
@@ -128,6 +131,6 @@ done }
 EOF
 
 if [ -n "${PORT_ABORT}" ]; then
-	echo ">>> The ports build quit unexpectedly :("
+	echo ">>> The ports build did not finish properly :("
 	exit 1
 fi
