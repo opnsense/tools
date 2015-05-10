@@ -33,9 +33,11 @@ git_clear ${COREDIR}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
-setup_packages ${STAGEDIR} opnsense pear-PHP_CodeSniffer
 setup_clone ${STAGEDIR} ${COREDIR}
 setup_chroot ${STAGEDIR}
+
+extract_packages ${STAGEDIR}
+install_packages ${STAGEDIR} opnsense pear-PHP_CodeSniffer
 
 echo ">>> Running ${COREDIR} test suite..."
 

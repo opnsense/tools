@@ -116,6 +116,8 @@ pkg_resolve_deps()
 	done
 }
 
+mkdir -p ${PACKAGESDIR}/All
+
 # sometimes stuck in an endless loop
 trap 'exit 0' 2
 

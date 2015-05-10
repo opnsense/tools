@@ -51,7 +51,7 @@ export TARGET_ARCH=${ARCH}
 export TARGETARCH=${ARCH}
 
 # define target directories
-export PACKAGESDIR="/tmp/packages/${ARCH}/${PRODUCT_FLAVOUR}"
+export PACKAGESDIR="/packages"
 export STAGEDIR="/usr/local/stage"
 export IMAGESDIR="/tmp/images"
 export SETSDIR="/tmp/sets"
@@ -218,7 +218,7 @@ install_packages()
 			# Adds all selected packages and fails if
 			# one cannot be installed.  Used to build
 			# final images or regression test systems.
-			PKG=$(chroot ${BASEDIR} /bin/sh -ec "cd ${PACKAGESDIR}/All; ls ${PKG}-*.txz")
+			PKG=$(chroot ${BASEDIR} /bin/sh -ec "cd ${PACKAGESDIR}/All; ls ${PKG}-*.txz" | head -n1)
 			pkg -c ${BASEDIR} add ${PACKAGESDIR}/All/${PKG}
 		done
 	fi
@@ -266,12 +266,12 @@ bundle_packages()
 
 clean_packages()
 {
-	# keep the directory!
-	rm -rf ${1}${PACKAGESDIR}/All/*
+	rm -rf ${1}${PACKAGESDIR}
 }
 
 setup_packages()
 {
+	# legacy package extract
 	extract_packages ${1}
 	install_packages ${@}
 	clean_packages ${1}
