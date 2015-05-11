@@ -1,6 +1,5 @@
 include         GENERIC
 
-options		KDB
 nooptions	KDB_TRACE
 options		DDB                     # Support DDB.
 nooptions       GDB                     # Support remote GDB.
@@ -23,45 +22,23 @@ device		enc
 
 options 	GEOM_MIRROR
 options		GEOM_UZIP
-options		GEOM_LABEL
 nooption	GEOM_MBR
-options		GEOM_PART_MBR
-options		GEOM_PART_BSD
 options		GEOM_ELI
 options		GEOM_BDE
 
 # Wireless
-device		wlan
-device		wlan_wep
-device		wlan_ccmp
-device		wlan_tkip
 device		wlan_xauth
 device		wlan_acl
-device		wlan_amrr
-device		iwi		# Intel PRO/Wireless 2200BG/2225BG/2915ABG IEEE 802.11 driver
-device		ipw		# Intel PRO/Wireless 2100 IEEE 802.11 driver
 device		ipwfw		# Firmware for Intel PRO/Wireless 2100 IEEE 802.11 driver
-device		wpi		# Intel 3945ABG Wireless LAN IEEE 802.11 driver
 device		wpifw		# Firmware for Intel 3945ABG Wireless LAN IEEE 802.11 driver
-device		iwn		# Intel Wireless WiFi Link 4965AGN IEEE 802.11n driver
 device		iwnfw		# Firmware for Intel Wireless WiFi Link 4965AGN IEEE 802.11n driver
-device		alc		# Atheros IEEE 802.11 wireless network driver
-device		ath		# Atheros IEEE 802.11 wireless network driver
-device		ath_hal
-options		AH_SUPPORT_AR5416
-device		ath_rate_sample
 device		uath		# Atheros USB IEEE 802.11a/b/g wireless network device
-device		an		# Aironet 4500/4800 802.11 wireless NICs.
-device		ral		# Ralink Technology RT2500 wireless NICs.
 device		ralfw		# Firmware for Ralink Technology RT2500 wireless NICs.
 device		ural		# Ralink Technology RT2500USB IEEE 802.11 driver
 device		urtw		# Realtek RTL8187B/L USB IEEE 802.11b/g wireless network device
-device		wi		# WaveLAN/Intersil/Symbol 802.11 wireless NICs.
 device		rum		# Ralink Technology USB IEEE 802.11a/b/g wireless network device
-device		mwl		# Marvell 88W8363 IEEE 802.11n wireless network driver
 device		mwlfw		# Firmware for Marvell 88W8363 IEEE 802.11n wireless network driver
 device		zyd		# ZyDAS ZD1211/ZD1211B USB IEEE 802.11b/g wireless network device
-device		malo		# Marvell Libertas IEEE 802.11b/g wireless network driver
 device		upgt		# Conexant/Intersil PrismGT SoftMAC USB IEEE 802.11b/g wireless
 device		bwi		# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
 # Only for 8.1+
@@ -73,16 +50,13 @@ options         IPFIREWALL_DEFAULT_TO_ACCEPT
 options         IPFIREWALL_VERBOSE
 options         IPFIREWALL_VERBOSE_LIMIT
 
-device		bpf
 device          carp
 device          pf
 device          pflog
 device          pfsync
-device          vlan
 device          gre
 
 options         IPSTEALTH
-options         INCLUDE_CONFIG_FILE
 
 options		NETGRAPH                #netgraph(4) system
 options		NETGRAPH_VLAN
@@ -117,26 +91,17 @@ options		NETGRAPH_DEFLATE
 options		NETGRAPH_PRED1
 
 # 3G devices
-device		ubsa
-device		ufoma
-#device		umsm
-device          ucom
 device          uplcom
-device          ubsa
 device          umct
 device          uvisor
 device          uark
 device          uftdi
 device          uvscom
 device          umodem
-device		ufoma
 device		u3g
-device		ucom
 
 options         IPSEC
-options         IPSEC_NAT_T
 
-options         TCP_SIGNATURE           #include support for RFC 2385
 
 options         ALTQ
 options         ALTQ_CBQ
@@ -156,7 +121,6 @@ options         MSGSSZ=32       # size of a message segment
 options         MSGTQL=2048     # max messages in system
 
 device          tap
-device          hme
 
 device          speaker
 
@@ -166,19 +130,11 @@ device          lagg
 
 options		MROUTING
 
-# Additional cards
 device		bktr		# bktr -- Brooktree Bt848/849/878/879 and Pinnacle PCTV video capture
-device		ale		# ale -- Atheros AR8121/AR8113/AR8114 Gigabit/Fast Ethernet driver
 device		safe		# safe -- SafeNet crypto accelerator
-device		et		# et(4) for AGERE ET1310 fastE and gigE
-device		ed		# NE[12]000, SMC Ultra, 3c503, DS8390 cards
 device		mxge		# mxge - Myricom Myri10GE 10 Gigabit Ethernet adapter driver
 device		cxgb		# cxgb -- Chelsio T3 10 Gigabit Ethernet adapter driver
 device		cxgbe		# cxgbe -- Chelsio T4 and T5 based 40Gb, 10Gb, and 1Gb Ethernet adapter driver
-device		igb		# igb -- Intel(R) PRO/1000 PCI Express Gigabit Ethernet adapter driver
-device		ixgbe 		# http://www.nabble.com/kern-130476:-Error-in-compiling-kernel-with-device-ixgbe-td21424560.html
-device		ae		# ae -- Attansic/Atheros L2 FastEthernet controller driver
-device		cas		# Sun Cassini/Cassini+ and National Semiconductor DP83065 Saturn
 device		crypto          # core crypto support
 device		cryptodev       # /dev/crypto for access to h/w
 device		hifn            # Hifn 7951, 7781, etc.
