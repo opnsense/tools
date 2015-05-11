@@ -47,7 +47,7 @@ clean_packages ${STAGEDIR}
 
 echo ">>> Building packages..."
 
-MAKE_CONF="${PRPDUCT_CONFIG}/make.conf"
+MAKE_CONF="${PRODUCT_CONFIG}/make.conf"
 if [ -f ${MAKE_CONF} ]; then
 	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
 fi
