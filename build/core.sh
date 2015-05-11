@@ -37,6 +37,9 @@ setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 
+# generate dynamic files before install
+# XXX push into chroot (needs gettext-tools installed)
+make -C ${COREDIR} bootstrap
 # no compiling needed; simply install
 make -C ${COREDIR} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
 
