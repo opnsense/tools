@@ -35,26 +35,8 @@ git_describe ${COREDIR}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
+setup_clone ${STAGEDIR} ${COREDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
-
-# generate dynamic files before install
-# XXX push into chroot (needs gettext-tools installed)
-make -C ${COREDIR} bootstrap
-# no compiling needed; simply install
-make -C ${COREDIR} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
-
-for PKGFILE in $(ls ${STAGEDIR}/+*); do
-	# fill in the blanks that come from the build
-	sed -i "" -e "s/%%REPO_VERSION%%/${REPO_VERSION}/g" ${PKGFILE}
-	sed -i "" -e "s/%%REPO_COMMENT%%/${REPO_COMMENT}/g" ${PKGFILE}
-done
-
-REPO_FLAVOUR="latest"
-if [ ${PRODUCT_FLAVOUR} = "LibreSSL" ]; then
-	REPO_FLAVOUR="libressl"
-fi
-sed -i '' -e "s/%%REPO_FLAVOUR%%/${REPO_FLAVOUR}/g" \
-    ${STAGEDIR}${CONFIG_PKG}
 
 while read PORT_NAME PORT_CAT PORT_OPT; do
 	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" -o -n "${PORT_OPT}" ]; then
@@ -65,16 +47,37 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 done < ${PRODUCT_CONFIG}/ports.conf
 
 extract_packages ${STAGEDIR} opnsense
-install_packages ${STAGEDIR} ${PORT_LIST}
+install_packages ${STAGEDIR} pkg gettext-tools ${PORT_LIST}
+
+chroot ${STAGEDIR} /bin/sh -es << EOF
+# generate dynamic files before install
+make -C ${COREDIR} bootstrap
+# inception incoming
+mkdir -p ${STAGEDIR}
+# no compiling needed; simply install
+make -C ${COREDIR} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
+
+for PKGFILE in \$(ls \${STAGEDIR}/+*); do
+	# fill in the blanks that come from the build
+	sed -i "" -e "s/%%REPO_VERSION%%/${REPO_VERSION}/g" \${PKGFILE}
+	sed -i "" -e "s/%%REPO_COMMENT%%/${REPO_COMMENT}/g" \${PKGFILE}
+done
+
+REPO_FLAVOUR="latest"
+if [ ${PRODUCT_FLAVOUR} = "LibreSSL" ]; then
+	REPO_FLAVOUR="libressl"
+fi
+sed -i '' -e "s/%%REPO_FLAVOUR%%/${REPO_FLAVOUR}/g" \
+    ${STAGEDIR}${CONFIG_PKG}
 
 for PORT_NAME in ${PORT_LIST}; do
-	echo -n ">>> Collecting depencency for ${PORT_NAME}... "
+	echo -n ">>> Collecting depencency for \${PORT_NAME}... "
 	# catch dependecy error in shell execution
-	PORT_DEP=$(pkg -c ${STAGEDIR} query '%n: { version: "%v", origin: "%o" }' ${PORT_NAME})
+	PORT_DEP=\$(pkg query '%n: { version: "%v", origin: "%o" }' \${PORT_NAME})
 	echo "done"
 
 	# fill in the direct ports dependencies
-	echo "  ${PORT_DEP}" >> ${STAGEDIR}/deps
+	echo "  \${PORT_DEP}" >> ${STAGEDIR}/deps
 done
 
 # remove placeholder now that all dependencies are in place
@@ -82,9 +85,8 @@ sed -i "" -e "/%%REPO_DEPENDS%%/r ${STAGEDIR}/deps" ${STAGEDIR}/+MANIFEST
 sed -i "" -e '/%%REPO_DEPENDS%%/d' ${STAGEDIR}/+MANIFEST
 
 echo -n ">>> Creating custom package for ${COREDIR}... "
-
-pkg -c ${STAGEDIR} create -m / -r / -p /plist -o ${PACKAGESDIR}/All
-
+pkg create -m ${STAGEDIR} -r ${STAGEDIR} -p ${STAGEDIR}/plist -o ${PACKAGESDIR}/All
 echo "done"
+EOF
 
 bundle_packages ${STAGEDIR}
