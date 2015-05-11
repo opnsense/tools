@@ -37,7 +37,7 @@ git_describe ${SRCDIR}
 BUILD_KERNEL="SMP"
 
 # XXX move config to src.git
-cp ${TOOLSDIR}/config/current/${BUILD_KERNEL} ${SRCDIR}/sys/${ARCH}/conf/${BUILD_KERNEL}
+cp ${PRODUCT_CONFIG}/${BUILD_KERNEL} ${SRCDIR}/sys/${ARCH}/conf/${BUILD_KERNEL}
 
 MAKEARGS="TARGET_ARCH=${ARCH} KERNCONF=${BUILD_KERNEL}"
 

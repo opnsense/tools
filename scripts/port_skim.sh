@@ -27,7 +27,7 @@
 
 set -e
 
-PORT_LIST=/usr/tools/config/current/ports.conf
+PORT_LIST=/usr/tools/config/OPNsense/ports.conf
 FREEBSD=/usr/freebsd-ports
 OPNSENSE=/usr/ports
 

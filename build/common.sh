@@ -30,7 +30,7 @@ set -e
 # important build settings
 export PRODUCT_VERSION=${PRODUCT_VERSION:-$(date '+%Y%m%d%H%M')}
 export PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR:-"OpenSSL"}
-export PRODUCT_NAME="OPNsense"
+export PRODUCT_NAME=${PRODUCT_NAME:-"OPNsense"}
 
 # full name for easy use
 export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}"
@@ -43,6 +43,7 @@ export SRCDIR="/usr/src"
 
 # misc. foo
 export CONFIG_PKG="/usr/local/etc/pkg/repos/${PRODUCT_NAME}.conf"
+export PRODUCT_CONFIG="${TOOLSDIR}/config/${PRODUCT_NAME}"
 export CPUS=$(sysctl kern.smp.cpus | awk '{ print $2 }')
 export CONFIG_XML="/usr/local/etc/config.xml"
 export ARCH=${ARCH:-$(uname -m)}

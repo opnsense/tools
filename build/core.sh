@@ -62,7 +62,7 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 	fi
 
 	PORT_LIST="${PORT_LIST} ${PORT_NAME}"
-done < ${TOOLSDIR}/config/current/ports.conf
+done < ${PRODUCT_CONFIG}/ports.conf
 
 extract_packages ${STAGEDIR} opnsense
 install_packages ${STAGEDIR} ${PORT_LIST}

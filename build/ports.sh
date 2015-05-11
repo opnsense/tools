@@ -29,7 +29,7 @@ set -e
 
 . ./common.sh
 
-PORT_LIST=$(cat ${TOOLSDIR}/config/current/ports.conf)
+PORT_LIST=$(cat ${PRODUCT_CONFIG}/ports.conf)
 
 git_clear ${PORTSDIR}
 git_clear ${SRCDIR}
@@ -47,7 +47,7 @@ clean_packages ${STAGEDIR}
 
 echo ">>> Building packages..."
 
-MAKE_CONF="${TOOLSDIR}/config/current/make.conf"
+MAKE_CONF="${PRPDUCT_CONFIG}/make.conf"
 if [ -f ${MAKE_CONF} ]; then
 	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
 fi
