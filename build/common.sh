@@ -27,6 +27,13 @@
 
 set -e
 
+BUILD_CONF=../config/build.conf
+
+# load previous settings
+if [ -f ${BUILD_CONF} ]; then
+	. ${BUILD_CONF}
+fi
+
 # important build settings
 export PRODUCT_VERSION=${PRODUCT_VERSION:-$(date '+%Y%m%d%H%M')}
 export PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR:-"OpenSSL"}
@@ -67,7 +74,17 @@ export VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
 export NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${ARCH}.img"
 
 # print environment to showcase all of our variables
-env
+env | sort
+
+setup_env()
+{
+	rm -f ${BUILD_CONF}
+
+	# these variables are allowed to steer the build
+	[ -n "${1}" ] && echo "export PRODUCT_NAME=${1}" >> ${BUILD_CONF}
+	[ -n "${2}" ] && echo "export PRODUCT_FLAVOUR=${2}" >> ${BUILD_CONF}
+	[ -n "${3}" ] && echo "export PRODUCT_VERSION=${3}" >> ${BUILD_CONF}
+}
 
 git_clear()
 {
