@@ -67,7 +67,7 @@ REPO_FLAVOUR="latest"
 if [ ${PRODUCT_FLAVOUR} = "LibreSSL" ]; then
 	REPO_FLAVOUR="libressl"
 fi
-sed -i '' -e "s/%%REPO_FLAVOUR%%/${REPO_FLAVOUR}/g" \
+sed -i '' -e "s/%%REPO_FLAVOUR%%/\${REPO_FLAVOUR}/g" \
     ${STAGEDIR}${CONFIG_PKG}
 
 for PORT_NAME in ${PORT_LIST}; do
