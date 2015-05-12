@@ -37,6 +37,9 @@ for ARG in ${@}; do
 	obj)	# previous staging cleanup
 		setup_stage /usr/obj
 		;;
+	env)	# kill config/build.conf
+		scrub_env
+		;;
 	images)
 		echo ">>> Removing ${IMAGESDIR}"
 		rm -rf ${IMAGESDIR}

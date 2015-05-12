@@ -76,9 +76,19 @@ export NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${ARCH}.img"
 # print environment to showcase all of our variables
 env | sort
 
-setup_env()
+scrub_env()
 {
 	rm -f ${BUILD_CONF}
+}
+
+setup_env()
+{
+	if [ -z "${1}" -a -z "${2}" -a -z "${3}" ]; then
+		return
+	fi
+
+	# clear previous env just in case
+	scrub_env
 
 	# these variables are allowed to steer the build
 	[ -n "${1}" ] && echo "export PRODUCT_NAME=${1}" >> ${BUILD_CONF}
