@@ -63,6 +63,16 @@ Go to the build directory:
 
     # cd /usr/tools/build
 
+Setup an additional build configuration (or skip to use the defaults):
+
+    # ./configure.sh -f flavour -n name -v version
+
+Available options are:
+
+* flavour: "OpenSSL" (default), "LibreSSL"
+* version: a version tag (if applicable)
+* name: "OPNsense" (default)
+
 Build the userland binaries, bootloader and administrative
 files:
 
@@ -125,11 +135,12 @@ All final images are stored under /tmp/images
 A couple of build machine cleanup helpers are available
 via the clean script:
 
-    # cd /usr/tools/build && ./clean.sh what
+    # cd /usr/tools/build && ./clean.sh what ...
 
 Available options are:
 
-* stage: reset the main staging area
-* obj: reset the kernel/base build directory
+* env: scrub the build config and use defaults
 * images: remove all available images
+* obj: reset the kernel/base build directory
 * sets: remove all available sets
+* stage: reset the main staging area
