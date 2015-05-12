@@ -199,7 +199,7 @@ extract_packages()
 
 install_packages()
 {
-	echo ">>> Setting up packages in ${1}..."
+	echo ">>> Installing packages in ${1}..."
 
 	BASEDIR=${1}
 	shift

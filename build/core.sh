@@ -47,7 +47,7 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 done < ${PRODUCT_CONFIG}/ports.conf
 
 extract_packages ${STAGEDIR} opnsense
-install_packages ${STAGEDIR} pkg gettext-tools ${PORT_LIST}
+install_packages ${STAGEDIR} gettext-tools ${PORT_LIST}
 
 chroot ${STAGEDIR} /bin/sh -es << EOF
 # generate dynamic files before install
