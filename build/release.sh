@@ -27,10 +27,7 @@
 
 set -e
 
-. ./common.sh
-
-# remove all mandatory arguments
-shift; shift; shift; shift; shift; shift
+. ./common.sh && $(${SCRUB_ARGS})
 
 if [ -n "${1}" ]; then
 	# make sure the all-encompassing package is a release, too

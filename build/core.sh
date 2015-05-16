@@ -27,7 +27,7 @@
 
 set -e
 
-. ./common.sh
+. ./common.sh && $(${SCRUB_ARGS})
 
 git_clear ${PORTSDIR}
 git_clear ${COREDIR}

@@ -28,7 +28,7 @@
 
 set -e
 
-. ./common.sh
+. ./common.sh && $(${SCRUB_ARGS})
 
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"

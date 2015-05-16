@@ -27,10 +27,7 @@
 
 set -e
 
-. ./common.sh
-
-# remove all mandatory arguments
-shift; shift; shift; shift; shift; shift
+. ./common.sh && $(${SCRUB_ARGS})
 
 for ARG in ${@}; do
 	case ${ARG} in

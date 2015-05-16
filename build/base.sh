@@ -27,7 +27,7 @@
 
 set -e
 
-. ./common.sh
+. ./common.sh && $(${SCRUB_ARGS})
 
 rm -f ${SETSDIR}/base-*-${ARCH}.txz
 

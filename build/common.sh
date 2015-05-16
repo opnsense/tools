@@ -27,16 +27,21 @@
 
 set -e
 
+SCRUB_ARGS=:
+
 while getopts n:f:v: OPT; do
 	case ${OPT} in
 	f)
 		export PRODUCT_FLAVOUR=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	n)
 		export PRODUCT_NAME=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	v)
 		export PRODUCT_VERSION=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	*)
 		echo "Usage: ${0} [-f flavour] [-n name] [-v version]" >&2
