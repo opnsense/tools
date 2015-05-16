@@ -40,7 +40,7 @@ if [ -n "${1}" ]; then
 	fi
 fi
 
-rm -f ${SETSDIR}/release-*_${PRODUCT_FLAVOUR}-${ARCH}.tar
+sh ./clean.sh release images
 
 echo ">>> Creating images for ${PRODUCT_RELEASE}"
 

@@ -50,7 +50,7 @@ while getopts n:f:v: OPT; do
 	esac
 done
 
-if [ -z "${PRODUCT_NAME}" -o -z "${PRODUCT_FLAVOUR}" -o -z "${PRODUCT_VERSION}"]; then
+if [ -z "${PRODUCT_NAME}" -o -z "${PRODUCT_FLAVOUR}" -o -z "${PRODUCT_VERSION}" ]; then
 	echo "Oops, please use the make targets to execute the build step." >&2
 	exit 1
 fi
@@ -259,7 +259,7 @@ install_packages()
 
 bundle_packages()
 {
-	rm -f ${SETSDIR}/packages-*_${PRODUCT_FLAVOUR}-${ARCH}.tar
+	sh ./clean.sh packages
 
 	# rebuild expected FreeBSD structure
 	mkdir -p ${1}/pkg-repo/Latest

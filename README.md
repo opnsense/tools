@@ -132,7 +132,10 @@ via the clean script:
 
 Available options are:
 
-* images: remove all available images
-* obj: reset the kernel/base build directory
-* sets: remove all available sets
-* stage: reset the main staging area
+* images:	remove all available images
+* obj:		reset the kernel/base build directory
+* kernel:	remove the kernel set
+* base:		remove the base set
+* packages:	remove the packages set
+* release:	remove the release set
+* stage:	reset the main staging area

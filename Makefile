@@ -19,4 +19,3 @@ ${BUILDSCRIPT}:
 	@cd build && sh ./${.TARGET}.sh \
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} ${ARGS}
 .endfor
-

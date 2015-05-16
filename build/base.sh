@@ -29,7 +29,7 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-rm -f ${SETSDIR}/base-*-${ARCH}.txz
+./clean.sh base
 
 git_clear ${SRCDIR}
 git_describe ${SRCDIR}
