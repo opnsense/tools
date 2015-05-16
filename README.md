@@ -49,9 +49,17 @@ src):
     # git clone https://github.com/opnsense/tools
     # git clone https://github.com/opnsense/core
     # git clone https://github.com/opnsense/src
+    # cd tools
 
-Running the actual build
-========================
+TL;DR
+=====
+
+    # make everything
+
+If successful, images can be found here: /tmp/images
+
+Detailed build steps and options
+================================
 
 The build is broken down into individual stages: base,
 kernel and ports can be built separately and repeatedly
