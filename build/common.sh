@@ -27,17 +27,28 @@
 
 set -e
 
-BUILD_CONF=../config/build.conf
+while getopts n:f:v: OPT; do
+	case ${OPT} in
+	f)
+		export PRODUCT_FLAVOUR=${OPTARG}
+		;;
+	n)
+		export PRODUCT_NAME=${OPTARG}
+		;;
+	v)
+		export PRODUCT_VERSION=${OPTARG}
+		;;
+	*)
+		echo "Usage: ${0} [-f flavour] [-n name] [-v version]" >&2
+		exit 1
+		;;
+	esac
+done
 
-# load previous settings
-if [ -f ${BUILD_CONF} ]; then
-	. ${BUILD_CONF}
+if [ -z "${PRODUCT_NAME}" -o -z "${PRODUCT_FLAVOUR}" -o -z "${PRODUCT_VERSION}"]; then
+	echo "Oops, please use the make targets to execute the build step." >&2
+	exit 1
 fi
-
-# important build settings
-export PRODUCT_VERSION=${PRODUCT_VERSION:-$(date '+%Y%m%d%H%M')}
-export PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR:-"OpenSSL"}
-export PRODUCT_NAME=${PRODUCT_NAME:-"OPNsense"}
 
 # full name for easy use
 export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}"
@@ -75,26 +86,6 @@ export NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${ARCH}.img"
 
 # print environment to showcase all of our variables
 env | sort
-
-scrub_env()
-{
-	rm -f ${BUILD_CONF}
-}
-
-setup_env()
-{
-	if [ -z "${1}" -a -z "${2}" -a -z "${3}" ]; then
-		return
-	fi
-
-	# clear previous env just in case
-	scrub_env
-
-	# these variables are allowed to steer the build
-	[ -n "${1}" ] && echo "export PRODUCT_NAME=${1}" >> ${BUILD_CONF}
-	[ -n "${2}" ] && echo "export PRODUCT_FLAVOUR=${2}" >> ${BUILD_CONF}
-	[ -n "${3}" ] && echo "export PRODUCT_VERSION=${3}" >> ${BUILD_CONF}
-}
 
 git_clear()
 {

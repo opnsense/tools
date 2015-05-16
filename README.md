@@ -59,48 +59,45 @@ without affecting the others.  All stages can be reinvoked
 and continue building without cleaning the previous progress.
 A final stage assembles all three stages into a target image.
 
-Go to the build directory:
+All build steps are invoked via make(1):
 
-    # cd /usr/tools/build
+    # make step OPTION="value"
 
-Setup an additional build configuration (or skip to use the defaults):
+Available build options are:
 
-    # ./configure.sh -f flavour -n name -v version
-
-Available options are:
-
-* flavour: "OpenSSL" (default), "LibreSSL"
-* version: a version tag (if applicable)
-* name: "OPNsense" (default)
+* NAME:		"OPNsense" (default)
+* FLAVOUR:	"OpenSSL" (default), "LibreSSL"
+* VERSION:	a version tag (if applicable)
+* CONFIG: 	reads the above from the specified file
 
 Build the userland binaries, bootloader and administrative
 files:
 
-    # ./base.sh
+    # make base
 
 Build the kernel and loadable kernel modules:
 
-    # ./kernel.sh
+    # make kernel
 
 Build all the third-party ports:
 
-    # ./ports.sh
+    # make ports
 
 Wrap up our core as a package:
 
-    # ./core.sh
+    # make core
 
 A cdrom live image is created using:
 
-    # ./iso.sh
+    # make iso
 
 A memstick image for VGA and serial is created using:
 
-    # ./memstick.sh
+    # make memstick
 
 A direct disk image in NanoBSD style is created using:
 
-    # ./nano.sh
+    # make nano
 
 Some more random information
 ============================
@@ -109,16 +106,12 @@ Before building images, you can run the regression tests
 to check the integrity of your core.git modifications plus
 generate output for the style checker:
 
-    # cd /usr/tools/build && ./regress.sh
-
-The OPNsense core package can then be rebuilt on its own via:
-
-    # cd /usr/tools/build && ./core.sh
+    # make regress
 
 For very fast ports rebuilding of already installed packages
 the following works:
 
-    # cd /usr/tools/build && ./ports.sh [packagename ...]
+    # make ports ARGS="packagename ..."
 
 Package sets (may be signed depending on whether the key is
 found under /root) ready for web server deployment are automatically
@@ -126,7 +119,7 @@ generated and modified by ports.sh and core.sh.
 
 Release sets can be built using:
 
-    # cd /usr/tools/build && ./release.sh [version]
+    # make release [ARGS=version]
 
 Kernel, base, packages and release sets are stored under /tmp/sets
 
@@ -135,11 +128,10 @@ All final images are stored under /tmp/images
 A couple of build machine cleanup helpers are available
 via the clean script:
 
-    # cd /usr/tools/build && ./clean.sh what ...
+    # make clean ARGS="what ..."
 
 Available options are:
 
-* env: scrub the build config and use defaults
 * images: remove all available images
 * obj: reset the kernel/base build directory
 * sets: remove all available sets
