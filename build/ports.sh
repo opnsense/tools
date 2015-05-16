@@ -29,6 +29,9 @@ set -e
 
 . ./common.sh
 
+# remove all mandatory arguments
+shift; shift; shift; shift; shift; shift
+
 PORT_LIST=$(cat ${PRODUCT_CONFIG}/ports.conf)
 
 git_clear ${PORTSDIR}

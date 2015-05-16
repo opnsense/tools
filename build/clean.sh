@@ -29,6 +29,9 @@ set -e
 
 . ./common.sh
 
+# remove all mandatory arguments
+shift; shift; shift; shift; shift; shift
+
 for ARG in ${@}; do
 	case ${ARG} in
 	stage)	# kernel and base build cleanup
