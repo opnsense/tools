@@ -14,6 +14,12 @@ VERSION?=	${_VERSION}
 all:
 	@cat ${.CURDIR}/README.md | ${PAGER}
 
+source: base kernel
+packages: ports core
+sets: source packages
+images: iso memstick nano
+everything: sets images
+
 .for BUILDSCRIPT in ${BUILDSCRIPTS}
 ${BUILDSCRIPT}:
 	@cd build && sh ./${.TARGET}.sh \
