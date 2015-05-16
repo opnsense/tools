@@ -11,6 +11,8 @@ FLAVOUR?=	OpenSSL
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
 
+PAGER?=		less
+
 all:
 	@cat ${.CURDIR}/README.md | ${PAGER}
 
