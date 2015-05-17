@@ -127,7 +127,7 @@ generated and modified by ports.sh and core.sh.
 
 Release sets can be built using:
 
-    # make release-<versiontag>
+    # make release[-<versiontag>]
 
 Kernel, base, packages and release sets are stored under /tmp/sets
 
