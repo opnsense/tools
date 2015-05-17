@@ -31,10 +31,10 @@ set -e
 
 for ARG in ${@}; do
 	case ${ARG} in
-	stage)	# kernel and base build cleanup
+	stage)
 		setup_stage ${STAGEDIR}
 		;;
-	obj)	# previous staging cleanup
+	obj)
 		setup_stage /usr/obj
 		;;
 	images)
