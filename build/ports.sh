@@ -76,6 +76,8 @@ echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
 	echo -n ">>> Building \${PORT_NAME}... "
 
 	if pkg query %n \${PORT_NAME} > /dev/null; then
+		# lock the package to keep build deps
+		pkg lock -qy \${PORT_NAME}
 		echo "skipped."
 		continue
 	fi
@@ -99,37 +101,8 @@ trap - 2
 echo ">>> Creating binary packages..."
 
 chroot ${STAGEDIR} /bin/sh -es << EOF && bundle_packages ${STAGEDIR}
-pkg_resolve_deps()
-{
-	local PORTS DEPS PORT DEP
-
-	DEPS="\$(pkg info -qd \${1})"
-	PORTS="\${1} \${DEPS}"
-
-	for DEP in \${DEPS}; do
-		# recurse into hell and back
-		pkg_resolve_deps \${DEP}
-	done
-
-	for PORT in \${PORTS}; do
-		pkg create -no ${PACKAGESDIR}/All -f txz \${PORT}
-	done
-}
-
-mkdir -p ${PACKAGESDIR}/All
-
-# sometimes stuck in an endless loop
-trap 'exit 0' 2
-
-pkg_resolve_deps pkg
-
-echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "\$(echo \${PORT_NAME} | colrm 2)" = "#" -o "\${PORT_OPT}" = "sync" ]; then
-		continue
-	fi
-
-	pkg_resolve_deps "\$(pkg info -E \${PORT_NAME})"
-done }
+pkg autoremove -qy
+pkg create -ao ${PACKAGESDIR}/All -f txz
 EOF
 
 if [ -n "${PORT_ABORT}" ]; then
