@@ -2,6 +2,11 @@ STEPS=		base kernel ports core iso memstick nano \
 		regress clean release
 .PHONY:		${STEPS}
 
+PAGER?=		less
+
+all:
+	@cat ${.CURDIR}/README.md | ${PAGER}
+
 # Load the custom options from a file:
 
 .if defined(CONFIG)
@@ -14,11 +19,6 @@ NAME?=		OPNsense
 FLAVOUR?=	OpenSSL
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
-
-PAGER?=		less
-
-all:
-	@cat ${.CURDIR}/README.md | ${PAGER}
 
 # A couple of meta-targets for easy use:
 
