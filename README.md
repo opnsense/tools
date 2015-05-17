@@ -119,7 +119,7 @@ generate output for the style checker:
 For very fast ports rebuilding of already installed packages
 the following works:
 
-    # make ports ARGS="packagename ..."
+    # make ports-<packagename>[,...]
 
 Package sets (may be signed depending on whether the key is
 found under /root) ready for web server deployment are automatically
@@ -127,7 +127,7 @@ generated and modified by ports.sh and core.sh.
 
 Release sets can be built using:
 
-    # make release [ARGS=version]
+    # make release-<versiontag>
 
 Kernel, base, packages and release sets are stored under /tmp/sets
 
@@ -136,7 +136,7 @@ All final images are stored under /tmp/images
 A couple of build machine cleanup helpers are available
 via the clean script:
 
-    # make clean ARGS="what ..."
+    # make clean-<option>[,...]
 
 Available options are:
 
