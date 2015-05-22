@@ -30,7 +30,7 @@ set -e
 . ./common.sh && $(${SCRUB_ARGS})
 
 export __MAKE_CONF=${PRODUCT_CONFIG}/make.conf
-PORT_LIST=$(cat ${PRODUCT_CONFIG}/ports.conf)
+PORT_LIST=${PRODUCT_CONFIG}/ports.conf
 FREEBSD=/usr/freebsd-ports
 OPNSENSE=${PORTSDIR}
 

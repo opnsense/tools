@@ -107,8 +107,8 @@ A direct disk image in NanoBSD style is created using:
 
     # make nano
 
-Some more random information
-============================
+About other scripts and tweaks
+==============================
 
 Before building images, you can run the regression tests
 to check the integrity of your core.git modifications plus
@@ -147,3 +147,15 @@ Available options are:
 * packages:	remove the packages set
 * release:	remove the release set
 * stage:	reset the main staging area
+
+The ports tree has a few of our modifications and is sometimes a
+bit ahead of FreeBSD.  In order to keep the local changes, a skimming
+script is used to review and copy upstream changes:
+
+    # make skim[-<option>]
+
+Available options are:
+
+* used:		review and copy upstream changes
+* unused:	copy unused upstream changes
+* (none):	all of the above
