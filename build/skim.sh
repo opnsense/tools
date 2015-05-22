@@ -27,9 +27,12 @@
 
 set -e
 
-PORT_LIST=/usr/tools/config/OPNsense/ports.conf
+. ./common.sh && $(${SCRUB_ARGS})
+
+export __MAKE_CONF=${PRODUCT_CONFIG}/make.conf
+PORT_LIST=$(cat ${PRODUCT_CONFIG}/ports.conf)
 FREEBSD=/usr/freebsd-ports
-OPNSENSE=/usr/ports
+OPNSENSE=${PORTSDIR}
 
 while read PORT_NAME PORT_CAT PORT_OPT; do
 	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" ]; then

@@ -1,5 +1,5 @@
 STEPS=		base kernel ports core iso memstick nano \
-		regress clean release
+		regress clean release skim
 .PHONY:		${STEPS}
 
 PAGER?=		less
