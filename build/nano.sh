@@ -39,7 +39,7 @@ setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR} opnsense
 
-echo "-S115200 -P" > ${STAGEDIR}/boot.config
+echo "-S115200 -D" > ${STAGEDIR}/boot.config
 
 sed -i '' -e 's:</system>:<enableserial/><use_mfs_tmpvar/></system>:' \
     ${STAGEDIR}${CONFIG_XML}

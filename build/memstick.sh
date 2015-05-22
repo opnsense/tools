@@ -49,7 +49,7 @@ EOF
 
 makefs -t ffs -B little -o label=${LABEL} ${VGAIMG} ${STAGEDIR}
 
-echo "-S115200 -P" > ${STAGEDIR}/boot.config
+echo "-S115200 -D" > ${STAGEDIR}/boot.config
 
 sed -i '' -e 's:</system>:<enableserial/></system>:' \
     ${STAGEDIR}${CONFIG_XML}
