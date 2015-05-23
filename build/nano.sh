@@ -41,6 +41,13 @@ setup_packages ${STAGEDIR} opnsense
 
 echo "-S115200 -D" > ${STAGEDIR}/boot.config
 
+cat > ${STAGEDIR}/boot/loader.conf << EOF
+boot_multicons="YES"
+boot_serial="YES"
+console="comconsole,vidconsole"
+comconsole_speed="115200"
+EOF
+
 sed -i '' -e 's:</system>:<enableserial/><use_mfs_tmpvar/></system>:' \
     ${STAGEDIR}${CONFIG_XML}
 
