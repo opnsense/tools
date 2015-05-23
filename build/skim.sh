@@ -50,10 +50,14 @@ for ARG in ${@}; do
 	esac
 done
 
+echo -n ">>> Gathering dependencies"
+
 while read PORT_NAME PORT_CAT PORT_OPT; do
 	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" ]; then
 		continue
 	fi
+
+	echo -n "."
 
 	PORT=${PORT_CAT}/${PORT_NAME}
 
@@ -101,6 +105,8 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 	done
 done < ${PORT_LIST}
 
+echo "done"
+
 if [ -n "${UNUSED}" ]; then
 	for ENTRY in ${OPNSENSE}/*; do
 		ENTRY=${ENTRY##"${OPNSENSE}/"}
@@ -124,6 +130,8 @@ if [ -n "${UNUSED}" ]; then
 				continue;
 			fi
 
+			echo ">>> Removing ${PORT}"
+
 			rm -fr ${OPNSENSE}/${PORT}
 		done
 
@@ -140,8 +148,11 @@ if [ -n "${UNUSED}" ]; then
 			done
 
 			if [ ${UNUSED} = 0 ]; then
+				echo ">>> Skipping ${PORT}"
 				continue;
 			fi
+
+			echo ">>> Refreshing ${PORT}"
 
 			rm -fr ${OPNSENSE}/${PORT}
 			cp -r ${FREEBSD}/${PORT} ${OPNSENSE}/${PORT}
