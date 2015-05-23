@@ -29,15 +29,13 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-if [ -n "${1}" ]; then
-	# make sure the all-encompassing package is a release, too
-	setup_stage ${STAGEDIR}
-	extract_packages ${STAGEDIR}
-	if [ ! -f ${STAGEDIR}${PACKAGESDIR}/All/opnsense-${1}.txz ]; then
-		echo "Release version mismatch:"
-		(cd ${STAGEDIR}${PACKAGESDIR}/All; ls opnsense-*.txz)
-		exit 1
-	fi
+# make sure the all-encompassing package is a release, too
+setup_stage ${STAGEDIR}
+extract_packages ${STAGEDIR}
+if [ ! -f ${STAGEDIR}${PACKAGESDIR}/All/opnsense-${PRODUCT_VERSION}.txz ]; then
+	echo "Release version mismatch:"
+	(cd ${STAGEDIR}${PACKAGESDIR}/All; ls opnsense-*.txz)
+	exit 1
 fi
 
 sh ./clean.sh release images
