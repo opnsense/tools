@@ -50,11 +50,7 @@ extract_packages ${STAGEDIR} opnsense
 install_packages ${STAGEDIR} gettext-tools ${PORT_LIST}
 
 chroot ${STAGEDIR} /bin/sh -es << EOF
-# generate dynamic files before install
-make -C ${COREDIR} bootstrap
-# inception incoming
 mkdir -p ${STAGEDIR}
-# no compiling needed; simply install
 make -C ${COREDIR} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
 
 for PKGFILE in \$(ls \${STAGEDIR}/+*); do
