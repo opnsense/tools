@@ -59,13 +59,6 @@ for PKGFILE in \$(ls \${STAGEDIR}/+*); do
 	sed -i "" -e "s/%%REPO_COMMENT%%/${REPO_COMMENT}/g" \${PKGFILE}
 done
 
-REPO_FLAVOUR="latest"
-if [ ${PRODUCT_FLAVOUR} = "LibreSSL" ]; then
-	REPO_FLAVOUR="libressl"
-fi
-sed -i '' -e "s/%%REPO_FLAVOUR%%/\${REPO_FLAVOUR}/g" \
-    ${STAGEDIR}${CONFIG_PKG}
-
 for PORT_NAME in ${PORT_LIST}; do
 	echo -n ">>> Collecting depencency for \${PORT_NAME}... "
 	# catch dependecy error in shell execution
