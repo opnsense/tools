@@ -19,6 +19,10 @@ NAME?=		OPNsense
 FLAVOUR?=	OpenSSL
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
+TOOLSDIR?=	/usr/tools
+PORTSDIR?=	/usr/ports
+COREDIR?=	/usr/core
+SRCDIR?=	/usr/src
 
 # A couple of meta-targets for easy use:
 
@@ -44,5 +48,7 @@ ${TARGET}: ${_TARGET}
 .for STEP in ${STEPS}
 ${STEP}:
 	@cd build && sh ./${.TARGET}.sh \
-	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} ${${STEP}_ARGS}
+	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} \
+	    -S ${SRCDIR} -P ${PORTSDIR} -T ${TOOLSDIR} \
+	    -C ${COREDIR} ${${STEP}_ARGS}
 .endfor

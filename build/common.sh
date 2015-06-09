@@ -29,14 +29,39 @@ set -e
 
 SCRUB_ARGS=:
 
-while getopts n:f:v: OPT; do
+# clear these to make sure they are passed by the caller
+PRODUCT_FLAVOUR=
+PRODUCT_VERSION=
+PRODUCT_NAME=
+TOOLSDIR=
+PORTSDIR=
+COREDIR=
+SRCDIR=
+
+while getopts C:f:n:P:S:T:v: OPT; do
 	case ${OPT} in
+	C)
+		export COREDIR=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
 	f)
 		export PRODUCT_FLAVOUR=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	n)
 		export PRODUCT_NAME=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	P)
+		export PORTSDIR=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	S)
+		export SRCDIR=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	T)
+		export TOOLSDIR=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	v)
@@ -50,19 +75,19 @@ while getopts n:f:v: OPT; do
 	esac
 done
 
-if [ -z "${PRODUCT_NAME}" -o -z "${PRODUCT_FLAVOUR}" -o -z "${PRODUCT_VERSION}" ]; then
+if [ -z "${PRODUCT_NAME}" -o \
+    -z "${PRODUCT_FLAVOUR}" -o \
+    -z "${PRODUCT_VERSION}" -o \
+    -z "${TOOLSDIR}" -o \
+    -z "${PORTSDIR}" -o \
+    -z "${COREDIR}" -o \
+    -z "${SRCDIR}" ]; then
 	echo "Oops, please use the make targets to execute the build step." >&2
 	exit 1
 fi
 
 # full name for easy use
 export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}"
-
-# code reositories
-export TOOLSDIR="/usr/tools"
-export PORTSDIR="/usr/ports"
-export COREDIR="/usr/core"
-export SRCDIR="/usr/src"
 
 # misc. foo
 export PRODUCT_CONFIG="${TOOLSDIR}/config/${PRODUCT_NAME}"
