@@ -38,6 +38,13 @@ PORTSDIR=
 COREDIR=
 SRCDIR=
 
+usage()
+{
+	echo "Usage: ${0} -f flavour -n name -v version" >&2
+	echo "	-C core.git -P ports.git -S src.git -T tools.git" >&2
+	exit 1
+}
+
 while getopts C:f:n:P:S:T:v: OPT; do
 	case ${OPT} in
 	C)
@@ -69,8 +76,7 @@ while getopts C:f:n:P:S:T:v: OPT; do
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	*)
-		echo "Usage: ${0} [-f flavour] [-n name] [-v version]" >&2
-		exit 1
+		usage
 		;;
 	esac
 done
@@ -82,8 +88,7 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PORTSDIR}" -o \
     -z "${COREDIR}" -o \
     -z "${SRCDIR}" ]; then
-	echo "Oops, please use the make targets to execute the build step." >&2
-	exit 1
+	usage
 fi
 
 # full name for easy use
