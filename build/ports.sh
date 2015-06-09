@@ -31,9 +31,6 @@ set -e
 
 PORT_LIST=$(cat ${PRODUCT_CONFIG}/ports.conf)
 
-git_clear ${PORTSDIR}
-git_clear ${SRCDIR}
-
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}

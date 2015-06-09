@@ -74,7 +74,7 @@ export TARGET_ARCH=${ARCH}
 export TARGETARCH=${ARCH}
 
 # define target directories
-export PACKAGESDIR="/packages"
+export PACKAGESDIR="/.pkg"
 export STAGEDIR="/usr/local/stage"
 export IMAGESDIR="/tmp/images"
 export SETSDIR="/tmp/sets"
@@ -91,18 +91,14 @@ export NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${ARCH}.img"
 # print environment to showcase all of our variables
 env | sort
 
-git_clear()
+git_checkout()
 {
-	# Reset the git repository into a known state by
-	# enforcing a hard-reset to HEAD (so you keep your
-	# selected commit, but no manual changes) and all
-	# unknown files are cleared (so it looks like a
-	# freshly cloned repository).
-
-	echo -n ">>> Resetting ${1}... "
-
-	git -C ${1} reset --hard HEAD
 	git -C ${1} clean -xdqf .
+	REPO_TAG=${2}
+	if [ -z "${REPO_TAG}" ]; then
+		git_tag ${1} ${PRODUCT_VERSION}
+	fi
+	git -C ${1} reset --hard ${REPO_TAG}
 }
 
 git_describe()
@@ -117,6 +113,38 @@ git_describe()
 
 	export REPO_VERSION=${VERSION}
 	export REPO_COMMENT=${COMMENT}
+}
+
+git_tag()
+{
+	# Fuzzy-match a tag and return it for the caller.
+
+	POOL=$(git -C ${1} tag | grep ^${2}\$ || true)
+	if [ -z "${POOL}" ]; then
+		VERSION=${2%.*}
+		FUZZY=${2##${VERSION}.}
+
+		for _POOL in $(git -C ${1} tag | grep ^${VERSION} | sort -r); do
+			_POOL=${_POOL##${VERSION}}
+			if [ -z "${_POOL}" ]; then
+				POOL=${VERSION}${_POOL}
+				break
+			fi
+			if [ ${_POOL##.} -lt ${FUZZY} ]; then
+				POOL=${VERSION}${_POOL}
+				break
+			fi
+		done
+	fi
+
+	if [ -z "${POOL}" ]; then
+		echo ">>> ${1} doesn't match tag ${2}"
+		exit 1
+	fi
+
+	echo ">>> ${1} matches tag ${2} -> ${POOL}"
+
+	export REPO_TAG=${POOL}
 }
 
 setup_clone()

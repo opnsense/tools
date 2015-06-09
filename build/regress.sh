@@ -29,8 +29,6 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-git_clear ${COREDIR}
-
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${COREDIR}

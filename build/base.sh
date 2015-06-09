@@ -31,7 +31,6 @@ set -e
 
 sh ./clean.sh base
 
-git_clear ${SRCDIR}
 git_describe ${SRCDIR}
 
 MAKEARGS="SRCCONF=${PRODUCT_CONFIG}/src.conf COMPILER_TYPE=clang __MAKE_CONF="

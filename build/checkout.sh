@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,19 +29,8 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-sh ./clean.sh kernel
-
-git_describe ${SRCDIR}
-
-BUILD_KERNEL="SMP"
-
-# XXX move config to src.git
-cp ${PRODUCT_CONFIG}/${BUILD_KERNEL} ${SRCDIR}/sys/${ARCH}/conf/${BUILD_KERNEL}
-
-MAKEARGS="TARGET_ARCH=${ARCH} KERNCONF=${BUILD_KERNEL}"
-
-make -C${SRCDIR} -j${CPUS} buildkernel ${MAKEARGS} NO_KERNELCLEAN=yes
-make -C${SRCDIR}/release obj ${MAKEARGS}
-make -C${SRCDIR}/release kernel.txz ${MAKEARGS}
-
-mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${SETSDIR}/kernel-${REPO_VERSION}-${ARCH}.txz
+for GITDIR in ${SRCDIR} ${PORTSDIR} ${COREDIR}; do
+	echo ">>> Checking out ${GITDIR}:"
+	git -C ${GITDIR} fetch --all --prune --quiet
+	git_checkout ${GITDIR} ${1}
+done
