@@ -91,6 +91,7 @@ fi
 export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}"
 
 # misc. foo
+export CONFIG_PKG="/usr/local/etc/pkg/repos/${PRODUCT_NAME}.conf.sample"
 export PRODUCT_CONFIG="${TOOLSDIR}/config/${PRODUCT_NAME}"
 export CPUS=$(sysctl kern.smp.cpus | awk '{ print $2 }')
 export CONFIG_XML="/usr/local/etc/config.xml"
