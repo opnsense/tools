@@ -30,9 +30,8 @@ set -e
 . ./common.sh && $(${SCRUB_ARGS})
 
 export __MAKE_CONF=${PRODUCT_CONFIG}/make.conf
-PORT_LIST=${PRODUCT_CONFIG}/ports.conf
-FREEBSD=/usr/freebsd-ports
-OPNSENSE=${PORTSDIR}
+
+git_update ${PORTSREFDIR} origin/master
 
 UNUSED=1
 USED=1
@@ -61,9 +60,9 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 
 	PORT=${PORT_CAT}/${PORT_NAME}
 
-	SOURCE=${OPNSENSE}
-	if [ ! -d ${OPNSENSE}/${PORT} ]; then
-		SOURCE=${FREEBSD}
+	SOURCE=${PORTSDIR}
+	if [ ! -d ${PORTSDIR}/${PORT} ]; then
+		SOURCE=${PORTSREFDIR}
 	fi
 
 	if [ "${PORT_OPT}" != "sync" ]; then
@@ -85,11 +84,11 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 	PORT_MODS="${PORT_MODS} ${PORT_DEPS}"
 
 	for PORT in ${PORT_DEPS}; do
-		if [ ! -d ${FREEBSD}/${PORT} ]; then
+		if [ ! -d ${PORTSREFDIR}/${PORT} ]; then
 			continue;
 		fi
 
-		diff -rq ${OPNSENSE}/${PORT} ${FREEBSD}/${PORT} \
+		diff -rq ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
 		    > /dev/null && continue
 
 		NEW=1
@@ -103,13 +102,13 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 			PORTS_CHANGED="${PORTS_CHANGED} ${PORT}"
 		fi
 	done
-done < ${PORT_LIST}
+done < ${PRODUCT_CONFIG}/ports.conf
 
 echo "done"
 
 if [ -n "${UNUSED}" ]; then
-	for ENTRY in ${OPNSENSE}/*; do
-		ENTRY=${ENTRY##"${OPNSENSE}/"}
+	for ENTRY in ${PORTSDIR}/*; do
+		ENTRY=${ENTRY##"${PORTSDIR}/"}
 
 		case "$(echo ${ENTRY} | colrm 2)" in
 		[[:upper:]])
@@ -119,26 +118,26 @@ if [ -n "${UNUSED}" ]; then
 			;;
 		esac
 
-		if [ ! -d ${FREEBSD}/${ENTRY} ]; then
+		if [ ! -d ${PORTSREFDIR}/${ENTRY} ]; then
 			continue;
 		fi
 
-		for PORT in ${OPNSENSE}/${ENTRY}/*; do
-			PORT=${PORT##"${OPNSENSE}/"}
+		for PORT in ${PORTSDIR}/${ENTRY}/*; do
+			PORT=${PORT##"${PORTSDIR}/"}
 
-			if [ -e ${FREEBSD}/${PORT} ]; then
+			if [ -e ${PORTSREFDIR}/${PORT} ]; then
 				continue;
 			fi
 
 			echo ">>> Removing ${PORT}"
 
-			rm -fr ${OPNSENSE}/${PORT}
+			rm -fr ${PORTSDIR}/${PORT}
 		done
 
 		PORT_MODS=$(echo ${PORT_MODS} | tr ' ' '\n' | sort -u)
 
-		for PORT in ${FREEBSD}/${ENTRY}/*; do
-			PORT=${PORT##"${FREEBSD}/"}
+		for PORT in ${PORTSREFDIR}/${ENTRY}/*; do
+			PORT=${PORT##"${PORTSREFDIR}/"}
 
 			UNUSED=1
 			for PORT_MOD in ${PORT_MODS}; do
@@ -154,29 +153,29 @@ if [ -n "${UNUSED}" ]; then
 
 			echo ">>> Refreshing ${PORT}"
 
-			rm -fr ${OPNSENSE}/${PORT}
-			cp -r ${FREEBSD}/${PORT} ${OPNSENSE}/${PORT}
+			rm -fr ${PORTSDIR}/${PORT}
+			cp -r ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
 		done
 	done
 fi
 
 if [ -n "${USED}" ]; then
 	for PORT in ${PORTS_CHANGED}; do
-		(clear && diff -ru ${OPNSENSE}/${PORT} ${FREEBSD}/${PORT} \
+		(clear && diff -ru ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
 		    2>/dev/null || true;) | less -r
 
 		echo -n "replace ${PORT} [y/N]: "
 		read YN
 		case ${YN} in
 		[yY])
-			rm -fr ${OPNSENSE}/${PORT}
-			cp -a ${FREEBSD}/${PORT} ${OPNSENSE}/${PORT}
+			rm -fr ${PORTSDIR}/${PORT}
+			cp -a ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
 			;;
 		esac
 	done
 
-	for ENTRY in ${FREEBSD}/*; do
-		ENTRY=${ENTRY##"${FREEBSD}/"}
+	for ENTRY in ${PORTSREFDIR}/*; do
+		ENTRY=${ENTRY##"${PORTSREFDIR}/"}
 
 		case "$(echo ${ENTRY} | colrm 2)" in
 		[[:upper:]])
@@ -186,13 +185,13 @@ if [ -n "${USED}" ]; then
 			;;
 		esac
 
-		diff -rq ${OPNSENSE}/${ENTRY} ${FREEBSD}/${ENTRY} \
+		diff -rq ${PORTSDIR}/${ENTRY} ${PORTSREFDIR}/${ENTRY} \
 		    > /dev/null || ENTRIES="${ENTRIES} ${ENTRY}"
 	done
 
 	if [ -n "${ENTRIES}" ]; then
 		(clear && for ENTRY in ${ENTRIES}; do
-			diff -ru ${OPNSENSE}/${ENTRY} ${FREEBSD}/${ENTRY} \
+			diff -ru ${PORTSDIR}/${ENTRY} ${PORTSREFDIR}/${ENTRY} \
 			    2>/dev/null || true;
 		done) | less -r
 
@@ -201,8 +200,8 @@ if [ -n "${USED}" ]; then
 		case ${YN} in
 		[yY])
 			for ENTRY in ${ENTRIES}; do
-				rm -r ${OPNSENSE}/${ENTRY}
-				cp -a ${FREEBSD}/${ENTRY} ${OPNSENSE}/
+				rm -r ${PORTSDIR}/${ENTRY}
+				cp -a ${PORTSREFDIR}/${ENTRY} ${PORTSDIR}/
 			done
 			;;
 		esac

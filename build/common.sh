@@ -29,23 +29,14 @@ set -e
 
 SCRUB_ARGS=:
 
-# clear these to make sure they are passed by the caller
-PRODUCT_FLAVOUR=
-PRODUCT_VERSION=
-PRODUCT_NAME=
-TOOLSDIR=
-PORTSDIR=
-COREDIR=
-SRCDIR=
-
 usage()
 {
-	echo "Usage: ${0} -f flavour -n name -v version" >&2
+	echo "Usage: ${0} -f flavour -n name -v version -R freebsd-ports.git" >&2
 	echo "	-C core.git -P ports.git -S src.git -T tools.git" >&2
 	exit 1
 }
 
-while getopts C:f:n:P:S:T:v: OPT; do
+while getopts C:f:n:P:R:S:T:v: OPT; do
 	case ${OPT} in
 	C)
 		export COREDIR=${OPTARG}
@@ -61,6 +52,10 @@ while getopts C:f:n:P:S:T:v: OPT; do
 		;;
 	P)
 		export PORTSDIR=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	R)
+		export PORTSREFDIR=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	S)
@@ -86,6 +81,7 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_VERSION}" -o \
     -z "${TOOLSDIR}" -o \
     -z "${PORTSDIR}" -o \
+    -z "${PORTSREFDIR}" -o \
     -z "${COREDIR}" -o \
     -z "${SRCDIR}" ]; then
 	usage
@@ -129,6 +125,14 @@ git_checkout()
 		git_tag ${1} ${PRODUCT_VERSION}
 	fi
 	git -C ${1} reset --hard ${REPO_TAG}
+}
+
+git_update()
+{
+	git -C ${1} fetch --all --prune
+	if [ -n "${2}" ]; then
+		git_checkout ${1} ${2}
+	fi
 }
 
 git_describe()

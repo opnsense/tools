@@ -30,7 +30,6 @@ set -e
 . ./common.sh && $(${SCRUB_ARGS})
 
 for GITDIR in ${SRCDIR} ${PORTSDIR} ${COREDIR}; do
-	echo ">>> Checking out ${GITDIR}:"
-	git -C ${GITDIR} fetch --all --prune
-	git_checkout ${GITDIR} ${1}
+	echo ">>> Updating ${GITDIR}:"
+	git_update ${GITDIR} ${1}
 done
