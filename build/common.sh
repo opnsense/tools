@@ -87,12 +87,12 @@ if [ -z "${PRODUCT_NAME}" -o \
 	usage
 fi
 
-# full name for easy use
+# full name for easy use and actual config directory
 export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}"
+export PRODUCT_CONFIG="${TOOLSDIR}/config/${PRODUCT_NAME}"
 
 # misc. foo
-export CONFIG_PKG="/usr/local/etc/pkg/repos/${PRODUCT_NAME}.conf.sample"
-export PRODUCT_CONFIG="${TOOLSDIR}/config/${PRODUCT_NAME}"
+export CONFIG_PKG="/usr/local/etc/pkg/repos/origin.conf.sample"
 export CPUS=$(sysctl kern.smp.cpus | awk '{ print $2 }')
 export CONFIG_XML="/usr/local/etc/config.xml"
 export ARCH=${ARCH:-$(uname -m)}
