@@ -44,13 +44,6 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 	PORT_LIST="${PORT_LIST} ${PORT_NAME}"
 done < ${PRODUCT_CONFIG}/ports.conf
 
-CRYPTO=openssl
-if [ ${PRODUCT_FLAVOUR} = "LibreSSL" ]; then
-	CRYPTO=libressl
-fi
-
-PORT_LIST="${PORT_LIST} ${CRYPTO}"
-
 extract_packages ${STAGEDIR} opnsense
 install_packages ${STAGEDIR} gettext-tools ${PORT_LIST}
 
