@@ -31,6 +31,6 @@ set -e
 
 for GITDIR in ${SRCDIR} ${PORTSDIR} ${COREDIR}; do
 	echo ">>> Checking out ${GITDIR}:"
-	git -C ${GITDIR} fetch --all --prune --quiet
+	git -C ${GITDIR} fetch --all --prune
 	git_checkout ${GITDIR} ${1}
 done
