@@ -324,14 +324,14 @@ bundle_packages()
 	sh ./clean.sh packages
 
 	# rebuild expected FreeBSD structure
-	mkdir -p ${1}/pkg-repo/Latest
-	mkdir -p ${1}/pkg-repo/All
+	mkdir -p ${1}/${PACKAGESDIR}-new/Latest
+	mkdir -p ${1}/${PACKAGESDIR}-new/All
 
 	# push packages to home location
-	cp ${1}${PACKAGESDIR}/All/* ${1}/pkg-repo/All
+	cp ${1}${PACKAGESDIR}/All/* ${1}/${PACKAGESDIR}-new/All
 
 	# needed bootstrap glue when no packages are on the system
-	(cd ${1}/pkg-repo/Latest; ln -s ../All/pkg-*.txz pkg.txz)
+	(cd ${1}/${PACKAGESDIR}-new/Latest; ln -s ../All/pkg-*.txz pkg.txz)
 
 	local SIGNARGS=
 	if [ -n "$(${TOOLSDIR}/scripts/pkg_fingerprint.sh)" ]; then
@@ -340,11 +340,11 @@ bundle_packages()
 	fi
 
 	# generate index files
-	pkg repo ${1}/pkg-repo ${SIGNARGS}
+	pkg repo ${1}/${PACKAGESDIR}-new ${SIGNARGS}
 
 	echo -n ">>> Creating package mirror set for ${PRODUCT_RELEASE}... "
 
-	tar -C ${STAGEDIR}/pkg-repo -cf \
+	tar -C ${STAGEDIR}/${PACKAGESDIR}-new -cf \
 	    ${SETSDIR}/packages-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}-${ARCH}.tar .
 
 	echo "done"
