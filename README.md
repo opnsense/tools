@@ -76,6 +76,7 @@ Available build options are:
 * NAME:		"OPNsense" (default)
 * FLAVOUR:	"OpenSSL" (default), "LibreSSL"
 * VERSION:	a version tag (if applicable)
+* SETTINGS:	the name of the selected settings in config/
 * CONFIG: 	reads the above from the specified file
 
 Build the userland binaries, bootloader and administrative

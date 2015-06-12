@@ -17,6 +17,7 @@ all:
 
 NAME?=		OPNsense
 FLAVOUR?=	OpenSSL
+SETTINGS?=	latest
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
 PORTSREFDIR?=	/usr/freebsd-ports
@@ -49,7 +50,7 @@ ${TARGET}: ${_TARGET}
 .for STEP in ${STEPS}
 ${STEP}:
 	@cd build && sh ./${.TARGET}.sh \
-	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} \
+	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} ${${STEP}_ARGS}
 .endfor

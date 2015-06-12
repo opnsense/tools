@@ -29,7 +29,7 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-export __MAKE_CONF=${PRODUCT_CONFIG}/make.conf
+export __MAKE_CONF=${CONFIGDIR}/make.conf
 
 git_update ${PORTSREFDIR} origin/master
 
@@ -102,7 +102,7 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 			PORTS_CHANGED="${PORTS_CHANGED} ${PORT}"
 		fi
 	done
-done < ${PRODUCT_CONFIG}/ports.conf
+done < ${CONFIGDIR}/ports.conf
 
 echo "done"
 

@@ -29,7 +29,7 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-PORT_LIST=$(cat ${PRODUCT_CONFIG}/ports.conf)
+PORT_LIST=$(cat ${CONFIGDIR}/ports.conf)
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
@@ -44,7 +44,7 @@ clean_packages ${STAGEDIR}
 
 echo ">>> Building packages..."
 
-MAKE_CONF="${PRODUCT_CONFIG}/make.conf"
+MAKE_CONF="${CONFIGDIR}/make.conf"
 if [ -f ${MAKE_CONF} ]; then
 	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
 fi

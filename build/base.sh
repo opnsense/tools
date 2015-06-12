@@ -33,7 +33,7 @@ sh ./clean.sh base
 
 git_describe ${SRCDIR}
 
-MAKEARGS="SRCCONF=${PRODUCT_CONFIG}/src.conf COMPILER_TYPE=clang __MAKE_CONF="
+MAKEARGS="SRCCONF=${CONFIGDIR}/src.conf COMPILER_TYPE=clang __MAKE_CONF="
 
 make -C${SRCDIR} -j${CPUS} buildworld ${MAKEARGS} NO_CLEAN=yes
 make -C${SRCDIR}/release obj ${MAKEARGS}
