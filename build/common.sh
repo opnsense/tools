@@ -207,19 +207,12 @@ setup_chroot()
 setup_marker()
 {
 	# Let opnsense-update(8) know it's up to date
-	local MARKER="/usr/local/opnsense/version/os-update"
+	local MARKER="/usr/local/opnsense/version/os-update.${3}"
 
 	if [ ! -f ${1}${MARKER} ]; then
 		# first call means bootstrap the marker file
 		mkdir -p ${1}$(dirname ${MARKER})
 		echo ${2} > ${1}${MARKER}
-	else
-		# subsequent call means make sure version matches
-		# (base and kernel must be in sync at all times)
-		if [ $(cat ${1}${MARKER}) != ${2} ]; then
-			echo "base/kernel version mismatch"
-			exit 1
-		fi
 	fi
 }
 
@@ -245,7 +238,7 @@ setup_base()
 
 	BASE_VER=${BASE_SET##${SETSDIR}/base-}
 
-	setup_marker ${1} ${BASE_VER%%.txz}
+	setup_marker ${1} ${BASE_VER%%.txz} base
 }
 
 setup_kernel()
@@ -260,7 +253,7 @@ setup_kernel()
 
 	KERNEL_VER=${KERNEL_SET##${SETSDIR}/kernel-}
 
-	setup_marker ${1} ${KERNEL_VER%%.txz}
+	setup_marker ${1} ${KERNEL_VER%%.txz} kernel
 }
 
 extract_packages()
