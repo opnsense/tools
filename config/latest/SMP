@@ -102,14 +102,6 @@ device		u3g
 
 options         IPSEC
 
-
-options         ALTQ
-options         ALTQ_CBQ
-options         ALTQ_RED
-options         ALTQ_RIO
-options         ALTQ_HFSC
-options         ALTQ_PRIQ
-
 # Bridging
 device          if_bridge
 
