@@ -34,7 +34,7 @@ for ARG in ${@}; do
 	stage)
 		setup_stage ${STAGEDIR}
 		;;
-	obj)
+	source)
 		setup_stage /usr/obj
 		;;
 	images)
