@@ -51,7 +51,7 @@ done
 
 echo -n ">>> Gathering dependencies"
 
-while read PORT_NAME PORT_CAT PORT_OPT; do
+while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
 	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" ]; then
 		continue
 	fi
@@ -65,7 +65,7 @@ while read PORT_NAME PORT_CAT PORT_OPT; do
 		SOURCE=${PORTSREFDIR}
 	fi
 
-	if [ "${PORT_OPT}" != "sync" ]; then
+	if [ ${PORT_TYPE} != "sync" ]; then
 		PORT_DEPS=$(echo ${PORT}; make -C ${SOURCE}/${PORT} \
 		    PORTSDIR=${SOURCE} all-depends-list | \
 		    awk -F"${SOURCE}/" '{print $2}')

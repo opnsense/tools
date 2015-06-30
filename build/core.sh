@@ -36,11 +36,13 @@ setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${COREDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 
-while read PORT_NAME PORT_CAT PORT_OPT; do
-	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" -o -n "${PORT_OPT}" ]; then
+while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
+	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" ]; then
 		continue
 	fi
-
+	if [ ${PORT_TYPE} != "run" ]; then
+		continue
+	fi
 	PORT_LIST="${PORT_LIST} ${PORT_NAME}"
 done < ${CONFIGDIR}/ports.conf
 
