@@ -195,7 +195,7 @@ if [ -n "${USED}" ]; then
 			    2>/dev/null || true;
 		done) | less -r
 
-		echo -n "replace Infrastructure [y/N]: "
+		echo -n "replace Framework [y/N]: "
 		read YN
 		case ${YN} in
 		[yY])
