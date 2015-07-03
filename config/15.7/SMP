@@ -1,0 +1,141 @@
+include         GENERIC
+
+nooptions	KDB_TRACE
+options		DDB                     # Support DDB.
+nooptions       GDB                     # Support remote GDB.
+nooptions       DEADLKRES
+nooptions	INVARIANTS
+nooptions	INVARIANT_SUPPORT
+nooptions	WITNESS
+nooptions	WITNESS_SKIPSPIN
+nooptions       MALLOC_DEBUG_MAXZONES
+
+nomakeoptions	DEBUG
+#makeoptions    DEBUG=-g                # Build kernel with gdb(1) debug symbols
+
+ident           SMP
+
+nooptions	FLOWTABLE
+
+# IPSEC filtering interface
+device		enc
+
+options 	GEOM_MIRROR
+options		GEOM_UZIP
+nooption	GEOM_MBR
+options		GEOM_ELI
+options		GEOM_BDE
+
+# Wireless
+device		wlan_xauth
+device		wlan_acl
+device		ipwfw		# Firmware for Intel PRO/Wireless 2100 IEEE 802.11 driver
+device		wpifw		# Firmware for Intel 3945ABG Wireless LAN IEEE 802.11 driver
+device		iwnfw		# Firmware for Intel Wireless WiFi Link 4965AGN IEEE 802.11n driver
+device		uath		# Atheros USB IEEE 802.11a/b/g wireless network device
+device		ralfw		# Firmware for Ralink Technology RT2500 wireless NICs.
+device		ural		# Ralink Technology RT2500USB IEEE 802.11 driver
+device		urtw		# Realtek RTL8187B/L USB IEEE 802.11b/g wireless network device
+device		rum		# Ralink Technology USB IEEE 802.11a/b/g wireless network device
+device		mwlfw		# Firmware for Marvell 88W8363 IEEE 802.11n wireless network driver
+device		zyd		# ZyDAS ZD1211/ZD1211B USB IEEE 802.11b/g wireless network device
+device		upgt		# Conexant/Intersil PrismGT SoftMAC USB IEEE 802.11b/g wireless
+device		bwi		# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
+# Only for 8.1+
+device		siba_bwn	# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
+device		bwn		# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
+device		run		# Ralink RT2700U/RT2800U/RT3000U USB 802.11agn
+
+options         IPFIREWALL_DEFAULT_TO_ACCEPT
+options         IPFIREWALL_VERBOSE
+options         IPFIREWALL_VERBOSE_LIMIT
+
+device          carp
+device          pf
+device          pflog
+device          pfsync
+device          gre
+
+options         IPSTEALTH
+
+options		NETGRAPH                #netgraph(4) system
+options		NETGRAPH_VLAN
+options		NETGRAPH_L2TP
+options		NETGRAPH_ASYNC
+options		NETGRAPH_BPF
+options		NETGRAPH_BRIDGE
+options		NETGRAPH_CISCO
+options		NETGRAPH_ECHO
+options		NETGRAPH_ETHER
+options		NETGRAPH_FRAME_RELAY
+options		NETGRAPH_HOLE
+options		NETGRAPH_IFACE
+options		NETGRAPH_EIFACE
+options		NETGRAPH_KSOCKET
+options		NETGRAPH_LMI
+options		NETGRAPH_MPPC_ENCRYPTION
+options		NETGRAPH_ONE2MANY
+options		NETGRAPH_PPP
+options		NETGRAPH_PPPOE
+options		NETGRAPH_PPTPGRE
+options		NETGRAPH_RFC1490
+options		NETGRAPH_SOCKET
+options		NETGRAPH_TEE
+options		NETGRAPH_TTY
+options		NETGRAPH_UI
+options		NETGRAPH_VJC
+options		NETGRAPH_TCPMSS
+options		NETGRAPH_PIPE
+options		NETGRAPH_CAR
+options		NETGRAPH_DEFLATE
+options		NETGRAPH_PRED1
+
+# 3G devices
+device          uplcom
+device          umct
+device          uvisor
+device          uark
+device          uftdi
+device          uvscom
+device          umodem
+device		u3g
+
+options         IPSEC
+
+# Bridging
+device          if_bridge
+
+# Squid related settings
+options         MSGMNB=8192     # max # of bytes in a queue
+options         MSGMNI=40       # number of message queue identifiers
+options         MSGSEG=512      # number of message segments per queue
+options         MSGSSZ=32       # size of a message segment
+options         MSGTQL=2048     # max messages in system
+
+device          tap
+
+device          speaker
+
+options         DEVICE_POLLING
+
+device          lagg
+
+options		MROUTING
+
+device		bktr		# bktr -- Brooktree Bt848/849/878/879 and Pinnacle PCTV video capture
+device		safe		# safe -- SafeNet crypto accelerator
+device		mxge		# mxge - Myricom Myri10GE 10 Gigabit Ethernet adapter driver
+device		cxgb		# cxgb -- Chelsio T3 10 Gigabit Ethernet adapter driver
+device		cxgbe		# cxgbe -- Chelsio T4 and T5 based 40Gb, 10Gb, and 1Gb Ethernet adapter driver
+device		crypto          # core crypto support
+device		cryptodev       # /dev/crypto for access to h/w
+device		hifn            # Hifn 7951, 7781, etc.
+device		ubsec           # Broadcom 5501, 5601, 58xx
+device		udav            # Davicom DM9601 USB Ethernet driver
+
+options		IPSEC_NAT_T
+
+device 		padlock
+
+options		PPS_SYNC
+options		TCP_SIGNATURE
