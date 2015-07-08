@@ -46,7 +46,12 @@ while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
 	PORT_LIST="${PORT_LIST} ${PORT_NAME}"
 done < ${CONFIGDIR}/ports.conf
 
-extract_packages ${STAGEDIR} opnsense
+REPO_SUFFIX=
+if [ -n "${1}" ]; then
+	REPO_SUFFIX=-${1}
+fi
+
+extract_packages ${STAGEDIR} opnsense"${REPO_SUFFIX}"
 install_packages ${STAGEDIR} gettext-tools ${PORT_LIST}
 
 chroot ${STAGEDIR} /bin/sh -es << EOF
@@ -57,6 +62,7 @@ for PKGFILE in \$(ls \${STAGEDIR}/+*); do
 	# fill in the blanks that come from the build
 	sed -i "" -e "s/%%REPO_VERSION%%/${REPO_VERSION}/g" \${PKGFILE}
 	sed -i "" -e "s/%%REPO_COMMENT%%/${REPO_COMMENT}/g" \${PKGFILE}
+	sed -i "" -e "s/%%REPO_SUFFIX%%/${REPO_SUFFIX}/g" \${PKGFILE}
 done
 
 REPO_FLAVOUR="latest"
