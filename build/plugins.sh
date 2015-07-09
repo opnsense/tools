@@ -29,7 +29,27 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-for GITDIR in ${SRCDIR} ${PORTSDIR} ${COREDIR} ${PLUGINS}; do
-	echo ">>> Updating ${GITDIR}:"
-	git_update ${GITDIR} ${1}
+setup_stage ${STAGEDIR}
+setup_base ${STAGEDIR}
+setup_clone ${STAGEDIR} ${PLUGINSDIR}
+extract_packages ${STAGEDIR}
+install_packages ${STAGEDIR}
+
+PLUGINS=$(make -C ${PLUGINSDIR} list)
+
+for PLUGIN in ${PLUGINS}; do
+	chroot ${STAGEDIR} /bin/sh -es << EOF
+# clear the internal staging area
+rm -rf ${STAGEDIR}
+mkdir ${STAGEDIR}
+
+make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} manifest > ${STAGEDIR}/+MANIFEST
+make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
+
+echo -n ">>> Creating custom package for plugin ${PLUGIN}... "
+pkg create -m ${STAGEDIR} -r ${STAGEDIR} -p ${STAGEDIR}/plist -o ${PACKAGESDIR}/All
+echo "done"
+EOF
 done
+
+bundle_packages ${STAGEDIR}

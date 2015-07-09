@@ -1,8 +1,8 @@
 About the OPNsense tools
 ========================
 
-In conjunction with src.git, ports.git and core.git they create
-sets, packages and images for the OPNsense project.  The license
+In conjunction with src.git, ports.git, core.git and plugins.git they
+create sets, packages and images for the OPNsense project.  The license
 is a standard BSD 2-Clause as reproduced here for your convenience:
 
     Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
@@ -45,6 +45,7 @@ src):
     # pkg install git
     # cd /usr
     # rm -rf src ports
+    # git clone https://github.com/opnsense/plugins
     # git clone https://github.com/opnsense/ports
     # git clone https://github.com/opnsense/tools
     # git clone https://github.com/opnsense/core
@@ -95,6 +96,10 @@ Build all the third-party ports:
 Wrap up our core as a package:
 
     # make core
+
+Build additional plugins if needed:
+
+    # make plugins
 
 A cdrom live image is created using:
 

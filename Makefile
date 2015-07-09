@@ -1,5 +1,5 @@
 STEPS=		base kernel ports core iso memstick nano \
-		regress clean release skim checkout
+		regress clean release skim checkout plugins
 .PHONY:		${STEPS}
 
 PAGER?=		less
@@ -21,6 +21,7 @@ SETTINGS?=	latest
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
 PORTSREFDIR?=	/usr/freebsd-ports
+PLUGINSDIR?=	/usr/plugins
 TOOLSDIR?=	/usr/tools
 PORTSDIR?=	/usr/ports
 COREDIR?=	/usr/core
@@ -29,7 +30,7 @@ SRCDIR?=	/usr/src
 # A couple of meta-targets for easy use:
 
 source: base kernel
-packages: ports core
+packages: ports core plugins
 sets: source packages
 images: iso memstick nano
 everything: sets images
@@ -51,6 +52,6 @@ ${TARGET}: ${_TARGET}
 ${STEP}:
 	@cd build && sh ./${.TARGET}.sh \
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
-	    -S ${SRCDIR} -P ${PORTSDIR} -T ${TOOLSDIR} \
+	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} ${${STEP}_ARGS}
 .endfor

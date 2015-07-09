@@ -36,7 +36,7 @@ usage()
 	exit 1
 }
 
-while getopts C:f:n:P:R:S:s:T:v: OPT; do
+while getopts C:f:n:P:p:R:S:s:T:v: OPT; do
 	case ${OPT} in
 	C)
 		export COREDIR=${OPTARG}
@@ -52,6 +52,10 @@ while getopts C:f:n:P:R:S:s:T:v: OPT; do
 		;;
 	P)
 		export PORTSDIR=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	p)
+		export PLUGINSDIR=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	R)
@@ -85,6 +89,7 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_VERSION}" -o \
     -z "${PRODUCT_SETTINGS}" -o \
     -z "${TOOLSDIR}" -o \
+    -z "${PLUGINSDIR}" -o \
     -z "${PORTSDIR}" -o \
     -z "${PORTSREFDIR}" -o \
     -z "${COREDIR}" -o \
@@ -381,7 +386,7 @@ setup_stage()
 {
 	echo ">>> Setting up stage in ${1}"
 
-	local MOUNTDIRS="/dev /usr/src /usr/ports /usr/core"
+	local MOUNTDIRS="/dev ${SRCDIR} ${PORTSDIR} ${COREDIR} ${PLUGINSDIR}"
 
 	# might have been a chroot
 	for DIR in ${MOUNTDIRS}; do
