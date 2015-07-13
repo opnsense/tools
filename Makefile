@@ -17,7 +17,7 @@ all:
 
 NAME?=		OPNsense
 FLAVOUR?=	OpenSSL
-SETTINGS?=	latest
+SETTINGS?=	15.7
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
 PORTSREFDIR?=	/usr/freebsd-ports
