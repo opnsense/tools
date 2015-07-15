@@ -174,7 +174,7 @@ if [ -n "${USED}" ]; then
 		[cC])
 			rm -fr ${PORTSDIR}/${PORT}
 			cp -a ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
-			(cd ${PORTSDIR}; git add ${PORTSDIR})
+			(cd ${PORTSDIR}; git add ${PORT})
 			(cd ${PORTSDIR}; git commit -m \
 "${PORT}: sync with upstream
 
