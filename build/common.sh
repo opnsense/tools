@@ -277,12 +277,15 @@ extract_packages()
 		tar -C ${BASEDIR}${PACKAGESDIR} -xpf ${PACKAGESET}
 	fi
 
-	if [ -n "${PKGLIST}" ]; then
-		for PKG in ${PKGLIST}; do
-			# clear out the ports that ought to be rebuilt
-			rm -f ${BASEDIR}${PACKAGESDIR}/All/${PKG}-*.txz
+	for PKG in ${PKGLIST}; do
+		# clear out the ports that ought to be rebuilt
+		for PKGFILE in ${BASEDIR}${PACKAGESDIR}/All/${PKG}-*.txz; do
+			PKGINFO=$(pkg info -F ${PKGFILE} | grep ^Name | awk '{ print $3; }')
+			if [ ${PKG} = ${PKGINFO} ]; then
+				rm ${PKGFILE}
+			fi
 		done
-	fi
+	done
 }
 
 install_packages()

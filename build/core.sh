@@ -31,6 +31,8 @@ set -e
 
 git_describe ${COREDIR}
 
+CORE_NAME=$(make -C ${COREDIR} name)
+
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${COREDIR}
@@ -46,7 +48,7 @@ while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
 	PORT_LIST="${PORT_LIST} ${PORT_NAME}"
 done < ${CONFIGDIR}/ports.conf
 
-extract_packages ${STAGEDIR} opnsense
+extract_packages ${STAGEDIR} ${CORE_NAME}
 install_packages ${STAGEDIR} gettext-tools ${PORT_LIST}
 
 chroot ${STAGEDIR} /bin/sh -es << EOF
@@ -84,5 +86,5 @@ sed -i "" -e '/%%REPO_DEPENDS%%/d' ${STAGEDIR}/+MANIFEST
 make -C ${COREDIR} DESTDIR=${STAGEDIR} plist > ${STAGEDIR}/plist
 EOF
 
-create_packages ${STAGEDIR} ${REPO_NAME}
+create_packages ${STAGEDIR} ${CORE_NAME}
 bundle_packages ${STAGEDIR}
