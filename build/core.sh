@@ -55,7 +55,7 @@ extract_packages ${STAGEDIR} opnsense"${REPO_SUFFIX}"
 install_packages ${STAGEDIR} gettext-tools ${PORT_LIST}
 
 chroot ${STAGEDIR} /bin/sh -es << EOF
-make -C ${COREDIR} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
+make -C ${COREDIR} DESTDIR=${STAGEDIR} install
 
 for PKGFILE in \$(ls \${STAGEDIR}/+*); do
 	# fill in the blanks that come from the build
@@ -84,6 +84,8 @@ done
 # remove placeholder now that all dependencies are in place
 sed -i "" -e "/%%REPO_DEPENDS%%/r ${STAGEDIR}/deps" ${STAGEDIR}/+MANIFEST
 sed -i "" -e '/%%REPO_DEPENDS%%/d' ${STAGEDIR}/+MANIFEST
+
+make -C ${COREDIR} DESTDIR=${STAGEDIR} plist > ${STAGEDIR}/plist
 
 echo -n ">>> Creating custom package for ${COREDIR}... "
 pkg create -m ${STAGEDIR} -r ${STAGEDIR} -p ${STAGEDIR}/plist -o ${PACKAGESDIR}/All
