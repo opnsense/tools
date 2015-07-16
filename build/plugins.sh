@@ -41,10 +41,11 @@ for PLUGIN in ${PLUGINS}; do
 	chroot ${STAGEDIR} /bin/sh -es << EOF
 # clear the internal staging area
 rm -rf ${STAGEDIR}
-mkdir ${STAGEDIR}
+
+make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} install
 
 make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} manifest > ${STAGEDIR}/+MANIFEST
-make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
+make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} plist > ${STAGEDIR}/plist
 
 echo -n ">>> Creating custom package for plugin ${PLUGIN}... "
 pkg create -m ${STAGEDIR} -r ${STAGEDIR} -p ${STAGEDIR}/plist -o ${PACKAGESDIR}/All
