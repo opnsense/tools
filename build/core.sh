@@ -46,22 +46,18 @@ while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
 	PORT_LIST="${PORT_LIST} ${PORT_NAME}"
 done < ${CONFIGDIR}/ports.conf
 
-REPO_SUFFIX=
-if [ -n "${1}" ]; then
-	REPO_SUFFIX=-${1}
-fi
-
-extract_packages ${STAGEDIR} opnsense"${REPO_SUFFIX}"
+extract_packages ${STAGEDIR} opnsense
 install_packages ${STAGEDIR} gettext-tools ${PORT_LIST}
 
 chroot ${STAGEDIR} /bin/sh -es << EOF
 make -C ${COREDIR} DESTDIR=${STAGEDIR} install
+make -C ${COREDIR} DESTDIR=${STAGEDIR} scripts
+make -C ${COREDIR} DESTDIR=${STAGEDIR} manifest > ${STAGEDIR}/+MANIFEST
 
 for PKGFILE in \$(ls \${STAGEDIR}/+*); do
 	# fill in the blanks that come from the build
 	sed -i "" -e "s/%%REPO_VERSION%%/${REPO_VERSION}/g" \${PKGFILE}
 	sed -i "" -e "s/%%REPO_COMMENT%%/${REPO_COMMENT}/g" \${PKGFILE}
-	sed -i "" -e "s/%%REPO_SUFFIX%%/${REPO_SUFFIX}/g" \${PKGFILE}
 done
 
 REPO_FLAVOUR="latest"
@@ -86,10 +82,7 @@ sed -i "" -e "/%%REPO_DEPENDS%%/r ${STAGEDIR}/deps" ${STAGEDIR}/+MANIFEST
 sed -i "" -e '/%%REPO_DEPENDS%%/d' ${STAGEDIR}/+MANIFEST
 
 make -C ${COREDIR} DESTDIR=${STAGEDIR} plist > ${STAGEDIR}/plist
-
-echo -n ">>> Creating custom package for ${COREDIR}... "
-pkg create -m ${STAGEDIR} -r ${STAGEDIR} -p ${STAGEDIR}/plist -o ${PACKAGESDIR}/All
-echo "done"
 EOF
 
+create_packages ${STAGEDIR} ${REPO_NAME}
 bundle_packages ${STAGEDIR}

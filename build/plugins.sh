@@ -32,26 +32,21 @@ set -e
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PLUGINSDIR}
-extract_packages ${STAGEDIR}
+extract_packages ${STAGEDIR} opnsense
 install_packages ${STAGEDIR}
 
 PLUGINS=$(make -C ${PLUGINSDIR} list)
 
 for PLUGIN in ${PLUGINS}; do
 	chroot ${STAGEDIR} /bin/sh -es << EOF
-# clear the internal staging area
-rm -rf ${STAGEDIR}
 
 make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} install
 make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} scripts
 
 make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} manifest > ${STAGEDIR}/+MANIFEST
 make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} plist > ${STAGEDIR}/plist
-
-echo -n ">>> Creating custom package for plugin ${PLUGIN}... "
-pkg create -m ${STAGEDIR} -r ${STAGEDIR} -p ${STAGEDIR}/plist -o ${PACKAGESDIR}/All
-echo "done"
 EOF
+	create_packages ${STAGEDIR} ${PLUGIN}
 done
 
 bundle_packages ${STAGEDIR}

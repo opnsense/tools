@@ -322,6 +322,18 @@ install_packages()
 	done
 }
 
+create_packages()
+{
+	chroot ${1} /bin/sh -es << EOF
+echo -n ">>> Creating custom package for ${2}... "
+pkg create -m ${1} -r ${1} -p ${1}/plist -o ${PACKAGESDIR}/All
+echo "done"
+
+# clear the internal staging area and package files
+rm -rf ${1}
+EOF
+}
+
 bundle_packages()
 {
 	sh ./clean.sh packages

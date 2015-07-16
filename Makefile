@@ -30,7 +30,7 @@ SRCDIR?=	/usr/src
 # A couple of meta-targets for easy use:
 
 source: base kernel
-packages: ports core plugins
+packages: ports plugins core
 sets: source packages
 images: iso memstick nano
 everything: sets images
