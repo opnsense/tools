@@ -29,13 +29,18 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+PLUGINS=$(make -C ${PLUGINSDIR} list)
+PLUGIN_NAMES=
+
+for PLUGIN in ${PLUGINS}; do
+	PLUGIN_NAMES="${PLUGIN_NAMES} $(make -C ${PLUGINSDIR}/${PLUGIN} name)"
+done
+
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PLUGINSDIR}
-extract_packages ${STAGEDIR} opnsense
+extract_packages ${STAGEDIR} ${PLUGIN_NAMES}
 install_packages ${STAGEDIR}
-
-PLUGINS=$(make -C ${PLUGINSDIR} list)
 
 for PLUGIN in ${PLUGINS}; do
 	chroot ${STAGEDIR} /bin/sh -es << EOF
@@ -46,7 +51,7 @@ make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} scripts
 make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} manifest > ${STAGEDIR}/+MANIFEST
 make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} plist > ${STAGEDIR}/plist
 EOF
-	create_packages ${STAGEDIR} ${PLUGIN}
+	create_packages ${STAGEDIR} $(make -C ${PLUGINSDIR}/${PLUGIN} name)
 done
 
 bundle_packages ${STAGEDIR}

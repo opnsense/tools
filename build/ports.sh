@@ -37,8 +37,8 @@ setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
 
-# bootstrap the stage with the avilable set (minus opnsense and args)
-extract_packages ${STAGEDIR} opnsense ${@}
+# bootstrap the stage with the avilable set (minus args)
+extract_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR}
 clean_packages ${STAGEDIR}
 

@@ -333,6 +333,7 @@ pkg create -m ${1} -r ${1} -p ${1}/plist -o ${PACKAGESDIR}/All
 echo "done"
 
 # clear the internal staging area and package files
+# XXX bad for debugging
 rm -rf ${1}
 EOF
 }
