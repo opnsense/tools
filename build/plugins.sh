@@ -43,6 +43,7 @@ for PLUGIN in ${PLUGINS}; do
 rm -rf ${STAGEDIR}
 
 make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} install
+make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} scripts
 
 make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} manifest > ${STAGEDIR}/+MANIFEST
 make -C ${PLUGINSDIR}/${PLUGIN} DESTDIR=${STAGEDIR} plist > ${STAGEDIR}/plist
