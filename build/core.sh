@@ -55,7 +55,6 @@ extract_packages ${STAGEDIR} opnsense"${REPO_SUFFIX}"
 install_packages ${STAGEDIR} gettext-tools ${PORT_LIST}
 
 chroot ${STAGEDIR} /bin/sh -es << EOF
-mkdir -p ${STAGEDIR}
 make -C ${COREDIR} DESTDIR=${STAGEDIR} install > ${STAGEDIR}/plist
 
 for PKGFILE in \$(ls \${STAGEDIR}/+*); do
