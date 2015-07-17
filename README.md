@@ -93,13 +93,13 @@ Build all the third-party ports:
 
     # make ports
 
-Wrap up our core as a package:
-
-    # make core
-
 Build additional plugins if needed:
 
     # make plugins
+
+Wrap up our core as a package:
+
+    # make core
 
 A cdrom live image is created using:
 
