@@ -30,29 +30,21 @@ set -e
 . ./common.sh && $(${SCRUB_ARGS})
 
 CORE_NAME=$(make -C ${COREDIR} name)
+CORE_DEPS=$(make -C ${COREDIR} depends)
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${COREDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 
-while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
-	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" ]; then
-		continue
-	fi
-	if [ ${PORT_TYPE} != "run" ]; then
-		continue
-	fi
-	PORT_LIST="${PORT_LIST} ${PORT_NAME}"
-done < ${CONFIGDIR}/ports.conf
-
 extract_packages ${STAGEDIR} ${CORE_NAME}
-install_packages ${STAGEDIR} git gettext-tools ${PORT_LIST}
+install_packages ${STAGEDIR} git gettext-tools ${CORE_DEPS}
 
 chroot ${STAGEDIR} /bin/sh -es << EOF
 make -C ${COREDIR} DESTDIR=${STAGEDIR} install
 make -C ${COREDIR} DESTDIR=${STAGEDIR} scripts
 make -C ${COREDIR} DESTDIR=${STAGEDIR} manifest > ${STAGEDIR}/+MANIFEST
+make -C ${COREDIR} DESTDIR=${STAGEDIR} plist > ${STAGEDIR}/plist
 
 REPO_FLAVOUR="latest"
 if [ ${PRODUCT_FLAVOUR} = "LibreSSL" ]; then
@@ -60,22 +52,6 @@ if [ ${PRODUCT_FLAVOUR} = "LibreSSL" ]; then
 fi
 sed -i '' -e "s/%%REPO_FLAVOUR%%/\${REPO_FLAVOUR}/g" \
     ${STAGEDIR}${CONFIG_PKG}
-
-for PORT_NAME in ${PORT_LIST}; do
-	echo -n ">>> Collecting depencency for \${PORT_NAME}... "
-	# catch dependecy error in shell execution
-	PORT_DEP=\$(pkg query '%n: { version: "%v", origin: "%o" }' \${PORT_NAME})
-	echo "done"
-
-	# fill in the direct ports dependencies
-	echo "  \${PORT_DEP}" >> ${STAGEDIR}/deps
-done
-
-# remove placeholder now that all dependencies are in place
-sed -i "" -e "/%%REPO_DEPENDS%%/r ${STAGEDIR}/deps" ${STAGEDIR}/+MANIFEST
-sed -i "" -e '/%%REPO_DEPENDS%%/d' ${STAGEDIR}/+MANIFEST
-
-make -C ${COREDIR} DESTDIR=${STAGEDIR} plist > ${STAGEDIR}/plist
 EOF
 
 create_packages ${STAGEDIR} ${CORE_NAME}
