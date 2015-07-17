@@ -80,25 +80,20 @@ echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_BROKEN; do
 		done
 	fi
 
-	echo -n ">>> Building \${PORT_NAME}... "
+	PORT_ORIGIN=\${PORT_CAT}/\${PORT_NAME}
 
-	if pkg query %n \${PORT_NAME} > /dev/null; then
+	echo -n ">>> Building \${PORT_ORIGIN}... "
+
+	if pkg query %o \${PORT_ORIGIN} > /dev/null; then
 		# lock the package to keep build deps
-		pkg lock -qy \${PORT_NAME}
+		pkg lock -qy \${PORT_ORIGIN}
 		echo "skipped."
 		continue
 	fi
 
 	# user configs linger somewhere else and override the override  :(
-	make -C ${PORTSDIR}/\${PORT_CAT}/\${PORT_NAME} rmconfig-recursive
-	make -C ${PORTSDIR}/\${PORT_CAT}/\${PORT_NAME} clean all install
-
-	if pkg query %n \${PORT_NAME} > /dev/null; then
-		# ok
-	else
-		echo "\${PORT_NAME}: package names don't match"
-		exit 1
-	fi
+	make -C ${PORTSDIR}/\${PORT_ORIGIN} rmconfig-recursive
+	make -C ${PORTSDIR}/\${PORT_ORIGIN} clean all install
 done }
 EOF
 
