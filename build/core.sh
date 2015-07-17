@@ -41,17 +41,10 @@ extract_packages ${STAGEDIR} ${CORE_NAME}
 install_packages ${STAGEDIR} git gettext-tools ${CORE_DEPS}
 
 chroot ${STAGEDIR} /bin/sh -es << EOF
-make -C ${COREDIR} DESTDIR=${STAGEDIR} install
+make -C ${COREDIR} DESTDIR=${STAGEDIR} FLAVOUR=${PRODUCT_FLAVOUR} install
 make -C ${COREDIR} DESTDIR=${STAGEDIR} scripts
 make -C ${COREDIR} DESTDIR=${STAGEDIR} manifest > ${STAGEDIR}/+MANIFEST
 make -C ${COREDIR} DESTDIR=${STAGEDIR} plist > ${STAGEDIR}/plist
-
-REPO_FLAVOUR="latest"
-if [ ${PRODUCT_FLAVOUR} = "LibreSSL" ]; then
-	REPO_FLAVOUR="libressl"
-fi
-sed -i '' -e "s/%%REPO_FLAVOUR%%/\${REPO_FLAVOUR}/g" \
-    ${STAGEDIR}${CONFIG_PKG}
 EOF
 
 create_packages ${STAGEDIR} ${CORE_NAME}
