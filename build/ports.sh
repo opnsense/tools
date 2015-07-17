@@ -69,9 +69,6 @@ echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
 	if [ "\$(echo \${PORT_NAME} | colrm 2)" = "#" ]; then
 		continue
 	fi
-	if [ \${PORT_TYPE} = "sync" ]; then
-		continue
-	fi
 	if [ -n "\${PORT_BROKEN}" ]; then
 		for PORT_QUIRK in \$(echo \${PORT_BROKEN} | tr ',' ' '); do
 			if [ \${PORT_QUIRK} = ${ARCH} ]; then

@@ -31,6 +31,9 @@ set -e
 
 export __MAKE_CONF=${CONFIGDIR}/make.conf
 
+PORT_LIST="devel/gettext security/libressl security/openssl security/vuxml"
+PORT_LIST="${PORT_LIST} $(cat ${CONFIGDIR}/ports.conf)"
+
 git_update ${PORTSREFDIR} origin/master
 
 UNUSED=1
@@ -51,7 +54,7 @@ done
 
 echo -n ">>> Gathering dependencies"
 
-while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
+echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
 	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" ]; then
 		continue
 	fi
@@ -65,13 +68,9 @@ while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
 		SOURCE=${PORTSREFDIR}
 	fi
 
-	if [ ${PORT_TYPE} != "sync" ]; then
-		PORT_DEPS=$(echo ${PORT}; make -C ${SOURCE}/${PORT} \
-		    PORTSDIR=${SOURCE} all-depends-list | \
-		    awk -F"${SOURCE}/" '{print $2}')
-	else
-		PORT_DEPS=${PORT}
-	fi
+	PORT_DEPS=$(echo ${PORT}; make -C ${SOURCE}/${PORT} \
+	    PORTSDIR=${SOURCE} all-depends-list | \
+	    awk -F"${SOURCE}/" '{print $2}')
 
 	for PORT in ${PORT_DEPS}; do
 		PORT_MASTER=$(make -C ${SOURCE}/${PORT} -V MASTER_PORT)
@@ -102,7 +101,7 @@ while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
 			PORTS_CHANGED="${PORTS_CHANGED} ${PORT}"
 		fi
 	done
-done < ${CONFIGDIR}/ports.conf
+done }
 
 echo "done"
 
