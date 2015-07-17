@@ -92,6 +92,12 @@ echo "${PORT_LIST}" | { while read PORT_ORIGIN PORT_BROKEN; do
 	# user configs linger somewhere else and override the override  :(
 	make -C ${PORTSDIR}/\${PORT_ORIGIN} rmconfig-recursive
 	make -C ${PORTSDIR}/\${PORT_ORIGIN} clean all install
+
+	if ! pkg query %o \${PORT_ORIGIN} > /dev/null; then
+		make -C ${PORTSDIR}/\${PORT_ORIGIN} deinstall
+		echo ">>> Error: origin mismatch for \${PORT_ORIGIN}"
+		exit 1
+	fi
 done }
 EOF
 
