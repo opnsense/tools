@@ -29,8 +29,6 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-git_describe ${COREDIR}
-
 CORE_NAME=$(make -C ${COREDIR} name)
 
 setup_stage ${STAGEDIR}
@@ -49,18 +47,12 @@ while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
 done < ${CONFIGDIR}/ports.conf
 
 extract_packages ${STAGEDIR} ${CORE_NAME}
-install_packages ${STAGEDIR} gettext-tools ${PORT_LIST}
+install_packages ${STAGEDIR} git gettext-tools ${PORT_LIST}
 
 chroot ${STAGEDIR} /bin/sh -es << EOF
 make -C ${COREDIR} DESTDIR=${STAGEDIR} install
 make -C ${COREDIR} DESTDIR=${STAGEDIR} scripts
 make -C ${COREDIR} DESTDIR=${STAGEDIR} manifest > ${STAGEDIR}/+MANIFEST
-
-for PKGFILE in \$(ls \${STAGEDIR}/+*); do
-	# fill in the blanks that come from the build
-	sed -i "" -e "s/%%REPO_VERSION%%/${REPO_VERSION}/g" \${PKGFILE}
-	sed -i "" -e "s/%%REPO_COMMENT%%/${REPO_COMMENT}/g" \${PKGFILE}
-done
 
 REPO_FLAVOUR="latest"
 if [ ${PRODUCT_FLAVOUR} = "LibreSSL" ]; then
