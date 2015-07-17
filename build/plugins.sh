@@ -41,9 +41,10 @@ setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PLUGINSDIR}
 
 extract_packages ${STAGEDIR} ${PLUGIN_NAMES}
-install_packages ${STAGEDIR}
 
 for PLUGIN in ${PLUGINS}; do
+	PLUGIN_DEPENDS=$(make -C ${PLUGINSDIR}/${PLUGIN} depends)
+	install_packages ${STAGEDIR} ${PLUGIN_DEPENDS}
 	custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN}
 done
 

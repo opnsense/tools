@@ -296,6 +296,8 @@ install_packages()
 	shift
 	PKGLIST=${@}
 
+	pkg -c ${BASEDIR} remove -fya
+
 	if [ -z "${PKGLIST}" ]; then
 		PKGLIST=$(cd ${BASEDIR}${PACKAGESDIR}/All; ls *.txz || true)
 		for PKG in ${PKGLIST}; do
