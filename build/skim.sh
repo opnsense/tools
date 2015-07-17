@@ -54,7 +54,7 @@ done
 
 echo -n ">>> Gathering dependencies"
 
-echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_TYPE PORT_BROKEN; do
+echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_BROKEN; do
 	if [ "$(echo ${PORT_NAME} | colrm 2)" = "#" ]; then
 		continue
 	fi
