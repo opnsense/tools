@@ -40,12 +40,6 @@ setup_clone ${STAGEDIR} ${PORTSDIR}
 extract_packages ${STAGEDIR} ${CORE_NAME}
 install_packages ${STAGEDIR} git gettext-tools ${CORE_DEPS}
 
-chroot ${STAGEDIR} /bin/sh -es << EOF
-make -C ${COREDIR} DESTDIR=${STAGEDIR} FLAVOUR=${PRODUCT_FLAVOUR} install
-make -C ${COREDIR} DESTDIR=${STAGEDIR} scripts
-make -C ${COREDIR} DESTDIR=${STAGEDIR} manifest > ${STAGEDIR}/+MANIFEST
-make -C ${COREDIR} DESTDIR=${STAGEDIR} plist > ${STAGEDIR}/plist
-EOF
+custom_packages ${STAGEDIR} ${COREDIR}
 
-create_packages ${STAGEDIR} ${CORE_NAME}
 bundle_packages ${STAGEDIR}

@@ -325,16 +325,21 @@ install_packages()
 	done
 }
 
-create_packages()
+custom_packages()
 {
 	chroot ${1} /bin/sh -es << EOF
-echo -n ">>> Creating custom package for ${2}... "
+# clear the internal staging area and package files
+rm -rf ${1}
+
+# run the package build process
+make -C ${2} DESTDIR=${1} FLAVOUR=${PRODUCT_FLAVOUR} install
+make -C ${2} DESTDIR=${1} scripts
+make -C ${2} DESTDIR=${1} manifest > ${1}/+MANIFEST
+make -C ${2} DESTDIR=${1} plist > ${1}/plist
+
+echo -n ">>> Creating custom package for \$(make -C ${2} name)... "
 pkg create -m ${1} -r ${1} -p ${1}/plist -o ${PACKAGESDIR}/All
 echo "done"
-
-# clear the internal staging area and package files
-# XXX bad for debugging
-rm -rf ${1}
 EOF
 }
 
