@@ -65,8 +65,8 @@ else
 	make -C ${PORTSDIR}/ports-mgmt/pkg clean all install
 fi
 
-echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_BROKEN; do
-	if [ "\$(echo \${PORT_NAME} | colrm 2)" = "#" ]; then
+echo "${PORT_LIST}" | { while read PORT_ORIGIN PORT_BROKEN; do
+	if [ "\$(echo \${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
 	fi
 	if [ -n "\${PORT_BROKEN}" ]; then
@@ -79,8 +79,6 @@ echo "${PORT_LIST}" | { while read PORT_NAME PORT_CAT PORT_BROKEN; do
 			fi
 		done
 	fi
-
-	PORT_ORIGIN=\${PORT_CAT}/\${PORT_NAME}
 
 	echo -n ">>> Building \${PORT_ORIGIN}... "
 
