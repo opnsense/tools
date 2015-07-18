@@ -266,8 +266,6 @@ extract_packages()
 	echo ">>> Extracting packages in ${1}"
 
 	BASEDIR=${1}
-	shift
-	PKGLIST=${@}
 
 	rm -rf ${BASEDIR}${PACKAGESDIR}/All
 	mkdir -p ${BASEDIR}${PACKAGESDIR}/All
@@ -276,6 +274,15 @@ extract_packages()
 	if [ -f "${PACKAGESET}" ]; then
 		tar -C ${BASEDIR}${PACKAGESDIR} -xpf ${PACKAGESET}
 	fi
+}
+
+remove_packages()
+{
+	echo ">>> Removing packages in ${1}"
+
+	BASEDIR=${1}
+	shift
+	PKGLIST=${@}
 
 	for PKG in ${PKGLIST}; do
 		# clear out the ports that ought to be rebuilt

@@ -30,21 +30,19 @@ set -e
 . ./common.sh && $(${SCRUB_ARGS})
 
 PLUGINS=$(make -C ${PLUGINSDIR} list)
-PLUGIN_NAMES=
-
-for PLUGIN in ${PLUGINS}; do
-	PLUGIN_NAMES="${PLUGIN_NAMES} $(make -C ${PLUGINSDIR}/${PLUGIN} name)"
-done
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PLUGINSDIR}
 
-extract_packages ${STAGEDIR} ${PLUGIN_NAMES}
+extract_packages ${STAGEDIR}
 
 for PLUGIN in ${PLUGINS}; do
-	PLUGIN_DEPENDS=$(make -C ${PLUGINSDIR}/${PLUGIN} depends)
-	install_packages ${STAGEDIR} ${PLUGIN_DEPENDS}
+	PLUGIN_NAME=$(make -C ${PLUGINSDIR}/${PLUGIN} name)
+	PLUGIN_DEPS=$(make -C ${PLUGINSDIR}/${PLUGIN} depends)
+
+	remove_packages ${STAGEDIR} ${PLUGIN_NAME}
+	install_packages ${STAGEDIR} ${PLUGIN_DEPS}
 	custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN}
 done
 

@@ -37,7 +37,8 @@ setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${COREDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 
-extract_packages ${STAGEDIR} ${CORE_NAME}
+extract_packages ${STAGEDIR}
+remove_packages ${STAGEDIR} ${CORE_NAME}
 install_packages ${STAGEDIR} git gettext-tools ${CORE_DEPS}
 
 custom_packages ${STAGEDIR} ${COREDIR}
