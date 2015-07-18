@@ -65,7 +65,7 @@ else
 	make -C ${PORTSDIR}/ports-mgmt/pkg clean all install
 fi
 
-echo "${PORT_LIST}" | { while read PORT_ORIGIN PORT_BROKEN; do
+echo "${PORT_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
 	if [ "\$(echo \${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
 	fi
@@ -98,7 +98,7 @@ echo "${PORT_LIST}" | { while read PORT_ORIGIN PORT_BROKEN; do
 		echo ">>> Error: origin mismatch for \${PORT_ORIGIN}"
 		exit 1
 	fi
-done }
+done
 EOF
 
 # unblock SIGINT

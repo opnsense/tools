@@ -31,8 +31,15 @@ set -e
 
 export __MAKE_CONF=${CONFIGDIR}/make.conf
 
-PORT_LIST="devel/gettext security/libressl security/openssl security/vuxml"
-PORT_LIST="${PORT_LIST} $(cat ${CONFIGDIR}/ports.conf)"
+PORT_LIST=$({
+	# the ports formerly known as `sync'
+	echo devel/gettext
+	echo security/libressl
+	echo security/openssl
+	echo security/vuxml
+	# all the ports that ought to be built
+	cat ${CONFIGDIR}/ports.conf
+})
 
 git_update ${PORTSREFDIR} origin/master
 
@@ -54,7 +61,10 @@ done
 
 echo -n ">>> Gathering dependencies"
 
-echo "${PORT_LIST}" | { while read PORT_ORIGIN PORT_BROKEN; do
+rm -f /tmp/skim.*
+echo "${PORT_LIST}" > /tmp/skim.${$}
+
+while read PORT_ORIGIN PORT_BROKEN; do
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
 	fi
@@ -101,7 +111,7 @@ echo "${PORT_LIST}" | { while read PORT_ORIGIN PORT_BROKEN; do
 			PORTS_CHANGED="${PORTS_CHANGED} ${PORT}"
 		fi
 	done
-done }
+done < /tmp/skim.${$}
 
 echo "done"
 
