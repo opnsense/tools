@@ -132,6 +132,10 @@ the following works:
 
     # make ports-<packagename>[,...]
 
+Core packages (pristine copies) can be batch-built using:
+
+    # make core-<repo_branch_or_tag>[,...]
+
 Package sets (may be signed depending on whether the key is
 found under /root) ready for web server deployment are automatically
 generated and modified by ports.sh and core.sh.

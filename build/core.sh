@@ -29,18 +29,29 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-CORE_NAME=$(make -C ${COREDIR} name)
-CORE_DEPS=$(make -C ${COREDIR} depends)
-
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
-setup_clone ${STAGEDIR} ${COREDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 
-extract_packages ${STAGEDIR}
-remove_packages ${STAGEDIR} ${CORE_NAME}
-install_packages ${STAGEDIR} git gettext-tools ${CORE_DEPS}
+if [ -z "${*}" ]; then
+	setup_clone ${STAGEDIR} ${COREDIR}
+	CORE_TAGS="bogus"
+else
+	setup_copy ${STAGEDIR} ${COREDIR}
+	CORE_TAGS="${*}"
+fi
 
-custom_packages ${STAGEDIR} ${COREDIR}
+extract_packages ${STAGEDIR}
+
+for CORE_TAG in ${CORE_TAGS}; do
+	if [ -n "${*}" ]; then
+		git_update ${STAGEDIR}${COREDIR} ${CORE_TAG}
+	fi
+	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} name)
+	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} depends)
+	remove_packages ${STAGEDIR} ${CORE_NAME}
+	install_packages ${STAGEDIR} git gettext-tools ${CORE_DEPS}
+	custom_packages ${STAGEDIR} ${COREDIR}
+done
 
 bundle_packages ${STAGEDIR}

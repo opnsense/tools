@@ -194,10 +194,18 @@ git_tag()
 
 setup_clone()
 {
-	echo ">>> Setting up ${2} in ${1}"
+	echo ">>> Setting up ${2} clone in ${1}"
 
 	# repositories may be huge so avoid the copy :)
 	mkdir -p ${1}${2} && mount_unionfs -o below ${2} ${1}${2}
+}
+
+setup_copy()
+{
+	echo ">>> Setting up ${2} copy in ${1}"
+
+	# in case we want to clobber HEAD
+	git clone ${2} ${1}${2}
 }
 
 setup_chroot()
