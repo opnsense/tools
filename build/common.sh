@@ -294,13 +294,10 @@ remove_packages()
 
 	for PKG in ${PKGLIST}; do
 		# clear out the ports that ought to be rebuilt
-		for PKGFILE in $({
-			cd ${BASEDIR}
-			find .${PACKAGESDIR}/All -type f
-		}); do
-			PKGINFO=$(pkg -c ${BASEDIR} info -F ${PKGFILE} | grep ^Name | awk '{ print $3; }')
+		for PKGFILE in $(cd ${BASEDIR}${PACKAGESDIR}; find All -type f); do
+			PKGINFO=$(pkg -c ${BASEDIR} info -F ${PACKAGESDIR}/${PKGFILE} | grep ^Name | awk '{ print $3; }')
 			if [ ${PKG} = ${PKGINFO} ]; then
-				rm ${PKGFILE}
+				rm ${BASEDIR}${PACKAGESDIR}/${PKGFILE}
 			fi
 		done
 	done
