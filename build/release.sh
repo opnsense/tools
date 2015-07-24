@@ -70,6 +70,5 @@ rm -rf tmp
 echo "done"
 
 echo -n ">>> Bundling images for ${PRODUCT_RELEASE}... "
-
-tar -cf ${SETSDIR}/release-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}-${ARCH}.tar .
+tar -cf ${SETSDIR}/release-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${ARCH}.tar .
 echo "done"

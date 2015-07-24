@@ -98,7 +98,7 @@ if [ -z "${PRODUCT_NAME}" -o \
 fi
 
 # full name for easy use and actual config directory
-export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}"
+export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
 
 # misc. foo
 export CONFIG_PKG="/usr/local/etc/pkg/repos/origin.conf"
@@ -270,7 +270,7 @@ extract_packages()
 	rm -rf ${BASEDIR}${PACKAGESDIR}/All
 	mkdir -p ${BASEDIR}${PACKAGESDIR}/All
 
-	PACKAGESET=$(ls ${SETSDIR}/packages-*_${PRODUCT_FLAVOUR}-${ARCH}.tar || true)
+	PACKAGESET=$(ls ${SETSDIR}/packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar || true)
 	if [ -f "${PACKAGESET}" ]; then
 		tar -C ${BASEDIR}${PACKAGESDIR} -xpf ${PACKAGESET}
 	fi
@@ -356,6 +356,8 @@ bundle_packages()
 {
 	sh ./clean.sh packages
 
+	git_describe ${PORTSDIR}
+
 	# rebuild expected FreeBSD structure
 	mkdir -p ${1}${PACKAGESDIR}-new/Latest
 	mkdir -p ${1}${PACKAGESDIR}-new/All
@@ -378,7 +380,7 @@ bundle_packages()
 	echo -n ">>> Creating package mirror set for ${PRODUCT_RELEASE}... "
 
 	tar -C ${STAGEDIR}${PACKAGESDIR}-new -cf \
-	    ${SETSDIR}/packages-${PRODUCT_VERSION}_${PRODUCT_FLAVOUR}-${ARCH}.tar .
+	    ${SETSDIR}/packages-${REPO_VERSION}-${PRODUCT_FLAVOUR}-${ARCH}.tar .
 
 	echo "done"
 }

@@ -51,11 +51,11 @@ for ARG in ${@}; do
 		;;
 	packages)
 		echo ">>> Removing packages set"
-		rm -f ${SETSDIR}/packages-*_${PRODUCT_FLAVOUR}-${ARCH}.tar
+		rm -f ${SETSDIR}/packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar
 		;;
 	release)
 		echo ">>> Removing release set"
-		rm -f ${SETSDIR}/release-*_${PRODUCT_FLAVOUR}-${ARCH}.tar
+		rm -f ${SETSDIR}/release-*-${PRODUCT_FLAVOUR}-${ARCH}.tar
 		;;
 	esac
 done
