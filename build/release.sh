@@ -51,7 +51,7 @@ setup_stage ${STAGEDIR}
 echo -n ">>> Compressing images for ${PRODUCT_RELEASE}... "
 
 mv ${IMAGESDIR}/${PRODUCT_RELEASE}-* ${STAGEDIR}
-for IMAGE in $(ls ${STAGEDIR}/${PRODUCT_RELEASE}-*); do
+for IMAGE in $(find ${STAGEDIR} -name "${PRODUCT_RELEASE}-*"); do
 	bzip2 ${IMAGE} &
 done
 wait

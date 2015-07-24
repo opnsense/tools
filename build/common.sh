@@ -227,7 +227,7 @@ setup_base()
 
 	echo ">>> Setting up world in ${1}"
 
-	BASE_SET=$(ls ${SETSDIR}/base-*-${ARCH}.txz)
+	BASE_SET=$(find ${SETSDIR} -name "base-*-${ARCH}.txz")
 
 	tar -C ${1} -xpf ${BASE_SET}
 
@@ -252,7 +252,7 @@ setup_kernel()
 
 	echo ">>> Setting up kernel in ${1}"
 
-	KERNEL_SET=$(ls ${SETSDIR}/kernel-*-${ARCH}.txz)
+	KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${ARCH}.txz")
 
 	tar -C ${1} -xpf ${KERNEL_SET}
 
@@ -270,7 +270,7 @@ extract_packages()
 	rm -rf ${BASEDIR}${PACKAGESDIR}/All
 	mkdir -p ${BASEDIR}${PACKAGESDIR}/All
 
-	PACKAGESET=$(ls ${SETSDIR}/packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar || true)
+	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar")
 	if [ -f "${PACKAGESET}" ]; then
 		tar -C ${BASEDIR}${PACKAGESDIR} -xpf ${PACKAGESET}
 	fi
@@ -286,8 +286,11 @@ remove_packages()
 
 	for PKG in ${PKGLIST}; do
 		# clear out the ports that ought to be rebuilt
-		for PKGFILE in ${BASEDIR}${PACKAGESDIR}/All/${PKG}-*.txz; do
-			PKGINFO=$(pkg info -F ${PKGFILE} | grep ^Name | awk '{ print $3; }')
+		for PKGFILE in $({
+			cd ${BASEDIR}
+			find .${PACKAGESDIR}/All -type f
+		}); do
+			PKGINFO=$(pkg -c ${BASEDIR} info -F ${PKGFILE} | grep ^Name | awk '{ print $3; }')
 			if [ ${PKG} = ${PKGINFO} ]; then
 				rm ${PKGFILE}
 			fi
@@ -303,15 +306,18 @@ install_packages()
 	shift
 	PKGLIST=${@}
 
+	# remove previous packages for a clean environment
 	pkg -c ${BASEDIR} remove -fya
 
 	if [ -z "${PKGLIST}" ]; then
-		PKGLIST=$(cd ${BASEDIR}${PACKAGESDIR}/All; ls *.txz || true)
-		for PKG in ${PKGLIST}; do
+		for PKG in $({
+			cd ${BASEDIR}
+			find .${PACKAGESDIR}/All -type f
+		}); do
 			# Adds all available packages but ignores the
 			# ones that cannot be installed due to missing
 			# dependencies.  This behaviour is desired.
-			pkg -c ${BASEDIR} add ${PACKAGESDIR}/All/${PKG} || true
+			pkg -c ${BASEDIR} add ${PKG} || true
 		done
 	else
 		# always bootstrap pkg as the first package
@@ -319,8 +325,17 @@ install_packages()
 			# Adds all selected packages and fails if
 			# one cannot be installed.  Used to build
 			# final images or regression test systems.
-			PKG=$(chroot ${BASEDIR} /bin/sh -ec "cd ${PACKAGESDIR}/All; ls ${PKG}-*.txz" | head -n1)
-			pkg -c ${BASEDIR} add ${PACKAGESDIR}/All/${PKG}
+			PKGFOUND=
+			for PKGFILE in $({
+				cd ${BASEDIR}
+				find .${PACKAGESDIR}/All -name "${PKG}-*.txz"
+			}); do
+				PKGINFO=$(pkg -c ${BASEDIR} info -F ${PKGFILE} | grep ^Name | awk '{ print $3; }')
+				if [ ${PKG} = ${PKGINFO} ]; then
+					PKGFOUND=${PKGFILE}
+				fi
+			done
+			pkg -c ${BASEDIR} add ${PKGFOUND}
 		done
 	fi
 
