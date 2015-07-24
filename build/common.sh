@@ -392,11 +392,10 @@ bundle_packages()
 	# generate index files
 	pkg repo ${1}${PACKAGESDIR}-new/ ${SIGNARGS}
 
-	echo -n ">>> Creating package mirror set for ${PRODUCT_RELEASE}... "
-
+	REPO_RELEASE="${REPO_VERSION}-${PRODUCT_FLAVOUR}-${ARCH}"
+	echo -n ">>> Creating package mirror set for ${REPO_RELEASE}... "
 	tar -C ${STAGEDIR}${PACKAGESDIR}-new -cf \
-	    ${SETSDIR}/packages-${REPO_VERSION}-${PRODUCT_FLAVOUR}-${ARCH}.tar .
-
+	    ${SETSDIR}/packages-${REPO_RELEASE}.tar .
 	echo "done"
 }
 
