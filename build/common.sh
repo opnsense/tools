@@ -205,7 +205,8 @@ setup_copy()
 	echo ">>> Setting up ${2} copy in ${1}"
 
 	# in case we want to clobber HEAD
-	git clone ${2} ${1}${2}
+	mkdir -p $(dirname ${1}${2})
+	cp -r ${2} ${1}${2}
 }
 
 setup_chroot()

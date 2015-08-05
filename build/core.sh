@@ -45,7 +45,7 @@ extract_packages ${STAGEDIR}
 
 for CORE_TAG in ${CORE_TAGS}; do
 	if [ -n "${*}" ]; then
-		git_update ${STAGEDIR}${COREDIR} ${CORE_TAG}
+		git_checkout ${STAGEDIR}${COREDIR} ${CORE_TAG}
 	fi
 	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} name)
 	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} depends)
