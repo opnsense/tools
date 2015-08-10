@@ -37,7 +37,6 @@ if [ -z "${*}" ]; then
 	setup_clone ${STAGEDIR} ${COREDIR}
 	CORE_TAGS="bogus"
 else
-	setup_copy ${STAGEDIR} ${COREDIR}
 	CORE_TAGS="${*}"
 fi
 
@@ -45,6 +44,7 @@ extract_packages ${STAGEDIR}
 
 for CORE_TAG in ${CORE_TAGS}; do
 	if [ -n "${*}" ]; then
+		setup_copy ${STAGEDIR} ${COREDIR}
 		git_checkout ${STAGEDIR}${COREDIR} ${CORE_TAG}
 	fi
 	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} name)
