@@ -42,6 +42,7 @@ setup_packages ${STAGEDIR} opnsense
 echo "-S115200 -D" > ${STAGEDIR}/boot.config
 
 cat > ${STAGEDIR}/boot/loader.conf << EOF
+kern.geom.part.check_integrity=0
 boot_multicons="YES"
 boot_serial="YES"
 console="comconsole,vidconsole"
