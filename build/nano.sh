@@ -32,7 +32,7 @@ set -e
 . ./common.sh && $(${SCRUB_ARGS})
 
 . ${SRCDIR}/tools/tools/nanobsd/FlashDevice.sub
-sub_FlashDevice sandisk 2g
+sub_FlashDevice sandisk 4g
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
