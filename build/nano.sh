@@ -32,7 +32,10 @@ set -e
 . ./common.sh && $(${SCRUB_ARGS})
 
 . ${SRCDIR}/tools/tools/nanobsd/FlashDevice.sub
-sub_FlashDevice sandisk 4g
+sub_FlashDevice generic 4g
+
+# chop off excess bytes that do not align to 8 byte boundard
+NANO_MEDIASIZE=$(expr ${NANO_MEDIASIZE} - \( ${NANO_MEDIASIZE} % 8 \))
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
