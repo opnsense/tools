@@ -42,7 +42,7 @@ for PLUGIN in ${PLUGINS}; do
 	PLUGIN_DEPS=$(make -C ${PLUGINSDIR}/${PLUGIN} depends)
 
 	remove_packages ${STAGEDIR} ${PLUGIN_NAME}
-	install_packages ${STAGEDIR} ${PLUGIN_DEPS}
+	install_packages ${STAGEDIR} ${PLUGIN_DEPS} git
 	custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN}
 done
 
