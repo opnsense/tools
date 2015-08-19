@@ -42,6 +42,7 @@ PORT_LIST=$({
 })
 
 git_update ${PORTSREFDIR} origin/master
+git_checkout ${PORTSDIR} HEAD
 
 UNUSED=1
 USED=1
@@ -61,7 +62,6 @@ done
 
 echo -n ">>> Gathering dependencies"
 
-rm -f /tmp/skim.*
 echo "${PORT_LIST}" > /tmp/skim.${$}
 
 while read PORT_ORIGIN PORT_BROKEN; do
@@ -112,6 +112,8 @@ while read PORT_ORIGIN PORT_BROKEN; do
 		fi
 	done
 done < /tmp/skim.${$}
+
+rm -f /tmp/skim.*
 
 echo "done"
 
@@ -166,6 +168,12 @@ if [ -n "${UNUSED}" ]; then
 			cp -r ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
 		done
 	done
+
+	(cd ${PORTSDIR}; git add .)
+	(cd ${PORTSDIR}; git commit -m \
+"*/*: sync with upstream
+
+Taken from: FreeBSD")
 fi
 
 if [ -n "${USED}" ]; then
