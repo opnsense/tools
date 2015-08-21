@@ -45,12 +45,16 @@ ${TARGET}: ${_TARGET}
 .endif
 .endfor
 
+.if defined(DEBUG)
+DEBUG_FLAGS=	-x
+.endif
+
 # Expand build steps to launch into the selected
 # script with the proper build options set:
 
 .for STEP in ${STEPS}
 ${STEP}:
-	@cd build && sh ./${.TARGET}.sh \
+	@cd build && sh ${DEBUG_FLAGS} ./${.TARGET}.sh \
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} ${${STEP}_ARGS}
