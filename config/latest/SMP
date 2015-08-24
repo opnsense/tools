@@ -50,6 +50,8 @@ options         IPFIREWALL_DEFAULT_TO_ACCEPT
 options         IPFIREWALL_VERBOSE
 options         IPFIREWALL_VERBOSE_LIMIT
 
+options		EM_MULTIQUEUE
+
 device          carp
 device          pf
 device          pflog
