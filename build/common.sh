@@ -222,7 +222,7 @@ setup_chroot()
 setup_marker()
 {
 	# Let opnsense-update(8) know it's up to date
-	local MARKER="/usr/local/opnsense/version/os-update.${3}"
+	local MARKER="/usr/local/opnsense/version/opnsense-update.${3}"
 
 	if [ ! -f ${1}${MARKER} ]; then
 		# first call means bootstrap the marker file
