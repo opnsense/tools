@@ -40,7 +40,7 @@ NANO_MEDIASIZE=$(expr ${NANO_MEDIASIZE} - \( ${NANO_MEDIASIZE} % 8 \))
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
-setup_packages ${STAGEDIR} opnsense
+setup_packages ${STAGEDIR}
 
 echo "-S115200 -D" > ${STAGEDIR}/boot.config
 

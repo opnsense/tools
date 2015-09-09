@@ -32,11 +32,11 @@ SCRUB_ARGS=:
 usage()
 {
 	echo "Usage: ${0} -f flavour -n name -v version -R freebsd-ports.git" >&2
-	echo "	-C core.git -P ports.git -S src.git -T tools.git" >&2
+	echo "	-C core.git -P ports.git -S src.git -T tools.git -t type" >&2
 	exit 1
 }
 
-while getopts C:f:n:P:p:R:S:s:T:v: OPT; do
+while getopts C:f:n:P:p:R:S:s:T:t:v: OPT; do
 	case ${OPT} in
 	C)
 		export COREDIR=${OPTARG}
@@ -74,6 +74,10 @@ while getopts C:f:n:P:p:R:S:s:T:v: OPT; do
 		export TOOLSDIR=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
+	t)
+		export PRODUCT_TYPE=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
 	v)
 		export PRODUCT_VERSION=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
@@ -85,6 +89,7 @@ while getopts C:f:n:P:p:R:S:s:T:v: OPT; do
 done
 
 if [ -z "${PRODUCT_NAME}" -o \
+    -z "${PRODUCT_TYPE}" -o \
     -z "${PRODUCT_FLAVOUR}" -o \
     -z "${PRODUCT_VERSION}" -o \
     -z "${PRODUCT_SETTINGS}" -o \
@@ -415,7 +420,7 @@ setup_packages()
 {
 	# legacy package extract
 	extract_packages ${1}
-	install_packages ${@}
+	install_packages ${@} ${PRODUCT_TYPE}
 	clean_packages ${1}
 }
 

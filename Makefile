@@ -16,6 +16,7 @@ all:
 # Bootstrap the build options if not set:
 
 NAME?=		OPNsense
+TYPE?=		opnsense-devel
 FLAVOUR?=	OpenSSL
 SETTINGS?=	15.7
 _VERSION!=	date '+%Y%m%d%H%M'
@@ -57,5 +58,5 @@ ${STEP}:
 	@cd build && sh ${DEBUG_FLAGS} ./${.TARGET}.sh \
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
-	    -C ${COREDIR} -R ${PORTSREFDIR} ${${STEP}_ARGS}
+	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} ${${STEP}_ARGS}
 .endfor

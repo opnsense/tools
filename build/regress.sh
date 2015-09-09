@@ -35,7 +35,8 @@ setup_clone ${STAGEDIR} ${COREDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
-install_packages ${STAGEDIR} opnsense pear-PHP_CodeSniffer
+install_packages ${STAGEDIR} ${PRODUCT_TYPE} pear-PHP_CodeSniffer
+# don't want to deinstall in case of testing...
 
 echo ">>> Running ${COREDIR} test suite..."
 

@@ -75,6 +75,7 @@ All build steps are invoked via make(1):
 Available build options are:
 
 * NAME:		"OPNsense" (default)
+* TYPE:         the name of the meta package to be installed
 * FLAVOUR:	"OpenSSL" (default), "LibreSSL"
 * VERSION:	a version tag (if applicable)
 * SETTINGS:	the name of the selected settings in config/

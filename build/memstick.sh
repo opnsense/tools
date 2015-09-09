@@ -36,7 +36,7 @@ LABEL="${LABEL}_Install"
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
-setup_packages ${STAGEDIR} opnsense
+setup_packages ${STAGEDIR}
 setup_mtree ${STAGEDIR}
 
 echo ">>> Building memstick image(s)..."
