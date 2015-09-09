@@ -46,8 +46,8 @@ ${TARGET}: ${_TARGET}
 .endif
 .endfor
 
-.if defined(DEBUG)
-DEBUG_FLAGS=	-x
+.if defined(VERBOSE)
+VERBOSE_FLAGS=	-x
 .endif
 
 # Expand build steps to launch into the selected
@@ -55,7 +55,7 @@ DEBUG_FLAGS=	-x
 
 .for STEP in ${STEPS}
 ${STEP}:
-	@cd build && sh ${DEBUG_FLAGS} ./${.TARGET}.sh \
+	@cd build && sh ${VERBOSE_FLAGS} ./${.TARGET}.sh \
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} ${${STEP}_ARGS}
