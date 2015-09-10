@@ -324,7 +324,8 @@ install_packages()
 	if [ -z "${PKGLIST}" ]; then
 		for PKG in $({
 			cd ${BASEDIR}
-			find .${PACKAGESDIR}/All -type f
+			# find all package files, omitting plugins
+			find .${PACKAGESDIR}/All -type f \! -name "os-*"
 		}); do
 			# Adds all available packages but ignores the
 			# ones that cannot be installed due to missing
