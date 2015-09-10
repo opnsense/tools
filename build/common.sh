@@ -347,7 +347,12 @@ install_packages()
 					PKGFOUND=${PKGFILE}
 				fi
 			done
-			pkg -c ${BASEDIR} add ${PKGFOUND}
+			if [ -n "${PKGFOUND}" ];
+				pkg -c ${BASEDIR} add ${PKGFOUND}
+			else
+				echo "Could not find package: ${PKG}" >&2
+				exit 1
+			fi
 		done
 	fi
 
