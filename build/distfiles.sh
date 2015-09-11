@@ -29,21 +29,35 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-PORT_LIST=$(cat ${CONFIGDIR}/ports.conf)
+# clean all previous distfiles
+rm -rf ${PORTSDIR}/distfiles
+sh ./clean.sh distfiles
 
-git_checkout ${PORTSDIR} HEAD
+PORT_LIST="ports-mgmt/pkg
+security/openssl
+security/libressl
+$(cat ${CONFIGDIR}/ports.conf)"
+
+git_describe ${PORTSDIR}
 
 MAKE_CONF="${CONFIGDIR}/make.conf"
 if [ -f ${MAKE_CONF} ]; then
 	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
 fi
 
-echo "ports-mgmt/pkg ${PORT_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
+echo "${PORT_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
 	fi
 
-	echo -n ">>> Fetching ${PORT_ORIGIN}... "
+	echo ">>> Fetching ${PORT_ORIGIN}..."
 
-	make -C ${PORTSDIR}/${PORT_ORIGIN} fetch
+	make -C ${PORTSDIR}/${PORT_ORIGIN} fetch-recursive
 done
+
+echo -n ">>> Creating distfiles set... "
+tar -C ${PORTSDIR} -cf ${SETSDIR}/distfiles-${REPO_VERSION}.tar distfiles
+echo "done"
+
+# clean up again
+rm -rf ${PORTSDIR}/distfiles

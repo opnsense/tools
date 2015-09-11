@@ -57,5 +57,9 @@ for ARG in ${@}; do
 		echo ">>> Removing release set"
 		rm -f ${SETSDIR}/release-*-${PRODUCT_FLAVOUR}-${ARCH}.tar
 		;;
+	distfiles)
+		echo ">>> Removing distfiles set"
+		rm -f ${SETSDIR}/distfiles-*.tar
+		;;
 	esac
 done

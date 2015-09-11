@@ -276,6 +276,17 @@ setup_kernel()
 	setup_marker ${1} ${KERNEL_VER%%.txz} kernel
 }
 
+setup_distfiles()
+{
+	echo ">>> Setting up distfiles in ${1}"
+
+	DISTFILES_SET=$(find ${SETSDIR} -name "distfiles-*.tar")
+	if [ -n "${DISTFILES_SET}" ]; then
+		mkdir -p ${1}${PORTSDIR}
+		tar -C ${1}${PORTSDIR} -xpf ${DISTFILES_SET}
+	fi
+}
+
 extract_packages()
 {
 	echo ">>> Extracting packages in ${1}"
