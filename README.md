@@ -157,7 +157,7 @@ via the clean script:
 Available options are:
 
 * images:	remove all available images
-* source:	reset the kernel/base build directory
+* src:		reset the kernel/base build directory
 * kernel:	remove the kernel set
 * base:		remove the base set
 * packages:	remove the packages set
