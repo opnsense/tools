@@ -37,7 +37,7 @@ usage()
 	exit 1
 }
 
-while getopts C:f:n:P:p:R:S:s:T:t:v: OPT; do
+while getopts C:f:k:n:P:p:R:S:s:T:t:v: OPT; do
 	case ${OPT} in
 	C)
 		export COREDIR=${OPTARG}
