@@ -33,6 +33,7 @@ usage()
 {
 	echo "Usage: ${0} -f flavour -n name -v version -R freebsd-ports.git" >&2
 	echo "	-C core.git -P ports.git -S src.git -T tools.git -t type" >&2
+	echo "	-k /path/to/signature/prefix [...]" >&2
 	exit 1
 }
 
@@ -48,6 +49,10 @@ while getopts C:f:n:P:p:R:S:s:T:t:v: OPT; do
 		;;
 	n)
 		export PRODUCT_NAME=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	k)
+		export PRODUCT_SIGNATURE=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	P)
@@ -93,6 +98,7 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_FLAVOUR}" -o \
     -z "${PRODUCT_VERSION}" -o \
     -z "${PRODUCT_SETTINGS}" -o \
+    -z "${PRODUCT_SIGNATURE}" -o \
     -z "${TOOLSDIR}" -o \
     -z "${PLUGINSDIR}" -o \
     -z "${PORTSDIR}" -o \
