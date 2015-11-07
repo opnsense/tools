@@ -169,11 +169,16 @@ if [ -n "${UNUSED}" ]; then
 		done
 	done
 
-	(cd ${PORTSDIR}; git add .)
-	(cd ${PORTSDIR}; git commit -m \
+	(
+		cd ${PORTSDIR}
+		git add .
+		if ! git diff --quiet HEAD; then
+			git commit -m \
 "*/*: sync with upstream
 
-Taken from: FreeBSD")
+Taken from: FreeBSD"
+		fi
+	)
 fi
 
 if [ -n "${USED}" ]; then
