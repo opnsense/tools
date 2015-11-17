@@ -29,35 +29,41 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-# clean all previous distfiles
-rm -rf ${PORTSDIR}/distfiles
-sh ./clean.sh distfiles
-
 PORT_LIST="ports-mgmt/pkg
 security/openssl
 security/libressl
 $(cat ${CONFIGDIR}/ports.conf)"
 
+setup_stage ${STAGEDIR}
+setup_base ${STAGEDIR}
+setup_clone ${STAGEDIR} ${PORTSDIR}
+setup_clone ${STAGEDIR} ${SRCDIR}
+setup_chroot ${STAGEDIR}
+
 git_describe ${PORTSDIR}
+
+echo ">>> Fetching distfiles..."
 
 MAKE_CONF="${CONFIGDIR}/make.conf"
 if [ -f ${MAKE_CONF} ]; then
 	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
 fi
 
+chroot ${STAGEDIR} /bin/sh -es << EOF
 echo "${PORT_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
-	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
+	if [ "\$(echo \${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
 	fi
 
-	echo ">>> Fetching ${PORT_ORIGIN}..."
+	echo ">>> Fetching \${PORT_ORIGIN}..."
 
-	make -C ${PORTSDIR}/${PORT_ORIGIN} fetch-recursive
+	make -C ${PORTSDIR}/\${PORT_ORIGIN} fetch-recursive
 done
+EOF
+
+sh ./clean.sh distfiles
 
 echo -n ">>> Creating distfiles set... "
-tar -C ${PORTSDIR} -cf ${SETSDIR}/distfiles-${REPO_VERSION}.tar distfiles
+tar -C ${STAGEDIR}${PORTSDIR} -cf \
+    ${SETSDIR}/distfiles-${REPO_VERSION}.tar distfiles
 echo "done"
-
-# clean up again
-rm -rf ${PORTSDIR}/distfiles
