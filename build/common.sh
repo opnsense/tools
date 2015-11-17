@@ -421,7 +421,12 @@ bundle_packages()
 	local SIGNARGS=
 	if [ -n "$(${TOOLSDIR}/scripts/pkg_fingerprint.sh)" ]; then
 		# XXX check if fingerprint is in core.git
-		SIGNARGS="signing_command: ${TOOLSDIR}/scripts/pkg_sign.sh"
+		local SIGNCMD="${TOOLSDIR}/scripts/pkg_sign.sh"
+		SIGNARGS="signing_command: ${SIGNCMD}"
+
+		# generate pkg bootstrap signature
+		sha256 -q ${1}${PACKAGESDIR}-new/Latest/pkg.txz | \
+		    ${SIGNCMD} > ${1}${PACKAGESDIR}-new/Latest/pkg.txz.sig
 	fi
 
 	# generate index files
