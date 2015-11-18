@@ -139,3 +139,5 @@ device 		padlock
 
 options		PPS_SYNC
 options		TCP_SIGNATURE
+
+device		netmap
