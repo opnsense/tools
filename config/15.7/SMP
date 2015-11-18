@@ -50,11 +50,12 @@ options         IPFIREWALL_DEFAULT_TO_ACCEPT
 options         IPFIREWALL_VERBOSE
 options         IPFIREWALL_VERBOSE_LIMIT
 
-device          carp
-device          pf
-device          pflog
-device          pfsync
-device          gre
+device		carp
+device		pf
+device		pflog
+device		pfsync
+device		gre
+device		netmap
 
 options         IPSTEALTH
 
@@ -139,5 +140,3 @@ device 		padlock
 
 options		PPS_SYNC
 options		TCP_SIGNATURE
-
-device		netmap

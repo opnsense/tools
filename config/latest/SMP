@@ -52,11 +52,12 @@ options         IPFIREWALL_VERBOSE_LIMIT
 
 options		EM_MULTIQUEUE
 
-device          carp
-device          pf
-device          pflog
-device          pfsync
-device          gre
+device		carp
+device		pf
+device		pflog
+device		pfsync
+device		gre
+device		netmap
 
 options         IPSTEALTH
 
