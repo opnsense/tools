@@ -34,9 +34,14 @@ sh ./clean.sh base
 git_describe ${SRCDIR}
 
 MAKEARGS="SRCCONF=${CONFIGDIR}/src.conf COMPILER_TYPE=clang __MAKE_CONF="
+ENVFILTER="env -i USER=${USER} LOGNAME=${LOGNAME} HOME=${HOME} \
+SHELL=${SHELL} BLOCKSIZE=${BLOCKSIZE} MAIL=${MAIL} PATH=${PATH} \
+TERM=${TERM} HOSTTYPE=${HOSTTYPE} VENDOR=${VENDOR} OSTYPE=${OSTYPE} \
+MACHTYPE=${MACHTYPE} PWD=${PWD} GROUP=${GROUP} HOST=${HOST} \
+EDITOR=${EDITOR} PAGER=${PAGER}"
 
-make -C${SRCDIR} -j${CPUS} buildworld ${MAKEARGS} NO_CLEAN=yes
-make -C${SRCDIR}/release obj ${MAKEARGS}
-make -C${SRCDIR}/release base.txz ${MAKEARGS}
+${ENVFILTER} make -C${SRCDIR} -j${CPUS} buildworld ${MAKEARGS} NO_CLEAN=yes
+${ENVFILTER} make -C${SRCDIR}/release obj ${MAKEARGS}
+${ENVFILTER} make -C${SRCDIR}/release base.txz ${MAKEARGS}
 
 mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${SETSDIR}/base-${REPO_VERSION}-${ARCH}.txz
