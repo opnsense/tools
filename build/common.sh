@@ -293,6 +293,14 @@ setup_distfiles()
 	fi
 }
 
+generate_signature()
+{
+	if [ -n "$(${TOOLSDIR}/scripts/pkg_fingerprint.sh)" ]; then
+		SIGNCMD="${TOOLSDIR}/scripts/pkg_sign.sh"
+		sha256 -q ${1} | ${SIGNCMD} > ${1}.sig
+	fi
+}
+
 extract_packages()
 {
 	echo ">>> Extracting packages in ${1}"
@@ -425,8 +433,7 @@ bundle_packages()
 		SIGNARGS="signing_command: ${SIGNCMD}"
 
 		# generate pkg bootstrap signature
-		sha256 -q ${1}${PACKAGESDIR}-new/Latest/pkg.txz | \
-		    ${SIGNCMD} > ${1}${PACKAGESDIR}-new/Latest/pkg.txz.sig
+		generate_signature ${1}${PACKAGESDIR}-new/Latest/pkg.txz
 	fi
 
 	# generate index files

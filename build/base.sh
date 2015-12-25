@@ -44,4 +44,8 @@ ${ENVFILTER} make -C${SRCDIR} -j${CPUS} buildworld ${MAKEARGS} NO_CLEAN=yes
 ${ENVFILTER} make -C${SRCDIR}/release obj ${MAKEARGS}
 ${ENVFILTER} make -C${SRCDIR}/release base.txz ${MAKEARGS}
 
-mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${SETSDIR}/base-${REPO_VERSION}-${ARCH}.txz
+BASESET=${SETSDIR}/base-${REPO_VERSION}-${ARCH}
+
+mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${BASESET}.txz
+
+generate_signature ${BASESET}.txz

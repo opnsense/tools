@@ -44,4 +44,8 @@ make -C${SRCDIR} -j${CPUS} buildkernel ${MAKEARGS} NO_KERNELCLEAN=yes
 make -C${SRCDIR}/release obj ${MAKEARGS}
 make -C${SRCDIR}/release kernel.txz ${MAKEARGS}
 
-mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${SETSDIR}/kernel-${REPO_VERSION}-${ARCH}.txz
+KERNELSET=${SETSDIR}/kernel-${REPO_VERSION}-${ARCH}
+
+mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${KERNELSET}.txz
+
+generate_signature ${KERNELSET}.txz

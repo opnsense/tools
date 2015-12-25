@@ -44,10 +44,12 @@ for ARG in ${@}; do
 	kernel)
 		echo ">>> Removing kernel set"
 		rm -f ${SETSDIR}/kernel-*-${ARCH}.txz
+		rm -f ${SETSDIR}/kernel-*-${ARCH}.txz.sig
 		;;
 	base)
 		echo ">>> Removing base set"
 		rm -f ${SETSDIR}/base-*-${ARCH}.txz
+		rm -f ${SETSDIR}/base-*-${ARCH}.txz.sig
 		;;
 	packages)
 		echo ">>> Removing packages set"
