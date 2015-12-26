@@ -295,9 +295,12 @@ setup_distfiles()
 
 generate_signature()
 {
+	SIGNCMD="${TOOLSDIR}/scripts/pkg_sign.sh"
+
 	if [ -n "$(${TOOLSDIR}/scripts/pkg_fingerprint.sh)" ]; then
-		SIGNCMD="${TOOLSDIR}/scripts/pkg_sign.sh"
+		echo -n "Signing $(basename ${1})... "
 		sha256 -q ${1} | ${SIGNCMD} > ${1}.sig
+		echo "done"
 	fi
 }
 

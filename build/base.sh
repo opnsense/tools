@@ -74,9 +74,5 @@ rm -f /tmp/setdiff.*
 
 echo "done"
 
-echo -n "Signing sets (if applicable)... "
-
 generate_signature ${BASESET}.txz
 generate_signature ${BASESET}.obsolete
-
-echo "done"
