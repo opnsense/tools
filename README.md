@@ -177,3 +177,8 @@ Available options are:
 * used:		review and copy upstream changes
 * unused:	copy unused upstream changes
 * (none):	all of the above
+
+In case a release was wrapped up, the base package list and obsoleted
+files need to be regenerated.  This is done using:
+
+    # make rebase

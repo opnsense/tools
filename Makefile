@@ -1,6 +1,6 @@
 STEPS=		base kernel ports core iso memstick nano \
 		regress clean release skim checkout plugins \
-		distfiles
+		distfiles rebase
 .PHONY:		${STEPS}
 
 PAGER?=		less
