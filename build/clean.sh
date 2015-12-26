@@ -50,6 +50,8 @@ for ARG in ${@}; do
 		echo ">>> Removing base set"
 		rm -f ${SETSDIR}/base-*-${ARCH}.txz
 		rm -f ${SETSDIR}/base-*-${ARCH}.txz.sig
+		rm -f ${SETSDIR}/base-*-${ARCH}.obsolete
+		rm -f ${SETSDIR}/base-*-${ARCH}.obsolete.sig
 		;;
 	packages)
 		echo ">>> Removing packages set"

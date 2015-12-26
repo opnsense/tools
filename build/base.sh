@@ -48,4 +48,35 @@ BASESET=${SETSDIR}/base-${REPO_VERSION}-${ARCH}
 
 mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${BASESET}.txz
 
+echo -n "Generating obsolete file list... "
+
+tar -tf ${BASESET}.txz | \
+    sed -e 's/^\.//g' -e '/\/$/d' | sort > /tmp/setdiff.new.${$}
+
+: > /tmp/setdiff.old.${$}
+if [ -s ${CONFIGDIR}/plist.base.${ARCH} ]; then
+	cat ${CONFIGDIR}/plist.base.${ARCH} | \
+	    sed -e 's/^\.//g' -e '/\/$/d' | sort > /tmp/setdiff.old.${$}
+fi
+
+: > /tmp/setdiff.tmp.${$}
+if [ -s ${CONFIGDIR}/plist.obsolete.${ARCH} ]; then
+	diff -u ${CONFIGDIR}/plist.obsolete.${ARCH} \
+	    /tmp/setdiff.new.${$} | grep '^-/' | \
+	    cut -b 2- > /tmp/setdiff.tmp.${$}
+fi
+
+(cat /tmp/setdiff.tmp.${$}; diff -u /tmp/setdiff.old.${$} \
+    /tmp/setdiff.new.${$} | grep '^-/' | cut -b 2-) | \
+    sort -u > ${BASESET}.obsolete
+
+rm -f /tmp/setdiff.*
+
+echo "done"
+
+echo -n "Signing sets (if applicable)... "
+
 generate_signature ${BASESET}.txz
+generate_signature ${BASESET}.obsolete
+
+echo "done"
