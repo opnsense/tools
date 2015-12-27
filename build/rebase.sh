@@ -32,5 +32,5 @@ set -e
 BASE_OBSOLETE=$(find ${SETSDIR} -name "base-*-${ARCH}.obsolete")
 BASE_SET=$(find ${SETSDIR} -name "base-*-${ARCH}.txz")
 
-tar -tf ${BASE_SET} > ${CONFIGDIR}/plist.base.${ARCH}
+tar -tf ${BASE_SET} | sort > ${CONFIGDIR}/plist.base.${ARCH}
 cp ${BASE_OBSOLETE} ${CONFIGDIR}/plist.obsolete.${ARCH}
