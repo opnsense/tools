@@ -62,7 +62,6 @@ unset TARGET_ARCH
 if pkg -N; then
 	# no need to rebuild
 else
-	make -C ${PORTSDIR}/ports-mgmt/pkg rmconfig-recursive
 	make -C ${PORTSDIR}/ports-mgmt/pkg clean all install
 fi
 
@@ -91,7 +90,6 @@ echo "${PORT_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
 	fi
 
 	# user configs linger somewhere else and override the override  :(
-	make -C ${PORTSDIR}/\${PORT_ORIGIN} rmconfig-recursive
 	make -C ${PORTSDIR}/\${PORT_ORIGIN} clean all install
 
 	if ! pkg query %o \${PORT_ORIGIN} > /dev/null; then
