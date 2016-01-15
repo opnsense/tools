@@ -35,7 +35,7 @@ for ARG in ${@}; do
 		setup_stage ${STAGEDIR}
 		;;
 	src)
-		setup_stage /usr/obj
+		setup_stage /usr/obj${SRCDIR}
 		;;
 	images)
 		echo ">>> Removing images"
