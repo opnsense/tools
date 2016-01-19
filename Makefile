@@ -19,7 +19,7 @@ all:
 NAME?=		OPNsense
 TYPE?=		opnsense-devel
 FLAVOUR?=	OpenSSL
-SETTINGS?=	15.7
+SETTINGS?=	16.1
 SIGNATURE?=	/root/repo
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
