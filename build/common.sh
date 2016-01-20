@@ -130,12 +130,6 @@ export PACKAGESDIR="/.pkg"
 # bootstrap target directories
 mkdir -p ${STAGEDIR} ${IMAGESDIR} ${SETSDIR}
 
-# target files
-export CDROM="${IMAGESDIR}/${PRODUCT_RELEASE}-cdrom-${ARCH}.iso"
-export SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${ARCH}.img"
-export VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
-export NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${ARCH}.img"
-
 # print environment to showcase all of our variables
 env | sort
 

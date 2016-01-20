@@ -1,7 +1,7 @@
 #!/bin/sh
 
+# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
-# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,8 +30,13 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${ARCH}.img"
+VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
+
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
+
+sh ./clean.sh memstick
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

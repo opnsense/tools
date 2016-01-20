@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,8 +29,12 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+CDROM="${IMAGESDIR}/${PRODUCT_RELEASE}-cdrom-${ARCH}.iso"
+
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
+
+sh ./clean.sh iso
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

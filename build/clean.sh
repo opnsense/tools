@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,27 +31,34 @@ set -e
 
 for ARG in ${@}; do
 	case ${ARG} in
-	stage)
-		setup_stage ${STAGEDIR}
-		;;
-	src)
-		setup_stage /usr/obj${SRCDIR}
-		;;
-	images)
-		echo ">>> Removing images"
-		rm -rf ${IMAGESDIR}
-		;;
-	kernel)
-		echo ">>> Removing kernel set"
-		rm -f ${SETSDIR}/kernel-*-${ARCH}.txz
-		rm -f ${SETSDIR}/kernel-*-${ARCH}.txz.sig
-		;;
 	base)
 		echo ">>> Removing base set"
 		rm -f ${SETSDIR}/base-*-${ARCH}.txz
 		rm -f ${SETSDIR}/base-*-${ARCH}.txz.sig
 		rm -f ${SETSDIR}/base-*-${ARCH}.obsolete
 		rm -f ${SETSDIR}/base-*-${ARCH}.obsolete.sig
+		;;
+	distfiles)
+		echo ">>> Removing distfiles set"
+		rm -f ${SETSDIR}/distfiles-*.tar
+		;;
+	iso)
+		echo ">>> Removing iso image"
+		rm -f ${IMAGESDIR}/*-cdrom-${ARCH}.iso
+		;;
+	kernel)
+		echo ">>> Removing kernel set"
+		rm -f ${SETSDIR}/kernel-*-${ARCH}.txz
+		rm -f ${SETSDIR}/kernel-*-${ARCH}.txz.sig
+		;;
+	memstick)
+		echo ">>> Removing memstick images"
+		rm -f ${IMAGESDIR}/*-serial-${ARCH}.img
+		rm -f ${IMAGESDIR}/*-vga-${ARCH}.img
+		;;
+	nano)
+		echo ">>> Removing nano image"
+		rm -f ${IMAGESDIR}/*-nano-${ARCH}.img
 		;;
 	packages)
 		echo ">>> Removing packages set"
@@ -61,9 +68,11 @@ for ARG in ${@}; do
 		echo ">>> Removing release set"
 		rm -f ${SETSDIR}/release-*-${PRODUCT_FLAVOUR}-${ARCH}.tar
 		;;
-	distfiles)
-		echo ">>> Removing distfiles set"
-		rm -f ${SETSDIR}/distfiles-*.tar
+	stage)
+		setup_stage ${STAGEDIR}
+		;;
+	src)
+		setup_stage /usr/obj${SRCDIR}
 		;;
 	esac
 done

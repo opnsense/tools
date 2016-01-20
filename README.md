@@ -135,6 +135,11 @@ the following works:
 
     # make ports-<packagename>[,...]
 
+For even faster ports building it may be of use to cache all
+distribution files before running the actual build:
+
+    # make distfiles
+
 Core packages (pristine copies) can be batch-built using:
 
     # make core-<repo_branch_or_tag>[,...]
@@ -145,7 +150,7 @@ generated and modified by ports.sh and core.sh.
 
 Release sets can be built using:
 
-    # make release
+    # make release VERSION=product.version.number_revision
 
 Kernel, base, packages and release sets are stored under /tmp/sets
 
@@ -158,12 +163,15 @@ via the clean script:
 
 Available options are:
 
-* images:	remove all available images
-* src:		reset the kernel/base build directory
-* kernel:	remove the kernel set
 * base:		remove the base set
+* distfiles:	remove the distfiles set
+* iso:		remove iso image
+* kernel:	remove the kernel set
+* memstick:	remove memstick images
+* nano:		remove nano image
 * packages:	remove the packages set
 * release:	remove the release set
+* src:		reset the kernel/base build directory
 * stage:	reset the main staging area
 
 The ports tree has a few of our modifications and is sometimes a

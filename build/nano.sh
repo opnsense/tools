@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2016 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2004-2009 Scott Ullrich <sullrich@gmail.com>
 # Copyright (c) 2005 Poul-Henning Kamp <phk@FreeBSD.org>
 #
@@ -30,6 +30,10 @@
 set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
+
+NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${ARCH}.img"
+
+sh ./clean.sh nano
 
 . ${SRCDIR}/tools/tools/nanobsd/FlashDevice.sub
 sub_FlashDevice generic 4g
