@@ -40,12 +40,6 @@ fi
 
 sh ./clean.sh release images
 
-echo ">>> Creating images for ${PRODUCT_RELEASE}"
-
-sh ./memstick.sh
-sh ./nano.sh
-sh ./iso.sh
-
 setup_stage ${STAGEDIR}
 
 echo -n ">>> Compressing images for ${PRODUCT_RELEASE}... "

@@ -34,9 +34,8 @@ SRCDIR?=	/usr/src
 
 src: base kernel
 packages: ports plugins core
-sets: src packages
-images: iso memstick nano
-everything: sets images
+sets iso memstick nano: src packages
+everything release: iso memstick nano
 
 # Expand target arguments for the script append:
 

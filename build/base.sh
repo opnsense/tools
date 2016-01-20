@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,9 +29,16 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-sh ./clean.sh base
-
 git_describe ${SRCDIR}
+
+BASESET=${SETSDIR}/base-${REPO_VERSION}-${ARCH}
+
+if [ -f ${BASESET}.txz ]; then
+	echo ">>> Base is up to date"
+	exit 0
+fi
+
+sh ./clean.sh base
 
 MAKEARGS="SRCCONF=${CONFIGDIR}/src.conf COMPILER_TYPE=clang __MAKE_CONF="
 ENVFILTER="env -i USER=${USER} LOGNAME=${LOGNAME} HOME=${HOME} \
@@ -44,11 +51,9 @@ ${ENVFILTER} make -C${SRCDIR} -j${CPUS} buildworld ${MAKEARGS} NO_CLEAN=yes
 ${ENVFILTER} make -C${SRCDIR}/release obj ${MAKEARGS}
 ${ENVFILTER} make -C${SRCDIR}/release base.txz ${MAKEARGS}
 
-BASESET=${SETSDIR}/base-${REPO_VERSION}-${ARCH}
-
 mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${BASESET}.txz
 
-echo -n "Generating obsolete file list... "
+echo -n ">>> Generating obsolete file list... "
 
 tar -tf ${BASESET}.txz | \
     sed -e 's/^\.//g' -e '/\/$/d' | sort > /tmp/setdiff.new.${$}

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,9 +29,16 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-sh ./clean.sh kernel
-
 git_describe ${SRCDIR}
+
+KERNELSET=${SETSDIR}/kernel-${REPO_VERSION}-${ARCH}
+
+if [ -f ${KERNELSET}.txz ]; then
+	echo ">>> Kernel is up to date"
+	exit 0
+fi
+
+sh ./clean.sh kernel
 
 BUILD_KERNEL="SMP"
 
@@ -43,8 +50,6 @@ MAKEARGS="TARGET_ARCH=${ARCH} KERNCONF=${BUILD_KERNEL}"
 make -C${SRCDIR} -j${CPUS} buildkernel ${MAKEARGS} NO_KERNELCLEAN=yes
 make -C${SRCDIR}/release obj ${MAKEARGS}
 make -C${SRCDIR}/release kernel.txz ${MAKEARGS}
-
-KERNELSET=${SETSDIR}/kernel-${REPO_VERSION}-${ARCH}
 
 mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${KERNELSET}.txz
 
