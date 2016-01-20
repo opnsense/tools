@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,15 +29,17 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-PLUGINS=$(make -C ${PLUGINSDIR} list)
+PLUGINS_LIST=$(make -C ${PLUGINSDIR} list)
+PLUGINS_MARKER="plugins"
 
 setup_stage ${STAGEDIR}
+
+extract_packages ${STAGEDIR} ${PLUGINS_MARKER}
+
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PLUGINSDIR}
 
-extract_packages ${STAGEDIR}
-
-for PLUGIN in ${PLUGINS}; do
+for PLUGIN in ${PLUGINS_LIST}; do
 	PLUGIN_NAME=$(make -C ${PLUGINSDIR}/${PLUGIN} name)
 	PLUGIN_DEPS=$(make -C ${PLUGINSDIR}/${PLUGIN} depends)
 
@@ -46,4 +48,4 @@ for PLUGIN in ${PLUGINS}; do
 	custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN}
 done
 
-bundle_packages ${STAGEDIR}
+bundle_packages ${STAGEDIR} ${PLUGINS_MARKER}

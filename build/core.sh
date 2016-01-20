@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,7 +29,12 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+CORE_MARKER="core"
+
 setup_stage ${STAGEDIR}
+
+extract_packages ${STAGEDIR} ${CORE_MARKER}
+
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 
@@ -39,8 +44,6 @@ if [ -z "${*}" ]; then
 else
 	CORE_TAGS="${*}"
 fi
-
-extract_packages ${STAGEDIR}
 
 for CORE_TAG in ${CORE_TAGS}; do
 	if [ -n "${*}" ]; then
@@ -54,4 +57,4 @@ for CORE_TAG in ${CORE_TAGS}; do
 	custom_packages ${STAGEDIR} ${COREDIR}
 done
 
-bundle_packages ${STAGEDIR}
+bundle_packages ${STAGEDIR} ${CORE_MARKER}

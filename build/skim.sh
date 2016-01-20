@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,7 +31,7 @@ set -e
 
 export __MAKE_CONF=${CONFIGDIR}/make.conf
 
-PORT_LIST=$({
+PORTS_LIST=$({
 	# the ports formerly known as `sync'
 	echo devel/gettext
 	echo security/libressl
@@ -62,7 +62,7 @@ done
 
 echo -n ">>> Gathering dependencies"
 
-echo "${PORT_LIST}" > /tmp/skim.${$}
+echo "${PORTS_LIST}" > /tmp/skim.${$}
 
 while read PORT_ORIGIN PORT_BROKEN; do
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then

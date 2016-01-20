@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-PORT_LIST="ports-mgmt/pkg
+PORTS_LIST="ports-mgmt/pkg
 security/openssl
 security/libressl
 $(cat ${CONFIGDIR}/ports.conf)"
@@ -50,7 +50,7 @@ if [ -f ${MAKE_CONF} ]; then
 fi
 
 chroot ${STAGEDIR} /bin/sh -es << EOF
-echo "${PORT_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
+echo "${PORTS_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
 	if [ "\$(echo \${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
 	fi

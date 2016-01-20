@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -309,6 +309,7 @@ extract_packages()
 	echo ">>> Extracting packages in ${1}"
 
 	BASEDIR=${1}
+	MARKER=${2}
 
 	rm -rf ${BASEDIR}${PACKAGESDIR}/All
 	mkdir -p ${BASEDIR}${PACKAGESDIR}/All
@@ -316,6 +317,11 @@ extract_packages()
 	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar")
 	if [ -f "${PACKAGESET}" ]; then
 		tar -C ${BASEDIR}${PACKAGESDIR} -xpf ${PACKAGESET}
+	fi
+
+	if [ -n "${MARKER}" -a -f ${BASEDIR}${PACKAGESDIR}/.${MARKER}_done ]; then
+		echo ">>> Packages are up to date"
+		exit 0
 	fi
 }
 
@@ -415,19 +421,34 @@ EOF
 
 bundle_packages()
 {
+	BASEDIR=${1}
+	MARKER=${2}
+
 	sh ./clean.sh packages
 
 	git_describe ${PORTSDIR}
 
 	# rebuild expected FreeBSD structure
-	mkdir -p ${1}${PACKAGESDIR}-new/Latest
-	mkdir -p ${1}${PACKAGESDIR}-new/All
+	mkdir -p ${BASEDIR}${PACKAGESDIR}-new/Latest
+	mkdir -p ${BASEDIR}${PACKAGESDIR}-new/All
+
+	for PROGRESS in $({
+		find ${BASEDIR}${PACKAGESDIR} -type f -name ".*_done"
+	}); do
+		# push previous markers to home location
+		cp ${PROGRESS} ${BASEDIR}${PACKAGESDIR}-new
+	done
+
+	if [ -n "${MARKER}" ]; then
+		# add build marker to set
+		touch ${BASEDIR}${PACKAGESDIR}-new/.${MARKER}_done
+	fi
 
 	# push packages to home location
-	cp ${1}${PACKAGESDIR}/All/* ${1}${PACKAGESDIR}-new/All
+	cp ${BASEDIR}${PACKAGESDIR}/All/* ${BASEDIR}${PACKAGESDIR}-new/All
 
 	# needed bootstrap glue when no packages are on the system
-	(cd ${1}${PACKAGESDIR}-new/Latest; ln -s ../All/pkg-*.txz pkg.txz)
+	(cd ${BASEDIR}${PACKAGESDIR}-new/Latest; ln -s ../All/pkg-*.txz pkg.txz)
 
 	local SIGNARGS=
 	if [ -n "$(${TOOLSDIR}/scripts/pkg_fingerprint.sh)" ]; then
@@ -436,11 +457,11 @@ bundle_packages()
 		SIGNARGS="signing_command: ${SIGNCMD}"
 
 		# generate pkg bootstrap signature
-		generate_signature ${1}${PACKAGESDIR}-new/Latest/pkg.txz
+		generate_signature ${BASEDIR}${PACKAGESDIR}-new/Latest/pkg.txz
 	fi
 
 	# generate index files
-	pkg repo ${1}${PACKAGESDIR}-new/ ${SIGNARGS}
+	pkg repo ${BASEDIR}${PACKAGESDIR}-new/ ${SIGNARGS}
 
 	REPO_RELEASE="${REPO_VERSION}-${PRODUCT_FLAVOUR}-${ARCH}"
 	echo -n ">>> Creating package mirror set for ${REPO_RELEASE}... "

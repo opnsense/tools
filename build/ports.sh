@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,16 +29,19 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-PORT_LIST=$(cat ${CONFIGDIR}/ports.conf)
+PORTS_LIST=$(cat ${CONFIGDIR}/ports.conf)
+PORTS_MARKER="ports"
 
 setup_stage ${STAGEDIR}
+
+extract_packages ${STAGEDIR} ${PORTS_MARKER}
+
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
 setup_distfiles ${STAGEDIR}
 
-extract_packages ${STAGEDIR}
 remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR}
 clean_packages ${STAGEDIR}
@@ -53,7 +56,7 @@ fi
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
-if ! chroot ${STAGEDIR} /bin/sh -es << EOF; then PORT_ABORT=1; fi
+if ! chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTS_MARKER=; fi
 # overwrites the ports tree variable, behaviour is unwanted...
 unset STAGEDIR
 # ...and this unbreaks the nmap build
@@ -65,7 +68,7 @@ else
 	make -C ${PORTSDIR}/ports-mgmt/pkg clean all install
 fi
 
-echo "${PORT_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
+echo "${PORTS_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
 	if [ "\$(echo \${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
 	fi
@@ -105,12 +108,12 @@ trap - 2
 
 echo ">>> Creating binary packages..."
 
-chroot ${STAGEDIR} /bin/sh -es << EOF && bundle_packages ${STAGEDIR}
+chroot ${STAGEDIR} /bin/sh -es << EOF && bundle_packages ${STAGEDIR} ${PORTS_MARKER}
 pkg autoremove -qy
 pkg create -ao ${PACKAGESDIR}/All -f txz
 EOF
 
-if [ -n "${PORT_ABORT}" ]; then
+if [ -z "${PORTS_MARKER}" ]; then
 	echo ">>> The ports build did not finish properly :("
 	exit 1
 fi
