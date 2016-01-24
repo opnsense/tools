@@ -122,7 +122,7 @@ export TARGETARCH=${ARCH}
 
 # define target directories
 export CONFIGDIR="${TOOLSDIR}/config/${PRODUCT_SETTINGS}"
-export STAGEDIR="/usr/local/stage"
+export STAGEDIR="/usr/obj/stage"
 export IMAGESDIR="/tmp/images"
 export SETSDIR="/tmp/sets"
 export PACKAGESDIR="/.pkg"
