@@ -32,7 +32,7 @@ set -e
 PORTS_LIST=$(cat ${CONFIGDIR}/ports.conf)
 PORTS_MARKER="ports"
 
-check_packages ${PORTS_MARKER}
+check_packages ${PORTS_MARKER} ${@}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

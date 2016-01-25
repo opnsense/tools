@@ -302,8 +302,9 @@ check_packages()
 {
 	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar")
 	MARKER=${1}
+	SKIP=${2}
 
-	if [ -z "${MARKER}" -o -z "${PACKAGESET}" ]; then
+	if [ -z "${MARKER}" -o -z "${PACKAGESET}" -o -n "${SKIP}" ]; then
 		return
 	fi
 

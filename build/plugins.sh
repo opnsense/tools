@@ -32,7 +32,7 @@ set -e
 PLUGINS_LIST=$(make -C ${PLUGINSDIR} list)
 PLUGINS_MARKER="plugins"
 
-check_packages ${PLUGINS_MARKER}
+check_packages ${PLUGINS_MARKER} ${@}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

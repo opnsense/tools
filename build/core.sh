@@ -31,7 +31,7 @@ set -e
 
 CORE_MARKER="core"
 
-check_packages ${CORE_MARKER}
+check_packages ${CORE_MARKER} ${@}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
