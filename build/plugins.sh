@@ -32,12 +32,13 @@ set -e
 PLUGINS_LIST=$(make -C ${PLUGINSDIR} list)
 PLUGINS_MARKER="plugins"
 
+check_packages ${PLUGINS_MARKER}
+
 setup_stage ${STAGEDIR}
-
-extract_packages ${STAGEDIR} ${PLUGINS_MARKER}
-
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PLUGINSDIR}
+
+extract_packages ${STAGEDIR}
 
 for PLUGIN in ${PLUGINS_LIST}; do
 	PLUGIN_NAME=$(make -C ${PLUGINSDIR}/${PLUGIN} name)

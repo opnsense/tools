@@ -31,12 +31,13 @@ set -e
 
 CORE_MARKER="core"
 
+check_packages ${CORE_MARKER}
+
 setup_stage ${STAGEDIR}
-
-extract_packages ${STAGEDIR} ${CORE_MARKER}
-
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
+
+extract_packages ${STAGEDIR}
 
 if [ -z "${*}" ]; then
 	setup_clone ${STAGEDIR} ${COREDIR}

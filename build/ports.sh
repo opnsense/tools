@@ -32,16 +32,16 @@ set -e
 PORTS_LIST=$(cat ${CONFIGDIR}/ports.conf)
 PORTS_MARKER="ports"
 
+check_packages ${PORTS_MARKER}
+
 setup_stage ${STAGEDIR}
-
-extract_packages ${STAGEDIR} ${PORTS_MARKER}
-
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
 setup_distfiles ${STAGEDIR}
 
+extract_packages ${STAGEDIR}
 remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR}
 clean_packages ${STAGEDIR}

@@ -298,12 +298,27 @@ generate_signature()
 	fi
 }
 
+check_packages()
+{
+	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar")
+	MARKER=${1}
+
+	if [ -z "${MARKER}" -o -z "${PACKAGESET}" ]; then
+		return
+	fi
+
+	DONE=$(tar tf ${PACKAGESET} | grep "^\./\.${MARKER}_done\$" || true)
+	if [ -n "${DONE}" ]; then
+		echo ">>> Packages (${MARKER}) are up to date"
+		exit 0
+	fi
+}
+
 extract_packages()
 {
 	echo ">>> Extracting packages in ${1}"
 
 	BASEDIR=${1}
-	MARKER=${2}
 
 	rm -rf ${BASEDIR}${PACKAGESDIR}/All
 	mkdir -p ${BASEDIR}${PACKAGESDIR}/All
@@ -311,11 +326,6 @@ extract_packages()
 	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar")
 	if [ -f "${PACKAGESET}" ]; then
 		tar -C ${BASEDIR}${PACKAGESDIR} -xpf ${PACKAGESET}
-	fi
-
-	if [ -n "${MARKER}" -a -f ${BASEDIR}${PACKAGESDIR}/.${MARKER}_done ]; then
-		echo ">>> Packages are up to date"
-		exit 0
 	fi
 }
 
