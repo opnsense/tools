@@ -29,7 +29,12 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-PLUGINS_LIST=$(make -C ${PLUGINSDIR} list)
+if [ -z "${*}" ]; then
+	PLUGINS_LIST=$(make -C ${PLUGINSDIR} list)
+else
+	PLUGINS_LIST="${*}"
+fi
+
 PLUGINS_MARKER="plugins"
 
 check_packages ${PLUGINS_MARKER} ${@}
