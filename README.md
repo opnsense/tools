@@ -119,11 +119,6 @@ A direct disk image in NanoBSD style is created using:
 About other scripts and tweaks
 ==============================
 
-A known state can be checked out, removing all unwanted files
-from the repository, fetching all remote updates, via:
-
-    # make checkout[-<repo_branch_or_tag>]
-
 Before building images, you can run the regression tests
 to check the integrity of your core.git modifications plus
 generate output for the style checker:
