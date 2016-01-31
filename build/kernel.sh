@@ -29,28 +29,29 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-git_describe ${SRCDIR}
+KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${ARCH}.txz")
 
-KERNELSET=${SETSDIR}/kernel-${REPO_VERSION}-${ARCH}
-
-if [ -f ${KERNELSET}.txz ]; then
-	echo ">>> Kernel is up to date"
+if [ -f ${KERNEL_SET} ]; then
+	echo ">>> Reusing kernel set: ${KERNEL_SET}"
 	exit 0
 fi
+
+git_describe ${SRCDIR}
+
+KERNEL_SET=${SETSDIR}/kernel-${REPO_VERSION}-${ARCH}
 
 sh ./clean.sh kernel
 
 BUILD_KERNEL="SMP"
 
-# XXX move config to src.git
 cp ${CONFIGDIR}/${BUILD_KERNEL} ${SRCDIR}/sys/${ARCH}/conf/${BUILD_KERNEL}
 
-MAKEARGS="TARGET_ARCH=${ARCH} KERNCONF=${BUILD_KERNEL}"
+MAKE_ARGS="TARGET_ARCH=${ARCH} KERNCONF=${BUILD_KERNEL}"
 
-make -C${SRCDIR} -j${CPUS} buildkernel ${MAKEARGS} NO_KERNELCLEAN=yes
-make -C${SRCDIR}/release obj ${MAKEARGS}
-make -C${SRCDIR}/release kernel.txz ${MAKEARGS}
+make -C${SRCDIR} -j${CPUS} buildkernel ${MAKE_ARGS} NO_KERNELCLEAN=yes
+make -C${SRCDIR}/release obj ${MAKE_ARGS}
+make -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
 
-mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${KERNELSET}.txz
+mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${KERNEL_SET}.txz
 
-generate_signature ${KERNELSET}.txz
+generate_signature ${KERNEL_SET}.txz

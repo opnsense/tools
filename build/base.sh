@@ -29,33 +29,35 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-git_describe ${SRCDIR}
+BASE_SET=$(find ${SETSDIR} -name "base-*-${ARCH}.txz")
 
-BASESET=${SETSDIR}/base-${REPO_VERSION}-${ARCH}
-
-if [ -f ${BASESET}.txz ]; then
-	echo ">>> Base is up to date"
+if [ -f ${BASE_SET} ]; then
+	echo ">>> Reusing base set: ${BASE_SET}"
 	exit 0
 fi
 
+git_describe ${SRCDIR}
+
+BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${ARCH}
+
 sh ./clean.sh base
 
-MAKEARGS="SRCCONF=${CONFIGDIR}/src.conf COMPILER_TYPE=clang __MAKE_CONF="
-ENVFILTER="env -i USER=${USER} LOGNAME=${LOGNAME} HOME=${HOME} \
+MAKE_ARGS="SRCCONF=${CONFIGDIR}/src.conf COMPILER_TYPE=clang __MAKE_CONF="
+ENV_FILTER="env -i USER=${USER} LOGNAME=${LOGNAME} HOME=${HOME} \
 SHELL=${SHELL} BLOCKSIZE=${BLOCKSIZE} MAIL=${MAIL} PATH=${PATH} \
 TERM=${TERM} HOSTTYPE=${HOSTTYPE} VENDOR=${VENDOR} OSTYPE=${OSTYPE} \
 MACHTYPE=${MACHTYPE} PWD=${PWD} GROUP=${GROUP} HOST=${HOST} \
 EDITOR=${EDITOR} PAGER=${PAGER}"
 
-${ENVFILTER} make -C${SRCDIR} -j${CPUS} buildworld ${MAKEARGS} NO_CLEAN=yes
-${ENVFILTER} make -C${SRCDIR}/release obj ${MAKEARGS}
-${ENVFILTER} make -C${SRCDIR}/release base.txz ${MAKEARGS}
+${ENV_FILTER} make -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS} NO_CLEAN=yes
+${ENV_FILTER} make -C${SRCDIR}/release obj ${MAKE_ARGS}
+${ENV_FILTER} make -C${SRCDIR}/release base.txz ${MAKE_ARGS}
 
-mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${BASESET}.txz
+mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${BASE_SET}.txz
 
 echo -n ">>> Generating obsolete file list... "
 
-tar -tf ${BASESET}.txz | \
+tar -tf ${BASE_SET}.txz | \
     sed -e 's/^\.//g' -e '/\/$/d' | sort > /tmp/setdiff.new.${$}
 
 : > /tmp/setdiff.old.${$}
@@ -73,11 +75,11 @@ fi
 
 (cat /tmp/setdiff.tmp.${$}; diff -u /tmp/setdiff.old.${$} \
     /tmp/setdiff.new.${$} | grep '^-/' | cut -b 2-) | \
-    sort -u > ${BASESET}.obsolete
+    sort -u > ${BASE_SET}.obsolete
 
 rm -f /tmp/setdiff.*
 
 echo "done"
 
-generate_signature ${BASESET}.txz
-generate_signature ${BASESET}.obsolete
+generate_signature ${BASE_SET}.txz
+generate_signature ${BASE_SET}.obsolete
