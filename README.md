@@ -135,9 +135,16 @@ distribution files before running the actual build:
 
     # make distfiles
 
-Compiled base and kernel sets can be prefetched from a mirror:
+Compiled base and kernel sets can be prefetched from a mirror,
+while removing any previously available set:
 
-    # make prefetch VERSION=version.to.prefetch
+    # make prefetch-<option>[,...] VERSION=version.to.prefetch
+
+Available prefetch options are:
+
+* base:		prefetch the base set
+* kernel:	prefetch the kernel set
+* packages:	prefetch the packages set
 
 Core packages (pristine copies) can be batch-built using:
 
@@ -160,7 +167,7 @@ via the clean script:
 
     # make clean-<option>[,...]
 
-Available options are:
+Available clean options are:
 
 * base:		remove the base set
 * distfiles:	remove the distfiles set

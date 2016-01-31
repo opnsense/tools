@@ -31,11 +31,23 @@ set -e
 
 MIRROR="https://pkg.opnsense.org/sets"
 
-sh ./clean.sh base kernel
-
-URL="${MIRROR}/base-${PRODUCT_VERSION}-${ARCH}"
-fetch -o ${SETSDIR} ${URL}.obsolete
-fetch -o ${SETSDIR} ${URL}.txz
-
-URL="${MIRROR}/kernel-${PRODUCT_VERSION}-${ARCH}"
-fetch -o ${SETSDIR} ${URL}.txz
+for ARG in ${@}; do
+	case ${ARG} in
+	base)
+		sh ./clean.sh ${ARG}
+		URL="${MIRROR}/${ARG}-${PRODUCT_VERSION}-${ARCH}"
+		fetch -o ${SETSDIR} ${URL}.obsolete
+		fetch -o ${SETSDIR} ${URL}.txz
+		;;
+	kernel)
+		sh ./clean.sh ${ARG}
+		URL="${MIRROR}/${ARG}-${PRODUCT_VERSION}-${ARCH}"
+		fetch -o ${SETSDIR} ${URL}.txz
+		;;
+	packages)
+		sh ./clean.sh ${ARG}
+		URL="${MIRROR}/${ARG}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${ARCH}"
+		fetch -o ${SETSDIR} ${URL}.tar
+		;;
+	esac
+done
