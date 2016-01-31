@@ -31,7 +31,7 @@ set -e
 
 KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${ARCH}.txz")
 
-if [ -f ${KERNEL_SET} ]; then
+if [ -f "${KERNEL_SET}" -a -z "${1}" ]; then
 	echo ">>> Reusing kernel set: ${KERNEL_SET}"
 	exit 0
 fi

@@ -31,7 +31,7 @@ set -e
 
 BASE_SET=$(find ${SETSDIR} -name "base-*-${ARCH}.txz")
 
-if [ -f ${BASE_SET} ]; then
+if [ -f "${BASE_SET}" -a -z "${1}" ]; then
 	echo ">>> Reusing base set: ${BASE_SET}"
 	exit 0
 fi
