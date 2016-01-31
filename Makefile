@@ -1,5 +1,5 @@
-STEPS=		base clean core distfiles kernel \
-		iso memstick nano plugins ports \
+STEPS=		base clean core distfiles kernel iso \
+		memstick nano plugins ports prefetch \
 		rebase regress release skim
 .PHONY:		${STEPS}
 

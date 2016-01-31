@@ -135,6 +135,10 @@ distribution files before running the actual build:
 
     # make distfiles
 
+Compiled base and kernel sets can be prefetched from a mirror:
+
+    # make prefetch VERSION=version.to.prefetch
+
 Core packages (pristine copies) can be batch-built using:
 
     # make core-<repo_branch_or_tag>[,...]
