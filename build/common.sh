@@ -338,11 +338,11 @@ extract_packages()
 
 remove_packages()
 {
-	echo ">>> Removing packages in ${1}"
-
 	BASEDIR=${1}
 	shift
 	PKGLIST=${@}
+
+	echo ">>> Removing packages in ${BASEDIR}: ${PKGLIST}"
 
 	for PKG in ${PKGLIST}; do
 		# clear out the ports that ought to be rebuilt
@@ -372,10 +372,12 @@ install_packages()
 			# find all package files, omitting plugins
 			find .${PACKAGESDIR}/All -type f \! -name "os-*"
 		}); do
-			# Adds all available packages but ignores the
+			# Adds all available packages and removes the
 			# ones that cannot be installed due to missing
 			# dependencies.  This behaviour is desired.
-			pkg -c ${BASEDIR} add ${PKG} || true
+			if ! pkg -c ${BASEDIR} add ${PKG}; then
+				rm -r ${BASEDIR}/${PKG}
+			fi
 		done
 	else
 		# always bootstrap pkg as the first package

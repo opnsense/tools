@@ -91,7 +91,6 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
 		continue
 	fi
 
-	# user configs linger somewhere else and override the override  :(
 	make -C ${PORTSDIR}/\${PORT_ORIGIN} clean all install
 
 	if ! pkg query %o \${PORT_ORIGIN} > /dev/null; then
