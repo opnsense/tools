@@ -49,9 +49,9 @@ TERM=${TERM} HOSTTYPE=${HOSTTYPE} VENDOR=${VENDOR} OSTYPE=${OSTYPE} \
 MACHTYPE=${MACHTYPE} PWD=${PWD} GROUP=${GROUP} HOST=${HOST} \
 EDITOR=${EDITOR} PAGER=${PAGER}"
 
-${ENV_FILTER} make -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS} NO_CLEAN=yes
-${ENV_FILTER} make -C${SRCDIR}/release obj ${MAKE_ARGS}
-${ENV_FILTER} make -C${SRCDIR}/release base.txz ${MAKE_ARGS}
+${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS} NO_CLEAN=yes
+${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
+${ENV_FILTER} make -s -C${SRCDIR}/release base.txz ${MAKE_ARGS}
 
 mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${BASE_SET}.txz
 
