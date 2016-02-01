@@ -44,7 +44,6 @@ setup_distfiles ${STAGEDIR}
 extract_packages ${STAGEDIR}
 remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR}
-clean_packages ${STAGEDIR}
 
 echo ">>> Building packages..."
 
@@ -110,7 +109,7 @@ echo ">>> Creating binary packages..."
 
 chroot ${STAGEDIR} /bin/sh -es << EOF && bundle_packages ${STAGEDIR} ${PORTS_MARKER}
 pkg autoremove -qy
-pkg create -ao ${PACKAGESDIR}/All -f txz
+pkg create -nao ${PACKAGESDIR}/All -f txz
 EOF
 
 if [ -z "${PORTS_MARKER}" ]; then
