@@ -20,9 +20,10 @@ NAME?=		OPNsense
 TYPE?=		opnsense-devel
 FLAVOUR?=	OpenSSL
 SETTINGS?=	16.1
-SIGNATURE?=	/root/repo
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
+PRIVKEY?=	/root/repo.key
+PUBKEY?=	/root/repo.pub
 PORTSREFDIR?=	/usr/freebsd-ports
 PLUGINSDIR?=	/usr/plugins
 TOOLSDIR?=	/usr/tools
@@ -59,6 +60,6 @@ ${STEP}:
 	@cd build && sh ${VERBOSE_FLAGS} ./${.TARGET}.sh \
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
-	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k ${SIGNATURE} \
-	    ${${STEP}_ARGS}
+	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k ${PRIVKEY} \
+	    -K ${PUBKEY} ${${STEP}_ARGS}
 .endfor

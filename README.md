@@ -77,9 +77,9 @@ Available build options are:
 * CONFIG: 	reads the below from the specified file
 * FLAVOUR:	"OpenSSL" (default), "LibreSSL"
 * NAME:		"OPNsense" (default)
+* PRIVKEY:	the private key for signing sets
+* PUBKEY:	the public key for signing sets
 * SETTINGS:	the name of the selected settings in config/
-* SIGNATURE:	file prefix to the packages signature files,
-		automatically appending ".key" and ".pub"
 * TYPE:         the name of the meta package to be installed
 * VERSION:	a version tag (if applicable)
 
