@@ -33,12 +33,11 @@ SRCDIR?=	/usr/src
 
 # A couple of meta-targets for easy use and ordering:
 
-src: base kernel
-ports: src
+ports: base
 plugins: ports
 core: plugins
 packages: core
-iso memstick nano: packages
+iso memstick nano: packages kernel
 everything release: iso memstick nano
 
 # Expand target arguments for the script append:

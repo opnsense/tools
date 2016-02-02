@@ -135,8 +135,8 @@ distribution files before running the actual build:
 
     # make distfiles
 
-Compiled base and kernel sets can be prefetched from a mirror,
-while removing any previously available set:
+Compiled sets can be prefetched from a mirror, while removing
+any previously available set:
 
     # make prefetch-<option>[,...] VERSION=version.to.prefetch
 
