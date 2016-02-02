@@ -31,11 +31,14 @@ PORTSDIR?=	/usr/ports
 COREDIR?=	/usr/core
 SRCDIR?=	/usr/src
 
-# A couple of meta-targets for easy use:
+# A couple of meta-targets for easy use and ordering:
 
 src: base kernel
-packages: ports plugins core
-sets iso memstick nano: src packages
+ports: src
+plugins: ports
+core: plugins
+packages: core
+iso memstick nano: packages
 everything release: iso memstick nano
 
 # Expand target arguments for the script append:
