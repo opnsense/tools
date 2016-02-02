@@ -33,11 +33,11 @@ usage()
 {
 	echo "Usage: ${0} -f flavour -n name -v version -R freebsd-ports.git" >&2
 	echo "	-C core.git -P ports.git -S src.git -T tools.git -t type" >&2
-	echo "	-k /path/to/privkey -K /path/to/pubkey [...]" >&2
+	echo "	-k /path/to/privkey -K /path/to/pubkey -m web_mirror [...]" >&2
 	exit 1
 }
 
-while getopts C:f:K:k:n:P:p:R:S:s:T:t:v: OPT; do
+while getopts C:f:K:k:m:n:P:p:R:S:s:T:t:v: OPT; do
 	case ${OPT} in
 	C)
 		export COREDIR=${OPTARG}
@@ -47,16 +47,20 @@ while getopts C:f:K:k:n:P:p:R:S:s:T:t:v: OPT; do
 		export PRODUCT_FLAVOUR=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
-	n)
-		export PRODUCT_NAME=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
-		;;
 	K)
 		export PRODUCT_PUBKEY=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	k)
 		export PRODUCT_PRIVKEY=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	m)
+		export PRODUCT_MIRROR=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	n)
+		export PRODUCT_NAME=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	P)
@@ -102,6 +106,7 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_FLAVOUR}" -o \
     -z "${PRODUCT_VERSION}" -o \
     -z "${PRODUCT_SETTINGS}" -o \
+    -z "${PRODUCT_MIRROR}" -o \
     -z "${PRODUCT_PRIVKEY}" -o \
     -z "${PRODUCT_PUBKEY}" -o \
     -z "${TOOLSDIR}" -o \

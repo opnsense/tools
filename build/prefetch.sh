@@ -29,24 +29,22 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-MIRROR="https://pkg.opnsense.org/sets"
-
 for ARG in ${@}; do
 	case ${ARG} in
 	base)
 		sh ./clean.sh ${ARG}
-		URL="${MIRROR}/${ARG}-${PRODUCT_VERSION}-${ARCH}"
+		URL="${PRODUCT_MIRROR}/sets/${ARG}-${PRODUCT_VERSION}-${ARCH}"
 		fetch -o ${SETSDIR} ${URL}.obsolete
 		fetch -o ${SETSDIR} ${URL}.txz
 		;;
 	kernel)
 		sh ./clean.sh ${ARG}
-		URL="${MIRROR}/${ARG}-${PRODUCT_VERSION}-${ARCH}"
+		URL="${PRODUCT_MIRROR}/sets/${ARG}-${PRODUCT_VERSION}-${ARCH}"
 		fetch -o ${SETSDIR} ${URL}.txz
 		;;
 	packages)
 		sh ./clean.sh ${ARG}
-		URL="${MIRROR}/${ARG}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${ARCH}"
+		URL="${PRODUCT_MIRROR}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${ARCH}"
 		fetch -o ${SETSDIR} ${URL}.tar
 		;;
 	esac
