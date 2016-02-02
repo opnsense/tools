@@ -80,6 +80,7 @@ Available build options are:
 * PRIVKEY:	the private key for signing sets
 * PUBKEY:	the public key for signing sets
 * SETTINGS:	the name of the selected settings in config/
+* MIRRORS:	a list of mirrors to prefetch sets from
 * TYPE:         the name of the meta package to be installed
 * VERSION:	a version tag (if applicable)
 

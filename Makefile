@@ -20,7 +20,7 @@ NAME?=		OPNsense
 TYPE?=		opnsense-devel
 FLAVOUR?=	OpenSSL
 SETTINGS?=	16.1
-MIRROR?=	https://opnsense.c0urier.net \
+MIRRORS?=	https://opnsense.c0urier.net \
 		http://mirrors.nycbug.org/pub/opnsense \
 		http://mirror.wdc1.us.leaseweb.net/opnsense \
 		http://mirror.sfo12.us.leaseweb.net/opnsense \
@@ -69,5 +69,5 @@ ${STEP}:
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k ${PRIVKEY} \
-	    -K ${PUBKEY} -m ${MIRROR:Ox:[1]} ${${STEP}_ARGS}
+	    -K ${PUBKEY} -m ${MIRRORS:Ox:[1]} ${${STEP}_ARGS}
 .endfor
