@@ -52,6 +52,8 @@ cat > ${STAGEDIR}/etc/fstab << EOF
 tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
+setup_entropy ${STAGEDIR}
+
 makefs -t ffs -B little -o label=${LABEL} ${VGAIMG} ${STAGEDIR}
 
 echo "-S115200 -D" > ${STAGEDIR}/boot.config
@@ -67,6 +69,8 @@ sed -i '' -e 's:</system>:<enableserial/></system>:' \
     ${STAGEDIR}${CONFIG_XML}
 
 sed -i '' -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${STAGEDIR}/etc/ttys
+
+setup_entropy ${STAGEDIR}
 
 makefs -t ffs -B little -o label=${LABEL} ${SERIALIMG} ${STAGEDIR}
 

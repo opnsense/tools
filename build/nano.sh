@@ -157,9 +157,11 @@ setup_partition()
 	umount ${3}
 }
 
+setup_entropy ${STAGEDIR}
 setup_partition /dev/${MD}s1 ${LABEL}0 ${MNT} ${STAGEDIR}
 
 if [ ${NANO_IMAGES} -gt 1 ]; then
+	setup_entropy ${STAGEDIR}
 	setup_partition /dev/${MD}s2 ${LABEL}1 ${MNT} ${STAGEDIR}
 fi
 

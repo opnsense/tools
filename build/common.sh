@@ -297,6 +297,23 @@ setup_distfiles()
 	fi
 }
 
+setup_entropy()
+{
+	echo ">>> Setting up entropy in ${1}"
+
+	mkdir -p ${1}/boot
+
+	umask 077
+
+	dd if=/dev/random of=${1}/boot/entropy bs=4096 count=1
+	dd if=/dev/random of=${1}/entropy bs=4096 count=1
+
+	chown 0:0 ${1}/boot/entropy
+	chown 0:0 ${1}/entropy
+
+	umask 022
+}
+
 generate_signature()
 {
 	SIGNCMD="${TOOLSDIR}/scripts/pkg_sign.sh"
