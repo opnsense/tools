@@ -54,6 +54,7 @@
 ./boot/boot1
 ./boot/boot2
 ./boot/brand-fbsd.4th
+./boot/brand-opnsense.4th
 ./boot/brand.4th
 ./boot/cdboot
 ./boot/check-password.4th
@@ -75,6 +76,8 @@
 ./boot/logo-beastie.4th
 ./boot/logo-beastiebw.4th
 ./boot/logo-fbsdbw.4th
+./boot/logo-hourglass.4th
+./boot/logo-hourglassbw.4th
 ./boot/logo-orb.4th
 ./boot/logo-orbbw.4th
 ./boot/mbr
