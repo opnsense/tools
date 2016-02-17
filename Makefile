@@ -69,5 +69,6 @@ ${STEP}:
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k ${PRIVKEY} \
-	    -K ${PUBKEY} -m ${MIRRORS:Ox:[1]} ${${STEP}_ARGS}
+	    -K ${PUBKEY} -l "${SIGNCHK}" -L "${SIGNCMD}" \
+	    -m ${MIRRORS:Ox:[1]} ${${STEP}_ARGS}
 .endfor

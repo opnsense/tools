@@ -33,11 +33,12 @@ usage()
 {
 	echo "Usage: ${0} -f flavour -n name -v version -R freebsd-ports.git" >&2
 	echo "	-C core.git -P ports.git -S src.git -T tools.git -t type" >&2
-	echo "	-k /path/to/privkey -K /path/to/pubkey -m web_mirror [...]" >&2
+	echo "	-k /path/to/privkey -K /path/to/pubkey -m web_mirror " >&2
+	echo "  -l 'custom sign check' -L 'custom sign command' [...]" >&2
 	exit 1
 }
 
-while getopts C:f:K:k:m:n:P:p:R:S:s:T:t:v: OPT; do
+while getopts C:f:K:k:L:l:m:n:P:p:R:S:s:T:t:v: OPT; do
 	case ${OPT} in
 	C)
 		export COREDIR=${OPTARG}
@@ -53,6 +54,18 @@ while getopts C:f:K:k:m:n:P:p:R:S:s:T:t:v: OPT; do
 		;;
 	k)
 		export PRODUCT_PRIVKEY=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	L)
+		if [ -n "${OPTARG}" ]; then
+			export PRODUCT_SIGNCMD=${OPTARG}
+		fi
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	l)
+		if [ -n "${OPTARG}" ]; then
+			export PRODUCT_SIGNCHK=${OPTARG}
+		fi
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	m)
@@ -118,7 +131,9 @@ if [ -z "${PRODUCT_NAME}" -o \
 	usage
 fi
 
-# full name for easy use and actual config directory
+# automatically expanded product stuff
+export PRODUCT_SIGNCMD=${PRODUCT_SIGNCMD:-"${TOOLSDIR}/scripts/pkg_sign.sh ${PRODUCT_PUBKEY} ${PRODUCT_PRIVKEY}"}
+export PRODUCT_SIGNCHK=${PRODUCT_SIGNCHK:-"${TOOLSDIR}/scripts/pkg_fingerprint.sh ${PRODUCT_PUBKEY}"}
 export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
 
 # misc. foo
@@ -316,12 +331,9 @@ setup_entropy()
 
 generate_signature()
 {
-	SIGNCMD="${TOOLSDIR}/scripts/pkg_sign.sh"
-	SIGNKEYS="${PRODUCT_PUBKEY} ${PRODUCT_PRIVKEY}"
-
-	if [ -n "$(${TOOLSDIR}/scripts/pkg_fingerprint.sh ${SIGNKEYS})" ]; then
+	if [ -n "$(${PRODUCT_SIGNCHK})" ]; then
 		echo -n "Signing $(basename ${1})... "
-		sha256 -q ${1} | ${SIGNCMD} ${SIGNKEYS} > ${1}.sig
+		sha256 -q ${1} | ${PRODUCT_SIGNCMD} > ${1}.sig
 		echo "done"
 	fi
 }
@@ -485,12 +497,10 @@ bundle_packages()
 	# needed bootstrap glue when no packages are on the system
 	(cd ${BASEDIR}${PACKAGESDIR}-new/Latest; ln -s ../All/pkg-*.txz pkg.txz)
 
-	SIGNCMD="${TOOLSDIR}/scripts/pkg_sign.sh"
-	SIGNKEYS="${PRODUCT_PUBKEY} ${PRODUCT_PRIVKEY}"
 	SIGNARGS=
 
-	if [ -n "$(${TOOLSDIR}/scripts/pkg_fingerprint.sh ${SIGNKEYS})" ]; then
-		SIGNARGS="signing_command: ${SIGNCMD} ${SIGNKEYS}"
+	if [ -n "$(${PRODUCT_SIGNCHK})" ]; then
+		SIGNARGS="signing_command: ${PRODUCT_SIGNCMD}"
 	fi
 
 	# generate pkg bootstrap signature
