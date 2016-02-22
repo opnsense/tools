@@ -36,11 +36,10 @@ is a standard BSD 2-Clause as reproduced here for your convenience:
 Setting up a build system
 =========================
 
-Install FreeBSD 10.1 (i386 or amd64 depending on your target arch)
-RELEASE on a machine with at least 10GB of hard disk (UFS works better
-than ZFS) and at least 2GB of RAM.  All tasks require a root user.  Do
-the following to grab the repositories (overwriting standard ports and
-src):
+Install FreeBSD 10.2-RELEASE (i386 or amd64 depending on your target arch)
+on a machine with at least 10GB of hard disk (UFS works better than ZFS)
+and at least 2GB of RAM.  All tasks require a root user.  Do the following
+to grab the repositories (overwriting standard ports and src):
 
     # pkg install git
     # cd /usr
