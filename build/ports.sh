@@ -107,7 +107,7 @@ trap - 2
 echo ">>> Creating binary packages..."
 
 chroot ${STAGEDIR} /bin/sh -es << EOF && bundle_packages ${STAGEDIR} ${PORTS_MARKER}
-pkg autoremove -qy
+pkg autoremove -y
 pkg create -nao ${PACKAGESDIR}/All -f txz
 EOF
 
