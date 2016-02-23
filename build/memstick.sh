@@ -33,6 +33,12 @@ set -e
 SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${ARCH}.img"
 VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
 
+SERIAL_SPEED="115200"
+
+SERIAL_CONFIG="<enableserial>1</enableserial>"
+SERIAL_CONFIG="${SERIAL_CONFIG}<serialspeed>${SERIAL_SPEED}</serialspeed>"
+SERIAL_CONFIG="${SERIAL_CONFIG}<primaryconsole>serial</primaryconsole>"
+
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
 
@@ -56,17 +62,16 @@ setup_entropy ${STAGEDIR}
 
 makefs -t ffs -B little -o label=${LABEL} ${VGAIMG} ${STAGEDIR}
 
-echo "-S115200 -D" > ${STAGEDIR}/boot.config
+echo "-S${SERIAL_SPEED} -D" > ${STAGEDIR}/boot.config
 
 cat > ${STAGEDIR}/boot/loader.conf << EOF
 boot_multicons="YES"
 boot_serial="YES"
 console="comconsole,vidconsole"
-comconsole_speed="115200"
+comconsole_speed="${SERIAL_SPEED}"
 EOF
 
-sed -i '' -e 's:</system>:<enableserial/></system>:' \
-    ${STAGEDIR}${CONFIG_XML}
+sed -i '' -e "s:</system>:${SERIAL_CONFIG}</system>:' ${STAGEDIR}${CONFIG_XML}
 
 sed -i '' -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${STAGEDIR}/etc/ttys
 
