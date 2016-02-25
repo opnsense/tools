@@ -71,7 +71,7 @@ console="comconsole,vidconsole"
 comconsole_speed="${SERIAL_SPEED}"
 EOF
 
-sed -i '' -e "s:</system>:${SERIAL_CONFIG}</system>:' ${STAGEDIR}${CONFIG_XML}
+sed -i '' -e "s:</system>:${SERIAL_CONFIG}</system>:" ${STAGEDIR}${CONFIG_XML}
 
 sed -i '' -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${STAGEDIR}/etc/ttys
 
