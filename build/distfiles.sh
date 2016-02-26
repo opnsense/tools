@@ -39,6 +39,7 @@ setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
+setup_distfiles ${STAGEDIR}
 
 git_describe ${PORTSDIR}
 
@@ -49,7 +50,12 @@ if [ -f ${MAKE_CONF} ]; then
 	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
 fi
 
-chroot ${STAGEDIR} /bin/sh -es << EOF
+echo "CLEAN_FETCH_ENV=yes" >> ${STAGEDIR}/etc/make.conf
+
+# block SIGINT to allow for collecting port progress (use with care)
+trap : 2
+
+if ! chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTS_LIST=; fi
 echo "${PORTS_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
 	if [ "\$(echo \${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
@@ -61,9 +67,17 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
 done
 EOF
 
+# unblock SIGINT
+trap - 2
+
 sh ./clean.sh distfiles
 
 echo -n ">>> Creating distfiles set... "
 tar -C ${STAGEDIR}${PORTSDIR} -cf \
     ${SETSDIR}/distfiles-${REPO_VERSION}.tar distfiles
 echo "done"
+
+if [ -z "${PORTS_LIST}" ]; then
+	echo ">>> The distfiles fetch did not finish properly :("
+	exit 1
+fi
