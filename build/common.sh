@@ -33,12 +33,13 @@ usage()
 {
 	echo "Usage: ${0} -f flavour -n name -v version -R freebsd-ports.git" >&2
 	echo "	-C core.git -P ports.git -S src.git -T tools.git -t type" >&2
-	echo "	-k /path/to/privkey -K /path/to/pubkey -m web_mirror " >&2
-	echo "  -l 'custom sign check' -L 'custom sign command' [...]" >&2
+	echo "	-k /path/to/privkey -K /path/to/pubkey -m web_mirror" >&2
+	echo "  [ -l customsigncheck -L customsigncommand ]" >&2
+	echo "  [ -o stagedirprefix ] [...]" >&2
 	exit 1
 }
 
-while getopts C:f:K:k:L:l:m:n:P:p:R:S:s:T:t:v: OPT; do
+while getopts C:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:v: OPT; do
 	case ${OPT} in
 	C)
 		export COREDIR=${OPTARG}
@@ -74,6 +75,12 @@ while getopts C:f:K:k:L:l:m:n:P:p:R:S:s:T:t:v: OPT; do
 		;;
 	n)
 		export PRODUCT_NAME=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	o)
+		if [ -n "${OPTARG}" ]; then
+			export STAGEDIRPREFIX=${OPTARG}
+		fi
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	P)
@@ -147,7 +154,7 @@ export TARGETARCH=${ARCH}
 
 # define target directories
 export CONFIGDIR="${TOOLSDIR}/config/${PRODUCT_SETTINGS}"
-export STAGEDIR="/usr/obj/stage"
+export STAGEDIR="${STAGEDIRPREFIX}${CONFIGDIR}/${PRODUCT_FLAVOUR}"
 export IMAGESDIR="/tmp/images"
 export SETSDIR="/tmp/sets"
 export PACKAGESDIR="/.pkg"

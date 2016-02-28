@@ -30,6 +30,7 @@ _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
 PRIVKEY?=	/root/repo.key
 PUBKEY?=	/root/repo.pub
+STAGEDIRPREFIX?=/usr/obj
 PORTSREFDIR?=	/usr/freebsd-ports
 PLUGINSDIR?=	/usr/plugins
 TOOLSDIR?=	/usr/tools
@@ -65,10 +66,10 @@ VERBOSE_FLAGS=	-x
 
 .for STEP in ${STEPS}
 ${STEP}:
-	@cd build && sh ${VERBOSE_FLAGS} ./${.TARGET}.sh \
+	@cd ${.CURDIR}/build && sh ${VERBOSE_FLAGS} ./${.TARGET}.sh \
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k ${PRIVKEY} \
 	    -K ${PUBKEY} -l "${SIGNCHK}" -L "${SIGNCMD}" \
-	    -m ${MIRRORS:Ox:[1]} ${${STEP}_ARGS}
+	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" ${${STEP}_ARGS}
 .endfor
