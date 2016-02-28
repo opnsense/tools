@@ -196,3 +196,8 @@ In case a release was wrapped up, the base package list and obsoleted
 files need to be regenerated.  This is done using:
 
     # make rebase
+
+Shall any debugging be needed inside the build jail, the following
+command will use chroot(8) to enter the active build jail:
+
+    # make chroot
