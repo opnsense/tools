@@ -8,6 +8,11 @@ PAGER?=		less
 all:
 	@cat ${.CURDIR}/README.md | ${PAGER}
 
+lint:
+. for STEP in ${STEPS}
+	@sh -n ${.CURDIR}/build/${STEP}.sh
+. endfor
+
 # Load the custom options from a file:
 
 .if defined(CONFIG)
@@ -65,7 +70,7 @@ VERBOSE_FLAGS=	-x
 # script with the proper build options set:
 
 .for STEP in ${STEPS}
-${STEP}:
+${STEP}: lint
 	@cd ${.CURDIR}/build && sh ${VERBOSE_FLAGS} ./${.TARGET}.sh \
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
