@@ -105,6 +105,7 @@
 /usr/share/nls/en_US.US-ASCII
 /usr/share/openssl/man/man3/CMS_sign_add1_signer.3.gz
 /usr/share/zoneinfo/America/Montreal
+/usr/share/zoneinfo/America/Santa_Isabel
 /var/db/etcupdate/current/etc/rc.d/ntpd
 /var/db/etcupdate/current/etc/rc.d/othermta
 /var/db/etcupdate/current/etc/rc.d/rwho
