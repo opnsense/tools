@@ -29,8 +29,6 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-CORE_NAME=${PRODUCT_TYPE}
-CORE_FAMILY="release"
 CORE_MARKER="core"
 
 check_packages ${CORE_MARKER} ${@}
@@ -49,6 +47,8 @@ else
 fi
 
 for CORE_TAG in ${CORE_TAGS}; do
+	CORE_NAME=${PRODUCT_TYPE}
+	CORE_FAMILY="release"
 	CORE_ARGS="CORE_NAME=${CORE_NAME} CORE_FAMILY=${CORE_FAMILY}"
 
 	if [ -n "${*}" ]; then
@@ -57,10 +57,10 @@ for CORE_TAG in ${CORE_TAGS}; do
 
 		git_describe ${STAGEDIR}${COREDIR}
 		if [ "${REPO_REFTYPE}" != tag ]; then
+			CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} name)
 			CORE_ARGS=
 		fi
 
-		CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} name)
 	fi
 
 	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} depends)
