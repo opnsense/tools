@@ -49,14 +49,20 @@ else
 fi
 
 for CORE_TAG in ${CORE_TAGS}; do
-	CORE_ARGS=
+	CORE_ARGS="CORE_NAME=${CORE_NAME} CORE_FAMILY=${CORE_FAMILY}"
+
 	if [ -n "${*}" ]; then
 		setup_copy ${STAGEDIR} ${COREDIR}
 		git_checkout ${STAGEDIR}${COREDIR} ${CORE_TAG}
+
+		git_describe ${STAGEDIR}${COREDIR}
+		if [ "${REPO_REFTYPE}" != tag ]; then
+			CORE_ARGS=
+		fi
+
 		CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} name)
-	else
-		CORE_ARGS="CORE_NAME=${CORE_NAME} CORE_FAMILY=${CORE_FAMILY}"
 	fi
+
 	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} depends)
 	remove_packages ${STAGEDIR} ${CORE_NAME}
 	install_packages ${STAGEDIR} git gettext-tools ${CORE_DEPS}
