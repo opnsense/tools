@@ -60,7 +60,6 @@ for CORE_TAG in ${CORE_TAGS}; do
 			CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} name)
 			CORE_ARGS=
 		fi
-
 	fi
 
 	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} depends)
