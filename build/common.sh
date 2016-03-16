@@ -185,10 +185,12 @@ git_update()
 
 git_describe()
 {
-	VERSION=$(git -C ${1} describe --abbrev=0 --always)
-	REVISION=$(git -C ${1} rev-list ${VERSION}.. --count)
-	COMMENT=$(git -C ${1} rev-list HEAD --max-count=1 | cut -c1-9)
-	REFTYPE=$(git -C ${1} cat-file -t ${VERSION})
+	HEAD=${2:-"HEAD"}
+
+	VERSION=$(git -C ${1} describe --abbrev=0 --always ${HEAD})
+	REVISION=$(git -C ${1} rev-list --count ${VERSION}..${HEAD})
+	COMMENT=$(git -C ${1} rev-list --max-count=1 ${HEAD} | cut -c1-9)
+	REFTYPE=$(git -C ${1} cat-file -t ${HEAD})
 
 	if [ "${REVISION}" != "0" ]; then
 		# must construct full version string manually

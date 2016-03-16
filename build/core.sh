@@ -54,8 +54,7 @@ for CORE_TAG in ${CORE_TAGS}; do
 	if [ -n "${*}" ]; then
 		setup_copy ${STAGEDIR} ${COREDIR}
 		git_checkout ${STAGEDIR}${COREDIR} ${CORE_TAG}
-
-		git_describe ${STAGEDIR}${COREDIR}
+		git_describe ${STAGEDIR}${COREDIR} ${CORE_TAG}
 		if [ "${REPO_REFTYPE}" != tag ]; then
 			CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} name)
 			CORE_ARGS=
