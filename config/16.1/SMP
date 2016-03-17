@@ -125,20 +125,11 @@ device          lagg
 
 options		MROUTING
 
-device		bktr		# bktr -- Brooktree Bt848/849/878/879 and Pinnacle PCTV video capture
-device		safe		# safe -- SafeNet crypto accelerator
 device		mxge		# mxge - Myricom Myri10GE 10 Gigabit Ethernet adapter driver
 device		cxgb		# cxgb -- Chelsio T3 10 Gigabit Ethernet adapter driver
 device		cxgbe		# cxgbe -- Chelsio T4 and T5 based 40Gb, 10Gb, and 1Gb Ethernet adapter driver
-device		crypto          # core crypto support
-device		cryptodev       # /dev/crypto for access to h/w
-device		hifn            # Hifn 7951, 7781, etc.
-device		ubsec           # Broadcom 5501, 5601, 58xx
-device		udav            # Davicom DM9601 USB Ethernet driver
 
 options		IPSEC_NAT_T
-
-device 		padlock
 
 options		PPS_SYNC
 options		TCP_SIGNATURE
