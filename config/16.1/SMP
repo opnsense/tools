@@ -103,7 +103,8 @@ device          uvscom
 device          umodem
 device		u3g
 
-options         IPSEC
+options		IPSEC
+device		crypto
 
 # Bridging
 device          if_bridge
