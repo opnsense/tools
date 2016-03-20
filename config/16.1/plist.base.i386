@@ -16370,6 +16370,7 @@
 ./usr/share/zoneinfo/Asia/Bahrain
 ./usr/share/zoneinfo/Asia/Baku
 ./usr/share/zoneinfo/Asia/Bangkok
+./usr/share/zoneinfo/Asia/Barnaul
 ./usr/share/zoneinfo/Asia/Beirut
 ./usr/share/zoneinfo/Asia/Bishkek
 ./usr/share/zoneinfo/Asia/Brunei
@@ -16506,6 +16507,7 @@
 ./usr/share/zoneinfo/Europe/
 ./usr/share/zoneinfo/Europe/Amsterdam
 ./usr/share/zoneinfo/Europe/Andorra
+./usr/share/zoneinfo/Europe/Astrakhan
 ./usr/share/zoneinfo/Europe/Athens
 ./usr/share/zoneinfo/Europe/Belgrade
 ./usr/share/zoneinfo/Europe/Berlin
@@ -16551,6 +16553,7 @@
 ./usr/share/zoneinfo/Europe/Stockholm
 ./usr/share/zoneinfo/Europe/Tallinn
 ./usr/share/zoneinfo/Europe/Tirane
+./usr/share/zoneinfo/Europe/Ulyanovsk
 ./usr/share/zoneinfo/Europe/Uzhgorod
 ./usr/share/zoneinfo/Europe/Vaduz
 ./usr/share/zoneinfo/Europe/Vatican
