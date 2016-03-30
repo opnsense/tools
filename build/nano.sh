@@ -38,7 +38,7 @@ sh ./clean.sh nano
 . ${SRCDIR}/tools/tools/nanobsd/FlashDevice.sub
 sub_FlashDevice generic 4g
 
-# chop off excess bytes that do not align to 8 byte boundard
+# chop off excess bytes that do not align to 8 byte boundary
 NANO_MEDIASIZE=$(expr ${NANO_MEDIASIZE} - \( ${NANO_MEDIASIZE} % 8 \))
 
 setup_stage ${STAGEDIR}
@@ -46,17 +46,17 @@ setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR}
 
-echo "-S115200 -D" > ${STAGEDIR}/boot.config
+echo "-S${SERIAL_SPEED} -D" > ${STAGEDIR}/boot.config
 
 cat > ${STAGEDIR}/boot/loader.conf << EOF
 kern.geom.part.check_integrity=0
 boot_multicons="YES"
 boot_serial="YES"
 console="comconsole,vidconsole"
-comconsole_speed="115200"
+comconsole_speed="${SERIAL_SPEED}"
 EOF
 
-sed -i '' -e 's:</system>:<enableserial/><use_mfs_tmpvar/></system>:' \
+sed -i '' -e "s:</system>:${SERIAL_CONFIG}<use_mfs_tmpvar/></system>:" \
     ${STAGEDIR}${CONFIG_XML}
 
 sed -i "" -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${STAGEDIR}/etc/ttys

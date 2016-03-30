@@ -33,12 +33,6 @@ set -e
 SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${ARCH}.img"
 VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
 
-SERIAL_SPEED="115200"
-
-SERIAL_CONFIG="<enableserial>1</enableserial>"
-SERIAL_CONFIG="${SERIAL_CONFIG}<serialspeed>${SERIAL_SPEED}</serialspeed>"
-SERIAL_CONFIG="${SERIAL_CONFIG}<primaryconsole>serial</primaryconsole>"
-
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
 
