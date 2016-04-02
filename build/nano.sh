@@ -148,7 +148,7 @@ setup_partition()
 	echo "/dev/ufs/${2} / ufs rw,async,noatime 1 1" > ${4}/etc/fstab
 
 	bsdlabel -w -B -b ${4}/boot/boot ${1}
-	newfs -b 4096 -f 512 -i 8192 -O1 -U ${1}a
+	newfs -b 4096 -f 512 -i 8192 -U ${1}a
 	tunefs -L ${2} ${1}a
 	mount -o async ${1}a ${3}
 	df -i ${3}
