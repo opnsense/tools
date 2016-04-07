@@ -8,7 +8,6 @@ options		EM_MULTIQUEUE
 options		MROUTING
 options		PPS_SYNC
 options		TCP_SIGNATURE
-options		DEVICE_POLLING
 options		IPFIREWALL_DEFAULT_TO_ACCEPT
 options		IPFIREWALL_VERBOSE
 options		IPSTEALTH
