@@ -50,14 +50,10 @@ device		siba_bwn	# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
 device		bwn		# Broadcom BCM43xx IEEE 802.11b/g wireless network driver
 device		run		# Ralink RT2700U/RT2800U/RT3000U USB 802.11agn
 
-
-device		carp
-device		gre
 device		netmap
 device		pf
 device		pflog
 device		pfsync
-device		tap
 
 # netgraph(4) system
 options		NETGRAPH
