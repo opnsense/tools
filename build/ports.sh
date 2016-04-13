@@ -84,7 +84,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
 
 	echo -n ">>> Building \${PORT_ORIGIN}... "
 
-	if pkg query %o \${PORT_ORIGIN} > /dev/null; then
+	if pkg query %n \${PORT_ORIGIN##*/} > /dev/null; then
 		# lock the package to keep build deps
 		pkg lock -qy \${PORT_ORIGIN}
 		echo "skipped."
@@ -92,12 +92,6 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
 	fi
 
 	make -C ${PORTSDIR}/\${PORT_ORIGIN} clean all install
-
-	if ! pkg query %o \${PORT_ORIGIN} > /dev/null; then
-		make -C ${PORTSDIR}/\${PORT_ORIGIN} deinstall
-		echo ">>> Error: origin mismatch for \${PORT_ORIGIN}"
-		exit 1
-	fi
 done
 EOF
 
