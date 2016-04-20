@@ -422,7 +422,8 @@ install_packages()
 		for PKG in $({
 			cd ${BASEDIR}
 			# find all package files, omitting plugins
-			find .${PACKAGESDIR}/All -type f \! -name "os-*"
+			find .${PACKAGESDIR}/All -type f \
+			    \! -name "os-*" \! -name "ospriv-*"
 		}); do
 			# Adds all available packages and removes the
 			# ones that cannot be installed due to missing
