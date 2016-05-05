@@ -43,4 +43,3 @@ setup_packages ${STAGEDIR}
 setup_mtree ${STAGEDIR}
 setup_entropy ${STAGEDIR}
 setup_memstick ${STAGEDIR} ${VGAIMG} ${LABEL}
-
