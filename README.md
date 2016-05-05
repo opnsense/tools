@@ -108,11 +108,11 @@ A cdrom live image is created using:
 
     # make iso
 
-A serial memstic image for is created using:
+A serial memstick image for is created using:
 
     # make serial
 
-A vga memstic image for is created using:
+A vga memstick image for is created using:
 
     # make vga
 
@@ -177,12 +177,13 @@ Available clean options are:
 * distfiles:	remove the distfiles set
 * iso:		remove iso image
 * kernel:	remove the kernel set
-* memstick:	remove memstick images
 * nano:		remove nano image
 * packages:	remove the packages set
 * release:	remove the release set
+* serial:	remove serial image
 * src:		reset the kernel/base build directory
 * stage:	reset the main staging area
+* vga:		remove vga image
 
 The ports tree has a few of our modifications and is sometimes a
 bit ahead of FreeBSD.  In order to keep the local changes, a skimming

@@ -34,7 +34,7 @@ VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
 
-sh ./clean.sh memstick
+sh ./clean.sh vga
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

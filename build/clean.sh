@@ -51,11 +51,6 @@ for ARG in ${@}; do
 		rm -f ${SETSDIR}/kernel-*-${ARCH}.txz
 		rm -f ${SETSDIR}/kernel-*-${ARCH}.txz.sig
 		;;
-	memstick)
-		echo ">>> Removing memstick images"
-		rm -f ${IMAGESDIR}/*-serial-${ARCH}.img
-		rm -f ${IMAGESDIR}/*-vga-${ARCH}.img
-		;;
 	nano)
 		echo ">>> Removing nano image"
 		rm -f ${IMAGESDIR}/*-nano-${ARCH}.img
@@ -68,11 +63,19 @@ for ARG in ${@}; do
 		echo ">>> Removing release set"
 		rm -f ${SETSDIR}/release-*-${PRODUCT_FLAVOUR}-${ARCH}.tar
 		;;
+	serial)
+		echo ">>> Removing serial image"
+		rm -f ${IMAGESDIR}/*-serial-${ARCH}.img
+		;;
 	stage)
 		setup_stage ${STAGEDIR}
 		;;
 	src)
 		setup_stage /usr/obj${SRCDIR}
+		;;
+	vga)
+		echo ">>> Removing vga image"
+		rm -f ${IMAGESDIR}/*-vga-${ARCH}.img
 		;;
 	esac
 done

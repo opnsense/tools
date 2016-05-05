@@ -35,7 +35,7 @@ SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${ARCH}.img"
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
 
-sh ./clean.sh memstick
+sh ./clean.sh serial
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
