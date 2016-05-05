@@ -16431,6 +16431,7 @@
 ./usr/share/zoneinfo/Asia/Tehran
 ./usr/share/zoneinfo/Asia/Thimphu
 ./usr/share/zoneinfo/Asia/Tokyo
+./usr/share/zoneinfo/Asia/Tomsk
 ./usr/share/zoneinfo/Asia/Ulaanbaatar
 ./usr/share/zoneinfo/Asia/Urumqi
 ./usr/share/zoneinfo/Asia/Ust-Nera
@@ -16527,6 +16528,7 @@
 ./usr/share/zoneinfo/Europe/Jersey
 ./usr/share/zoneinfo/Europe/Kaliningrad
 ./usr/share/zoneinfo/Europe/Kiev
+./usr/share/zoneinfo/Europe/Kirov
 ./usr/share/zoneinfo/Europe/Lisbon
 ./usr/share/zoneinfo/Europe/Ljubljana
 ./usr/share/zoneinfo/Europe/London
