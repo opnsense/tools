@@ -47,21 +47,7 @@ setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR}
-
-echo "-S${SERIAL_SPEED} -D" > ${STAGEDIR}/boot.config
-
-cat > ${STAGEDIR}/boot/loader.conf << EOF
-kern.geom.part.check_integrity=0
-boot_multicons="YES"
-boot_serial="YES"
-console="comconsole,vidconsole"
-comconsole_speed="${SERIAL_SPEED}"
-EOF
-
-sed -i '' -e "s:</system>:${SERIAL_CONFIG}<use_mfs_tmpvar/></system>:" \
-    ${STAGEDIR}${CONFIG_XML}
-
-sed -i "" -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${STAGEDIR}/etc/ttys
+setup_extras ${STAGEDIR} ${SELF}
 
 MD=$(mdconfig -a -t swap -s ${NANO_MEDIASIZE} -x ${NANO_SECTS} -y ${NANO_HEADS})
 

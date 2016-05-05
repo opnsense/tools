@@ -43,20 +43,7 @@ setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR}
+setup_extras ${STAGEDIR} ${SELF}
 setup_mtree ${STAGEDIR}
 setup_entropy ${STAGEDIR}
-
-echo "-S${SERIAL_SPEED} -D" > ${STAGEDIR}/boot.config
-
-cat > ${STAGEDIR}/boot/loader.conf << EOF
-boot_multicons="YES"
-boot_serial="YES"
-console="comconsole,vidconsole"
-comconsole_speed="${SERIAL_SPEED}"
-EOF
-
-sed -i '' -e "s:</system>:${SERIAL_CONFIG}</system>:" ${STAGEDIR}${CONFIG_XML}
-
-sed -i '' -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${STAGEDIR}/etc/ttys
-
 setup_memstick ${STAGEDIR} ${SERIALIMG} ${LABEL}

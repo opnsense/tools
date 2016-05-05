@@ -566,6 +566,19 @@ setup_packages()
 	clean_packages ${1}
 }
 
+setup_extras()
+{
+	if [ ! -f ${CONFIGDIR}/extras.conf ]; then
+		return
+	fi
+
+	. ${CONFIGDIR}/extras.conf
+
+	if type ${2}_hook > /dev/null; then
+		${2}_hook ${1}
+	fi
+}
+
 setup_mtree()
 {
 	echo ">>> Creating mtree summary of files present..."

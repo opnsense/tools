@@ -42,6 +42,7 @@ setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR}
+setup_extras ${STAGEDIR} ${SELF}
 setup_mtree ${STAGEDIR}
 setup_entropy ${STAGEDIR}
 
