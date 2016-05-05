@@ -574,8 +574,10 @@ setup_extras()
 
 	. ${CONFIGDIR}/extras.conf
 
-	if type ${2}_hook > /dev/null; then
+	if [ -n "$(type ${2}_hook 2> /dev/null)" ]; then
+		echo ">>> Begin extra: ${2}_hook"
 		${2}_hook ${1}
+		echo ">>> End extra: ${2}_hook"
 	fi
 }
 
