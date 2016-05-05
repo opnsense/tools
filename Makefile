@@ -1,6 +1,6 @@
-STEPS=		base chroot clean core distfiles kernel iso \
-		memstick nano plugins ports prefetch rebase \
-		regress release skim
+STEPS=		base chroot clean core distfiles kernel \
+		iso nano plugins ports prefetch rebase \
+		regress release serial skim vga
 .PHONY:		${STEPS}
 
 PAGER?=		less
@@ -49,8 +49,8 @@ ports distfiles: base
 plugins: ports
 core: plugins
 packages: core
-iso memstick nano: packages kernel
-everything release: iso memstick nano
+iso serial vga nano: packages kernel
+everything release: iso serial vga nano
 
 # Expand target arguments for the script append:
 

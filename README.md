@@ -108,9 +108,13 @@ A cdrom live image is created using:
 
     # make iso
 
-A memstick image for VGA and serial is created using:
+A serial memstic image for is created using:
 
-    # make memstick
+    # make serial
+
+A vga memstic image for is created using:
+
+    # make vga
 
 A direct disk image in NanoBSD style is created using:
 

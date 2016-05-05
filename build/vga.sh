@@ -1,7 +1,6 @@
 #!/bin/sh
 
 # Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
-# Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,7 +29,6 @@ set -e
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${ARCH}.img"
 VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
 
 # rewrite the disk label, because we're install media
@@ -43,50 +41,6 @@ setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_packages ${STAGEDIR}
 setup_mtree ${STAGEDIR}
-
-echo ">>> Building memstick image(s)..."
-
-cat > ${STAGEDIR}/etc/fstab << EOF
-# Device	Mountpoint	FStype	Options	Dump	Pass#
-/dev/ufs/${LABEL}	/	ufs	ro,noatime	1	1
-tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
-EOF
-
 setup_entropy ${STAGEDIR}
+setup_memstick ${STAGEDIR} ${VGAIMG} ${LABEL}
 
-makefs -t ffs -B little -o label=${LABEL} ${VGAIMG} ${STAGEDIR}
-
-echo "-S${SERIAL_SPEED} -D" > ${STAGEDIR}/boot.config
-
-cat > ${STAGEDIR}/boot/loader.conf << EOF
-boot_multicons="YES"
-boot_serial="YES"
-console="comconsole,vidconsole"
-comconsole_speed="${SERIAL_SPEED}"
-EOF
-
-sed -i '' -e "s:</system>:${SERIAL_CONFIG}</system>:" ${STAGEDIR}${CONFIG_XML}
-
-sed -i '' -Ee 's:^ttyu0:ttyu0	"/usr/libexec/getty std.9600"	cons25	on  secure:' ${STAGEDIR}/etc/ttys
-
-setup_entropy ${STAGEDIR}
-
-makefs -t ffs -B little -o label=${LABEL} ${SERIALIMG} ${STAGEDIR}
-
-setup_bootcode()
-{
-	local dev
-
-	dev=$(mdconfig -a -t vnode -f "${1}")
-	gpart create -s BSD "${dev}"
-	gpart bootcode -b "${STAGEDIR}"/boot/boot "${dev}"
-	gpart add -t freebsd-ufs "${dev}"
-	mdconfig -d -u "${dev}"
-}
-
-setup_bootcode ${VGAIMG}
-setup_bootcode ${SERIALIMG}
-
-echo "done:"
-
-ls -lah ${IMAGESDIR}/*
