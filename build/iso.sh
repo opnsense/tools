@@ -27,6 +27,8 @@
 
 set -e
 
+SELF=iso
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 CDROM="${IMAGESDIR}/${PRODUCT_RELEASE}-cdrom-${ARCH}.iso"
@@ -34,7 +36,7 @@ CDROM="${IMAGESDIR}/${PRODUCT_RELEASE}-cdrom-${ARCH}.iso"
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
 
-sh ./clean.sh iso
+sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

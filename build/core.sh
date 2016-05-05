@@ -27,11 +27,11 @@
 
 set -e
 
+SELF=core
+
 . ./common.sh && $(${SCRUB_ARGS})
 
-CORE_MARKER="core"
-
-check_packages ${CORE_MARKER} ${@}
+check_packages ${SELF} ${@}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
@@ -67,4 +67,4 @@ for CORE_TAG in ${CORE_TAGS}; do
 	custom_packages ${STAGEDIR} ${COREDIR} "${CORE_ARGS}"
 done
 
-bundle_packages ${STAGEDIR} ${CORE_MARKER}
+bundle_packages ${STAGEDIR} ${SELF}

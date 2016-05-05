@@ -27,6 +27,8 @@
 
 set -e
 
+SELF=base
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 BASE_SET=$(find ${SETSDIR} -name "base-*-${ARCH}.txz")
@@ -40,7 +42,7 @@ git_describe ${SRCDIR}
 
 BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${ARCH}
 
-sh ./clean.sh base
+sh ./clean.sh ${SELF}
 
 MAKE_ARGS="SRCCONF=${CONFIGDIR}/src.conf COMPILER_TYPE=clang __MAKE_CONF="
 ENV_FILTER="env -i USER=${USER} LOGNAME=${LOGNAME} HOME=${HOME} \

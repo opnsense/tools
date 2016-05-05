@@ -27,12 +27,13 @@
 
 set -e
 
+SELF=ports
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 PORTS_LIST=$(cat ${CONFIGDIR}/ports.conf)
-PORTS_MARKER="ports"
 
-check_packages ${PORTS_MARKER} ${@}
+check_packages ${SELF} ${@}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
@@ -55,7 +56,7 @@ fi
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
-if ! chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTS_MARKER=; fi
+if ! chroot ${STAGEDIR} /bin/sh -es << EOF; then SELF=; fi
 # overwrites the ports tree variable, behaviour is unwanted...
 unset STAGEDIR
 # ...and this unbreaks the nmap build
@@ -100,12 +101,12 @@ trap - 2
 
 echo ">>> Creating binary packages..."
 
-chroot ${STAGEDIR} /bin/sh -es << EOF && bundle_packages ${STAGEDIR} ${PORTS_MARKER}
+chroot ${STAGEDIR} /bin/sh -es << EOF && bundle_packages ${STAGEDIR} ${SELF}
 pkg autoremove -y
 pkg create -nao ${PACKAGESDIR}/All -f txz
 EOF
 
-if [ -z "${PORTS_MARKER}" ]; then
+if [ -z "${SELF}" ]; then
 	echo ">>> The ports build did not finish properly :("
 	exit 1
 fi

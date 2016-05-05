@@ -27,11 +27,11 @@
 
 set -e
 
+SELF=plugins
+
 . ./common.sh && $(${SCRUB_ARGS})
 
-PLUGINS_MARKER="plugins"
-
-check_packages ${PLUGINS_MARKER} ${@}
+check_packages ${SELF} ${@}
 
 if [ -z "${*}" ]; then
 	PLUGINS_LIST=$(make -C ${PLUGINSDIR} list)
@@ -54,4 +54,4 @@ for PLUGIN in ${PLUGINS_LIST}; do
 	custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN}
 done
 
-bundle_packages ${STAGEDIR} ${PLUGINS_MARKER}
+bundle_packages ${STAGEDIR} ${SELF}

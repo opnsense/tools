@@ -27,6 +27,8 @@
 
 set -e
 
+SELF=regress
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 setup_stage ${STAGEDIR}

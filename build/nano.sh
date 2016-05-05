@@ -29,11 +29,13 @@
 
 set -e
 
+SELF=nano
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${ARCH}.img"
 
-sh ./clean.sh nano
+sh ./clean.sh ${SELF}
 
 . ${SRCDIR}/tools/tools/nanobsd/FlashDevice.sub
 sub_FlashDevice generic 4g

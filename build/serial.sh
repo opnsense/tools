@@ -28,6 +28,8 @@
 
 set -e
 
+SELF=serial
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${ARCH}.img"
@@ -35,7 +37,7 @@ SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${ARCH}.img"
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
 
-sh ./clean.sh serial
+sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

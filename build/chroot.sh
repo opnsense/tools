@@ -27,6 +27,8 @@
 
 set -e
 
+SELF=chroot
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 echo ">>> chroot'ing into ${STAGEDIR}..."

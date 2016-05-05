@@ -27,6 +27,8 @@
 
 set -e
 
+SELF=skim
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 export __MAKE_CONF=${CONFIGDIR}/make.conf

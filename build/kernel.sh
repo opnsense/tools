@@ -27,6 +27,8 @@
 
 set -e
 
+SELF=kernel
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${ARCH}.txz")
@@ -40,7 +42,7 @@ git_describe ${SRCDIR}
 
 KERNEL_SET=${SETSDIR}/kernel-${REPO_VERSION}-${ARCH}
 
-sh ./clean.sh kernel
+sh ./clean.sh ${SELF}
 
 BUILD_KERNEL="SMP"
 

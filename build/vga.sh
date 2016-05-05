@@ -27,6 +27,8 @@
 
 set -e
 
+SELF=vga
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
@@ -34,7 +36,7 @@ VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
 
-sh ./clean.sh vga
+sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

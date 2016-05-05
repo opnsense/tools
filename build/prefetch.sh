@@ -27,6 +27,8 @@
 
 set -e
 
+SELF=prefetch
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 for ARG in ${@}; do

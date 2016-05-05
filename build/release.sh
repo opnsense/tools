@@ -27,6 +27,8 @@
 
 set -e
 
+SELF=release
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 # make sure the all-encompassing package is a release, too
@@ -38,7 +40,7 @@ if [ ! -f ${STAGEDIR}${PACKAGESDIR}/All/${PRODUCT_TYPE}-${PRODUCT_VERSION}.txz ]
 	exit 1
 fi
 
-sh ./clean.sh release
+sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR}
 

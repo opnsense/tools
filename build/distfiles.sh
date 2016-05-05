@@ -27,6 +27,8 @@
 
 set -e
 
+SELF=distfiles
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 PORTS_LIST="ports-mgmt/pkg

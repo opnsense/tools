@@ -27,6 +27,8 @@
 
 set -e
 
+SELF=clean
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 for ARG in ${@}; do

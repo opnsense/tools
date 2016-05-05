@@ -27,6 +27,8 @@
 
 set -e
 
+SELF=rebase
+
 . ./common.sh && $(${SCRUB_ARGS})
 
 BASE_OBSOLETE=$(find ${SETSDIR} -name "base-*-${ARCH}.obsolete")
