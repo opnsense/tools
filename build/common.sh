@@ -47,7 +47,7 @@ while getopts C:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:v: OPT; do
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	d)
-		export PRODUCT_DEVICE=${PORTARG}
+		export PRODUCT_DEVICE=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	f)
