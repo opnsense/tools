@@ -35,15 +35,19 @@ usage()
 	echo "Usage: ${0} -f flavour -n name -v version -R freebsd-ports.git" >&2
 	echo "	-C core.git -P ports.git -S src.git -T tools.git -t type" >&2
 	echo "	-k /path/to/privkey -K /path/to/pubkey -m web_mirror" >&2
-	echo "  [ -l customsigncheck -L customsigncommand ]" >&2
+	echo "  -d device [ -l customsigncheck -L customsigncommand ]" >&2
 	echo "  [ -o stagedirprefix ] [...]" >&2
 	exit 1
 }
 
-while getopts C:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:v: OPT; do
+while getopts C:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:v: OPT; do
 	case ${OPT} in
 	C)
 		export COREDIR=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	d)
+		export PRODUCT_DEVICE=${PORTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	f)
@@ -130,6 +134,7 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_MIRROR}" -o \
     -z "${PRODUCT_PRIVKEY}" -o \
     -z "${PRODUCT_PUBKEY}" -o \
+    -z "${PRODUCT_DEVICE}" -o \
     -z "${TOOLSDIR}" -o \
     -z "${PLUGINSDIR}" -o \
     -z "${PORTSDIR}" -o \
@@ -162,6 +167,7 @@ export TARGETARCH=${ARCH}
 # define target directories
 export CONFIGDIR="${TOOLSDIR}/config/${PRODUCT_SETTINGS}"
 export STAGEDIR="${STAGEDIRPREFIX}${CONFIGDIR}/${PRODUCT_FLAVOUR}"
+export DEVICEDIR="${TOOLSDIR}/device"
 export IMAGESDIR="/tmp/images"
 export SETSDIR="/tmp/sets"
 export PACKAGESDIR="/.pkg"
@@ -566,7 +572,7 @@ setup_packages()
 	clean_packages ${1}
 }
 
-setup_extras()
+_setup_extras_generic()
 {
 	if [ ! -f ${CONFIGDIR}/extras.conf ]; then
 		return
@@ -579,6 +585,27 @@ setup_extras()
 		${2}_hook ${1}
 		echo ">>> End extra: ${2}_hook"
 	fi
+}
+
+_setup_extras_device()
+{
+	if [ ! -f ${DEVICEDIR}/${PRODUCT_DEVICE}.conf ]; then
+		return
+	fi
+
+	. ${DEVICEDIR}/${PRODUCT_DEVICE}.conf
+
+	if [ -n "$(type ${2}_hook 2> /dev/null)" ]; then
+		echo ">>> Begin ${PRODUCT_DEVICE} extra: ${2}_hook"
+		${2}_hook ${1}
+		echo ">>> End ${PRODUCT_DEVICE} extra: ${2}_hook"
+	fi
+}
+
+setup_extras()
+{
+	_setup_extras_generic ${@}
+	_setup_extras_device ${@}
 }
 
 setup_mtree()
