@@ -74,6 +74,7 @@ All build steps are invoked via make(1):
 Available build options are:
 
 * CONFIG: 	reads the below from the specified file
+* DEVICE:	loads device-specific modifications, e.g. "a10" (default)
 * FLAVOUR:	"OpenSSL" (default), "LibreSSL"
 * MIRRORS:	a list of mirrors to prefetch sets from
 * NAME:		"OPNsense" (default)
@@ -122,6 +123,22 @@ A direct disk image in NanoBSD style is created using:
 
 About other scripts and tweaks
 ==============================
+
+Device-specific settings can be found and added in the
+device/ directory.  Of special interest are hooks into
+the build process for required non-default settings for
+image builds.  The .conf files are shell scrips that can
+define hooks in the form of e.g.:
+
+    serial_hook()
+    {
+        touch ${STAGEDIR}/my_custom_file
+    }
+
+These hooks are available for all image types, namely
+iso, nano, serial, and vga.  Device-specific hooks are
+loaded after config-specific hooks and both of them can
+coexist in a given build.
 
 Before building images, you can run the regression tests
 to check the integrity of your core.git modifications plus
