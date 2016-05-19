@@ -111,3 +111,7 @@ device		speaker
 device		mxge
 device		cxgb
 device		cxgbe
+
+# HardenedBSD goodies
+options		PAX
+options		PAX_ASLR
