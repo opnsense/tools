@@ -82,7 +82,7 @@ SWAPARGS=
 
 if [ -n "${VMSWAP}" ]; then
 	SWAPARGS="-p freebsd-swap/swapfs::${VMSWAP}"
-	cat > ${STAGEDIR}/mnt/etc/fstab << EOF
+	cat >> ${STAGEDIR}/mnt/etc/fstab << EOF
 /dev/gpt/swapfs	none		swap	sw	0	0
 EOF
 fi
