@@ -150,10 +150,10 @@ export PRODUCT_SIGNCHK=${PRODUCT_SIGNCHK:-"${TOOLSDIR}/scripts/pkg_fingerprint.s
 export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
 
 # serial bootstrapping
+export SERIAL_SPEED="115200"
 SERIAL_CONFIG="<enableserial>1</enableserial>"
 SERIAL_CONFIG="${SERIAL_CONFIG}<serialspeed>${SERIAL_SPEED}</serialspeed>"
 export SERIAL_CONFIG="${SERIAL_CONFIG}<primaryconsole>serial</primaryconsole>"
-export SERIAL_SPEED="115200"
 
 # misc. foo
 export CONFIG_PKG="/usr/local/etc/pkg/repos/origin.conf"

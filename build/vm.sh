@@ -72,6 +72,7 @@ cp -r ${STAGEDIR}/mnt/boot ${STAGEDIR}
 setup_kernel ${STAGEDIR}/mnt
 setup_packages ${STAGEDIR}/mnt
 setup_extras ${STAGEDIR}/mnt ${SELF}
+setup_entropy ${STAGEDIR}/mnt
 
 cat > ${STAGEDIR}/mnt/etc/fstab << EOF
 # Device	Mountpoint	FStype	Options	Dump	Pass#
