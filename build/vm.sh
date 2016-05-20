@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,61 +27,69 @@
 
 set -e
 
-SELF=clean
+SELF=vm
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-for ARG in ${@}; do
-	case ${ARG} in
-	base)
-		echo ">>> Removing base set"
-		rm -f ${SETSDIR}/base-*-${ARCH}.txz
-		rm -f ${SETSDIR}/base-*-${ARCH}.txz.sig
-		rm -f ${SETSDIR}/base-*-${ARCH}.obsolete
-		rm -f ${SETSDIR}/base-*-${ARCH}.obsolete.sig
-		;;
-	distfiles)
-		echo ">>> Removing distfiles set"
-		rm -f ${SETSDIR}/distfiles-*.tar
-		;;
-	iso)
-		echo ">>> Removing iso image"
-		rm -f ${IMAGESDIR}/*-cdrom-${ARCH}.iso
-		;;
-	kernel)
-		echo ">>> Removing kernel set"
-		rm -f ${SETSDIR}/kernel-*-${ARCH}.txz
-		rm -f ${SETSDIR}/kernel-*-${ARCH}.txz.sig
-		;;
-	nano)
-		echo ">>> Removing nano image"
-		rm -f ${IMAGESDIR}/*-nano-${ARCH}.img
-		;;
-	packages)
-		echo ">>> Removing packages set"
-		rm -f ${SETSDIR}/packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar
-		;;
-	release)
-		echo ">>> Removing release set"
-		rm -f ${SETSDIR}/release-*-${PRODUCT_FLAVOUR}-${ARCH}.tar
-		;;
-	serial)
-		echo ">>> Removing serial image"
-		rm -f ${IMAGESDIR}/*-serial-${ARCH}.img
-		;;
-	stage)
-		setup_stage ${STAGEDIR}
-		;;
-	src)
-		setup_stage /usr/obj${SRCDIR}
-		;;
-	vga)
-		echo ">>> Removing vga image"
-		rm -f ${IMAGESDIR}/*-vga-${ARCH}.img
-		;;
-	vm)
-		echo ">>> Removing vm image"
-		rm -f ${IMAGESDIR}/*-vm-${ARCH}.*
-		;;
-	esac
-done
+VMFORMAT="vmdk"
+VMSIZE="20G"
+VMSWAP="1G"
+
+if [ -n "${1}" ]; then
+	VMFORMAT=${1}
+fi
+
+if [ -n "${2}" ]; then
+	VMSIZE=${2}
+fi
+
+if [ -n "${3}" ]; then
+	if [ "${3}" != "off" ]; then
+		VMSWAP=${3}
+	else
+		VMSWAP=
+	fi
+fi
+
+VMIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vm-${ARCH}.${VMFORMAT}"
+VMBASE="${STAGEDIR}/vmbase"
+
+sh ./clean.sh ${SELF}
+
+setup_stage ${STAGEDIR}
+
+truncate -s ${VMSIZE} ${VMBASE}
+MD=$(mdconfig -f ${VMBASE})
+newfs /dev/${MD}
+mkdir ${STAGEDIR}/mnt
+mount /dev/${MD} ${STAGEDIR}/mnt
+
+setup_base ${STAGEDIR}/mnt
+
+# need these again later
+cp -r ${STAGEDIR}/mnt/boot ${STAGEDIR}
+
+setup_kernel ${STAGEDIR}/mnt
+setup_packages ${STAGEDIR}/mnt
+setup_extras ${STAGEDIR}/mnt ${SELF}
+
+cat > ${STAGEDIR}/mnt/etc/fstab << EOF
+# Device	Mountpoint	FStype	Options	Dump	Pass#
+/dev/gpt/rootfs	/		ufs	rw	1	1
+EOF
+
+SWAPARGS=
+
+if [ -n "${VMSWAP}" ]; then
+	SWAPARGS="-p freebsd-swap/swapfs::${VMSWAP}"
+	cat > ${STAGEDIR}/mnt/etc/fstab << EOF
+/dev/gpt/swapfs	none		swap	sw	0	0
+EOF
+fi
+
+umount ${STAGEDIR}/mnt
+mdconfig -d -u ${MD}
+
+mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} -b ${STAGEDIR}/boot/pmbr \
+    -p freebsd-boot/bootfs:=${STAGEDIR}/boot/gptboot \
+    -p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS}

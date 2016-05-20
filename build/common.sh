@@ -628,7 +628,7 @@ setup_stage()
 {
 	echo ">>> Setting up stage in ${1}"
 
-	local MOUNTDIRS="/dev ${SRCDIR} ${PORTSDIR} ${COREDIR} ${PLUGINSDIR}"
+	MOUNTDIRS="/dev /mnt ${SRCDIR} ${PORTSDIR} ${COREDIR} ${PLUGINSDIR}"
 
 	# might have been a chroot
 	for DIR in ${MOUNTDIRS}; do

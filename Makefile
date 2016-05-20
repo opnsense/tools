@@ -1,6 +1,6 @@
 STEPS=		base chroot clean core distfiles kernel \
 		iso nano plugins ports prefetch rebase \
-		regress release serial skim vga
+		regress release serial skim vga vm
 .PHONY:		${STEPS}
 
 PAGER?=		less
@@ -50,8 +50,8 @@ ports distfiles: base
 plugins: ports
 core: plugins
 packages: core
-iso serial vga nano: packages kernel
-everything release: iso serial vga nano
+iso vm serial vga nano: packages kernel
+everything release: iso vm serial vga nano
 
 # Expand target arguments for the script append:
 
@@ -63,7 +63,7 @@ ${TARGET}: ${_TARGET}
 .endif
 .endfor
 
-.if defined(VERBOSE)
+.if "${VERBOSE}" != ""
 VERBOSE_FLAGS=	-x
 .endif
 

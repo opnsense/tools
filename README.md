@@ -109,17 +109,21 @@ A cdrom live image is created using:
 
     # make iso
 
-A serial memstick image for is created using:
+A serial memstick image is created using:
 
     # make serial
 
-A vga memstick image for is created using:
+A vga memstick image is created using:
 
     # make vga
 
-A direct disk image in NanoBSD style is created using:
+A flash card disk image (NanoBSD) is created using:
 
     # make nano
+
+A virtual machine disk image is created using:
+
+    # make vm
 
 About other scripts and tweaks
 ==============================
@@ -175,6 +179,23 @@ Package sets (may be signed depending on whether the key is
 found under /root) ready for web server deployment are automatically
 generated and modified by ports.sh and core.sh.
 
+Virtual machine images come in varying disk formats and sizes.
+The default format is vmdk with 20G and 1G swap. If you want
+to change that you can manually alter the invoke using:
+
+    # make vm-<format>[,<size>[,<swap>]]
+
+Available virtual machine disk formats are:
+
+* qcow:		Qemu, KVM (legacy format)
+* qcow2:	Qemu, KVM (not backwards-compatible)
+* raw:		Unformatted (sector by sector)
+* vhd:		VirtualPC, Hyper-V, Xen (dynamic size)
+* vhdf:		Azure, VirtualPC, Hyper-V, Xen (fixed size)
+* vmdk:		VMWare, VirtualBox (dynamic size)
+
+The swap argument is either its size or set to "off" to disable.
+
 Release sets can be built using:
 
     # make release VERSION=product.version.number_revision
@@ -190,17 +211,18 @@ via the clean script:
 
 Available clean options are:
 
-* base:		remove the base set
-* distfiles:	remove the distfiles set
+* base:		remove base set
+* distfiles:	remove distfiles set
 * iso:		remove iso image
-* kernel:	remove the kernel set
+* kernel:	remove kernel set
 * nano:		remove nano image
-* packages:	remove the packages set
-* release:	remove the release set
+* packages:	remove packages set
+* release:	remove release set
 * serial:	remove serial image
-* src:		reset the kernel/base build directory
-* stage:	reset the main staging area
+* src:		reset kernel/base build directory
+* stage:	reset main staging area
 * vga:		remove vga image
+* vm:		remove vm image
 
 The ports tree has a few of our modifications and is sometimes a
 bit ahead of FreeBSD.  In order to keep the local changes, a skimming
