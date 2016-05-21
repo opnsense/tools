@@ -142,9 +142,9 @@ define hooks in the form of e.g.:
     }
 
 These hooks are available for all image types, namely
-cdrom, nano, serial, and vga.  Device-specific hooks are
-loaded after config-specific hooks and both of them can
-coexist in a given build.
+cdrom, nano, serial, vga and vm.  Device-specific hooks
+are loaded after config-specific hooks and both of them
+can coexist in a given build.
 
 Before building images, you can run the regression tests
 to check the integrity of your core.git modifications plus
