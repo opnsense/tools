@@ -136,7 +136,8 @@ define hooks in the form of e.g.:
 
     serial_hook()
     {
-        touch ${STAGEDIR}/my_custom_file
+        # ${1} is the target file system root
+        touch ${1}/my_custom_file
     }
 
 These hooks are available for all image types, namely
