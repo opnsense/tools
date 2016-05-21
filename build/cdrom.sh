@@ -27,9 +27,16 @@
 
 set -e
 
-SELF=iso
+SELF=cdrom
 
 . ./common.sh && $(${SCRUB_ARGS})
+
+CDROM=$(find ${IMAGESDIR} -name "*-cdrom-${ARCH}.*")
+
+if [ -f "${CDROM}" -a -z "${1}" ]; then
+	echo ">>> Reusing cdrom image: ${CDROM}"
+	exit 0
+fi
 
 CDROM="${IMAGESDIR}/${PRODUCT_RELEASE}-cdrom-${ARCH}.iso"
 

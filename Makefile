@@ -1,5 +1,5 @@
-STEPS=		base chroot clean core distfiles kernel \
-		iso nano plugins ports prefetch rebase \
+STEPS=		base cdrom chroot clean core distfiles \
+		kernel nano plugins ports prefetch rebase \
 		regress release serial skim vga vm
 .PHONY:		${STEPS}
 
@@ -50,8 +50,8 @@ ports distfiles: base
 plugins: ports
 core: plugins
 packages: core
-iso vm serial vga nano: packages kernel
-everything release: iso vm serial vga nano
+cdrom vm serial vga nano: packages kernel
+everything release: cdrom vm serial vga nano
 
 # Expand target arguments for the script append:
 

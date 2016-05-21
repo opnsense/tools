@@ -37,13 +37,13 @@ for ARG in ${@}; do
 		echo ">>> Removing base set"
 		rm -f ${SETSDIR}/base-*-${ARCH}.*
 		;;
+	cdrom)
+		echo ">>> Removing cdrom image"
+		rm -f ${IMAGESDIR}/*-cdrom-${ARCH}.*
+		;;
 	distfiles)
 		echo ">>> Removing distfiles set"
 		rm -f ${SETSDIR}/distfiles-*.tar
-		;;
-	iso)
-		echo ">>> Removing iso image"
-		rm -f ${IMAGESDIR}/*-cdrom-${ARCH}.iso
 		;;
 	kernel)
 		echo ">>> Removing kernel set"
@@ -51,7 +51,7 @@ for ARG in ${@}; do
 		;;
 	nano)
 		echo ">>> Removing nano image"
-		rm -f ${IMAGESDIR}/*-nano-${ARCH}.img
+		rm -f ${IMAGESDIR}/*-nano-${ARCH}.*
 		;;
 	packages)
 		echo ">>> Removing packages set"
@@ -63,7 +63,7 @@ for ARG in ${@}; do
 		;;
 	serial)
 		echo ">>> Removing serial image"
-		rm -f ${IMAGESDIR}/*-serial-${ARCH}.img
+		rm -f ${IMAGESDIR}/*-serial-${ARCH}.*
 		;;
 	stage)
 		setup_stage ${STAGEDIR}
@@ -75,7 +75,7 @@ for ARG in ${@}; do
 		;;
 	vga)
 		echo ">>> Removing vga image"
-		rm -f ${IMAGESDIR}/*-vga-${ARCH}.img
+		rm -f ${IMAGESDIR}/*-vga-${ARCH}.*
 		;;
 	vm)
 		echo ">>> Removing vm image"

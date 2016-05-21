@@ -107,7 +107,7 @@ Wrap up our core as a package:
 
 A cdrom live image is created using:
 
-    # make iso
+    # make cdrom
 
 A serial memstick image is created using:
 
@@ -141,7 +141,7 @@ define hooks in the form of e.g.:
     }
 
 These hooks are available for all image types, namely
-iso, nano, serial, and vga.  Device-specific hooks are
+cdrom, nano, serial, and vga.  Device-specific hooks are
 loaded after config-specific hooks and both of them can
 coexist in a given build.
 
@@ -214,7 +214,7 @@ Available clean options are:
 
 * base:		remove base set
 * distfiles:	remove distfiles set
-* iso:		remove iso image
+* cdrom:	remove cdrom image
 * kernel:	remove kernel set
 * nano:		remove nano image
 * packages:	remove packages set
