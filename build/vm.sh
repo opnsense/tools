@@ -31,6 +31,8 @@ SELF=vm
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+check_images ${SELF} ${@}
+
 VMFORMAT="vmdk"
 VMSIZE="20G"
 VMSWAP="1G"
@@ -90,6 +92,10 @@ fi
 umount ${STAGEDIR}/mnt
 mdconfig -d -u ${MD}
 
+echo -n ">>> Building vm image... "
+
 mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} -b ${STAGEDIR}/boot/pmbr \
     -p freebsd-boot/bootfs:=${STAGEDIR}/boot/gptboot \
     -p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS}
+
+echo "done"

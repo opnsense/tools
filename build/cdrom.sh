@@ -31,12 +31,7 @@ SELF=cdrom
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-CDROM=$(find ${IMAGESDIR} -name "*-cdrom-${ARCH}.*")
-
-if [ -f "${CDROM}" -a -z "${1}" ]; then
-	echo ">>> Reusing cdrom image: ${CDROM}"
-	exit 0
-fi
+check_images ${SELF} ${@}
 
 CDROM="${IMAGESDIR}/${PRODUCT_RELEASE}-cdrom-${ARCH}.iso"
 
@@ -53,7 +48,7 @@ setup_extras ${STAGEDIR} ${SELF}
 setup_mtree ${STAGEDIR}
 setup_entropy ${STAGEDIR}
 
-echo -n ">>> Building ISO image... "
+echo -n ">>> Building cdrom image... "
 
 # must be upper case:
 LABEL=$(echo ${LABEL} | tr '[:lower:]' '[:upper:]')
@@ -67,6 +62,4 @@ EOF
 makefs -t cd9660 -o bootimage="i386;${STAGEDIR}/boot/cdboot" \
     -o no-emul-boot -o label=${LABEL} -o rockridge ${CDROM} ${STAGEDIR}
 
-echo "done:"
-
-ls -lah ${IMAGESDIR}/*
+echo "done"

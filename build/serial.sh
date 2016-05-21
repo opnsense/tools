@@ -32,6 +32,8 @@ SELF=serial
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+check_images ${SELF} ${@}
+
 SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${ARCH}.img"
 
 # rewrite the disk label, because we're install media

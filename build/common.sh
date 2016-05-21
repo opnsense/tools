@@ -294,7 +294,7 @@ setup_chroot()
 setup_marker()
 {
 	# Let opnsense-update(8) know it's up to date
-	local MARKER="/usr/local/opnsense/version/opnsense-update.${3}"
+	MARKER="/usr/local/opnsense/version/opnsense-update.${3}"
 
 	if [ ! -f ${1}${MARKER} ]; then
 		# first call means bootstrap the marker file
@@ -380,19 +380,33 @@ generate_signature()
 	fi
 }
 
-check_packages()
+check_images()
 {
-	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar")
-	MARKER=${1}
+	SELF=${1}
 	SKIP=${2}
 
-	if [ -z "${MARKER}" -o -z "${PACKAGESET}" -o -n "${SKIP}" ]; then
+	IMAGE=$(find ${IMAGESDIR} -name "*-${SELF}-${ARCH}.*")
+
+	if [ -f "${IMAGE}" -a -z "${SKIP}" ]; then
+		echo ">>> Reusing ${SELF} image: ${IMAGE}"
+		exit 0
+	fi
+}
+
+check_packages()
+{
+	SELF=${1}
+	SKIP=${2}
+
+	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar")
+
+	if [ -z "${SELF}" -o -z "${PACKAGESET}" -o -n "${SKIP}" ]; then
 		return
 	fi
 
-	DONE=$(tar tf ${PACKAGESET} | grep "^\./\.${MARKER}_done\$" || true)
+	DONE=$(tar tf ${PACKAGESET} | grep "^\./\.${SELF}_done\$" || true)
 	if [ -n "${DONE}" ]; then
-		echo ">>> Packages (${MARKER}) are up to date"
+		echo ">>> Packages (${SELF}) are up to date"
 		exit 0
 	fi
 }
@@ -512,7 +526,7 @@ EOF
 bundle_packages()
 {
 	BASEDIR=${1}
-	MARKER=${2}
+	SELF=${2}
 
 	sh ./clean.sh packages
 
@@ -529,9 +543,9 @@ bundle_packages()
 		cp ${PROGRESS} ${BASEDIR}${PACKAGESDIR}-new
 	done
 
-	if [ -n "${MARKER}" ]; then
+	if [ -n "${SELF}" ]; then
 		# add build marker to set
-		touch ${BASEDIR}${PACKAGESDIR}-new/.${MARKER}_done
+		touch ${BASEDIR}${PACKAGESDIR}-new/.${SELF}_done
 	fi
 
 	# push packages to home location

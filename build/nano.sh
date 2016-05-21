@@ -33,6 +33,8 @@ SELF=nano
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+check_images ${SELF} ${@}
+
 NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${ARCH}.img"
 
 sh ./clean.sh ${SELF}
@@ -153,9 +155,4 @@ fi
 
 # move image from RAM to output file
 dd if=/dev/${MD} of=${NANOIMG} bs=64k
-
 mdconfig -d -u ${MD}
-
-echo "done:"
-
-ls -lah ${IMAGESDIR}/*

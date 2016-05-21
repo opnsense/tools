@@ -31,6 +31,8 @@ SELF=vga
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+check_images ${SELF} ${@}
+
 VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
 
 # rewrite the disk label, because we're install media
