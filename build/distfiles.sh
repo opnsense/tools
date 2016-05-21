@@ -72,7 +72,7 @@ EOF
 # unblock SIGINT
 trap - 2
 
-sh ./clean.sh distfiles
+sh ./clean.sh ${SELF}
 
 echo -n ">>> Creating distfiles set... "
 tar -C ${STAGEDIR}${PORTSDIR} -cf \
