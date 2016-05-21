@@ -51,7 +51,9 @@ plugins: ports
 core: plugins
 packages: core
 cdrom vm serial vga nano: packages kernel
-everything release: cdrom vm serial vga nano
+sets: distfiles packages kernel
+images: cdrom nano serial vga vm
+release: images
 
 # Expand target arguments for the script append:
 

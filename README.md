@@ -37,9 +37,10 @@ Setting up a build system
 =========================
 
 Install FreeBSD 10.2-RELEASE (i386 or amd64 depending on your target arch)
-on a machine with at least 10GB of hard disk (UFS works better than ZFS)
-and at least 2GB of RAM.  All tasks require a root user.  Do the following
-to grab the repositories (overwriting standard ports and src):
+on a machine with at least 25GB of hard disk (UFS works better than ZFS)
+and at least 6GB of RAM to successfully build all standard images.  All
+tasks require a root user.  Do the following to grab the repositories
+(overwriting standard ports and src):
 
     # pkg install git
     # cd /usr
@@ -54,9 +55,9 @@ to grab the repositories (overwriting standard ports and src):
 TL;DR
 =====
 
-    # make everything
+    # make cdrom
 
-If successful, images can be found here: /tmp/images
+If successful, a cdrom image can be found here: /tmp/images
 
 Detailed build steps and options
 ================================
@@ -215,11 +216,13 @@ Available clean options are:
 * base:		remove base set
 * distfiles:	remove distfiles set
 * cdrom:	remove cdrom image
+* images:	remove all images
 * kernel:	remove kernel set
 * nano:		remove nano image
 * packages:	remove packages set
 * release:	remove release set
 * serial:	remove serial image
+* sets:		remove all sets
 * src:		reset kernel/base build directory
 * stage:	reset main staging area
 * vga:		remove vga image

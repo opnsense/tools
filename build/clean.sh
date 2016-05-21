@@ -45,6 +45,10 @@ for ARG in ${@}; do
 		echo ">>> Removing distfiles set"
 		rm -f ${SETSDIR}/distfiles-*.tar
 		;;
+	images)
+		setup_stage ${IMAGESDIR}
+		rm -r ${IMAGESDIR}
+		;;
 	kernel)
 		echo ">>> Removing kernel set"
 		rm -f ${SETSDIR}/kernel-*-${ARCH}.*
@@ -64,6 +68,10 @@ for ARG in ${@}; do
 	serial)
 		echo ">>> Removing serial image"
 		rm -f ${IMAGESDIR}/*-serial-${ARCH}.*
+		;;
+	sets)
+		setup_stage ${SETSDIR}
+		rm -r ${SETSDIR}
 		;;
 	stage)
 		setup_stage ${STAGEDIR}
