@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -42,12 +42,12 @@ fi
 
 sh ./clean.sh ${SELF}
 
-setup_stage ${STAGEDIR}
+setup_stage ${STAGEDIR} tmp work
 
 echo -n ">>> Compressing images for ${PRODUCT_RELEASE}... "
 
-mv ${IMAGESDIR}/${PRODUCT_RELEASE}-* ${STAGEDIR}
-for IMAGE in $(find ${STAGEDIR} -name "${PRODUCT_RELEASE}-*"); do
+mv ${IMAGESDIR}/${PRODUCT_RELEASE}-* ${STAGEDIR}/work
+for IMAGE in $(find ${STAGEDIR}/work -name "${PRODUCT_RELEASE}-*"); do
 	bzip2 ${IMAGE} &
 done
 wait
@@ -56,15 +56,15 @@ echo "done"
 
 echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
 
-mkdir -p ${STAGEDIR}/tmp
-cd ${STAGEDIR} && sha256 ${PRODUCT_RELEASE}-* > tmp/${PRODUCT_RELEASE}-checksums-${ARCH}.sha256
-cd ${STAGEDIR} && md5 ${PRODUCT_RELEASE}-* > tmp/${PRODUCT_RELEASE}-checksums-${ARCH}.md5
+(cd ${STAGEDIR}/work && sha256 ${PRODUCT_RELEASE}-*) \
+    > ${STAGEDIR}/tmp/${PRODUCT_RELEASE}-checksums-${ARCH}.sha256
+(cd ${STAGEDIR}/work && md5 ${PRODUCT_RELEASE}-*) \
+    > ${STAGEDIR}/tmp/${PRODUCT_RELEASE}-checksums-${ARCH}.md5
 
-mv tmp/* .
-rm -rf tmp
+mv ${STAGEDIR}/tmp/* ${STAGEDIR}/work/
 
 echo "done"
 
 echo -n ">>> Bundling images for ${PRODUCT_RELEASE}... "
-tar -cf ${SETSDIR}/release-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${ARCH}.tar .
+tar -C ${STAGEDIR}/work -cf ${SETSDIR}/release-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${ARCH}.tar .
 echo "done"

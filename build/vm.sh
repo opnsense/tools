@@ -56,12 +56,11 @@ VMBASE="${STAGEDIR}/vmbase"
 
 sh ./clean.sh ${SELF}
 
-setup_stage ${STAGEDIR}
+setup_stage ${STAGEDIR} mnt
 
 truncate -s ${VMSIZE} ${VMBASE}
 MD=$(mdconfig -f ${VMBASE})
 newfs /dev/${MD}
-mkdir ${STAGEDIR}/mnt
 mount /dev/${MD} ${STAGEDIR}/mnt
 
 setup_base ${STAGEDIR}/mnt

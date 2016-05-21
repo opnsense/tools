@@ -35,10 +35,7 @@ for ARG in ${@}; do
 	case ${ARG} in
 	base)
 		echo ">>> Removing base set"
-		rm -f ${SETSDIR}/base-*-${ARCH}.txz
-		rm -f ${SETSDIR}/base-*-${ARCH}.txz.sig
-		rm -f ${SETSDIR}/base-*-${ARCH}.obsolete
-		rm -f ${SETSDIR}/base-*-${ARCH}.obsolete.sig
+		rm -f ${SETSDIR}/base-*-${ARCH}.*
 		;;
 	distfiles)
 		echo ">>> Removing distfiles set"
@@ -50,8 +47,7 @@ for ARG in ${@}; do
 		;;
 	kernel)
 		echo ">>> Removing kernel set"
-		rm -f ${SETSDIR}/kernel-*-${ARCH}.txz
-		rm -f ${SETSDIR}/kernel-*-${ARCH}.txz.sig
+		rm -f ${SETSDIR}/kernel-*-${ARCH}.*
 		;;
 	nano)
 		echo ">>> Removing nano image"
@@ -71,9 +67,11 @@ for ARG in ${@}; do
 		;;
 	stage)
 		setup_stage ${STAGEDIR}
+		rm -r ${STAGEDIR}
 		;;
 	src)
 		setup_stage /usr/obj${SRCDIR}
+		rm -r /usr/obj${SRCDIR}
 		;;
 	vga)
 		echo ">>> Removing vga image"

@@ -44,6 +44,8 @@ BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${ARCH}
 
 sh ./clean.sh ${SELF}
 
+setup_stage ${STAGEDIR}
+
 MAKE_ARGS="SRCCONF=${CONFIGDIR}/src.conf COMPILER_TYPE=clang __MAKE_CONF="
 ENV_FILTER="env -i USER=${USER} LOGNAME=${LOGNAME} HOME=${HOME} \
 SHELL=${SHELL} BLOCKSIZE=${BLOCKSIZE} MAIL=${MAIL} PATH=${PATH} \
@@ -60,26 +62,24 @@ mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${BASE_SET}.txz
 echo -n ">>> Generating obsolete file list... "
 
 tar -tf ${BASE_SET}.txz | \
-    sed -e 's/^\.//g' -e '/\/$/d' | sort > /tmp/setdiff.new.${$}
+    sed -e 's/^\.//g' -e '/\/$/d' | sort > ${STAGEDIR}/setdiff.new
 
-: > /tmp/setdiff.old.${$}
+: > ${STAGEDIR}/setdiff.old
 if [ -s ${CONFIGDIR}/plist.base.${ARCH} ]; then
 	cat ${CONFIGDIR}/plist.base.${ARCH} | \
-	    sed -e 's/^\.//g' -e '/\/$/d' | sort > /tmp/setdiff.old.${$}
+	    sed -e 's/^\.//g' -e '/\/$/d' | sort > ${STAGEDIR}/setdiff.old
 fi
 
-: > /tmp/setdiff.tmp.${$}
+: > ${STAGEDIR}/setdiff.tmp
 if [ -s ${CONFIGDIR}/plist.obsolete.${ARCH} ]; then
 	diff -u ${CONFIGDIR}/plist.obsolete.${ARCH} \
-	    /tmp/setdiff.new.${$} | grep '^-/' | \
-	    cut -b 2- > /tmp/setdiff.tmp.${$}
+	    ${STAGEDIR}/setdiff.new | grep '^-/' | \
+	    cut -b 2- > ${STAGEDIR}/setdiff.tmp
 fi
 
-(cat /tmp/setdiff.tmp.${$}; diff -u /tmp/setdiff.old.${$} \
-    /tmp/setdiff.new.${$} | grep '^-/' | cut -b 2-) | \
+(cat ${STAGEDIR}/setdiff.tmp; diff -u ${STAGEDIR}/setdiff.old \
+    ${STAGEDIR}/setdiff.new | grep '^-/' | cut -b 2-) | \
     sort -u > ${BASE_SET}.obsolete
-
-rm -f /tmp/setdiff.*
 
 echo "done"
 

@@ -164,16 +164,16 @@ export LABEL=${PRODUCT_NAME}
 export TARGET_ARCH=${ARCH}
 export TARGETARCH=${ARCH}
 
-# define target directories
+# define build and config directories
 export CONFIGDIR="${TOOLSDIR}/config/${PRODUCT_SETTINGS}"
 export STAGEDIR="${STAGEDIRPREFIX}${CONFIGDIR}/${PRODUCT_FLAVOUR}"
 export DEVICEDIR="${TOOLSDIR}/device"
-export IMAGESDIR="/tmp/images"
-export SETSDIR="/tmp/sets"
 export PACKAGESDIR="/.pkg"
 
-# bootstrap target directories
-mkdir -p ${STAGEDIR} ${IMAGESDIR} ${SETSDIR}
+# define and bootstrap target directories
+export IMAGESDIR="/tmp/images"
+export SETSDIR="/tmp/sets"
+mkdir -p ${IMAGESDIR} ${SETSDIR}
 
 # print environment to showcase all of our variables
 env | sort
@@ -629,18 +629,26 @@ setup_stage()
 	echo ">>> Setting up stage in ${1}"
 
 	MOUNTDIRS="/dev /mnt ${SRCDIR} ${PORTSDIR} ${COREDIR} ${PLUGINSDIR}"
+	STAGE=${1}
+
+	shift
 
 	# might have been a chroot
 	for DIR in ${MOUNTDIRS}; do
-		if [ -d ${1}${DIR} ]; then
-			umount ${1}${DIR} 2> /dev/null || true
+		if [ -d ${STAGE}${DIR} ]; then
+			umount ${STAGE}${DIR} 2> /dev/null || true
 		fi
 	done
 
 	# remove base system files
-	rm -rf ${1} 2> /dev/null ||
-	    (chflags -R noschg ${1}; rm -rf ${1} 2> /dev/null)
+	rm -rf ${STAGE} 2> /dev/null ||
+	    (chflags -R noschg ${STAGE}; rm -rf ${STAGE} 2> /dev/null)
 
 	# revive directory for next run
-	mkdir -p ${1}
+	mkdir -p ${STAGE}
+
+	# additional directories if requested
+	for DIR in ${@}; do
+		mkdir -p ${STAGE}/${DIR}
+	done
 }

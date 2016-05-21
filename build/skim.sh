@@ -31,6 +31,8 @@ SELF=skim
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+setup_stage ${STAGEDIR}
+
 export __MAKE_CONF=${CONFIGDIR}/make.conf
 
 PORTS_LIST=$({
@@ -64,7 +66,7 @@ done
 
 echo -n ">>> Gathering dependencies"
 
-echo "${PORTS_LIST}" > /tmp/skim.${$}
+echo "${PORTS_LIST}" > ${STAGEDIR}/skim
 
 while read PORT_ORIGIN PORT_BROKEN; do
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
@@ -113,9 +115,7 @@ while read PORT_ORIGIN PORT_BROKEN; do
 			PORTS_CHANGED="${PORTS_CHANGED} ${PORT}"
 		fi
 	done
-done < /tmp/skim.${$}
-
-rm -f /tmp/skim.*
+done < ${STAGEDIR}/skim
 
 echo "done"
 

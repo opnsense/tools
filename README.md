@@ -244,4 +244,4 @@ files need to be regenerated.  This is done using:
 Shall any debugging be needed inside the build jail, the following
 command will use chroot(8) to enter the active build jail:
 
-    # make chroot
+    # make chroot[-<subdir>]
