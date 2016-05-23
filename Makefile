@@ -26,6 +26,7 @@ TYPE?=		opnsense
 FLAVOUR?=	OpenSSL
 SETTINGS?=	16.1
 DEVICE?=	a10
+SPEED?=		115200
 MIRRORS?=	https://opnsense.c0urier.net \
 		http://mirrors.nycbug.org/pub/opnsense \
 		http://mirror.wdc1.us.leaseweb.net/opnsense \
@@ -79,5 +80,6 @@ ${STEP}: lint
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k ${PRIVKEY} \
 	    -K ${PUBKEY} -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
-	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" ${${STEP}_ARGS}
+	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
+	    ${${STEP}_ARGS}
 .endfor

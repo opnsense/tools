@@ -40,10 +40,14 @@ usage()
 	exit 1
 }
 
-while getopts C:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:v: OPT; do
+while getopts C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:v: OPT; do
 	case ${OPT} in
 	C)
 		export COREDIR=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	c)
+		export PRODUCT_SPEED=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	d)
@@ -135,6 +139,7 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_PRIVKEY}" -o \
     -z "${PRODUCT_PUBKEY}" -o \
     -z "${PRODUCT_DEVICE}" -o \
+    -z "${PRODUCT_SPEED}" -o \
     -z "${TOOLSDIR}" -o \
     -z "${PLUGINSDIR}" -o \
     -z "${PORTSDIR}" -o \
@@ -148,12 +153,6 @@ fi
 export PRODUCT_SIGNCMD=${PRODUCT_SIGNCMD:-"${TOOLSDIR}/scripts/pkg_sign.sh ${PRODUCT_PUBKEY} ${PRODUCT_PRIVKEY}"}
 export PRODUCT_SIGNCHK=${PRODUCT_SIGNCHK:-"${TOOLSDIR}/scripts/pkg_fingerprint.sh ${PRODUCT_PUBKEY}"}
 export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
-
-# serial bootstrapping
-export SERIAL_SPEED="115200"
-SERIAL_CONFIG="<enableserial>1</enableserial>"
-SERIAL_CONFIG="${SERIAL_CONFIG}<serialspeed>${SERIAL_SPEED}</serialspeed>"
-export SERIAL_CONFIG="${SERIAL_CONFIG}<primaryconsole>serial</primaryconsole>"
 
 # misc. foo
 export CONFIG_PKG="/usr/local/etc/pkg/repos/origin.conf"
@@ -584,6 +583,24 @@ setup_packages()
 	extract_packages ${1}
 	install_packages ${@} ${PRODUCT_TYPE}
 	clean_packages ${1}
+}
+
+setup_serial()
+{
+	SERIAL_CONFIG="<enableserial>1</enableserial>"
+	SERIAL_CONFIG="${SERIAL_CONFIG}<serialspeed>${PRODUCT_SPEED}</serialspeed>"
+	SERIAL_CONFIG="${SERIAL_CONFIG}<primaryconsole>serial</primaryconsole>"
+
+	echo "-S${PRODUCT_SPEED} -D" > ${1}/boot.config
+
+	cat > ${1}/boot/loader.conf << EOF
+boot_multicons="YES"
+boot_serial="YES"
+console="comconsole,vidconsole"
+comconsole_speed="${PRODUCT_SPEED}"
+EOF
+
+	sed -i '' -e "s:</system>:${SERIAL_CONFIG}</system>:" ${1}${CONFIG_XML}
 }
 
 _setup_extras_generic()
