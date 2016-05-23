@@ -151,7 +151,7 @@ Before building images, you can run the regression tests
 to check the integrity of your core.git modifications plus
 generate output for the style checker:
 
-    # make regress
+    # make test
 
 For very fast ports rebuilding of already installed packages
 the following works:

@@ -474,7 +474,7 @@ install_packages()
 		for PKG in pkg ${PKGLIST}; do
 			# Adds all selected packages and fails if
 			# one cannot be installed.  Used to build
-			# final images or regression test systems.
+			# a runtime environment.
 			PKGFOUND=
 			for PKGFILE in $({
 				cd ${BASEDIR}
