@@ -1,4 +1,4 @@
-STEPS=		base cdrom chroot clean core distfiles \
+STEPS=		base boot cdrom chroot clean core distfiles \
 		kernel nano plugins ports prefetch rebase \
 		regress release serial skim vga vm
 .PHONY:		${STEPS}
