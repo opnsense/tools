@@ -1,4 +1,5 @@
 /boot/loader.old
+/boot/logo-hourglassbw.4th
 /boot/zfsloader.old
 /etc/gnats/freefall
 /etc/rc.d/kerberos
@@ -16,6 +17,7 @@
 /usr/bin/scp
 /usr/bin/sendbug
 /usr/bin/sftp
+/usr/bin/sgsmsg
 /usr/bin/slogin
 /usr/bin/ssh
 /usr/bin/ssh-add
@@ -56,6 +58,7 @@
 /usr/include/clang/3.3/x86intrin.h
 /usr/include/clang/3.3/xmmintrin.h
 /usr/include/clang/3.3/xopintrin.h
+/usr/include/lzma/lzma.h
 /usr/include/net/pf_mtag.h
 /usr/include/netinet/in_gif.h
 /usr/include/netinet/ip_gre.h
@@ -70,7 +73,9 @@
 /usr/libexec/sftp-server
 /usr/libexec/ssh-keysign
 /usr/libexec/ssh-pkcs11-helper
+/usr/sbin/etcupdate
 /usr/sbin/sshd
+/usr/sbin/unbound-control-setup
 /usr/share/examples/bsdconfig/browse_packages_ftp.sh
 /usr/share/info/send-pr.info.gz
 /usr/share/man/man1/dtc.1.gz
@@ -88,11 +93,17 @@
 /usr/share/man/man1/ssh.1.gz
 /usr/share/man/man5/ssh_config.5.gz
 /usr/share/man/man5/sshd_config.5.gz
+/usr/share/man/man8/etcupdate.8.gz
 /usr/share/man/man8/pam_ssh.8.gz
 /usr/share/man/man8/sftp-server.8.gz
 /usr/share/man/man8/ssh-keysign.8.gz
 /usr/share/man/man8/ssh-pkcs11-helper.8.gz
 /usr/share/man/man8/sshd.8.gz
+/usr/share/man/man9/MEXTFREE.9.gz
+/usr/share/man/man9/MEXT_ADD_REF.9.gz
+/usr/share/man/man9/MEXT_IS_REF.9.gz
+/usr/share/man/man9/MEXT_REM_REF.9.gz
+/usr/share/man/man9/MFREE.9.gz
 /usr/share/man/man9/NDHASGIANT.9.gz
 /usr/share/man/man9/VOP_CREATEVOBJECT.9.gz
 /usr/share/man/man9/VOP_DESTROYVOBJECT.9.gz
