@@ -52,9 +52,9 @@
 ./boot/boot0
 ./boot/boot0sio
 ./boot/boot1
-./boot/boot1.efi
-./boot/boot1.efifat
 ./boot/boot2
+./boot/brand-fbsd.4th
+./boot/brand-opnsense.4th
 ./boot/brand.4th
 ./boot/cdboot
 ./boot/check-password.4th
@@ -63,6 +63,7 @@
 ./boot/defaults/loader.conf
 ./boot/delay.4th
 ./boot/device.hints
+./boot/dtb/
 ./boot/firmware/
 ./boot/frames.4th
 ./boot/gptboot
@@ -70,9 +71,15 @@
 ./boot/kernel/
 ./boot/loader
 ./boot/loader.4th
-./boot/loader.efi
 ./boot/loader.help
 ./boot/loader.rc
+./boot/logo-beastie.4th
+./boot/logo-beastiebw.4th
+./boot/logo-fbsdbw.4th
+./boot/logo-hourglass.4th
+./boot/logo-hourglassbw.4th
+./boot/logo-orb.4th
+./boot/logo-orbbw.4th
 ./boot/mbr
 ./boot/menu-commands.4th
 ./boot/menu.4th
@@ -84,7 +91,6 @@
 ./boot/screen.4th
 ./boot/shortcuts.4th
 ./boot/support.4th
-./boot/userboot.so
 ./boot/version.4th
 ./boot/zfs/
 ./boot/zfsboot
@@ -98,6 +104,8 @@
 ./etc/autofs/
 ./etc/autofs/include_ldap
 ./etc/autofs/special_hosts
+./etc/autofs/special_media
+./etc/autofs/special_noauto
 ./etc/autofs/special_null
 ./etc/bluetooth/
 ./etc/bluetooth/hcsecd.conf
@@ -119,6 +127,7 @@
 ./etc/devd/hyperv.conf
 ./etc/devd/uath.conf
 ./etc/devd/usb.conf
+./etc/devd/zfs.conf
 ./etc/devfs.conf
 ./etc/dhclient.conf
 ./etc/disktab
@@ -137,7 +146,6 @@
 ./etc/inetd.conf
 ./etc/libalias.conf
 ./etc/libmap.conf
-./etc/libmap32.conf
 ./etc/login.access
 ./etc/login.conf
 ./etc/login.conf.db
@@ -197,6 +205,7 @@
 ./etc/periodic/daily/409.status-gconcat
 ./etc/periodic/daily/420.status-network
 ./etc/periodic/daily/450.status-security
+./etc/periodic/daily/510.status-world-kernel
 ./etc/periodic/daily/800.scrub-zfs
 ./etc/periodic/daily/999.local
 ./etc/periodic/monthly/
@@ -284,6 +293,7 @@
 ./etc/rc.d/geli
 ./etc/rc.d/geli2
 ./etc/rc.d/gptboot
+./etc/rc.d/growfs
 ./etc/rc.d/gssd
 ./etc/rc.d/hastd
 ./etc/rc.d/hcsecd
@@ -341,9 +351,7 @@
 ./etc/rc.d/nfsuserd
 ./etc/rc.d/nisdomain
 ./etc/rc.d/nsswitch
-./etc/rc.d/ntpd
 ./etc/rc.d/ntpdate
-./etc/rc.d/othermta
 ./etc/rc.d/pf
 ./etc/rc.d/pflog
 ./etc/rc.d/pfsync
@@ -366,11 +374,9 @@
 ./etc/rc.d/rpcbind
 ./etc/rc.d/rtadvd
 ./etc/rc.d/rtsold
-./etc/rc.d/rwho
 ./etc/rc.d/savecore
 ./etc/rc.d/sdpd
 ./etc/rc.d/securelevel
-./etc/rc.d/sendmail
 ./etc/rc.d/serial
 ./etc/rc.d/sppp
 ./etc/rc.d/statd
@@ -402,7 +408,6 @@
 ./etc/rc.firewall
 ./etc/rc.initdiskless
 ./etc/rc.resume
-./etc/rc.sendmail
 ./etc/rc.shutdown
 ./etc/rc.subr
 ./etc/rc.suspend
@@ -478,6 +483,7 @@
 ./lib/libkvm.so.6
 ./lib/libm.so.5
 ./lib/libmd.so.6
+./lib/libmt.so.5
 ./lib/libncurses.so.8
 ./lib/libncursesw.so.8
 ./lib/libnvpair.so.2
@@ -501,6 +507,7 @@
 ./libexec/resolvconf/dnsmasq
 ./libexec/resolvconf/libc
 ./libexec/resolvconf/named
+./libexec/resolvconf/pdns_recursor
 ./libexec/resolvconf/pdnsd
 ./libexec/resolvconf/unbound
 ./media/
@@ -620,6 +627,7 @@
 ./sbin/rtquery
 ./sbin/rtsol
 ./sbin/savecore
+./sbin/sconfig
 ./sbin/setkey
 ./sbin/sha1
 ./sbin/sha256
@@ -734,6 +742,7 @@
 ./usr/bin/diff
 ./usr/bin/diff3
 ./usr/bin/dirname
+./usr/bin/dpv
 ./usr/bin/drill
 ./usr/bin/dtc
 ./usr/bin/du
@@ -929,6 +938,7 @@
 ./usr/bin/pgrep
 ./usr/bin/pic
 ./usr/bin/pkill
+./usr/bin/pmcstudy
 ./usr/bin/post-grohtml
 ./usr/bin/pr
 ./usr/bin/pre-grohtml
@@ -1105,6 +1115,8 @@
 ./usr/include/asn1-common.h
 ./usr/include/asn1_err.h
 ./usr/include/assert.h
+./usr/include/atf-c++/
+./usr/include/atf-c/
 ./usr/include/base64.h
 ./usr/include/bitstring.h
 ./usr/include/bluetooth.h
@@ -1173,6 +1185,7 @@
 ./usr/include/c++/v1/__hash_table
 ./usr/include/c++/v1/__locale
 ./usr/include/c++/v1/__mutex_base
+./usr/include/c++/v1/__refstring
 ./usr/include/c++/v1/__split_buffer
 ./usr/include/c++/v1/__sso_allocator
 ./usr/include/c++/v1/__std_stream
@@ -1217,8 +1230,12 @@
 ./usr/include/c++/v1/deque
 ./usr/include/c++/v1/exception
 ./usr/include/c++/v1/experimental/
+./usr/include/c++/v1/experimental/__config
 ./usr/include/c++/v1/experimental/dynarray
 ./usr/include/c++/v1/experimental/optional
+./usr/include/c++/v1/experimental/string_view
+./usr/include/c++/v1/experimental/type_traits
+./usr/include/c++/v1/experimental/utility
 ./usr/include/c++/v1/ext/
 ./usr/include/c++/v1/ext/__hash
 ./usr/include/c++/v1/ext/hash_map
@@ -1269,6 +1286,7 @@
 ./usr/include/c++/v1/tr1/__hash_table
 ./usr/include/c++/v1/tr1/__locale
 ./usr/include/c++/v1/tr1/__mutex_base
+./usr/include/c++/v1/tr1/__refstring
 ./usr/include/c++/v1/tr1/__split_buffer
 ./usr/include/c++/v1/tr1/__sso_allocator
 ./usr/include/c++/v1/tr1/__std_stream
@@ -1462,6 +1480,7 @@
 ./usr/include/der.h
 ./usr/include/dev/
 ./usr/include/dev/acpica/
+./usr/include/dev/acpica/acpi_hpet.h
 ./usr/include/dev/acpica/acpiio.h
 ./usr/include/dev/agp/
 ./usr/include/dev/agp/agpreg.h
@@ -1587,6 +1606,7 @@
 ./usr/include/dev/usb/
 ./usr/include/dev/usb/ufm_ioctl.h
 ./usr/include/dev/usb/uftdiio.h
+./usr/include/dev/usb/uled_ioctl.h
 ./usr/include/dev/usb/usb.h
 ./usr/include/dev/usb/usb_bus.h
 ./usr/include/dev/usb/usb_busdma.h
@@ -1635,6 +1655,7 @@
 ./usr/include/dlg_colors.h
 ./usr/include/dlg_config.h
 ./usr/include/dlg_keys.h
+./usr/include/dpv.h
 ./usr/include/dwarf.h
 ./usr/include/edit/
 ./usr/include/edit/readline/
@@ -1650,6 +1671,7 @@
 ./usr/include/fcntl.h
 ./usr/include/fenv.h
 ./usr/include/fetch.h
+./usr/include/figpar.h
 ./usr/include/float.h
 ./usr/include/floatingpoint.h
 ./usr/include/fmtmsg.h
@@ -1870,9 +1892,11 @@
 ./usr/include/machine/acpica_machdep.h
 ./usr/include/machine/apicvar.h
 ./usr/include/machine/apm_bios.h
+./usr/include/machine/apm_segments.h
 ./usr/include/machine/asm.h
 ./usr/include/machine/asmacros.h
 ./usr/include/machine/atomic.h
+./usr/include/machine/bootinfo.h
 ./usr/include/machine/bus.h
 ./usr/include/machine/bus_dma.h
 ./usr/include/machine/clock.h
@@ -1880,19 +1904,23 @@
 ./usr/include/machine/cpu.h
 ./usr/include/machine/cpufunc.h
 ./usr/include/machine/cputypes.h
+./usr/include/machine/cserial.h
 ./usr/include/machine/db_machdep.h
+./usr/include/machine/elan_mmcr.h
 ./usr/include/machine/elf.h
 ./usr/include/machine/endian.h
 ./usr/include/machine/exec.h
 ./usr/include/machine/fdt.h
 ./usr/include/machine/float.h
 ./usr/include/machine/floatingpoint.h
-./usr/include/machine/fpu.h
 ./usr/include/machine/frame.h
 ./usr/include/machine/gdb_machdep.h
 ./usr/include/machine/ieeefp.h
+./usr/include/machine/if_wl_wavelan.h
 ./usr/include/machine/in_cksum.h
 ./usr/include/machine/intr_machdep.h
+./usr/include/machine/ioctl_bt848.h
+./usr/include/machine/ioctl_meteor.h
 ./usr/include/machine/iodev.h
 ./usr/include/machine/kdb.h
 ./usr/include/machine/limits.h
@@ -1908,12 +1936,16 @@
 ./usr/include/machine/pc/
 ./usr/include/machine/pc/bios.h
 ./usr/include/machine/pc/display.h
+./usr/include/machine/pcaudioio.h
 ./usr/include/machine/pcb.h
+./usr/include/machine/pcb_ext.h
 ./usr/include/machine/pci_cfgreg.h
 ./usr/include/machine/pcpu.h
+./usr/include/machine/perfmon.h
 ./usr/include/machine/pmap.h
 ./usr/include/machine/pmc_mdep.h
 ./usr/include/machine/ppireg.h
+./usr/include/machine/privatespace.h
 ./usr/include/machine/proc.h
 ./usr/include/machine/profile.h
 ./usr/include/machine/psl.h
@@ -1927,7 +1959,9 @@
 ./usr/include/machine/sf_buf.h
 ./usr/include/machine/sigframe.h
 ./usr/include/machine/signal.h
+./usr/include/machine/smapi.h
 ./usr/include/machine/smp.h
+./usr/include/machine/speaker.h
 ./usr/include/machine/specialreg.h
 ./usr/include/machine/stack.h
 ./usr/include/machine/stdarg.h
@@ -1939,10 +1973,9 @@
 ./usr/include/machine/varargs.h
 ./usr/include/machine/vdso.h
 ./usr/include/machine/vm.h
-./usr/include/machine/vmm.h
-./usr/include/machine/vmm_dev.h
-./usr/include/machine/vmm_instruction_emul.h
+./usr/include/machine/vm86.h
 ./usr/include/machine/vmparam.h
+./usr/include/machine/xbox.h
 ./usr/include/magic.h
 ./usr/include/malloc.h
 ./usr/include/malloc_np.h
@@ -1956,6 +1989,7 @@
 ./usr/include/mp.h
 ./usr/include/mpool.h
 ./usr/include/mqueue.h
+./usr/include/mtlib.h
 ./usr/include/ncurses.h
 ./usr/include/ncurses_dll.h
 ./usr/include/ndbm.h
@@ -1996,6 +2030,7 @@
 ./usr/include/net/if_types.h
 ./usr/include/net/if_var.h
 ./usr/include/net/if_vlan_var.h
+./usr/include/net/if_vxlan.h
 ./usr/include/net/iso88025.h
 ./usr/include/net/netisr.h
 ./usr/include/net/netisr_internal.h
@@ -2143,7 +2178,6 @@
 ./usr/include/netinet/igmp.h
 ./usr/include/netinet/igmp_var.h
 ./usr/include/netinet/in.h
-./usr/include/netinet/in_gif.h
 ./usr/include/netinet/in_kdtrace.h
 ./usr/include/netinet/in_pcb.h
 ./usr/include/netinet/in_systm.h
@@ -2156,7 +2190,6 @@
 ./usr/include/netinet/ip_ecn.h
 ./usr/include/netinet/ip_encap.h
 ./usr/include/netinet/ip_fw.h
-./usr/include/netinet/ip_gre.h
 ./usr/include/netinet/ip_icmp.h
 ./usr/include/netinet/ip_ipsec.h
 ./usr/include/netinet/ip_mroute.h
@@ -2205,7 +2238,6 @@
 ./usr/include/netinet6/
 ./usr/include/netinet6/icmp6.h
 ./usr/include/netinet6/in6.h
-./usr/include/netinet6/in6_gif.h
 ./usr/include/netinet6/in6_ifattach.h
 ./usr/include/netinet6/in6_pcb.h
 ./usr/include/netinet6/in6_var.h
@@ -2570,6 +2602,7 @@
 ./usr/include/stdlib.h
 ./usr/include/stdnoreturn.h
 ./usr/include/string.h
+./usr/include/string_m.h
 ./usr/include/stringlist.h
 ./usr/include/strings.h
 ./usr/include/sys/
@@ -2624,6 +2657,7 @@
 ./usr/include/sys/callout.h
 ./usr/include/sys/capability.h
 ./usr/include/sys/caprights.h
+./usr/include/sys/capsicum.h
 ./usr/include/sys/cdefs.h
 ./usr/include/sys/cdio.h
 ./usr/include/sys/cdrio.h
@@ -2932,7 +2966,6 @@
 ./usr/include/vm/vm_radix.h
 ./usr/include/vm/vm_reserv.h
 ./usr/include/vm/vnode_pager.h
-./usr/include/vmmapi.h
 ./usr/include/wchar.h
 ./usr/include/wctype.h
 ./usr/include/wind.h
@@ -2973,6 +3006,7 @@
 ./usr/include/x86/trap.h
 ./usr/include/x86/ucontext.h
 ./usr/include/x86/vdso.h
+./usr/include/x86/vmware.h
 ./usr/include/xdbm.h
 ./usr/include/xlocale.h
 ./usr/include/xlocale/
@@ -3154,6 +3188,9 @@
 ./usr/lib/libdialog.a
 ./usr/lib/libdialog.so
 ./usr/lib/libdialog.so.8
+./usr/lib/libdpv.a
+./usr/lib/libdpv.so
+./usr/lib/libdpv.so.1
 ./usr/lib/libdtrace.a
 ./usr/lib/libdtrace.so
 ./usr/lib/libdwarf.a
@@ -3170,6 +3207,9 @@
 ./usr/lib/libfetch.a
 ./usr/lib/libfetch.so
 ./usr/lib/libfetch.so.6
+./usr/lib/libfigpar.a
+./usr/lib/libfigpar.so
+./usr/lib/libfigpar.so.0
 ./usr/lib/libfl.a
 ./usr/lib/libform.a
 ./usr/lib/libform.so
@@ -3266,6 +3306,8 @@
 ./usr/lib/libmp.a
 ./usr/lib/libmp.so
 ./usr/lib/libmp.so.7
+./usr/lib/libmt.a
+./usr/lib/libmt.so
 ./usr/lib/libncurses.a
 ./usr/lib/libncurses.so
 ./usr/lib/libncursesw.a
@@ -3385,9 +3427,6 @@
 ./usr/lib/libvgl.a
 ./usr/lib/libvgl.so
 ./usr/lib/libvgl.so.6
-./usr/lib/libvmmapi.a
-./usr/lib/libvmmapi.so
-./usr/lib/libvmmapi.so.5
 ./usr/lib/libwind.a
 ./usr/lib/libwind.so
 ./usr/lib/libwind.so.11
@@ -3495,19 +3534,19 @@
 ./usr/libdata/
 ./usr/libdata/gcc/
 ./usr/libdata/ldscripts/
-./usr/libdata/ldscripts/elf_x86_64_fbsd.x
-./usr/libdata/ldscripts/elf_x86_64_fbsd.xbn
-./usr/libdata/ldscripts/elf_x86_64_fbsd.xc
-./usr/libdata/ldscripts/elf_x86_64_fbsd.xd
-./usr/libdata/ldscripts/elf_x86_64_fbsd.xdc
-./usr/libdata/ldscripts/elf_x86_64_fbsd.xdw
-./usr/libdata/ldscripts/elf_x86_64_fbsd.xn
-./usr/libdata/ldscripts/elf_x86_64_fbsd.xr
-./usr/libdata/ldscripts/elf_x86_64_fbsd.xs
-./usr/libdata/ldscripts/elf_x86_64_fbsd.xsc
-./usr/libdata/ldscripts/elf_x86_64_fbsd.xsw
-./usr/libdata/ldscripts/elf_x86_64_fbsd.xu
-./usr/libdata/ldscripts/elf_x86_64_fbsd.xw
+./usr/libdata/ldscripts/elf_i386_fbsd.x
+./usr/libdata/ldscripts/elf_i386_fbsd.xbn
+./usr/libdata/ldscripts/elf_i386_fbsd.xc
+./usr/libdata/ldscripts/elf_i386_fbsd.xd
+./usr/libdata/ldscripts/elf_i386_fbsd.xdc
+./usr/libdata/ldscripts/elf_i386_fbsd.xdw
+./usr/libdata/ldscripts/elf_i386_fbsd.xn
+./usr/libdata/ldscripts/elf_i386_fbsd.xr
+./usr/libdata/ldscripts/elf_i386_fbsd.xs
+./usr/libdata/ldscripts/elf_i386_fbsd.xsc
+./usr/libdata/ldscripts/elf_i386_fbsd.xsw
+./usr/libdata/ldscripts/elf_i386_fbsd.xu
+./usr/libdata/ldscripts/elf_i386_fbsd.xw
 ./usr/libdata/lint/
 ./usr/libdata/lint/llib-lposix.ln
 ./usr/libdata/lint/llib-lstdc.ln
@@ -3732,6 +3771,7 @@
 ./usr/sbin/amq
 ./usr/sbin/ancontrol
 ./usr/sbin/apm
+./usr/sbin/apmd
 ./usr/sbin/arp
 ./usr/sbin/asf
 ./usr/sbin/ath3kfw
@@ -3739,9 +3779,6 @@
 ./usr/sbin/automountd
 ./usr/sbin/autounmountd
 ./usr/sbin/bcmfw
-./usr/sbin/bhyve
-./usr/sbin/bhyvectl
-./usr/sbin/bhyveload
 ./usr/sbin/binmiscctl
 ./usr/sbin/boot0cfg
 ./usr/sbin/bootparamd
@@ -3795,6 +3832,7 @@
 ./usr/sbin/flowctl
 ./usr/sbin/fmtree
 ./usr/sbin/fsinfo
+./usr/sbin/fstyp
 ./usr/sbin/ftp-proxy
 ./usr/sbin/fwcontrol
 ./usr/sbin/gensnmptree
@@ -3828,6 +3866,7 @@
 ./usr/sbin/kbdmap
 ./usr/sbin/keyserv
 ./usr/sbin/kgmon
+./usr/sbin/kgzip
 ./usr/sbin/kldxref
 ./usr/sbin/kstash
 ./usr/sbin/ktutil
@@ -3879,6 +3918,7 @@
 ./usr/sbin/pmcannotate
 ./usr/sbin/pmccontrol
 ./usr/sbin/pmcstat
+./usr/sbin/pnpinfo
 ./usr/sbin/powerd
 ./usr/sbin/ppp
 ./usr/sbin/pppctl
@@ -3933,6 +3973,7 @@
 ./usr/sbin/trpt
 ./usr/sbin/tzsetup
 ./usr/sbin/uathload
+./usr/sbin/uefisign
 ./usr/sbin/ugidfw
 ./usr/sbin/uhsoctl
 ./usr/sbin/unbound
@@ -3953,6 +3994,7 @@
 ./usr/sbin/watchdogd
 ./usr/sbin/wire-test
 ./usr/sbin/wlandebug
+./usr/sbin/wlconfig
 ./usr/sbin/wpa_cli
 ./usr/sbin/wpa_passphrase
 ./usr/sbin/wpa_supplicant
@@ -3962,6 +4004,7 @@
 ./usr/sbin/zic
 ./usr/sbin/zzz
 ./usr/share/
+./usr/share/atf/
 ./usr/share/bsdconfig/
 ./usr/share/bsdconfig/common.subr
 ./usr/share/bsdconfig/device.subr
@@ -4037,6 +4080,7 @@
 ./usr/share/dict/eign
 ./usr/share/doc/
 ./usr/share/doc/IPv6/
+./usr/share/doc/atf/
 ./usr/share/doc/atm/
 ./usr/share/doc/legal/
 ./usr/share/doc/legal/intel_ipw/
@@ -4047,10 +4091,14 @@
 ./usr/share/doc/ncurses/
 ./usr/share/doc/ntp/
 ./usr/share/doc/ntp/drivers/
+./usr/share/doc/ntp/drivers/icons/
 ./usr/share/doc/ntp/drivers/scripts/
 ./usr/share/doc/ntp/hints/
+./usr/share/doc/ntp/icons/
+./usr/share/doc/ntp/pic/
 ./usr/share/doc/ntp/scripts/
 ./usr/share/doc/papers/
+./usr/share/doc/pjdfstest/
 ./usr/share/doc/psd/
 ./usr/share/doc/psd/01.cacm/
 ./usr/share/doc/psd/02.implement/
@@ -4168,6 +4216,7 @@
 ./usr/share/examples/sunrpc/msg/
 ./usr/share/examples/sunrpc/sort/
 ./usr/share/examples/tcsh/
+./usr/share/examples/uefisign/
 ./usr/share/games/
 ./usr/share/games/fortune/
 ./usr/share/groff_font/
@@ -5621,6 +5670,7 @@
 ./usr/share/man/man1/do.1.gz
 ./usr/share/man/man1/domainname.1.gz
 ./usr/share/man/man1/done.1.gz
+./usr/share/man/man1/dpv.1.gz
 ./usr/share/man/man1/drill.1.gz
 ./usr/share/man/man1/dtrace.1.gz
 ./usr/share/man/man1/dtruss.1.gz
@@ -5793,6 +5843,9 @@
 ./usr/share/man/man1/ls.1.gz
 ./usr/share/man/man1/lsvfs.1.gz
 ./usr/share/man/man1/lzcat.1.gz
+./usr/share/man/man1/lzegrep.1.gz
+./usr/share/man/man1/lzfgrep.1.gz
+./usr/share/man/man1/lzgrep.1.gz
 ./usr/share/man/man1/lzma.1.gz
 ./usr/share/man/man1/lzmadec.1.gz
 ./usr/share/man/man1/lzmainfo.1.gz
@@ -6024,6 +6077,9 @@
 ./usr/share/man/man1/xz.1.gz
 ./usr/share/man/man1/xzcat.1.gz
 ./usr/share/man/man1/xzdec.1.gz
+./usr/share/man/man1/xzegrep.1.gz
+./usr/share/man/man1/xzfgrep.1.gz
+./usr/share/man/man1/xzgrep.1.gz
 ./usr/share/man/man1/yacc.1.gz
 ./usr/share/man/man1/yes.1.gz
 ./usr/share/man/man1/zcat.1.gz
@@ -6033,6 +6089,7 @@
 ./usr/share/man/man1/zfgrep.1.gz
 ./usr/share/man/man1/zforce.1.gz
 ./usr/share/man/man1/zgrep.1.gz
+./usr/share/man/man1/zless.1.gz
 ./usr/share/man/man1/zmore.1.gz
 ./usr/share/man/man1/znew.1.gz
 ./usr/share/man/man1/zstreamdump.1.gz
@@ -6161,6 +6218,11 @@
 ./usr/share/man/man2/getsockopt.2.gz
 ./usr/share/man/man2/gettimeofday.2.gz
 ./usr/share/man/man2/getuid.2.gz
+./usr/share/man/man2/i386_get_ioperm.2.gz
+./usr/share/man/man2/i386_get_ldt.2.gz
+./usr/share/man/man2/i386_set_ioperm.2.gz
+./usr/share/man/man2/i386_set_ldt.2.gz
+./usr/share/man/man2/i386_vm86.2.gz
 ./usr/share/man/man2/intro.2.gz
 ./usr/share/man/man2/ioctl.2.gz
 ./usr/share/man/man2/issetugid.2.gz
@@ -6249,6 +6311,7 @@
 ./usr/share/man/man2/posix_fallocate.2.gz
 ./usr/share/man/man2/posix_madvise.2.gz
 ./usr/share/man/man2/posix_openpt.2.gz
+./usr/share/man/man2/ppoll.2.gz
 ./usr/share/man/man2/pread.2.gz
 ./usr/share/man/man2/preadv.2.gz
 ./usr/share/man/man2/procctl.2.gz
@@ -7507,6 +7570,8 @@
 ./usr/share/man/man3/dn_skipname.3.gz
 ./usr/share/man/man3/doupdate.3.gz
 ./usr/share/man/man3/dprintf.3.gz
+./usr/share/man/man3/dpv.3.gz
+./usr/share/man/man3/dpv_free.3.gz
 ./usr/share/man/man3/drand48.3.gz
 ./usr/share/man/man3/dup3.3.gz
 ./usr/share/man/man3/dup_field.3.gz
@@ -7755,6 +7820,7 @@
 ./usr/share/man/man3/field_term.3.gz
 ./usr/share/man/man3/field_type.3.gz
 ./usr/share/man/man3/field_userptr.3.gz
+./usr/share/man/man3/figpar.3.gz
 ./usr/share/man/man3/fileno.3.gz
 ./usr/share/man/man3/fileno_unlocked.3.gz
 ./usr/share/man/man3/filter.3.gz
@@ -7941,6 +8007,7 @@
 ./usr/share/man/man3/geom_stats_snapshot_next.3.gz
 ./usr/share/man/man3/geom_stats_snapshot_reset.3.gz
 ./usr/share/man/man3/geom_stats_snapshot_timestamp.3.gz
+./usr/share/man/man3/get_config_option.3.gz
 ./usr/share/man/man3/get_myaddress.3.gz
 ./usr/share/man/man3/get_wch.3.gz
 ./usr/share/man/man3/get_wstr.3.gz
@@ -8377,6 +8444,8 @@
 ./usr/share/man/man3/hypot.3.gz
 ./usr/share/man/man3/hypotf.3.gz
 ./usr/share/man/man3/hypotl.3.gz
+./usr/share/man/man3/i386_clr_watch.3.gz
+./usr/share/man/man3/i386_set_watch.3.gz
 ./usr/share/man/man3/iconv.3.gz
 ./usr/share/man/man3/iconv_canonicalize.3.gz
 ./usr/share/man/man3/iconv_close.3.gz
@@ -9139,6 +9208,7 @@
 ./usr/share/man/man3/lfind.3.gz
 ./usr/share/man/man3/lgamma.3.gz
 ./usr/share/man/man3/lgammaf.3.gz
+./usr/share/man/man3/lgammal.3.gz
 ./usr/share/man/man3/libalias.3.gz
 ./usr/share/man/man3/libarchive.3.gz
 ./usr/share/man/man3/libarchive_changes.3.gz
@@ -9503,6 +9573,7 @@
 ./usr/share/man/man3/move_panel.3.gz
 ./usr/share/man/man3/mpool.3.gz
 ./usr/share/man/man3/mrand48.3.gz
+./usr/share/man/man3/mt.3.gz
 ./usr/share/man/man3/mtx_destroy.3.gz
 ./usr/share/man/man3/mtx_init.3.gz
 ./usr/share/man/man3/mtx_lock.3.gz
@@ -9723,6 +9794,7 @@
 ./usr/share/man/man3/panel_hidden.3.gz
 ./usr/share/man/man3/panel_userptr.3.gz
 ./usr/share/man/man3/panel_window.3.gz
+./usr/share/man/man3/parse_config.3.gz
 ./usr/share/man/man3/parse_lt.3.gz
 ./usr/share/man/man3/pause.3.gz
 ./usr/share/man/man3/pcap.3.gz
@@ -10161,6 +10233,7 @@
 ./usr/share/man/man3/remquof.3.gz
 ./usr/share/man/man3/remquol.3.gz
 ./usr/share/man/man3/replace_panel.3.gz
+./usr/share/man/man3/replaceall.3.gz
 ./usr/share/man/man3/request_init.3.gz
 ./usr/share/man/man3/request_set.3.gz
 ./usr/share/man/man3/res_init.3.gz
@@ -10492,12 +10565,15 @@
 ./usr/share/man/man3/strcmp.3.gz
 ./usr/share/man/man3/strcoll.3.gz
 ./usr/share/man/man3/strcoll_l.3.gz
+./usr/share/man/man3/strcount.3.gz
 ./usr/share/man/man3/strcpy.3.gz
 ./usr/share/man/man3/strcspn.3.gz
 ./usr/share/man/man3/strdup.3.gz
 ./usr/share/man/man3/strenvisx.3.gz
 ./usr/share/man/man3/strerror.3.gz
 ./usr/share/man/man3/strerror_r.3.gz
+./usr/share/man/man3/strexpand.3.gz
+./usr/share/man/man3/strexpandnl.3.gz
 ./usr/share/man/man3/strfmon.3.gz
 ./usr/share/man/man3/strfmon_l.3.gz
 ./usr/share/man/man3/strftime.3.gz
@@ -10542,6 +10618,7 @@
 ./usr/share/man/man3/strtol.3.gz
 ./usr/share/man/man3/strtold.3.gz
 ./usr/share/man/man3/strtoll.3.gz
+./usr/share/man/man3/strtolower.3.gz
 ./usr/share/man/man3/strtonum.3.gz
 ./usr/share/man/man3/strtoq.3.gz
 ./usr/share/man/man3/strtoul.3.gz
@@ -11122,7 +11199,6 @@
 ./usr/share/man/man4/bce.4.gz
 ./usr/share/man/man4/bfe.4.gz
 ./usr/share/man/man4/bge.4.gz
-./usr/share/man/man4/bhyve.4.gz
 ./usr/share/man/man4/bktr.4.gz
 ./usr/share/man/man4/blackhole.4.gz
 ./usr/share/man/man4/bpf.4.gz
@@ -11186,6 +11262,7 @@
 ./usr/share/man/man4/esp.4.gz
 ./usr/share/man/man4/est.4.gz
 ./usr/share/man/man4/et.4.gz
+./usr/share/man/man4/etherswitch.4.gz
 ./usr/share/man/man4/eventtimers.4.gz
 ./usr/share/man/man4/exca.4.gz
 ./usr/share/man/man4/faith.4.gz
@@ -11238,6 +11315,40 @@
 ./usr/share/man/man4/hv_vmbus.4.gz
 ./usr/share/man/man4/hwpmc.4.gz
 ./usr/share/man/man4/i386/
+./usr/share/man/man4/i386/CPU_ELAN.4.gz
+./usr/share/man/man4/i386/CPU_SOEKRIS.4.gz
+./usr/share/man/man4/i386/PAE.4.gz
+./usr/share/man/man4/i386/aic.4.gz
+./usr/share/man/man4/i386/apm.4.gz
+./usr/share/man/man4/i386/ce.4.gz
+./usr/share/man/man4/i386/cp.4.gz
+./usr/share/man/man4/i386/cs.4.gz
+./usr/share/man/man4/i386/ct.4.gz
+./usr/share/man/man4/i386/ctau.4.gz
+./usr/share/man/man4/i386/cx.4.gz
+./usr/share/man/man4/i386/ep.4.gz
+./usr/share/man/man4/i386/ex.4.gz
+./usr/share/man/man4/i386/fe.4.gz
+./usr/share/man/man4/i386/glxiic.4.gz
+./usr/share/man/man4/i386/glxsb.4.gz
+./usr/share/man/man4/i386/ie.4.gz
+./usr/share/man/man4/i386/if_sbni.4.gz
+./usr/share/man/man4/i386/longrun.4.gz
+./usr/share/man/man4/i386/mse.4.gz
+./usr/share/man/man4/i386/npx.4.gz
+./usr/share/man/man4/i386/pae.4.gz
+./usr/share/man/man4/i386/pbio.4.gz
+./usr/share/man/man4/i386/perfmon.4.gz
+./usr/share/man/man4/i386/pnp.4.gz
+./usr/share/man/man4/i386/pnpbios.4.gz
+./usr/share/man/man4/i386/sbni.4.gz
+./usr/share/man/man4/i386/smapi.4.gz
+./usr/share/man/man4/i386/snc.4.gz
+./usr/share/man/man4/i386/streams.4.gz
+./usr/share/man/man4/i386/svr4.4.gz
+./usr/share/man/man4/i386/vpd.4.gz
+./usr/share/man/man4/i386/vx.4.gz
+./usr/share/man/man4/i386/wl.4.gz
 ./usr/share/man/man4/i8254.4.gz
 ./usr/share/man/man4/ichsmb.4.gz
 ./usr/share/man/man4/ichwd.4.gz
@@ -11288,12 +11399,15 @@
 ./usr/share/man/man4/if_hatm.4.gz
 ./usr/share/man/man4/if_hme.4.gz
 ./usr/share/man/man4/if_igb.4.gz
+./usr/share/man/man4/if_ipheth.4.gz
 ./usr/share/man/man4/if_ipw.4.gz
 ./usr/share/man/man4/if_iwi.4.gz
 ./usr/share/man/man4/if_iwn.4.gz
 ./usr/share/man/man4/if_ix.4.gz
 ./usr/share/man/man4/if_ixgb.4.gz
 ./usr/share/man/man4/if_ixgbe.4.gz
+./usr/share/man/man4/if_ixl.4.gz
+./usr/share/man/man4/if_ixlv.4.gz
 ./usr/share/man/man4/if_jme.4.gz
 ./usr/share/man/man4/if_kue.4.gz
 ./usr/share/man/man4/if_lagg.4.gz
@@ -11311,14 +11425,10 @@
 ./usr/share/man/man4/if_nf10bmac.4.gz
 ./usr/share/man/man4/if_nfe.4.gz
 ./usr/share/man/man4/if_nge.4.gz
-./usr/share/man/man4/if_ntb.4.gz
 ./usr/share/man/man4/if_nve.4.gz
 ./usr/share/man/man4/if_nxge.4.gz
 ./usr/share/man/man4/if_patm.4.gz
 ./usr/share/man/man4/if_pcn.4.gz
-./usr/share/man/man4/if_qlxgb.4.gz
-./usr/share/man/man4/if_qlxgbe.4.gz
-./usr/share/man/man4/if_qlxge.4.gz
 ./usr/share/man/man4/if_ral.4.gz
 ./usr/share/man/man4/if_re.4.gz
 ./usr/share/man/man4/if_rl.4.gz
@@ -11326,10 +11436,10 @@
 ./usr/share/man/man4/if_rum.4.gz
 ./usr/share/man/man4/if_run.4.gz
 ./usr/share/man/man4/if_sf.4.gz
-./usr/share/man/man4/if_sfxge.4.gz
 ./usr/share/man/man4/if_sge.4.gz
 ./usr/share/man/man4/if_sis.4.gz
 ./usr/share/man/man4/if_sk.4.gz
+./usr/share/man/man4/if_smsc.4.gz
 ./usr/share/man/man4/if_sn.4.gz
 ./usr/share/man/man4/if_ste.4.gz
 ./usr/share/man/man4/if_stf.4.gz
@@ -11353,6 +11463,7 @@
 ./usr/share/man/man4/if_vte.4.gz
 ./usr/share/man/man4/if_vtnet.4.gz
 ./usr/share/man/man4/if_vxge.4.gz
+./usr/share/man/man4/if_vxlan.4.gz
 ./usr/share/man/man4/if_wb.4.gz
 ./usr/share/man/man4/if_wi.4.gz
 ./usr/share/man/man4/if_wpi.4.gz
@@ -11379,6 +11490,7 @@
 ./usr/share/man/man4/ipacct.4.gz
 ./usr/share/man/man4/ipfirewall.4.gz
 ./usr/share/man/man4/ipfw.4.gz
+./usr/share/man/man4/ipheth.4.gz
 ./usr/share/man/man4/ipmi.4.gz
 ./usr/share/man/man4/ips.4.gz
 ./usr/share/man/man4/ipsec.4.gz
@@ -11396,6 +11508,8 @@
 ./usr/share/man/man4/ix.4.gz
 ./usr/share/man/man4/ixgb.4.gz
 ./usr/share/man/man4/ixgbe.4.gz
+./usr/share/man/man4/ixl.4.gz
+./usr/share/man/man4/ixlv.4.gz
 ./usr/share/man/man4/jme.4.gz
 ./usr/share/man/man4/joy.4.gz
 ./usr/share/man/man4/kbdmux.4.gz
@@ -11432,6 +11546,7 @@
 ./usr/share/man/man4/malo.4.gz
 ./usr/share/man/man4/mcd.4.gz
 ./usr/share/man/man4/md.4.gz
+./usr/share/man/man4/me.4.gz
 ./usr/share/man/man4/mem.4.gz
 ./usr/share/man/man4/meteor.4.gz
 ./usr/share/man/man4/mfi.4.gz
@@ -11537,8 +11652,6 @@
 ./usr/share/man/man4/nge.4.gz
 ./usr/share/man/man4/nmdm.4.gz
 ./usr/share/man/man4/nsp.4.gz
-./usr/share/man/man4/ntb.4.gz
-./usr/share/man/man4/ntb_hw.4.gz
 ./usr/share/man/man4/null.4.gz
 ./usr/share/man/man4/nvd.4.gz
 ./usr/share/man/man4/nve.4.gz
@@ -11566,6 +11679,7 @@
 ./usr/share/man/man4/pfsync.4.gz
 ./usr/share/man/man4/pim.4.gz
 ./usr/share/man/man4/plip.4.gz
+./usr/share/man/man4/pms.4.gz
 ./usr/share/man/man4/polling.4.gz
 ./usr/share/man/man4/powerpc/
 ./usr/share/man/man4/ppbus.4.gz
@@ -11578,9 +11692,6 @@
 ./usr/share/man/man4/pts.4.gz
 ./usr/share/man/man4/pty.4.gz
 ./usr/share/man/man4/puc.4.gz
-./usr/share/man/man4/qlxgb.4.gz
-./usr/share/man/man4/qlxgbe.4.gz
-./usr/share/man/man4/qlxge.4.gz
 ./usr/share/man/man4/ral.4.gz
 ./usr/share/man/man4/random.4.gz
 ./usr/share/man/man4/rawip.4.gz
@@ -11618,7 +11729,6 @@
 ./usr/share/man/man4/send.4.gz
 ./usr/share/man/man4/ses.4.gz
 ./usr/share/man/man4/sf.4.gz
-./usr/share/man/man4/sfxge.4.gz
 ./usr/share/man/man4/sge.4.gz
 ./usr/share/man/man4/si.4.gz
 ./usr/share/man/man4/siba.4.gz
@@ -11632,6 +11742,7 @@
 ./usr/share/man/man4/smb.4.gz
 ./usr/share/man/man4/smbus.4.gz
 ./usr/share/man/man4/smp.4.gz
+./usr/share/man/man4/smsc.4.gz
 ./usr/share/man/man4/sn.4.gz
 ./usr/share/man/man4/snd.4.gz
 ./usr/share/man/man4/snd_ad1816.4.gz
@@ -11736,6 +11847,7 @@
 ./usr/share/man/man4/uhso.4.gz
 ./usr/share/man/man4/uipaq.4.gz
 ./usr/share/man/man4/ukbd.4.gz
+./usr/share/man/man4/uled.4.gz
 ./usr/share/man/man4/ulpt.4.gz
 ./usr/share/man/man4/umass.4.gz
 ./usr/share/man/man4/umcs.4.gz
@@ -11766,6 +11878,7 @@
 ./usr/share/man/man4/virtio.4.gz
 ./usr/share/man/man4/virtio_balloon.4.gz
 ./usr/share/man/man4/virtio_blk.4.gz
+./usr/share/man/man4/virtio_console.4.gz
 ./usr/share/man/man4/virtio_random.4.gz
 ./usr/share/man/man4/virtio_scsi.4.gz
 ./usr/share/man/man4/vkbd.4.gz
@@ -11778,6 +11891,7 @@
 ./usr/share/man/man4/vte.4.gz
 ./usr/share/man/man4/vtnet.4.gz
 ./usr/share/man/man4/vxge.4.gz
+./usr/share/man/man4/vxlan.4.gz
 ./usr/share/man/man4/watchdog.4.gz
 ./usr/share/man/man4/wb.4.gz
 ./usr/share/man/man4/wbwd.4.gz
@@ -12001,6 +12115,7 @@
 ./usr/share/man/man7/groff_ms.7.gz
 ./usr/share/man/man7/groff_trace.7.gz
 ./usr/share/man/man7/groff_www.7.gz
+./usr/share/man/man7/growfs.7.gz
 ./usr/share/man/man7/hier.7.gz
 ./usr/share/man/man7/hostname.7.gz
 ./usr/share/man/man7/intro.7.gz
@@ -12049,8 +12164,6 @@
 ./usr/share/man/man8/adjkerntz.8.gz
 ./usr/share/man/man8/amd.8.gz
 ./usr/share/man/man8/amd64/
-./usr/share/man/man8/amd64/apm.8.gz
-./usr/share/man/man8/amd64/apmconf.8.gz
 ./usr/share/man/man8/amq.8.gz
 ./usr/share/man/man8/ancontrol.8.gz
 ./usr/share/man/man8/arp.8.gz
@@ -12063,8 +12176,6 @@
 ./usr/share/man/man8/badsect.8.gz
 ./usr/share/man/man8/bcmfw.8.gz
 ./usr/share/man/man8/beastie.4th.8.gz
-./usr/share/man/man8/bhyve.8.gz
-./usr/share/man/man8/bhyveload.8.gz
 ./usr/share/man/man8/binmiscctl.8.gz
 ./usr/share/man/man8/boot.8.gz
 ./usr/share/man/man8/boot0cfg.8.gz
@@ -12144,6 +12255,7 @@
 ./usr/share/man/man8/fsdb.8.gz
 ./usr/share/man/man8/fsinfo.8.gz
 ./usr/share/man/man8/fsirand.8.gz
+./usr/share/man/man8/fstyp.8.gz
 ./usr/share/man/man8/ftp-proxy.8.gz
 ./usr/share/man/man8/ftpd.8.gz
 ./usr/share/man/man8/fwcontrol.8.gz
@@ -12168,6 +12280,7 @@
 ./usr/share/man/man8/gpart.8.gz
 ./usr/share/man/man8/gpioctl.8.gz
 ./usr/share/man/man8/gptboot.8.gz
+./usr/share/man/man8/gptzfsboot.8.gz
 ./usr/share/man/man8/graid.8.gz
 ./usr/share/man/man8/graid3.8.gz
 ./usr/share/man/man8/growfs.8.gz
@@ -12192,6 +12305,11 @@
 ./usr/share/man/man8/hv_kvp_daemon.8.gz
 ./usr/share/man/man8/i2c.8.gz
 ./usr/share/man/man8/i386/
+./usr/share/man/man8/i386/apm.8.gz
+./usr/share/man/man8/i386/apmconf.8.gz
+./usr/share/man/man8/i386/apmd.8.gz
+./usr/share/man/man8/i386/sconfig.8.gz
+./usr/share/man/man8/i386/wlconfig.8.gz
 ./usr/share/man/man8/iasl.8.gz
 ./usr/share/man/man8/ifconfig.8.gz
 ./usr/share/man/man8/ifmcstat.8.gz
@@ -12219,6 +12337,7 @@
 ./usr/share/man/man8/keyserv.8.gz
 ./usr/share/man/man8/kfd.8.gz
 ./usr/share/man/man8/kgmon.8.gz
+./usr/share/man/man8/kgzip.8.gz
 ./usr/share/man/man8/kimpersonate.8.gz
 ./usr/share/man/man8/kldconfig.8.gz
 ./usr/share/man/man8/kldload.8.gz
@@ -12334,6 +12453,8 @@
 ./usr/share/man/man8/pmcannotate.8.gz
 ./usr/share/man/man8/pmccontrol.8.gz
 ./usr/share/man/man8/pmcstat.8.gz
+./usr/share/man/man8/pmcstudy.8.gz
+./usr/share/man/man8/pnpinfo.8.gz
 ./usr/share/man/man8/powerd.8.gz
 ./usr/share/man/man8/poweroff.8.gz
 ./usr/share/man/man8/powerpc/
@@ -12439,7 +12560,7 @@
 ./usr/share/man/man8/tunefs.8.gz
 ./usr/share/man/man8/tzsetup.8.gz
 ./usr/share/man/man8/uathload.8.gz
-./usr/share/man/man8/uefi.8.gz
+./usr/share/man/man8/uefisign.8.gz
 ./usr/share/man/man8/ugidfw.8.gz
 ./usr/share/man/man8/umount.8.gz
 ./usr/share/man/man8/unbound-anchor.8.gz
@@ -12468,6 +12589,8 @@
 ./usr/share/man/man8/zdb.8.gz
 ./usr/share/man/man8/zdump.8.gz
 ./usr/share/man/man8/zfs.8.gz
+./usr/share/man/man8/zfsboot.8.gz
+./usr/share/man/man8/zfsloader.8.gz
 ./usr/share/man/man8/zic.8.gz
 ./usr/share/man/man8/zpool.8.gz
 ./usr/share/man/man8/zzz.8.gz
@@ -12558,7 +12681,6 @@
 ./usr/share/man/man9/M_WME_GETAC.9.gz
 ./usr/share/man/man9/M_WRITABLE.9.gz
 ./usr/share/man/man9/NDFREE.9.gz
-./usr/share/man/man9/NDHASGIANT.9.gz
 ./usr/share/man/man9/NDINIT.9.gz
 ./usr/share/man/man9/RM_SYSINIT.9.gz
 ./usr/share/man/man9/RTFREE.9.gz
@@ -12623,6 +12745,7 @@
 ./usr/share/man/man9/TASKQUEUE_FAST_DEFINE_THREAD.9.gz
 ./usr/share/man/man9/TASK_INIT.9.gz
 ./usr/share/man/man9/TASK_INITIALIZER.9.gz
+./usr/share/man/man9/TIMEOUT_TASK_INIT.9.gz
 ./usr/share/man/man9/VFS.9.gz
 ./usr/share/man/man9/VFS_CHECKEXP.9.gz
 ./usr/share/man/man9/VFS_FHTOVP.9.gz
@@ -12875,9 +12998,17 @@
 ./usr/share/man/man9/callout_reset.9.gz
 ./usr/share/man/man9/callout_reset_on.9.gz
 ./usr/share/man/man9/callout_reset_sbt.9.gz
+./usr/share/man/man9/callout_reset_sbt_curcpu.9.gz
 ./usr/share/man/man9/callout_reset_sbt_on.9.gz
 ./usr/share/man/man9/callout_schedule.9.gz
+./usr/share/man/man9/callout_schedule_sbt.9.gz
+./usr/share/man/man9/callout_schedule_sbt_curcpu.9.gz
+./usr/share/man/man9/callout_schedule_sbt_on.9.gz
 ./usr/share/man/man9/callout_stop.9.gz
+./usr/share/man/man9/casueword.9.gz
+./usr/share/man/man9/casueword32.9.gz
+./usr/share/man/man9/casuword.9.gz
+./usr/share/man/man9/casuword32.9.gz
 ./usr/share/man/man9/cd.9.gz
 ./usr/share/man/man9/choosethread.9.gz
 ./usr/share/man/man9/condvar.9.gz
@@ -13055,6 +13186,9 @@
 ./usr/share/man/man9/free_mntarg.9.gz
 ./usr/share/man/man9/free_unr.9.gz
 ./usr/share/man/man9/fubyte.9.gz
+./usr/share/man/man9/fueword.9.gz
+./usr/share/man/man9/fueword32.9.gz
+./usr/share/man/man9/fueword64.9.gz
 ./usr/share/man/man9/fuswintr.9.gz
 ./usr/share/man/man9/fuword.9.gz
 ./usr/share/man/man9/fuword16.9.gz
@@ -13679,8 +13813,6 @@
 ./usr/share/man/man9/sleepq_add.9.gz
 ./usr/share/man/man9/sleepq_alloc.9.gz
 ./usr/share/man/man9/sleepq_broadcast.9.gz
-./usr/share/man/man9/sleepq_calc_signal_retval.9.gz
-./usr/share/man/man9/sleepq_catch_signals.9.gz
 ./usr/share/man/man9/sleepq_free.9.gz
 ./usr/share/man/man9/sleepq_lookup.9.gz
 ./usr/share/man/man9/sleepq_release.9.gz
@@ -13769,15 +13901,21 @@
 ./usr/share/man/man9/taskqueue.9.gz
 ./usr/share/man/man9/taskqueue_block.9.gz
 ./usr/share/man/man9/taskqueue_cancel.9.gz
+./usr/share/man/man9/taskqueue_cancel_timeout.9.gz
 ./usr/share/man/man9/taskqueue_create.9.gz
 ./usr/share/man/man9/taskqueue_create_fast.9.gz
 ./usr/share/man/man9/taskqueue_drain.9.gz
 ./usr/share/man/man9/taskqueue_drain_all.9.gz
+./usr/share/man/man9/taskqueue_drain_timeout.9.gz
 ./usr/share/man/man9/taskqueue_enqueue.9.gz
 ./usr/share/man/man9/taskqueue_enqueue_fast.9.gz
+./usr/share/man/man9/taskqueue_enqueue_timeout.9.gz
 ./usr/share/man/man9/taskqueue_free.9.gz
 ./usr/share/man/man9/taskqueue_member.9.gz
 ./usr/share/man/man9/taskqueue_run.9.gz
+./usr/share/man/man9/taskqueue_set_callback.9.gz
+./usr/share/man/man9/taskqueue_start_threads.9.gz
+./usr/share/man/man9/taskqueue_start_threads_pinned.9.gz
 ./usr/share/man/man9/taskqueue_unblock.9.gz
 ./usr/share/man/man9/tdsignal.9.gz
 ./usr/share/man/man9/thread_exit.9.gz
@@ -13991,6 +14129,7 @@
 ./usr/share/man/man9/vn_isdisk.9.gz
 ./usr/share/man/man9/vn_lock.9.gz
 ./usr/share/man/man9/vnode.9.gz
+./usr/share/man/man9/vpanic.9.gz
 ./usr/share/man/man9/vput.9.gz
 ./usr/share/man/man9/vref.9.gz
 ./usr/share/man/man9/vrefcnt.9.gz
@@ -14067,6 +14206,7 @@
 ./usr/share/mk/bsd.crunchgen.mk
 ./usr/share/mk/bsd.dep.mk
 ./usr/share/mk/bsd.doc.mk
+./usr/share/mk/bsd.dtb.mk
 ./usr/share/mk/bsd.endian.mk
 ./usr/share/mk/bsd.files.mk
 ./usr/share/mk/bsd.incs.mk
@@ -14096,7 +14236,6 @@
 ./usr/share/mk/version_gen.awk
 ./usr/share/nls/
 ./usr/share/nls/C/
-./usr/share/nls/POSIX
 ./usr/share/nls/af_ZA.ISO8859-1/
 ./usr/share/nls/af_ZA.ISO8859-15/
 ./usr/share/nls/af_ZA.UTF-8/
@@ -14145,7 +14284,6 @@
 ./usr/share/nls/en_NZ.UTF-8/
 ./usr/share/nls/en_US.ISO8859-1/
 ./usr/share/nls/en_US.ISO8859-15/
-./usr/share/nls/en_US.US-ASCII
 ./usr/share/nls/en_US.UTF-8/
 ./usr/share/nls/es_ES.ISO8859-1/
 ./usr/share/nls/es_ES.ISO8859-15/
@@ -14592,6 +14730,7 @@
 ./usr/share/openssl/man/man3/CMS_final.3.gz
 ./usr/share/openssl/man/man3/CMS_get0_RecipientInfos.3.gz
 ./usr/share/openssl/man/man3/CMS_get0_SignerInfos.3.gz
+./usr/share/openssl/man/man3/CMS_get0_content.3.gz
 ./usr/share/openssl/man/man3/CMS_get0_eContentType.3.gz
 ./usr/share/openssl/man/man3/CMS_get0_type.3.gz
 ./usr/share/openssl/man/man3/CMS_get1_ReceiptRequest.3.gz
@@ -15084,6 +15223,7 @@
 ./usr/share/openssl/man/man3/SSL_CTX_get_cert_store.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_get_client_CA_list.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_get_client_cert_cb.3.gz
+./usr/share/openssl/man/man3/SSL_CTX_get_default_read_ahead.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_get_ex_data.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_get_ex_new_index.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_get_info_callback.3.gz
@@ -15091,6 +15231,7 @@
 ./usr/share/openssl/man/man3/SSL_CTX_get_mode.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_get_options.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_get_quiet_shutdown.3.gz
+./usr/share/openssl/man/man3/SSL_CTX_get_read_ahead.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_get_session_cache_mode.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_get_timeout.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_get_verify_callback.3.gz
@@ -15128,6 +15269,7 @@
 ./usr/share/openssl/man/man3/SSL_CTX_set_client_cert_cb.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_set_default_passwd_cb.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_set_default_passwd_cb_userdata.3.gz
+./usr/share/openssl/man/man3/SSL_CTX_set_default_read_ahead.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_set_ex_data.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_set_generate_session_id.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_set_info_callback.3.gz
@@ -15139,6 +15281,7 @@
 ./usr/share/openssl/man/man3/SSL_CTX_set_psk_client_callback.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_set_psk_server_callback.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_set_quiet_shutdown.3.gz
+./usr/share/openssl/man/man3/SSL_CTX_set_read_ahead.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_set_session_cache_mode.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_set_session_id_context.3.gz
 ./usr/share/openssl/man/man3/SSL_CTX_set_ssl_version.3.gz
@@ -15212,6 +15355,7 @@
 ./usr/share/openssl/man/man3/SSL_get_psk_identity_hint.3.gz
 ./usr/share/openssl/man/man3/SSL_get_quiet_shutdown.3.gz
 ./usr/share/openssl/man/man3/SSL_get_rbio.3.gz
+./usr/share/openssl/man/man3/SSL_get_read_ahead.3.gz
 ./usr/share/openssl/man/man3/SSL_get_secure_renegotiation_support.3.gz
 ./usr/share/openssl/man/man3/SSL_get_session.3.gz
 ./usr/share/openssl/man/man3/SSL_get_shutdown.3.gz
@@ -15248,6 +15392,7 @@
 ./usr/share/openssl/man/man3/SSL_set_psk_client_callback.3.gz
 ./usr/share/openssl/man/man3/SSL_set_psk_server_callback.3.gz
 ./usr/share/openssl/man/man3/SSL_set_quiet_shutdown.3.gz
+./usr/share/openssl/man/man3/SSL_set_read_ahead.3.gz
 ./usr/share/openssl/man/man3/SSL_set_session.3.gz
 ./usr/share/openssl/man/man3/SSL_set_session_id_context.3.gz
 ./usr/share/openssl/man/man3/SSL_set_shutdown.3.gz
@@ -15400,11 +15545,14 @@
 ./usr/share/openssl/man/man3/crypto.3.gz
 ./usr/share/openssl/man/man3/d2i_509_CRL_fp.3.gz
 ./usr/share/openssl/man/man3/d2i_ASN1_OBJECT.3.gz
+./usr/share/openssl/man/man3/d2i_CMS_ContentInfo.3.gz
 ./usr/share/openssl/man/man3/d2i_DHparams.3.gz
 ./usr/share/openssl/man/man3/d2i_DSAPrivateKey.3.gz
 ./usr/share/openssl/man/man3/d2i_DSAPublicKey.3.gz
 ./usr/share/openssl/man/man3/d2i_DSA_PUBKEY.3.gz
 ./usr/share/openssl/man/man3/d2i_DSA_SIG.3.gz
+./usr/share/openssl/man/man3/d2i_ECPrivateKey.3.gz
+./usr/share/openssl/man/man3/d2i_ECPrivate_key.3.gz
 ./usr/share/openssl/man/man3/d2i_Netscape_RSA.3.gz
 ./usr/share/openssl/man/man3/d2i_PKCS8PrivateKey.3.gz
 ./usr/share/openssl/man/man3/d2i_PKCS8PrivateKey_bio.3.gz
@@ -15437,12 +15585,14 @@
 ./usr/share/openssl/man/man3/evp.3.gz
 ./usr/share/openssl/man/man3/hmac.3.gz
 ./usr/share/openssl/man/man3/i2d_ASN1_OBJECT.3.gz
+./usr/share/openssl/man/man3/i2d_CMS_ContentInfo.3.gz
 ./usr/share/openssl/man/man3/i2d_CMS_bio_stream.3.gz
 ./usr/share/openssl/man/man3/i2d_DHparams.3.gz
 ./usr/share/openssl/man/man3/i2d_DSAPrivateKey.3.gz
 ./usr/share/openssl/man/man3/i2d_DSAPublicKey.3.gz
 ./usr/share/openssl/man/man3/i2d_DSA_PUBKEY.3.gz
 ./usr/share/openssl/man/man3/i2d_DSA_SIG.3.gz
+./usr/share/openssl/man/man3/i2d_ECPrivateKey.3.gz
 ./usr/share/openssl/man/man3/i2d_Netscape_RSA.3.gz
 ./usr/share/openssl/man/man3/i2d_PKCS7_bio_stream.3.gz
 ./usr/share/openssl/man/man3/i2d_PKCS8PrivateKey_bio.3.gz
@@ -16170,7 +16320,6 @@
 ./usr/share/zoneinfo/America/Regina
 ./usr/share/zoneinfo/America/Resolute
 ./usr/share/zoneinfo/America/Rio_Branco
-./usr/share/zoneinfo/America/Santa_Isabel
 ./usr/share/zoneinfo/America/Santarem
 ./usr/share/zoneinfo/America/Santiago
 ./usr/share/zoneinfo/America/Santo_Domingo
@@ -16221,6 +16370,7 @@
 ./usr/share/zoneinfo/Asia/Bahrain
 ./usr/share/zoneinfo/Asia/Baku
 ./usr/share/zoneinfo/Asia/Bangkok
+./usr/share/zoneinfo/Asia/Barnaul
 ./usr/share/zoneinfo/Asia/Beirut
 ./usr/share/zoneinfo/Asia/Bishkek
 ./usr/share/zoneinfo/Asia/Brunei
@@ -16281,6 +16431,7 @@
 ./usr/share/zoneinfo/Asia/Tehran
 ./usr/share/zoneinfo/Asia/Thimphu
 ./usr/share/zoneinfo/Asia/Tokyo
+./usr/share/zoneinfo/Asia/Tomsk
 ./usr/share/zoneinfo/Asia/Ulaanbaatar
 ./usr/share/zoneinfo/Asia/Urumqi
 ./usr/share/zoneinfo/Asia/Ust-Nera
@@ -16357,6 +16508,7 @@
 ./usr/share/zoneinfo/Europe/
 ./usr/share/zoneinfo/Europe/Amsterdam
 ./usr/share/zoneinfo/Europe/Andorra
+./usr/share/zoneinfo/Europe/Astrakhan
 ./usr/share/zoneinfo/Europe/Athens
 ./usr/share/zoneinfo/Europe/Belgrade
 ./usr/share/zoneinfo/Europe/Berlin
@@ -16376,6 +16528,7 @@
 ./usr/share/zoneinfo/Europe/Jersey
 ./usr/share/zoneinfo/Europe/Kaliningrad
 ./usr/share/zoneinfo/Europe/Kiev
+./usr/share/zoneinfo/Europe/Kirov
 ./usr/share/zoneinfo/Europe/Lisbon
 ./usr/share/zoneinfo/Europe/Ljubljana
 ./usr/share/zoneinfo/Europe/London
@@ -16402,6 +16555,7 @@
 ./usr/share/zoneinfo/Europe/Stockholm
 ./usr/share/zoneinfo/Europe/Tallinn
 ./usr/share/zoneinfo/Europe/Tirane
+./usr/share/zoneinfo/Europe/Ulyanovsk
 ./usr/share/zoneinfo/Europe/Uzhgorod
 ./usr/share/zoneinfo/Europe/Vaduz
 ./usr/share/zoneinfo/Europe/Vatican
@@ -16507,6 +16661,8 @@
 ./var/db/etcupdate/current/etc/autofs/
 ./var/db/etcupdate/current/etc/autofs/include_ldap
 ./var/db/etcupdate/current/etc/autofs/special_hosts
+./var/db/etcupdate/current/etc/autofs/special_media
+./var/db/etcupdate/current/etc/autofs/special_noauto
 ./var/db/etcupdate/current/etc/autofs/special_null
 ./var/db/etcupdate/current/etc/bluetooth/
 ./var/db/etcupdate/current/etc/bluetooth/hcsecd.conf
@@ -16528,6 +16684,7 @@
 ./var/db/etcupdate/current/etc/devd/hyperv.conf
 ./var/db/etcupdate/current/etc/devd/uath.conf
 ./var/db/etcupdate/current/etc/devd/usb.conf
+./var/db/etcupdate/current/etc/devd/zfs.conf
 ./var/db/etcupdate/current/etc/devfs.conf
 ./var/db/etcupdate/current/etc/dhclient.conf
 ./var/db/etcupdate/current/etc/disktab
@@ -16545,7 +16702,6 @@
 ./var/db/etcupdate/current/etc/inetd.conf
 ./var/db/etcupdate/current/etc/libalias.conf
 ./var/db/etcupdate/current/etc/libmap.conf
-./var/db/etcupdate/current/etc/libmap32.conf
 ./var/db/etcupdate/current/etc/login.access
 ./var/db/etcupdate/current/etc/login.conf
 ./var/db/etcupdate/current/etc/mac.conf
@@ -16600,6 +16756,7 @@
 ./var/db/etcupdate/current/etc/periodic/daily/409.status-gconcat
 ./var/db/etcupdate/current/etc/periodic/daily/420.status-network
 ./var/db/etcupdate/current/etc/periodic/daily/450.status-security
+./var/db/etcupdate/current/etc/periodic/daily/510.status-world-kernel
 ./var/db/etcupdate/current/etc/periodic/daily/800.scrub-zfs
 ./var/db/etcupdate/current/etc/periodic/daily/999.local
 ./var/db/etcupdate/current/etc/periodic/monthly/
@@ -16685,6 +16842,7 @@
 ./var/db/etcupdate/current/etc/rc.d/geli
 ./var/db/etcupdate/current/etc/rc.d/geli2
 ./var/db/etcupdate/current/etc/rc.d/gptboot
+./var/db/etcupdate/current/etc/rc.d/growfs
 ./var/db/etcupdate/current/etc/rc.d/gssd
 ./var/db/etcupdate/current/etc/rc.d/hastd
 ./var/db/etcupdate/current/etc/rc.d/hcsecd
@@ -16742,9 +16900,7 @@
 ./var/db/etcupdate/current/etc/rc.d/nfsuserd
 ./var/db/etcupdate/current/etc/rc.d/nisdomain
 ./var/db/etcupdate/current/etc/rc.d/nsswitch
-./var/db/etcupdate/current/etc/rc.d/ntpd
 ./var/db/etcupdate/current/etc/rc.d/ntpdate
-./var/db/etcupdate/current/etc/rc.d/othermta
 ./var/db/etcupdate/current/etc/rc.d/pf
 ./var/db/etcupdate/current/etc/rc.d/pflog
 ./var/db/etcupdate/current/etc/rc.d/pfsync
@@ -16767,11 +16923,9 @@
 ./var/db/etcupdate/current/etc/rc.d/rpcbind
 ./var/db/etcupdate/current/etc/rc.d/rtadvd
 ./var/db/etcupdate/current/etc/rc.d/rtsold
-./var/db/etcupdate/current/etc/rc.d/rwho
 ./var/db/etcupdate/current/etc/rc.d/savecore
 ./var/db/etcupdate/current/etc/rc.d/sdpd
 ./var/db/etcupdate/current/etc/rc.d/securelevel
-./var/db/etcupdate/current/etc/rc.d/sendmail
 ./var/db/etcupdate/current/etc/rc.d/serial
 ./var/db/etcupdate/current/etc/rc.d/sppp
 ./var/db/etcupdate/current/etc/rc.d/statd
@@ -16803,7 +16957,6 @@
 ./var/db/etcupdate/current/etc/rc.firewall
 ./var/db/etcupdate/current/etc/rc.initdiskless
 ./var/db/etcupdate/current/etc/rc.resume
-./var/db/etcupdate/current/etc/rc.sendmail
 ./var/db/etcupdate/current/etc/rc.shutdown
 ./var/db/etcupdate/current/etc/rc.subr
 ./var/db/etcupdate/current/etc/rc.suspend
@@ -16859,9 +17012,6 @@
 ./var/db/etcupdate/current/usr/share/man/en.UTF-8/man7
 ./var/db/etcupdate/current/usr/share/man/en.UTF-8/man8
 ./var/db/etcupdate/current/usr/share/man/en.UTF-8/man9
-./var/db/etcupdate/current/usr/share/nls/
-./var/db/etcupdate/current/usr/share/nls/POSIX
-./var/db/etcupdate/current/usr/share/nls/en_US.US-ASCII
 ./var/db/etcupdate/current/usr/share/openssl/
 ./var/db/etcupdate/current/usr/share/openssl/man/
 ./var/db/etcupdate/current/usr/share/openssl/man/en.ISO8859-1/
@@ -16875,7 +17025,6 @@
 ./var/db/freebsd-update/
 ./var/db/hyperv/
 ./var/db/ipf/
-./var/db/locate.database
 ./var/db/mergemaster.mtree
 ./var/db/pkg/
 ./var/db/ports/
