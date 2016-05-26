@@ -44,13 +44,18 @@ setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PLUGINSDIR}
 
 extract_packages ${STAGEDIR}
+# register persistent packages to avoid bouncing
+install_packages ${STAGEDIR} pkg git
+lock_packages ${STAGEDIR}
 
 for PLUGIN in ${PLUGINS_LIST}; do
 	PLUGIN_NAME=$(make -C ${PLUGINSDIR}/${PLUGIN} name)
 	PLUGIN_DEPS=$(make -C ${PLUGINSDIR}/${PLUGIN} depends)
 
 	remove_packages ${STAGEDIR} ${PLUGIN_NAME}
-	install_packages ${STAGEDIR} ${PLUGIN_DEPS} git
+	if [ -n "${PLUGIN_DEPS}" ]; then
+		install_packages ${STAGEDIR} ${PLUGIN_DEPS}
+	fi
 	custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN}
 done
 

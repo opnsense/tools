@@ -444,13 +444,29 @@ remove_packages()
 	done
 }
 
-install_packages()
+lock_packages()
 {
-	echo ">>> Installing packages in ${1}..."
-
 	BASEDIR=${1}
 	shift
 	PKGLIST=${@}
+	if [ -z "${PKGLIST}" ]; then
+		PKGLIST="-a"
+	fi
+
+	echo ">>> Locking packages in ${BASEDIR}: ${PKGLIST}"
+
+	for PKG in ${PKGLIST}; do
+		pkg -c ${BASEDIR} lock -qy ${PKG}
+	done
+}
+
+install_packages()
+{
+	BASEDIR=${1}
+	shift
+	PKGLIST=${@}
+
+	echo ">>> Installing packages in ${BASEDIR}: ${PKGLIST}"
 
 	# remove previous packages for a clean environment
 	pkg -c ${BASEDIR} remove -fya
@@ -494,8 +510,8 @@ install_packages()
 		done
 	fi
 
-	# collect all installed packages
-	PKGLIST="$(pkg -c ${BASEDIR} query %n)"
+	# collect all installed packages (minus locked packages)
+	PKGLIST="$(pkg -c ${BASEDIR} query -e "%k != 1" %n)"
 
 	for PKG in ${PKGLIST}; do
 		# add, unlike install, is not aware of repositories :(
@@ -530,6 +546,9 @@ bundle_packages()
 	sh ./clean.sh packages
 
 	git_describe ${PORTSDIR}
+
+	# clean up in case of partial run
+	rm -rf ${BASEDIR}${PACKAGESDIR}-new
 
 	# rebuild expected FreeBSD structure
 	mkdir -p ${BASEDIR}${PACKAGESDIR}-new/Latest
