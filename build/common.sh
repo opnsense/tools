@@ -527,10 +527,8 @@ custom_packages()
 rm -rf ${1}
 
 # run the package build process
+make -C ${2} DESTDIR=${1} ${3} FLAVOUR=${PRODUCT_FLAVOUR} metadata
 make -C ${2} DESTDIR=${1} ${3} FLAVOUR=${PRODUCT_FLAVOUR} install
-make -C ${2} DESTDIR=${1} ${3} scripts
-make -C ${2} DESTDIR=${1} ${3} manifest > ${1}/+MANIFEST
-make -C ${2} DESTDIR=${1} ${3} plist > ${1}/plist
 
 echo -n ">>> Creating custom package for ${2}... "
 pkg create -m ${1} -r ${1} -p ${1}/plist -o ${PACKAGESDIR}/All
