@@ -681,6 +681,14 @@ setup_stage()
 
 	shift
 
+	# kill stale pids for chrooted daemons
+	if [ -d ${STAGE}/var/run ]; then
+		PIDS=$(find ${STAGE}/var/run -name "*.pid")
+		for PID in ${PIDS}; do
+			pkill -F ${PID};
+		done
+	fi
+
 	# might have been a chroot
 	for DIR in ${MOUNTDIRS}; do
 		if [ -d ${STAGE}${DIR} ]; then
