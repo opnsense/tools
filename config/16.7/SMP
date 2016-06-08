@@ -113,5 +113,5 @@ device		cxgb
 device		cxgbe
 
 # HardenedBSD goodies
-#options		PAX
-#options		PAX_ASLR
+options		PAX
+options		PAX_ASLR
