@@ -55,39 +55,6 @@ device		pf
 device		pflog
 device		pfsync
 
-# netgraph(4) system
-options		NETGRAPH
-options		NETGRAPH_VLAN
-options		NETGRAPH_L2TP
-options		NETGRAPH_ASYNC
-options		NETGRAPH_BPF
-options		NETGRAPH_BRIDGE
-options		NETGRAPH_CISCO
-options		NETGRAPH_ECHO
-options		NETGRAPH_ETHER
-options		NETGRAPH_FRAME_RELAY
-options		NETGRAPH_HOLE
-options		NETGRAPH_IFACE
-options		NETGRAPH_EIFACE
-options		NETGRAPH_KSOCKET
-options		NETGRAPH_LMI
-options		NETGRAPH_MPPC_ENCRYPTION
-options		NETGRAPH_ONE2MANY
-options		NETGRAPH_PPP
-options		NETGRAPH_PPPOE
-options		NETGRAPH_PPTPGRE
-options		NETGRAPH_RFC1490
-options		NETGRAPH_SOCKET
-options		NETGRAPH_TEE
-options		NETGRAPH_TTY
-options		NETGRAPH_UI
-options		NETGRAPH_VJC
-options		NETGRAPH_TCPMSS
-options		NETGRAPH_PIPE
-options		NETGRAPH_CAR
-options		NETGRAPH_DEFLATE
-options		NETGRAPH_PRED1
-
 # 3G
 device		u3g
 device		uark
