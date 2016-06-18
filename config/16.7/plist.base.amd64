@@ -2784,6 +2784,7 @@
 ./usr/include/sys/nvpair_impl.h
 ./usr/include/sys/osd.h
 ./usr/include/sys/param.h
+./usr/include/sys/pax.h
 ./usr/include/sys/pciio.h
 ./usr/include/sys/pcpu.h
 ./usr/include/sys/pctrie.h
