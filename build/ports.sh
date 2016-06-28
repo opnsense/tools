@@ -101,7 +101,7 @@ trap - 2
 
 echo ">>> Creating binary packages..."
 
-chroot ${STAGEDIR} /bin/sh -es << EOF && bundle_packages ${STAGEDIR} ${SELF}
+chroot ${STAGEDIR} /bin/sh -es << EOF && bundle_packages ${STAGEDIR} ${SELF} plugins core
 pkg autoremove -y
 pkg create -nao ${PACKAGESDIR}/All -f txz
 EOF

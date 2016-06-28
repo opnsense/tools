@@ -541,6 +541,11 @@ bundle_packages()
 	BASEDIR=${1}
 	SELF=${2}
 
+	shift
+	shift
+
+	REDOS=${@}
+
 	sh ./clean.sh packages
 
 	git_describe ${PORTSDIR}
@@ -557,6 +562,11 @@ bundle_packages()
 	}); do
 		# push previous markers to home location
 		cp ${PROGRESS} ${BASEDIR}${PACKAGESDIR}-new
+	done
+
+	for REDO in ${REDOS}; do
+		# remove markers we need to rerun
+		rm -f ${BASEDIR}${PACKAGESDIR}-new/.${REDO}_done
 	done
 
 	if [ -n "${SELF}" ]; then
