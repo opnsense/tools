@@ -54,7 +54,7 @@ packages: core
 cdrom vm serial vga nano: packages kernel
 sets: distfiles packages kernel
 images: cdrom nano serial vga vm
-release: images
+release: cdrom nano serial vga
 
 # Expand target arguments for the script append:
 
