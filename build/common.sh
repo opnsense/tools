@@ -264,23 +264,6 @@ setup_copy()
 	cp -r ${2} ${1}${2}
 }
 
-setup_memstick()
-{
-	cat > ${1}/etc/fstab << EOF
-# Device	Mountpoint	FStype	Options	Dump	Pass#
-/dev/ufs/${3}	/	ufs	ro,noatime	1	1
-tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
-EOF
-
-	makefs -t ffs -B little -o label=${3} ${2} ${1}
-
-	DEV=$(mdconfig -a -t vnode -f "${2}")
-	gpart create -s BSD "${DEV}"
-	gpart bootcode -b "${1}"/boot/boot "${DEV}"
-	gpart add -t freebsd-ufs "${DEV}"
-	mdconfig -d -u "${DEV}"
-}
-
 setup_chroot()
 {
 	echo ">>> Setting up chroot in ${1}"

@@ -115,9 +115,9 @@ A serial memstick image is created using:
 
     # make serial
 
-A vga memstick image is created using:
+A uefi memstick image is created using:
 
-    # make vga
+    # make uefi
 
 A flash card disk image (NanoBSD) is created using:
 
@@ -143,7 +143,7 @@ define hooks in the form of e.g.:
     }
 
 These hooks are available for all image types, namely
-cdrom, nano, serial, vga and vm.  Device-specific hooks
+cdrom, nano, serial, uefi and vm.  Device-specific hooks
 are loaded after config-specific hooks and both of them
 can coexist in a given build.
 
@@ -231,7 +231,7 @@ Available clean options are:
 * sets:		remove all sets
 * src:		reset kernel/base build directory
 * stage:	reset main staging area
-* vga:		remove vga image
+* uefi:		remove uefi image
 * vm:		remove vm image
 
 The ports tree has a few of our modifications and is sometimes a

@@ -49,4 +49,17 @@ setup_serial ${STAGEDIR}
 setup_extras ${STAGEDIR} ${SELF}
 setup_mtree ${STAGEDIR}
 setup_entropy ${STAGEDIR}
-setup_memstick ${STAGEDIR} ${SERIALIMG} ${LABEL}
+
+cat > ${STAGEDIR}/etc/fstab << EOF
+# Device		Mountpoint	FStype	Options		Dump	Pass#
+/dev/ufs/${LABEL}	/		ufs	ro,noatime	1	1
+tmpfs			/tmp		tmpfs	rw,mode=01777	0	0
+EOF
+
+makefs -t ffs -B little -o label=${LABEL} ${SERIALIMG} ${STAGEDIR}
+
+DEV=$(mdconfig -a -t vnode -f "${SERIALIMG}")
+gpart create -s BSD "${DEV}"
+gpart bootcode -b "${STAGEDIR}"/boot/boot "${DEV}"
+gpart add -t freebsd-ufs "${DEV}"
+mdconfig -d -u "${DEV}"
