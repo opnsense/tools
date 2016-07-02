@@ -182,6 +182,11 @@ Package sets (may be signed depending on whether the key is
 found under /root) ready for web server deployment are automatically
 generated and modified by ports.sh and core.sh.
 
+Signing for all sets can be redone or applied to a previous run
+that did not sign by invoking:
+
+    # make sign
+
 Virtual machine images come in varying disk formats and sizes.
 The default format is vmdk with 20G and 1G swap. If you want
 to change that you can manually alter the invoke using:
