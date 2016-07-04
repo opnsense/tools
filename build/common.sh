@@ -603,7 +603,7 @@ setup_serial()
 
 	echo "-S${PRODUCT_SPEED} -D" > ${1}/boot.config
 
-	cat > ${1}/boot/loader.conf << EOF
+	cat >> ${1}/boot/loader.conf << EOF
 boot_multicons="YES"
 boot_serial="YES"
 console="comconsole,vidconsole"
