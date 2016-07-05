@@ -59,11 +59,15 @@ while getopts C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:v: OPT; do
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	K)
-		export PRODUCT_PUBKEY=${OPTARG}
+		if [ -n "${OPTARG}" ]; then
+			export PRODUCT_PUBKEY=${OPTARG}
+		fi
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	k)
-		export PRODUCT_PRIVKEY=${OPTARG}
+		if [ -n "${OPTARG}" ]; then
+			export PRODUCT_PRIVKEY=${OPTARG}
+		fi
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	L)
@@ -136,8 +140,6 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_VERSION}" -o \
     -z "${PRODUCT_SETTINGS}" -o \
     -z "${PRODUCT_MIRROR}" -o \
-    -z "${PRODUCT_PRIVKEY}" -o \
-    -z "${PRODUCT_PUBKEY}" -o \
     -z "${PRODUCT_DEVICE}" -o \
     -z "${PRODUCT_SPEED}" -o \
     -z "${TOOLSDIR}" -o \
@@ -148,11 +150,6 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${SRCDIR}" ]; then
 	usage
 fi
-
-# automatically expanded product stuff
-export PRODUCT_SIGNCMD=${PRODUCT_SIGNCMD:-"${TOOLSDIR}/scripts/pkg_sign.sh ${PRODUCT_PUBKEY} ${PRODUCT_PRIVKEY}"}
-export PRODUCT_SIGNCHK=${PRODUCT_SIGNCHK:-"${TOOLSDIR}/scripts/pkg_fingerprint.sh ${PRODUCT_PUBKEY}"}
-export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
 
 # misc. foo
 export CONFIG_PKG="/usr/local/etc/pkg/repos/origin.conf"
@@ -173,6 +170,13 @@ export PACKAGESDIR="/.pkg"
 export IMAGESDIR="/tmp/images"
 export SETSDIR="/tmp/sets"
 mkdir -p ${IMAGESDIR} ${SETSDIR}
+
+# automatically expanded product stuff
+export PRODUCT_PRIVKEY=${PRODUCT_PRIVKEY:-"${CONFIGDIR}/repo.key"}
+export PRODUCT_PUBKEY=${PRODUCT_PUBKEY:-"${CONFIGDIR}/repo.pub"}
+export PRODUCT_SIGNCMD=${PRODUCT_SIGNCMD:-"${TOOLSDIR}/scripts/pkg_sign.sh ${PRODUCT_PUBKEY} ${PRODUCT_PRIVKEY}"}
+export PRODUCT_SIGNCHK=${PRODUCT_SIGNCHK:-"${TOOLSDIR}/scripts/pkg_fingerprint.sh ${PRODUCT_PUBKEY}"}
+export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
 
 # print environment to showcase all of our variables
 env | sort

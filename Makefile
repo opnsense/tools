@@ -35,8 +35,6 @@ MIRRORS?=	https://opnsense.c0urier.net \
 		http://mirror.ams1.nl.leaseweb.net/opnsense
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
-PRIVKEY?=	/root/repo.key
-PUBKEY?=	/root/repo.pub
 STAGEDIRPREFIX?=/usr/obj
 PORTSREFDIR?=	/usr/freebsd-ports
 PLUGINSDIR?=	/usr/plugins
@@ -78,8 +76,8 @@ ${STEP}: lint
 	@cd ${.CURDIR}/build && sh ${VERBOSE_FLAGS} ./${.TARGET}.sh \
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
-	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k ${PRIVKEY} \
-	    -K ${PUBKEY} -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
+	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
+	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
 	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
 	    ${${STEP}_ARGS}
 .endfor
