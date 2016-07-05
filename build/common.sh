@@ -412,6 +412,33 @@ extract_packages()
 	fi
 }
 
+search_packages()
+{
+	BASEDIR=${1}
+	shift
+	PKGLIST=${@}
+
+	echo ">>> Searching packages in ${BASEDIR}: ${PKGLIST}"
+
+	for PKG in ${PKGLIST}; do
+		# exact matching according to package name
+		for PKGFILE in $(cd ${BASEDIR}${PACKAGESDIR}; \
+		    find All -type f); do
+			PKGINFO=$(pkg -c ${BASEDIR} info -F ${PACKAGESDIR}/${PKGFILE} | grep ^Name | awk '{ print $3; }')
+			if [ ${PKG} = ${PKGINFO} ]; then
+				return 0
+			fi
+		done
+		# match using globbing as a second pass
+		for PKGGLOB in $(cd ${BASEDIR}${PACKAGESDIR}; \
+		    find All -name "${PKG}" -type f); do
+			return 0
+		done
+	done
+
+	return 1
+}
+
 remove_packages()
 {
 	BASEDIR=${1}
@@ -421,7 +448,7 @@ remove_packages()
 	echo ">>> Removing packages in ${BASEDIR}: ${PKGLIST}"
 
 	for PKG in ${PKGLIST}; do
-		# clear out the ports that ought to be rebuilt
+		# exact matching according to package name
 		for PKGFILE in $(cd ${BASEDIR}${PACKAGESDIR}; \
 		    find All -type f); do
 			PKGINFO=$(pkg -c ${BASEDIR} info -F ${PACKAGESDIR}/${PKGFILE} | grep ^Name | awk '{ print $3; }')
@@ -429,7 +456,7 @@ remove_packages()
 				rm ${BASEDIR}${PACKAGESDIR}/${PKGFILE}
 			fi
 		done
-		# if globbing matches, remove too
+		# match using globbing as a second pass
 		for PKGGLOB in $(cd ${BASEDIR}${PACKAGESDIR}; \
 		    find All -name "${PKG}" -type f); do
 			rm ${BASEDIR}${PACKAGESDIR}/${PKGGLOB}
@@ -453,6 +480,27 @@ lock_packages()
 	done
 }
 
+bootstrap_packages()
+{
+	BASEDIR=${1}
+
+	echo ">>> Bootstrapping packages in ${BASEDIR}"
+
+	for PKG in $({
+		cd ${BASEDIR}
+		# find all package files, omitting plugins
+		find .${PACKAGESDIR}/All -type f \
+		    \! -name "os-*" \! -name "ospriv-*"
+	}); do
+		# Adds all available packages and removes the
+		# ones that cannot be installed due to missing
+		# dependencies.  This behaviour is desired.
+		if ! pkg -c ${BASEDIR} add ${PKG}; then
+			rm -r ${BASEDIR}/${PKG}
+		fi
+	done
+}
+
 install_packages()
 {
 	BASEDIR=${1}
@@ -464,44 +512,26 @@ install_packages()
 	# remove previous packages for a clean environment
 	pkg -c ${BASEDIR} remove -fya
 
-	if [ -z "${PKGLIST}" ]; then
-		for PKG in $({
+	# Adds all selected packages and fails if one cannot
+	# be installed.  Used to build a runtime environment.
+	for PKG in pkg ${PKGLIST}; do
+		PKGFOUND=
+		for PKGFILE in $({
 			cd ${BASEDIR}
-			# find all package files, omitting plugins
-			find .${PACKAGESDIR}/All -type f \
-			    \! -name "os-*" \! -name "ospriv-*"
+			find .${PACKAGESDIR}/All -name "${PKG}-*.txz"
 		}); do
-			# Adds all available packages and removes the
-			# ones that cannot be installed due to missing
-			# dependencies.  This behaviour is desired.
-			if ! pkg -c ${BASEDIR} add ${PKG}; then
-				rm -r ${BASEDIR}/${PKG}
+			PKGINFO=$(pkg -c ${BASEDIR} info -F ${PKGFILE} | grep ^Name | awk '{ print $3; }')
+			if [ ${PKG} = ${PKGINFO} ]; then
+				PKGFOUND=${PKGFILE}
 			fi
 		done
-	else
-		# always bootstrap pkg as the first package
-		for PKG in pkg ${PKGLIST}; do
-			# Adds all selected packages and fails if
-			# one cannot be installed.  Used to build
-			# a runtime environment.
-			PKGFOUND=
-			for PKGFILE in $({
-				cd ${BASEDIR}
-				find .${PACKAGESDIR}/All -name "${PKG}-*.txz"
-			}); do
-				PKGINFO=$(pkg -c ${BASEDIR} info -F ${PKGFILE} | grep ^Name | awk '{ print $3; }')
-				if [ ${PKG} = ${PKGINFO} ]; then
-					PKGFOUND=${PKGFILE}
-				fi
-			done
-			if [ -n "${PKGFOUND}" ]; then
-				pkg -c ${BASEDIR} add ${PKGFOUND}
-			else
-				echo "Could not find package: ${PKG}" >&2
-				exit 1
-			fi
-		done
-	fi
+		if [ -n "${PKGFOUND}" ]; then
+			pkg -c ${BASEDIR} add ${PKGFOUND}
+		else
+			echo "Could not find package: ${PKG}" >&2
+			exit 1
+		fi
+	done
 
 	# collect all installed packages (minus locked packages)
 	PKGLIST="$(pkg -c ${BASEDIR} query -e "%k != 1" %n)"

@@ -53,6 +53,7 @@ for CORE_TAG in ${CORE_TAGS}; do
 	CORE_NAME=${PRODUCT_TYPE}
 	CORE_FAMILY="release"
 	CORE_ARGS="CORE_NAME=${CORE_NAME} CORE_FAMILY=${CORE_FAMILY}"
+	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} depends)
 
 	if [ -n "${*}" ]; then
 		setup_copy ${STAGEDIR} ${COREDIR}
@@ -64,11 +65,8 @@ for CORE_TAG in ${CORE_TAGS}; do
 		fi
 	fi
 
-	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} depends)
 	remove_packages ${STAGEDIR} ${CORE_NAME}
-	if [ -n "${CORE_DEPS}" ]; then
-		install_packages ${STAGEDIR} ${CORE_DEPS}
-	fi
+	install_packages ${STAGEDIR} ${CORE_DEPS}
 	custom_packages ${STAGEDIR} ${COREDIR} "${CORE_ARGS}"
 done
 

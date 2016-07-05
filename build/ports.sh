@@ -44,7 +44,7 @@ setup_distfiles ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
 remove_packages ${STAGEDIR} ${@}
-install_packages ${STAGEDIR}
+bootstrap_packages ${STAGEDIR}
 
 echo ">>> Building packages..."
 

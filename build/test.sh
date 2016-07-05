@@ -38,7 +38,7 @@ setup_clone ${STAGEDIR} ${PLUGINSDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
-install_packages ${STAGEDIR} ${PRODUCT_TYPE} pear-PHP_CodeSniffer phpunit
+install_packages ${STAGEDIR} pkg ${PRODUCT_TYPE} pear-PHP_CodeSniffer phpunit
 # don't want to deinstall in case of testing...
 
 # install all plugins, see if files clash
