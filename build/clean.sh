@@ -41,6 +41,15 @@ for ARG in ${@}; do
 		echo ">>> Removing cdrom image"
 		rm -f ${IMAGESDIR}/*-cdrom-${ARCH}.*
 		;;
+	core)
+		echo ">>> Removing core from packages set"
+		setup_stage ${STAGEDIR}
+		setup_base ${STAGEDIR}
+		extract_packages ${STAGEDIR}
+		remove_packages ${STAGEDIR} ${PRODUCT_TYPE} \
+		    ${PRODUCT_TYPE}-stable ${PRODUCT_TYPE}-devel
+		bundle_packages ${STAGEDIR} ${SELF} core
+		;;
 	distfiles)
 		echo ">>> Removing distfiles set"
 		rm -f ${SETSDIR}/distfiles-*.tar
@@ -57,9 +66,17 @@ for ARG in ${@}; do
 		echo ">>> Removing nano image"
 		rm -f ${IMAGESDIR}/*-nano-${ARCH}.*
 		;;
-	packages)
+	packages|ports)
 		echo ">>> Removing packages set"
 		rm -f ${SETSDIR}/packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar
+		;;
+	plugins)
+		echo ">>> Removing plugins from packages set"
+		setup_stage ${STAGEDIR}
+		setup_base ${STAGEDIR}
+		extract_packages ${STAGEDIR}
+		remove_packages ${STAGEDIR} "os-*" "ospriv-*"
+		bundle_packages ${STAGEDIR} ${SELF} plugins
 		;;
 	release)
 		echo ">>> Removing release set"

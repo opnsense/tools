@@ -422,11 +422,17 @@ remove_packages()
 
 	for PKG in ${PKGLIST}; do
 		# clear out the ports that ought to be rebuilt
-		for PKGFILE in $(cd ${BASEDIR}${PACKAGESDIR}; find All -type f); do
+		for PKGFILE in $(cd ${BASEDIR}${PACKAGESDIR}; \
+		    find All -type f); do
 			PKGINFO=$(pkg -c ${BASEDIR} info -F ${PACKAGESDIR}/${PKGFILE} | grep ^Name | awk '{ print $3; }')
 			if [ ${PKG} = ${PKGINFO} ]; then
 				rm ${BASEDIR}${PACKAGESDIR}/${PKGFILE}
 			fi
+		done
+		# if globbing matches, remove too
+		for PKGGLOB in $(cd ${BASEDIR}${PACKAGESDIR}; \
+		    find All -name "${PKG}" -type f); do
+			rm ${BASEDIR}${PACKAGESDIR}/${PKGGLOB}
 		done
 	done
 }

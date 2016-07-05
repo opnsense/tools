@@ -222,10 +222,13 @@ Available clean options are:
 * base:		remove base set
 * distfiles:	remove distfiles set
 * cdrom:	remove cdrom image
+* core:		remove core from packages set
 * images:	remove all images
 * kernel:	remove kernel set
 * nano:		remove nano image
 * packages:	remove packages set
+* plugins:	remove plugins from packages set
+* ports:	alias for "packages" option
 * release:	remove release set
 * serial:	remove serial image
 * sets:		remove all sets
