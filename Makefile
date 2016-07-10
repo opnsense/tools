@@ -22,7 +22,7 @@ lint:
 # Bootstrap the build options if not set:
 
 NAME?=		OPNsense
-TYPE?=		opnsense
+TYPE?=		${NAME:tl}
 FLAVOUR?=	OpenSSL
 SETTINGS?=	16.1
 DEVICE?=	a10

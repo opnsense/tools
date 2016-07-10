@@ -43,7 +43,8 @@ setup_chroot ${STAGEDIR}
 setup_distfiles ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
-remove_packages ${STAGEDIR} ${@}
+remove_packages ${STAGEDIR} ${@} "os-*" "ospriv-*" ${PRODUCT_TYPE} \
+    ${PRODUCT_TYPE}-stable ${PRODUCT_TYPE}-devel
 bootstrap_packages ${STAGEDIR}
 
 echo ">>> Building packages..."

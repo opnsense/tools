@@ -486,12 +486,7 @@ bootstrap_packages()
 
 	echo ">>> Bootstrapping packages in ${BASEDIR}"
 
-	for PKG in $({
-		cd ${BASEDIR}
-		# find all package files, omitting plugins
-		find .${PACKAGESDIR}/All -type f \
-		    \! -name "os-*" \! -name "ospriv-*"
-	}); do
+	for PKG in $(cd ${BASEDIR}; find .${PACKAGESDIR}/All -type f); do
 		# Adds all available packages and removes the
 		# ones that cannot be installed due to missing
 		# dependencies.  This behaviour is desired.
