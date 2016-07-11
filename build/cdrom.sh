@@ -48,16 +48,8 @@ setup_extras ${STAGEDIR}/work ${SELF}
 setup_mtree ${STAGEDIR}/work
 setup_entropy ${STAGEDIR}/work
 
-echo -n ">>> Building cdrom image... "
-
 # must be upper case:
 LABEL=$(echo ${LABEL} | tr '[:lower:]' '[:upper:]')
-
-cat > ${STAGEDIR}/work/etc/fstab << EOF
-# Device	Mountpoint	FStype	Options	Dump	Pass #
-/dev/iso9660/${LABEL}	/	cd9660	ro	0	0
-tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
-EOF
 
 UEFIBOOT=
 if [ ${ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
@@ -74,6 +66,14 @@ if [ ${ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
 	UEFIBOOT="-o bootimage=i386;${STAGEDIR}/efiboot.img"
 	UEFIBOOT="${UEFIBOOT} -o no-emul-boot"
 fi
+
+echo -n ">>> Building cdrom image... "
+
+cat > ${STAGEDIR}/work/etc/fstab << EOF
+# Device	Mountpoint	FStype	Options	Dump	Pass #
+/dev/iso9660/${LABEL}	/	cd9660	ro	0	0
+tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
+EOF
 
 makefs -t cd9660 ${UEFIBOOT} \
     -o 'bootimage=i386;'"${STAGEDIR}"'/work/boot/cdboot' -o no-emul-boot \
