@@ -40,26 +40,43 @@ LABEL="${LABEL}_Install"
 
 sh ./clean.sh ${SELF}
 
-setup_stage ${STAGEDIR}
-setup_base ${STAGEDIR}
-setup_kernel ${STAGEDIR}
-setup_packages ${STAGEDIR}
-setup_extras ${STAGEDIR} ${SELF}
-setup_mtree ${STAGEDIR}
-setup_entropy ${STAGEDIR}
+setup_stage ${STAGEDIR} work mnt
+setup_base ${STAGEDIR}/work
+setup_kernel ${STAGEDIR}/work
+setup_packages ${STAGEDIR}/work
+setup_extras ${STAGEDIR}/work ${SELF}
+setup_mtree ${STAGEDIR}/work
+setup_entropy ${STAGEDIR}/work
 
 echo -n ">>> Building cdrom image... "
 
 # must be upper case:
 LABEL=$(echo ${LABEL} | tr '[:lower:]' '[:upper:]')
 
-cat > ${STAGEDIR}/etc/fstab << EOF
+cat > ${STAGEDIR}/work/etc/fstab << EOF
 # Device	Mountpoint	FStype	Options	Dump	Pass #
 /dev/iso9660/${LABEL}	/	cd9660	ro	0	0
 tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
-makefs -t cd9660 -o bootimage="i386;${STAGEDIR}/boot/cdboot" \
-    -o no-emul-boot -o label=${LABEL} -o rockridge ${CDROM} ${STAGEDIR}
+UEFIBOOT=
+if [ ${ARCH} = "amd64" ]; then
+	dd if=/dev/zero of=${STAGEDIR}/efiboot.img bs=4k count=200
+	DEV=$(mdconfig -a -t vnode -f ${STAGEDIR}/efiboot.img)
+	newfs_msdos -F 12 -m 0xf8 /dev/${DEV}
+	mount -t msdosfs /dev/${DEV} ${STAGEDIR}/mnt
+	mkdir -p ${STAGEDIR}/mnt/efi/boot
+	cp ${STAGEDIR}/work/boot/loader.efi \
+	    ${STAGEDIR}/mnt/efi/boot/bootx64.efi
+	umount ${STAGEDIR}/mnt
+	mdconfig -d -u ${DEV}
+
+	UEFIBOOT="-o bootimage=i386;${STAGEDIR}/efiboot.img"
+	UEFIBOOT="${UEFIBOOT} -o no-emul-boot"
+fi
+
+makefs -t cd9660 ${UEFIBOOT} \
+    -o 'bootimage=i386;'"${STAGEDIR}"'/work/boot/cdboot' -o no-emul-boot \
+    -o label=${LABEL} -o rockridge ${CDROM} ${STAGEDIR}/work
 
 echo "done"
