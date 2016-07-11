@@ -31,11 +31,6 @@ SELF=vga
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-if [ ${ARCH} != "amd64" ]; then
-	echo ">>> Skipping vga image for ${ARCH}"
-	exit 0
-fi
-
 check_images ${SELF} ${@}
 
 VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
@@ -61,7 +56,11 @@ EOF
 
 makefs -B little -o label=${LABEL} ${STAGEDIR}/root.part ${STAGEDIR}/work
 
-mkimg -s gpt -o ${VGAIMG} -b ${STAGEDIR}/work/boot/pmbr \
-    -p efi:=${STAGEDIR}/work/boot/boot1.efifat \
+UEFIBOOT=
+if [ ${ARCH} = "amd64" ]; then
+	UEFIBOOT="-p efi:=${STAGEDIR}/work/boot/boot1.efifat"
+fi
+
+mkimg -s gpt -o ${VGAIMG} -b ${STAGEDIR}/work/boot/pmbr ${UEFIBOOT} \
     -p freebsd-boot:=${STAGEDIR}/work/boot/gptboot \
     -p freebsd-ufs:=${STAGEDIR}/root.part
