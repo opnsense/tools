@@ -1,6 +1,6 @@
 STEPS=		base boot cdrom chroot clean core distfiles \
 		kernel nano plugins ports prefetch rebase \
-		release serial sign skim test uefi vm
+		release serial sign skim test vga vm
 .PHONY:		${STEPS}
 
 PAGER?=		less
@@ -49,10 +49,10 @@ ports distfiles: base
 plugins: ports
 core: plugins
 packages: core
-cdrom vm serial uefi nano: packages kernel
+cdrom vm serial vga nano: packages kernel
 sets: distfiles packages kernel
-images: cdrom nano serial uefi vm
-release: cdrom nano serial uefi
+images: cdrom nano serial vga vm
+release: cdrom nano serial vga
 
 # Expand target arguments for the script append:
 

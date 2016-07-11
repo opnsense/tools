@@ -98,9 +98,9 @@ for ARG in ${@}; do
 		setup_stage /usr/obj${SRCDIR}
 		rm -r /usr/obj${SRCDIR}
 		;;
-	uefi)
-		echo ">>> Removing uefi image"
-		rm -f ${IMAGESDIR}/*-uefi-${ARCH}.*
+	vga)
+		echo ">>> Removing vga image"
+		rm -f ${IMAGESDIR}/*-vga-${ARCH}.*
 		;;
 	vm)
 		echo ">>> Removing vm image"

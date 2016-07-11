@@ -27,18 +27,18 @@
 
 set -e
 
-SELF=uefi
+SELF=vga
 
 . ./common.sh && $(${SCRUB_ARGS})
 
 if [ ${ARCH} != "amd64" ]; then
-	echo ">>> Skipping uefi image for ${ARCH}"
+	echo ">>> Skipping vga image for ${ARCH}"
 	exit 0
 fi
 
 check_images ${SELF} ${@}
 
-UEFIIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-uefi-${ARCH}.img"
+VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
 
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
@@ -61,7 +61,7 @@ EOF
 
 makefs -B little -o label=${LABEL} ${STAGEDIR}/root.part ${STAGEDIR}/work
 
-mkimg -s gpt -o ${UEFIIMG} -b ${STAGEDIR}/work/boot/pmbr \
+mkimg -s gpt -o ${VGAIMG} -b ${STAGEDIR}/work/boot/pmbr \
     -p efi:=${STAGEDIR}/work/boot/boot1.efifat \
     -p freebsd-boot:=${STAGEDIR}/work/boot/gptboot \
     -p freebsd-ufs:=${STAGEDIR}/root.part
