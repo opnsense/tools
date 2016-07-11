@@ -60,7 +60,7 @@ tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
 UEFIBOOT=
-if [ ${ARCH} = "amd64" ]; then
+if [ ${ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
 	dd if=/dev/zero of=${STAGEDIR}/efiboot.img bs=4k count=200
 	DEV=$(mdconfig -a -t vnode -f ${STAGEDIR}/efiboot.img)
 	newfs_msdos -F 12 -m 0xf8 /dev/${DEV}

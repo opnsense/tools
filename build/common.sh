@@ -40,7 +40,7 @@ usage()
 	exit 1
 }
 
-while getopts C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:v: OPT; do
+while getopts C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:u:v: OPT; do
 	case ${OPT} in
 	C)
 		export COREDIR=${OPTARG}
@@ -122,6 +122,12 @@ while getopts C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:v: OPT; do
 		;;
 	t)
 		export PRODUCT_TYPE=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	u)
+		if [ "${OPTARG}" = "yes" ]; then
+			export PRODUCT_UEFI=${OPTARG}
+		fi
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	v)

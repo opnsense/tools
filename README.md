@@ -84,6 +84,7 @@ Available build options are:
 * SETTINGS:	the name of the selected settings in config/
 * SPEED:	serial speed, e.g. "115200" (default)
 * TYPE:         the name of the meta package to be installed
+* UEFI:		"yes" for amd64 hybrid images with optional UEFI boot
 * VERSION:	a version tag (if applicable)
 
 Build the userland binaries, bootloader and administrative

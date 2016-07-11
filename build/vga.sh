@@ -57,7 +57,7 @@ EOF
 makefs -B little -o label=${LABEL} ${STAGEDIR}/root.part ${STAGEDIR}/work
 
 UEFIBOOT=
-if [ ${ARCH} = "amd64" ]; then
+if [ ${ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
 	UEFIBOOT="-p efi:=${STAGEDIR}/work/boot/boot1.efifat"
 fi
 
