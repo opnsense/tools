@@ -34,9 +34,9 @@ SELF=release
 # make sure the all-encompassing package is a release, too
 setup_stage ${STAGEDIR}
 extract_packages ${STAGEDIR}
-if [ ! -f ${STAGEDIR}${PACKAGESDIR}/All/${PRODUCT_TYPE}-${PRODUCT_VERSION}.txz ]; then
+if [ ! -f ${STAGEDIR}${PACKAGESDIR}/All/${PRODUCT_PKGNAME}-${PRODUCT_VERSION}.txz ]; then
 	echo "Release version mismatch:"
-	(cd ${STAGEDIR}${PACKAGESDIR}/All; ls ${PRODUCT_TYPE}-*.txz)
+	(cd ${STAGEDIR}${PACKAGESDIR}/All; ls ${PRODUCT_PKGNAME}-*.txz)
 	exit 1
 fi
 

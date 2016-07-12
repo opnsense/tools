@@ -38,11 +38,11 @@ setup_clone ${STAGEDIR} ${PLUGINSDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
-install_packages ${STAGEDIR} pkg ${PRODUCT_TYPE} pear-PHP_CodeSniffer phpunit
+install_packages ${STAGEDIR} pkg pear-PHP_CodeSniffer phpunit ${PRODUCT_PKGNAME}
 # don't want to deinstall in case of testing...
 
 # install all plugins, see if files clash
-# between those and PRODUCT_TYPE package
+# between those and PRODUCT_PKGNAME package
 for PKGFILE in $({
 	cd ${STAGEDIR}
 	# ospriv- means development so is ok to break

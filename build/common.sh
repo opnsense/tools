@@ -40,7 +40,7 @@ usage()
 	exit 1
 }
 
-while getopts C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:u:v: OPT; do
+while getopts C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v: OPT; do
 	case ${OPT} in
 	C)
 		export COREDIR=${OPTARG}
@@ -124,6 +124,18 @@ while getopts C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:u:v: OPT; do
 		export PRODUCT_TYPE=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
+	U)
+		case "${OPTARG}" in
+		''|-stable|-devel)
+			export PRODUCT_SUFFIX=${OPTARG}
+			SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+			;;
+		*)
+			echo "SUFFIX wants empty string, -stable or -devel" >&2
+			exit 1
+			;;
+		esac
+		;;
 	u)
 		if [ "${OPTARG}" = "yes" ]; then
 			export PRODUCT_UEFI=${OPTARG}
@@ -183,6 +195,8 @@ export PRODUCT_PUBKEY=${PRODUCT_PUBKEY:-"${CONFIGDIR}/repo.pub"}
 export PRODUCT_SIGNCMD=${PRODUCT_SIGNCMD:-"${TOOLSDIR}/scripts/pkg_sign.sh ${PRODUCT_PUBKEY} ${PRODUCT_PRIVKEY}"}
 export PRODUCT_SIGNCHK=${PRODUCT_SIGNCHK:-"${TOOLSDIR}/scripts/pkg_fingerprint.sh ${PRODUCT_PUBKEY}"}
 export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
+export PRODUCT_PKGNAMES="${PRODUCT_TYPE} ${PRODUCT_TYPE}-stable ${PRODUCT_TYPE}-devel"
+export PRODUCT_PKGNAME="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
 
 # print environment to showcase all of our variables
 env | sort
@@ -632,7 +646,7 @@ setup_packages()
 {
 	# legacy package extract
 	extract_packages ${1}
-	install_packages ${@} ${PRODUCT_TYPE}
+	install_packages ${@} ${PRODUCT_PKGNAME}
 	clean_packages ${1}
 }
 

@@ -46,8 +46,7 @@ for ARG in ${@}; do
 		setup_stage ${STAGEDIR}
 		setup_base ${STAGEDIR}
 		extract_packages ${STAGEDIR}
-		remove_packages ${STAGEDIR} ${PRODUCT_TYPE} \
-		    ${PRODUCT_TYPE}-stable ${PRODUCT_TYPE}-devel
+		remove_packages ${STAGEDIR} ${PRODUCT_PKGNAMES}
 		bundle_packages ${STAGEDIR} ${SELF} core
 		;;
 	distfiles)

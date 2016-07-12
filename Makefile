@@ -23,6 +23,7 @@ lint:
 
 NAME?=		OPNsense
 TYPE?=		${NAME:tl}
+SUFFIX?=	#-devel
 FLAVOUR?=	OpenSSL
 SETTINGS?=	16.1
 DEVICE?=	a10
@@ -80,5 +81,5 @@ ${STEP}: lint
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
 	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
-	    -u "${UEFI:tl}" ${${STEP}_ARGS}
+	    -u "${UEFI:tl}" -U "${SUFFIX}" ${${STEP}_ARGS}
 .endfor
