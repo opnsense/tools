@@ -74,6 +74,7 @@ All build steps are invoked via make(1):
 
 Available build options are:
 
+* ARCH:		the target architecture if not native
 * CONFIG: 	reads the below from the specified file
 * DEVICE:	loads device-specific modifications, e.g. "a10" (default)
 * FLAVOUR:	"OpenSSL" (default), "LibreSSL"

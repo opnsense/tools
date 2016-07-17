@@ -35,13 +35,26 @@ usage()
 	echo "Usage: ${0} -f flavour -n name -v version -R freebsd-ports.git" >&2
 	echo "	-C core.git -P ports.git -S src.git -T tools.git -t type" >&2
 	echo "	-k /path/to/privkey -K /path/to/pubkey -m web_mirror" >&2
-	echo "  -d device [ -l customsigncheck -L customsigncommand ]" >&2
-	echo "  [ -o stagedirprefix ] [...]" >&2
+	echo "	-d device [ -l customsigncheck -L customsigncommand ]" >&2
+	echo "	[ -o stagedirprefix ] [...]" >&2
 	exit 1
 }
 
-while getopts C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v: OPT; do
+while getopts a:C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v: OPT; do
 	case ${OPT} in
+	a)
+		case "${OPTARG}" in
+		amd64|i386)
+			export PRODUCT_SUBARCH=${OPTARG##*:}
+			export PRODUCT_ARCH=${OPTARG%%:*}
+			SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+			;;
+		*)
+			echo "ARCH wants amd64 or i386" >&2
+			exit 1
+			;;
+		esac
+		;;
 	C)
 		export COREDIR=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
@@ -147,6 +160,7 @@ while getopts C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v: OPT; do
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	*)
+		echo "Unknown argument '${OPT}'" >&2
 		usage
 		;;
 	esac
@@ -154,6 +168,7 @@ done
 
 if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_TYPE}" -o \
+    -z "${PRODUCT_ARCH}" -o \
     -z "${PRODUCT_FLAVOUR}" -o \
     -z "${PRODUCT_VERSION}" -o \
     -z "${PRODUCT_SETTINGS}" -o \
@@ -170,13 +185,12 @@ if [ -z "${PRODUCT_NAME}" -o \
 fi
 
 # misc. foo
-export CONFIG_PKG="/usr/local/etc/pkg/repos/origin.conf"
 export CPUS=$(sysctl kern.smp.cpus | awk '{ print $2 }')
 export CONFIG_XML="/usr/local/etc/config.xml"
-export ARCH=${ARCH:-$(uname -m)}
+export TARGET_ARCH=${PRODUCT_ARCH}
+export TARGETARCH=${PRODUCT_ARCH}
 export LABEL=${PRODUCT_NAME}
-export TARGET_ARCH=${ARCH}
-export TARGETARCH=${ARCH}
+export XARCH=$(uname -m)
 
 # define build and config directories
 export CONFIGDIR="${TOOLSDIR}/config/${PRODUCT_SETTINGS}"
@@ -315,7 +329,7 @@ setup_base()
 
 	echo ">>> Setting up world in ${1}"
 
-	BASE_SET=$(find ${SETSDIR} -name "base-*-${ARCH}.txz")
+	BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
 
 	tar -C ${1} -xpf ${BASE_SET}
 
@@ -340,7 +354,7 @@ setup_kernel()
 
 	echo ">>> Setting up kernel in ${1}"
 
-	KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${ARCH}.txz")
+	KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
 
 	tar -C ${1} -xpf ${KERNEL_SET}
 
@@ -391,7 +405,7 @@ check_images()
 	SELF=${1}
 	SKIP=${2}
 
-	IMAGE=$(find ${IMAGESDIR} -name "*-${SELF}-${ARCH}.*")
+	IMAGE=$(find ${IMAGESDIR} -name "*-${SELF}-${PRODUCT_ARCH}.*")
 
 	if [ -f "${IMAGE}" -a -z "${SKIP}" ]; then
 		echo ">>> Reusing ${SELF} image: ${IMAGE}"
@@ -404,7 +418,7 @@ check_packages()
 	SELF=${1}
 	SKIP=${2}
 
-	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar")
+	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar")
 
 	if [ -z "${SELF}" -o -z "${PACKAGESET}" -o -n "${SKIP}" ]; then
 		return
@@ -426,7 +440,7 @@ extract_packages()
 	rm -rf ${BASEDIR}${PACKAGESDIR}/All
 	mkdir -p ${BASEDIR}${PACKAGESDIR}/All
 
-	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar")
+	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar")
 	if [ -f "${PACKAGESET}" ]; then
 		tar -C ${BASEDIR}${PACKAGESDIR} -xpf ${PACKAGESET}
 	fi
@@ -630,7 +644,7 @@ bundle_packages()
 	# generate index files
 	pkg repo ${BASEDIR}${PACKAGESDIR}-new/ ${SIGNARGS}
 
-	REPO_RELEASE="${REPO_VERSION}-${PRODUCT_FLAVOUR}-${ARCH}"
+	REPO_RELEASE="${REPO_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
 	echo -n ">>> Creating package mirror set for ${REPO_RELEASE}... "
 	tar -C ${STAGEDIR}${PACKAGESDIR}-new -cf \
 	    ${SETSDIR}/packages-${REPO_RELEASE}.tar .

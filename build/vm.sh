@@ -53,7 +53,7 @@ if [ -n "${3}" ]; then
 	fi
 fi
 
-VMIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vm-${ARCH}.${VMFORMAT}"
+VMIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vm-${PRODUCT_ARCH}.${VMFORMAT}"
 VMBASE="${STAGEDIR}/vmbase"
 
 sh ./clean.sh ${SELF}

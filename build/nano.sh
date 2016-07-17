@@ -35,7 +35,7 @@ SELF=nano
 
 check_images ${SELF} ${@}
 
-NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${ARCH}.img"
+NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${PRODUCT_ARCH}.img"
 
 sh ./clean.sh ${SELF}
 

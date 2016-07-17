@@ -31,6 +31,8 @@ SELF=release
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+RELEASE_SET="${SETSDIR}/release-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar"
+
 # make sure the all-encompassing package is a release, too
 setup_stage ${STAGEDIR}
 extract_packages ${STAGEDIR}
@@ -57,14 +59,14 @@ echo "done"
 echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
 
 (cd ${STAGEDIR}/work && sha256 ${PRODUCT_RELEASE}-*) \
-    > ${STAGEDIR}/tmp/${PRODUCT_RELEASE}-checksums-${ARCH}.sha256
+    > ${STAGEDIR}/tmp/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256
 (cd ${STAGEDIR}/work && md5 ${PRODUCT_RELEASE}-*) \
-    > ${STAGEDIR}/tmp/${PRODUCT_RELEASE}-checksums-${ARCH}.md5
+    > ${STAGEDIR}/tmp/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.md5
 
 mv ${STAGEDIR}/tmp/* ${STAGEDIR}/work/
 
 echo "done"
 
 echo -n ">>> Bundling images for ${PRODUCT_RELEASE}... "
-tar -C ${STAGEDIR}/work -cf ${SETSDIR}/release-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${ARCH}.tar .
+tar -C ${STAGEDIR}/work -cf ${RELEASE_SET} .
 echo "done"

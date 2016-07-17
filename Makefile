@@ -26,6 +26,8 @@ TYPE?=		${NAME:tl}
 SUFFIX?=	#-devel
 FLAVOUR?=	OpenSSL
 SETTINGS?=	16.1
+_ARCH!=		uname -m
+ARCH?=		${_ARCH}
 DEVICE?=	a10
 SPEED?=		115200
 UEFI?=		yes
@@ -68,6 +70,8 @@ ${TARGET}: ${_TARGET}
 
 .if "${VERBOSE}" != ""
 VERBOSE_FLAGS=	-x
+.else
+VERBOSE_HIDDEN=	@
 .endif
 
 # Expand build steps to launch into the selected
@@ -75,7 +79,8 @@ VERBOSE_FLAGS=	-x
 
 .for STEP in ${STEPS}
 ${STEP}: lint
-	@cd ${.CURDIR}/build && sh ${VERBOSE_FLAGS} ./${.TARGET}.sh \
+	${VERBOSE_HIDDEN} cd ${.CURDIR}/build && \
+	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} \
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \

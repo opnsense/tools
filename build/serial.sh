@@ -34,7 +34,7 @@ SELF=serial
 
 check_images ${SELF} ${@}
 
-SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${ARCH}.img"
+SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${PRODUCT_ARCH}.img"
 
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"

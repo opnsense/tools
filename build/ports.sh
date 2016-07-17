@@ -74,7 +74,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
 	fi
 	if [ -n "\${PORT_BROKEN}" ]; then
 		for PORT_QUIRK in \$(echo \${PORT_BROKEN} | tr ',' ' '); do
-			if [ \${PORT_QUIRK} = ${ARCH} ]; then
+			if [ \${PORT_QUIRK} = ${PRODUCT_ARCH} ]; then
 				continue 2
 			fi
 			if [ \${PORT_QUIRK} = ${PRODUCT_FLAVOUR} ]; then

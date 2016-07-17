@@ -31,8 +31,8 @@ SELF=rebase
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-BASE_OBSOLETE=$(find ${SETSDIR} -name "base-*-${ARCH}.obsolete")
-BASE_SET=$(find ${SETSDIR} -name "base-*-${ARCH}.txz")
+BASE_OBSOLETE=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.obsolete")
+BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
 
-tar -tf ${BASE_SET} | sort > ${CONFIGDIR}/plist.base.${ARCH}
-cp ${BASE_OBSOLETE} ${CONFIGDIR}/plist.obsolete.${ARCH}
+tar -tf ${BASE_SET} | sort > ${CONFIGDIR}/plist.base.${PRODUCT_ARCH}
+cp ${BASE_OBSOLETE} ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH}

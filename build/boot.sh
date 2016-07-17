@@ -36,7 +36,7 @@ if [ -z "${1}" ]; then
 	exit 0
 fi
 
-IMAGE=$(find ${IMAGESDIR} -name "*-${1}-${ARCH}.*")
+IMAGE=$(find ${IMAGESDIR} -name "*-${1}-${PRODUCT_ARCH}.*")
 
 echo ">>> Booting image ${IMAGE}..."
 

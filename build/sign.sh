@@ -31,18 +31,18 @@ SELF=sign
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-BASE_SET=$(find ${SETSDIR} -name "base-*-${ARCH}.txz")
+BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
 if [ -f "${BASE_SET}" ]; then
 	generate_signature ${BASE_SET}
 	generate_signature ${BASE_SET%%.txz}.obsolete
 fi
 
-KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${ARCH}.txz")
+KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
 if [ -f "${KERNEL_SET}" ]; then
 	generate_signature ${KERNEL_SET}
 fi
 
-PKGS_SET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar")
+PKGS_SET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar")
 if [ -f "${PKGS_SET}" ]; then
 	setup_stage ${STAGEDIR}
 	extract_packages ${STAGEDIR}

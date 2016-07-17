@@ -35,11 +35,11 @@ for ARG in ${@}; do
 	case ${ARG} in
 	base)
 		echo ">>> Removing base set"
-		rm -f ${SETSDIR}/base-*-${ARCH}.*
+		rm -f ${SETSDIR}/base-*-${PRODUCT_ARCH}.*
 		;;
 	cdrom)
 		echo ">>> Removing cdrom image"
-		rm -f ${IMAGESDIR}/*-cdrom-${ARCH}.*
+		rm -f ${IMAGESDIR}/*-cdrom-${PRODUCT_ARCH}.*
 		;;
 	core)
 		echo ">>> Removing core from packages set"
@@ -59,15 +59,15 @@ for ARG in ${@}; do
 		;;
 	kernel)
 		echo ">>> Removing kernel set"
-		rm -f ${SETSDIR}/kernel-*-${ARCH}.*
+		rm -f ${SETSDIR}/kernel-*-${PRODUCT_ARCH}.*
 		;;
 	nano)
 		echo ">>> Removing nano image"
-		rm -f ${IMAGESDIR}/*-nano-${ARCH}.*
+		rm -f ${IMAGESDIR}/*-nano-${PRODUCT_ARCH}.*
 		;;
 	packages|ports)
 		echo ">>> Removing packages set"
-		rm -f ${SETSDIR}/packages-*-${PRODUCT_FLAVOUR}-${ARCH}.tar
+		rm -f ${SETSDIR}/packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar
 		;;
 	plugins)
 		echo ">>> Removing plugins from packages set"
@@ -79,11 +79,11 @@ for ARG in ${@}; do
 		;;
 	release)
 		echo ">>> Removing release set"
-		rm -f ${SETSDIR}/release-*-${PRODUCT_FLAVOUR}-${ARCH}.tar
+		rm -f ${SETSDIR}/release-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar
 		;;
 	serial)
 		echo ">>> Removing serial image"
-		rm -f ${IMAGESDIR}/*-serial-${ARCH}.*
+		rm -f ${IMAGESDIR}/*-serial-${PRODUCT_ARCH}.*
 		;;
 	sets)
 		setup_stage ${SETSDIR}
@@ -99,11 +99,11 @@ for ARG in ${@}; do
 		;;
 	vga)
 		echo ">>> Removing vga image"
-		rm -f ${IMAGESDIR}/*-vga-${ARCH}.*
+		rm -f ${IMAGESDIR}/*-vga-${PRODUCT_ARCH}.*
 		;;
 	vm)
 		echo ">>> Removing vm image"
-		rm -f ${IMAGESDIR}/*-vm-${ARCH}.*
+		rm -f ${IMAGESDIR}/*-vm-${PRODUCT_ARCH}.*
 		;;
 	esac
 done

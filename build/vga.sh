@@ -33,7 +33,7 @@ SELF=vga
 
 check_images ${SELF} ${@}
 
-VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${ARCH}.img"
+VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${PRODUCT_ARCH}.img"
 
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
@@ -57,7 +57,7 @@ EOF
 makefs -B little -o label=${LABEL} ${STAGEDIR}/root.part ${STAGEDIR}/work
 
 UEFIBOOT=
-if [ ${ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
+if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
 	UEFIBOOT="-p efi:=${STAGEDIR}/work/boot/boot1.efifat"
 fi
 
