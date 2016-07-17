@@ -59,8 +59,6 @@ trap : 2
 if ! chroot ${STAGEDIR} /bin/sh -es << EOF; then SELF=; fi
 # overwrites the ports tree variable, behaviour is unwanted...
 unset STAGEDIR
-# ...and this unbreaks the nmap build
-unset TARGET_ARCH
 
 if pkg -N; then
 	# no need to rebuild

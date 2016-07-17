@@ -45,8 +45,8 @@ while getopts a:C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v: OPT; do
 	a)
 		case "${OPTARG}" in
 		amd64|i386)
-			export PRODUCT_SUBARCH=${OPTARG##*:}
-			export PRODUCT_ARCH=${OPTARG%%:*}
+			export PRODUCT_TARGET=${OPTARG%%:*}
+			export PRODUCT_ARCH=${OPTARG##*:}
 			SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 			;;
 		*)
@@ -187,10 +187,7 @@ fi
 # misc. foo
 export CPUS=$(sysctl kern.smp.cpus | awk '{ print $2 }')
 export CONFIG_XML="/usr/local/etc/config.xml"
-export TARGET_ARCH=${PRODUCT_ARCH}
-export TARGETARCH=${PRODUCT_ARCH}
 export LABEL=${PRODUCT_NAME}
-export XARCH=$(uname -m)
 
 # define build and config directories
 export CONFIGDIR="${TOOLSDIR}/config/${PRODUCT_SETTINGS}"
