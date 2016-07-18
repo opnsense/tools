@@ -189,6 +189,11 @@ fi
 export CPUS=$(sysctl kern.smp.cpus | awk '{ print $2 }')
 export CONFIG_XML="/usr/local/etc/config.xml"
 export LABEL=${PRODUCT_NAME}
+export ENV_FILTER="env -i USER=${USER} LOGNAME=${LOGNAME} HOME=${HOME} \
+SHELL=${SHELL} BLOCKSIZE=${BLOCKSIZE} MAIL=${MAIL} PATH=${PATH} \
+TERM=${TERM} HOSTTYPE=${HOSTTYPE} VENDOR=${VENDOR} OSTYPE=${OSTYPE} \
+MACHTYPE=${MACHTYPE} PWD=${PWD} GROUP=${GROUP} HOST=${HOST} \
+EDITOR=${EDITOR} PAGER=${PAGER}"
 
 # define build and config directories
 export CONFIGDIR="${TOOLSDIR}/config/${PRODUCT_SETTINGS}"
@@ -311,6 +316,12 @@ setup_chroot()
 		cp /usr/local/bin/qemu-${PRODUCT_TARGET}-static \
 		    ${1}/usr/local/bin
 		/usr/local/etc/rc.d/qemu_user_static onerestart
+
+		# copy the native toolchain for extra speed
+		XTOOLS_SET=$(find ${SETSDIR} -name "xtools-*-${PRODUCT_ARCH}.txz")
+		if [ -n "${XTOOLS_SET}" ]; then
+			tar -C ${1} -xpf ${XTOOLS_SET}
+		fi
 	fi
 
 	cp /etc/resolv.conf ${1}/etc

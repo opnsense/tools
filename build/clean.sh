@@ -105,5 +105,9 @@ for ARG in ${@}; do
 		echo ">>> Removing vm image"
 		rm -f ${IMAGESDIR}/*-vm-${PRODUCT_ARCH}.*
 		;;
+	xtools)
+		echo ">>> Removing xtools set"
+		rm -f ${SETSDIR}/xtools-*-${PRODUCT_ARCH}.*
+		;;
 	esac
 done

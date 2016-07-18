@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,20 +27,25 @@
 
 set -e
 
-SELF=base
+SELF=xtools
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
+if [ ${PRODUCT_HOST} == ${PRODUCT_ARCH} ]; then
+	echo ">>> No need to build xtools on native build"
+	exit 0
+fi
 
-if [ -f "${BASE_SET}" -a -z "${1}" ]; then
-	echo ">>> Reusing base set: ${BASE_SET}"
+XTOOLS_SET=$(find ${SETSDIR} -name "xtools-*-${PRODUCT_ARCH}.txz")
+
+if [ -f "${XTOOLS_SET}" -a -z "${1}" ]; then
+	echo ">>> Reusing xtools set: ${XTOOLS_SET}"
 	exit 0
 fi
 
 git_describe ${SRCDIR}
 
-BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}
+XTOOLS_SET=${SETSDIR}/xtools-${REPO_VERSION}-${PRODUCT_ARCH}.txz
 
 sh ./clean.sh ${SELF}
 
@@ -49,35 +54,12 @@ setup_stage ${STAGEDIR}
 MAKE_ARGS="TARGET_ARCH=${PRODUCT_ARCH} TARGET=${PRODUCT_TARGET}"
 MAKE_ARGS="${MAKE_ARGS} SRCCONF=${CONFIGDIR}/src.conf __MAKE_CONF="
 
-${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS} NO_CLEAN=yes
-${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
-${ENV_FILTER} make -s -C${SRCDIR}/release base.txz ${MAKE_ARGS}
+${ENV_FILTER} make -C${SRCDIR} -j${CPUS} native-xtools ${MAKE_ARGS} NO_CLEAN=yes
 
-mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${BASE_SET}.txz
+XTOOLS_DIR=$(make -C${SRCDIR} -f Makefile.inc1 -V OBJTREE ${MAKE_ARGS})/nxb-bin
 
-echo -n ">>> Generating obsolete file list... "
+echo -n ">>> Generating xtools set... "
 
-tar -tf ${BASE_SET}.txz | \
-    sed -e 's/^\.//g' -e '/\/$/d' | sort > ${STAGEDIR}/setdiff.new
-
-: > ${STAGEDIR}/setdiff.old
-if [ -s ${CONFIGDIR}/plist.base.${PRODUCT_ARCH} ]; then
-	cat ${CONFIGDIR}/plist.base.${PRODUCT_ARCH} | \
-	    sed -e 's/^\.//g' -e '/\/$/d' | sort > ${STAGEDIR}/setdiff.old
-fi
-
-: > ${STAGEDIR}/setdiff.tmp
-if [ -s ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH} ]; then
-	diff -u ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH} \
-	    ${STAGEDIR}/setdiff.new | grep '^-/' | \
-	    cut -b 2- > ${STAGEDIR}/setdiff.tmp
-fi
-
-(cat ${STAGEDIR}/setdiff.tmp; diff -u ${STAGEDIR}/setdiff.old \
-    ${STAGEDIR}/setdiff.new | grep '^-/' | cut -b 2-) | \
-    sort -u > ${BASE_SET}.obsolete
+tar -C ${XTOOLS_DIR} -cJf ${XTOOLS_SET} .
 
 echo "done"
-
-generate_signature ${BASE_SET}.txz
-generate_signature ${BASE_SET}.obsolete

@@ -64,6 +64,7 @@ unset MAKEFLAGS
 
 export TARGET_ARCH=${PRODUCT_ARCH}
 export TARGET=${PRODUCT_TARGET}
+export ARCH=${PRODUCT_ARCH}
 
 if pkg -N; then
 	# no need to rebuild

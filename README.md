@@ -142,6 +142,13 @@ The current target is the Raspberry Pi 1 / 2 using the
 option ARCH=arm:armv6 and is supposed to run best on
 i386 for a matching 32 bit size.
 
+In order to speed up building of an emulated build,
+the xtools set can be build:
+
+    # make xtools ARCH=arm:armv6
+
+The xtools set works similar to the distfiles set.
+
 About other scripts and tweaks
 ==============================
 
@@ -251,6 +258,7 @@ Available clean options are:
 * stage:	reset main staging area
 * vga:		remove vga image
 * vm:		remove vm image
+* xtools:	remove xtools set
 
 The ports tree has a few of our modifications and is sometimes a
 bit ahead of FreeBSD.  In order to keep the local changes, a skimming
