@@ -62,6 +62,10 @@ unset STAGEDIR
 # clobbers build for pkg(8) at least, since ARCH= is in there:
 unset MAKEFLAGS
 
+# Tell pkg(8) not to peek at /bin/sh
+export ABI_FILE=/usr/lib/crt1.o
+
+# Set up environment for target
 export TARGET_ARCH=${PRODUCT_ARCH}
 export TARGET=${PRODUCT_TARGET}
 export ARCH=${PRODUCT_ARCH}

@@ -320,7 +320,9 @@ setup_chroot()
 		# copy the native toolchain for extra speed
 		XTOOLS_SET=$(find ${SETSDIR} -name "xtools-*-${PRODUCT_ARCH}.txz")
 		if [ -n "${XTOOLS_SET}" ]; then
-			tar -C ${1} -xpf ${XTOOLS_SET}
+			tar -C ${1} -xpf ${XTOOLS_SET} \
+			    --exclude="./bin/sh" \
+			    --exclude="./usr/bin/flex"
 		fi
 	fi
 
