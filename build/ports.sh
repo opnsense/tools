@@ -57,8 +57,13 @@ fi
 trap : 2
 
 if ! chroot ${STAGEDIR} /bin/sh -es << EOF; then SELF=; fi
-# overwrites the ports tree variable, behaviour is unwanted...
+# overwrites the ports tree variable, behaviour is unwanted:
 unset STAGEDIR
+# clobbers build for pkg(8) at least, since ARCH= is in there:
+unset MAKEFLAGS
+
+export TARGET_ARCH=${PRODUCT_ARCH}
+export TARGET=${PRODUCT_TARGET}
 
 if pkg -N; then
 	# no need to rebuild
@@ -99,7 +104,8 @@ trap - 2
 
 echo ">>> Creating binary packages..."
 
-chroot ${STAGEDIR} /bin/sh -es << EOF && bundle_packages ${STAGEDIR} ${SELF} plugins core
+chroot ${STAGEDIR} /bin/sh -es << EOF && \
+    bundle_packages ${STAGEDIR} ${SELF} plugins core
 pkg autoremove -y
 pkg create -nao ${PACKAGESDIR}/All -f txz
 EOF

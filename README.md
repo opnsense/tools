@@ -130,6 +130,18 @@ A virtual machine disk image is created using:
 
     # make vm
 
+Cross-building for other architecures
+=====================================
+
+This feature is currently experimental.  It requires
+to install a qemu package for user mode emulation:
+
+    # pkg install qemu-user-static
+
+The current target is the Raspberry Pi 1 / 2 using the
+option ARCH=arm:armv6 and is supposed to run best on
+i386 for a matching 32 bit size.
+
 About other scripts and tweaks
 ==============================
 

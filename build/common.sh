@@ -43,14 +43,15 @@ usage()
 while getopts a:C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v: OPT; do
 	case ${OPT} in
 	a)
-		case "${OPTARG}" in
-		amd64|i386)
+		case ${OPTARG} in
+		amd64|i386|arm:armv6)
 			export PRODUCT_TARGET=${OPTARG%%:*}
 			export PRODUCT_ARCH=${OPTARG##*:}
+			export PRODUCT_HOST=$(uname -m)
 			SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 			;;
 		*)
-			echo "ARCH wants amd64 or i386" >&2
+			echo "ARCH wants amd64, arm:armv6 or i386" >&2
 			exit 1
 			;;
 		esac
@@ -303,9 +304,18 @@ setup_chroot()
 {
 	echo ">>> Setting up chroot in ${1}"
 
+	if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
+		# additional emulation layer so that chroot
+		# looks like a native environment later on
+		mkdir -p ${1}/usr/local/bin
+		cp /usr/local/bin/qemu-${PRODUCT_TARGET}-static \
+		    ${1}/usr/local/bin
+		/usr/local/etc/rc.d/qemu_user_static onerestart
+	fi
+
 	cp /etc/resolv.conf ${1}/etc
 	mount -t devfs devfs ${1}/dev
-	chroot ${1} /etc/rc.d/ldconfig start
+	chroot ${1} /bin/sh /etc/rc.d/ldconfig start
 }
 
 setup_marker()
