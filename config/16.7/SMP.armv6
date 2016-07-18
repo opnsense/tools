@@ -1,0 +1,56 @@
+include		RPI-B
+
+ident		SMP
+
+options		DDB
+
+options		EM_MULTIQUEUE
+options		MROUTING
+options		PPS_SYNC
+options		TCP_SIGNATURE
+options		IPFIREWALL_DEFAULT_TO_ACCEPT
+options		IPFIREWALL_VERBOSE
+options		IPSTEALTH
+
+nooptions	KDB_TRACE
+nooptions	GDB
+nooptions	DEADLKRES
+nooptions	INVARIANTS
+nooptions	INVARIANT_SUPPORT
+nooptions	WITNESS
+nooptions	WITNESS_SKIPSPIN
+nooptions	MALLOC_DEBUG_MAXZONES
+nooptions	FLOWTABLE
+
+nomakeoptions	DEBUG
+
+options		GEOM_MIRROR
+options		GEOM_UZIP
+nooption	GEOM_MBR
+options		GEOM_ELI
+options		GEOM_BDE
+
+device		netmap
+device		pf
+device		pflog
+device		pfsync
+
+# 3G
+device		u3g
+device		uark
+device		uftdi
+device		umct
+device		umodem
+device		uplcom
+device		uvisor
+device		uvscom
+
+# IPSec
+options		IPSEC
+options		IPSEC_NAT_T
+device		crypto
+device		enc
+
+# HardenedBSD goodies
+options		PAX
+options		PAX_ASLR
