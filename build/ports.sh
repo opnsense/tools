@@ -31,7 +31,25 @@ SELF=ports
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-PORTS_LIST=$(cat ${CONFIGDIR}/ports.conf)
+PORTS_LIST=$(
+cat ${CONFIGDIR}/ports.conf  | while read PORT_ORIGIN PORT_BROKEN; do
+	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
+		continue
+	fi
+	if [ -n "${PORT_BROKEN}" ]; then
+		for PORT_QUIRK in $(echo ${PORT_BROKEN} | tr ',' ' '); do
+			if [ ${PORT_QUIRK} = ${PRODUCT_ARCH} ]; then
+				continue 2
+			fi
+			if [ ${PORT_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
+				continue 2
+			fi
+		done
+	fi
+
+	echo ${PORT_ORIGIN}
+done
+)
 
 check_packages ${SELF} ${@}
 
@@ -70,34 +88,16 @@ export ARCH=${PRODUCT_ARCH}
 if pkg -N; then
 	# no need to rebuild
 else
-	make -C ${PORTSDIR}/ports-mgmt/pkg clean all install
+	make -C ${PORTSDIR}/ports-mgmt/pkg install
 fi
 
-echo "${PORTS_LIST}" | while read PORT_ORIGIN PORT_BROKEN; do
-	if [ "\$(echo \${PORT_ORIGIN} | colrm 2)" = "#" ]; then
-		continue
-	fi
-	if [ -n "\${PORT_BROKEN}" ]; then
-		for PORT_QUIRK in \$(echo \${PORT_BROKEN} | tr ',' ' '); do
-			if [ \${PORT_QUIRK} = ${PRODUCT_ARCH} ]; then
-				continue 2
-			fi
-			if [ \${PORT_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
-				continue 2
-			fi
-		done
-	fi
-
-	echo -n ">>> Building \${PORT_ORIGIN}... "
-
+echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	if pkg query %n \${PORT_ORIGIN##*/} > /dev/null; then
-		# lock the package to keep build deps
-		pkg lock -qy \${PORT_ORIGIN}
-		echo "skipped."
 		continue
 	fi
 
-	make -C ${PORTSDIR}/\${PORT_ORIGIN} clean all install
+	echo ">>> Building \${PORT_ORIGINA}"
+	make -C ${PORTSDIR}/\${PORT_ORIGIN} install
 done
 EOF
 
@@ -108,6 +108,12 @@ echo ">>> Creating binary packages..."
 
 chroot ${STAGEDIR} /bin/sh -es << EOF && \
     bundle_packages ${STAGEDIR} ${SELF} plugins core
+echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
+	if pkg query %n \${PORT_ORIGIN##*/} > /dev/null; then
+		# lock the package to keep build deps
+		pkg lock -qy \${PORT_ORIGIN}
+	fi
+done
 pkg autoremove -y
 pkg create -nao ${PACKAGESDIR}/All -f txz
 EOF
