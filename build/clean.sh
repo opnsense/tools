@@ -55,7 +55,6 @@ for ARG in ${@}; do
 		;;
 	images)
 		setup_stage ${IMAGESDIR}
-		rm -r ${IMAGESDIR}
 		;;
 	kernel)
 		echo ">>> Removing kernel set"
@@ -66,7 +65,6 @@ for ARG in ${@}; do
 		rm -f ${IMAGESDIR}/*-nano-${PRODUCT_ARCH}.*
 		;;
 	obj)
-		echo ">>> Removing object directories"
 		for DIR in $(find ${STAGEDIRPREFIX}${TOOLSDIR} -type d -depth 3); do
 			setup_stage ${DIR}
 		done
@@ -97,15 +95,12 @@ for ARG in ${@}; do
 		;;
 	sets)
 		setup_stage ${SETSDIR}
-		rm -r ${SETSDIR}
 		;;
 	stage)
 		setup_stage ${STAGEDIR}
-		rm -r ${STAGEDIR}
 		;;
 	src)
 		setup_stage /usr/obj${SRCDIR}
-		rm -r /usr/obj${SRCDIR}
 		;;
 	vga)
 		echo ">>> Removing vga image"
