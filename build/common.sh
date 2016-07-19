@@ -188,6 +188,7 @@ fi
 # misc. foo
 export CPUS=$(sysctl kern.smp.cpus | awk '{ print $2 }')
 export CONFIG_XML="/usr/local/etc/config.xml"
+export ABI_FILE="/usr/lib/crt1.o"
 export LABEL=${PRODUCT_NAME}
 export ENV_FILTER="env -i USER=${USER} LOGNAME=${LOGNAME} HOME=${HOME} \
 SHELL=${SHELL} BLOCKSIZE=${BLOCKSIZE} MAIL=${MAIL} PATH=${PATH} \
