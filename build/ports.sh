@@ -75,9 +75,9 @@ fi
 trap : 2
 
 if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then SELF=; fi
-if pkg -N; then
-	# no need to rebuild
-else
+export PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
+
+if ! pkg -N; then
 	make -C ${PORTSDIR}/ports-mgmt/pkg install
 fi
 
