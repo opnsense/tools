@@ -198,7 +198,7 @@ EDITOR=${EDITOR} PAGER=${PAGER}"
 
 # define build and config directories
 export CONFIGDIR="${TOOLSDIR}/config/${PRODUCT_SETTINGS}"
-export STAGEDIR="${STAGEDIRPREFIX}${CONFIGDIR}/${PRODUCT_FLAVOUR}"
+export STAGEDIR="${STAGEDIRPREFIX}${CONFIGDIR}/${PRODUCT_FLAVOUR}:${PRODUCT_ARCH}"
 export DEVICEDIR="${TOOLSDIR}/device"
 export PACKAGESDIR="/.pkg"
 
@@ -216,8 +216,10 @@ export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
 export PRODUCT_PKGNAMES="${PRODUCT_TYPE} ${PRODUCT_TYPE}-stable ${PRODUCT_TYPE}-devel"
 export PRODUCT_PKGNAME="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
 
-# print environment to showcase all of our variables
-env | sort
+if [ "${SELF}" != print ]; then
+	# print environment to showcase all of our variables
+	env | sort
+fi
 
 git_checkout()
 {
@@ -761,6 +763,8 @@ setup_stage()
 
 	MOUNTDIRS="/dev /mnt ${SRCDIR} ${PORTSDIR} ${COREDIR} ${PLUGINSDIR}"
 	STAGE=${1}
+
+	local PID DIR
 
 	shift
 

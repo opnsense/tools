@@ -1,5 +1,5 @@
 STEPS=		base boot cdrom chroot clean core distfiles \
-		kernel nano plugins ports prefetch rebase \
+		kernel nano plugins ports prefetch print rebase \
 		release serial sign skim test vga vm xtools
 .PHONY:		${STEPS}
 

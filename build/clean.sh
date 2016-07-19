@@ -65,6 +65,16 @@ for ARG in ${@}; do
 		echo ">>> Removing nano image"
 		rm -f ${IMAGESDIR}/*-nano-${PRODUCT_ARCH}.*
 		;;
+	obj)
+		echo ">>> Removing object directories"
+		for DIR in $(find ${STAGEDIRPREFIX}${TOOLSDIR} -type d -depth 3); do
+			setup_stage ${DIR}
+		done
+		for DIR in $(find /usr/obj -type d -depth 1); do
+			setup_stage ${DIR}
+			rm -rf ${DIR}
+		done
+		;;
 	packages|ports)
 		echo ">>> Removing packages set"
 		rm -f ${SETSDIR}/packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar

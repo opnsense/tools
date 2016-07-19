@@ -248,6 +248,7 @@ Available clean options are:
 * images:	remove all images
 * kernel:	remove kernel set
 * nano:		remove nano image
+* obj:		remove all object directories
 * packages:	remove packages set
 * plugins:	remove plugins from packages set
 * ports:	alias for "packages" option
@@ -285,3 +286,8 @@ command will use chroot(8) to enter the active build jail:
 There's also the posh way to boot a final image using bhyve(8):
 
     # make boot-<image>
+
+Last but not least, in case build variables needs to be inspected,
+they can be printed selectively using:
+
+    # make print-<variable1>[,<variable2>]
