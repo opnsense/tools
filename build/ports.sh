@@ -74,17 +74,7 @@ fi
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
-if ! chroot ${STAGEDIR} /bin/sh -es << EOF; then SELF=; fi
-# overwrites the ports tree variable, behaviour is unwanted:
-unset STAGEDIR
-# clobbers build for pkg(8) at least, since ARCH= is in there:
-unset MAKEFLAGS
-
-# Set up environment for target
-export TARGET_ARCH=${PRODUCT_ARCH}
-export TARGET=${PRODUCT_TARGET}
-export ARCH=${PRODUCT_ARCH}
-
+if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then SELF=; fi
 if pkg -N; then
 	# no need to rebuild
 else

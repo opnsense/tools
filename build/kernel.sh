@@ -55,9 +55,9 @@ cp ${CONFIGDIR}/${BUILD_KERNEL} \
 MAKE_ARGS="TARGET_ARCH=${PRODUCT_ARCH} TARGET=${PRODUCT_TARGET}"
 MAKE_ARGS="${MAKE_ARGS} KERNCONF=${BUILD_KERNEL} __MAKE_CONF="
 
-make -s -C${SRCDIR} -j${CPUS} buildkernel ${MAKE_ARGS} NO_KERNELCLEAN=yes
-make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
-make -s -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
+${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildkernel ${MAKE_ARGS} NO_KERNELCLEAN=yes
+${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
+${ENV_FILTER} make -s -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
 
 mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${KERNEL_SET}.txz
 
