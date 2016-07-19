@@ -96,7 +96,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 		continue
 	fi
 
-	echo ">>> Building \${PORT_ORIGINA}"
+	echo ">>> Building \${PORT_ORIGIN}"
 	make -C ${PORTSDIR}/\${PORT_ORIGIN} install
 done
 EOF
