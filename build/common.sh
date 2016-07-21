@@ -47,7 +47,7 @@ while getopts a:C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v: OPT; do
 		amd64|i386|arm:armv6)
 			export PRODUCT_TARGET=${OPTARG%%:*}
 			export PRODUCT_ARCH=${OPTARG##*:}
-			export PRODUCT_HOST=$(uname -m)
+			export PRODUCT_HOST=$(uname -p)
 			SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 			;;
 		*)
