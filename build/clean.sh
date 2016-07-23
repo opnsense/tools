@@ -65,9 +65,12 @@ for ARG in ${@}; do
 		rm -f ${IMAGESDIR}/*-nano-${PRODUCT_ARCH}.*
 		;;
 	obj)
-		for DIR in $(find ${STAGEDIRPREFIX}${TOOLSDIR} -type d -depth 3); do
-			setup_stage ${DIR}
-		done
+		if [ -d ${STAGEDIRPREFIX}${TOOLSDIR} ]; then
+			for DIR in $(find ${STAGEDIRPREFIX}${TOOLSDIR} \
+			    -type d -depth 3); do
+				setup_stage ${DIR}
+			done
+		fi
 		for DIR in $(find /usr/obj -type d -depth 1); do
 			setup_stage ${DIR}
 			rm -rf ${DIR}

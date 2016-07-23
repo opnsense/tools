@@ -75,8 +75,6 @@ fi
 trap : 2
 
 if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then SELF=; fi
-export PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
-
 if ! pkg -N; then
 	make -C ${PORTSDIR}/ports-mgmt/pkg install
 fi
@@ -87,7 +85,8 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	fi
 
 	echo ">>> Building \${PORT_ORIGIN}"
-	make -C ${PORTSDIR}/\${PORT_ORIGIN} install
+	make -C ${PORTSDIR}/\${PORT_ORIGIN} install \
+	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
 done
 EOF
 
