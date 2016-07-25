@@ -35,15 +35,20 @@ setup_stage ${STAGEDIR}
 
 export __MAKE_CONF=${CONFIGDIR}/make.conf
 
-PORTS_LIST=$({
+PORTS_LIST=$(
 	# the ports formerly known as `sync'
 	echo devel/gettext
 	echo security/libressl
 	echo security/openssl
 	echo security/vuxml
 	# all the ports that ought to be built
-	cat ${CONFIGDIR}/ports.conf
-})
+	cat ${CONFIGDIR}/ports.conf  | while read PORT_ORIGIN PORT_BROKEN; do
+		if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
+			continue
+		fi
+		echo ${PORT_ORIGIN}
+	done
+)
 
 git_update ${PORTSREFDIR} origin/master
 git_checkout ${PORTSDIR} HEAD
@@ -64,17 +69,14 @@ for ARG in ${@}; do
 	esac
 done
 
-echo -n ">>> Gathering dependencies"
+echo -n ">>> Gathering dependencies:   0%"
 
 echo "${PORTS_LIST}" > ${STAGEDIR}/skim
 
+PORTS_COUNT=$(wc -l ${STAGEDIR}/skim | awk '{ print $1 }')
+PORTS_NUM=0
+
 while read PORT_ORIGIN PORT_BROKEN; do
-	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
-		continue
-	fi
-
-	echo -n "."
-
 	PORT=${PORT_ORIGIN}
 
 	SOURCE=${PORTSDIR}
@@ -115,9 +117,11 @@ while read PORT_ORIGIN PORT_BROKEN; do
 			PORTS_CHANGED="${PORTS_CHANGED} ${PORT}"
 		fi
 	done
-done < ${STAGEDIR}/skim
 
-echo "done"
+	PORTS_NUM=$(expr ${PORTS_NUM} + 1)
+	printf "\b\b\b\b%3s%%" \
+	    $(expr \( 100 \* ${PORTS_NUM} \) / ${PORTS_COUNT})
+done < ${STAGEDIR}/skim
 
 if [ -n "${UNUSED}" ]; then
 	for ENTRY in ${PORTSDIR}/*; do
