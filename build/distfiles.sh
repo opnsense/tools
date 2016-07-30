@@ -62,10 +62,12 @@ echo "CLEAN_FETCH_ENV=yes" >> ${STAGEDIR}/etc/make.conf
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
-if ! chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTS_LIST=; fi
+if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTS_LIST=; fi
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	echo ">>> Fetching \${PORT_ORIGIN}..."
-	make -C ${PORTSDIR}/\${PORT_ORIGIN} fetch-recursive
+	make -C ${PORTSDIR}/\${PORT_ORIGIN} fetch-recursive \
+	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
+	    UNAME_r=\$(freebsd-version)
 done
 EOF
 
