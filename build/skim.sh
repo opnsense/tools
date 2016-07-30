@@ -36,18 +36,13 @@ setup_stage ${STAGEDIR}
 export __MAKE_CONF=${CONFIGDIR}/make.conf
 
 PORTS_LIST=$(
-	# the ports formerly known as `sync'
-	echo devel/gettext
-	echo security/libressl
-	echo security/openssl
-	echo security/vuxml
-	# all the ports that ought to be built
-	cat ${CONFIGDIR}/ports.conf  | while read PORT_ORIGIN PORT_BROKEN; do
-		if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
-			continue
-		fi
-		echo ${PORT_ORIGIN}
-	done
+cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \
+    while read PORT_ORIGIN PORT_BROKEN; do
+	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
+		continue
+	fi
+	echo ${PORT_ORIGIN}
+done
 )
 
 git_update ${PORTSREFDIR} origin/master

@@ -32,7 +32,7 @@ SELF=ports
 . ./common.sh && $(${SCRUB_ARGS})
 
 PORTS_LIST=$(
-cat ${CONFIGDIR}/ports.conf  | while read PORT_ORIGIN PORT_BROKEN; do
+cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_BROKEN; do
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
 	fi
