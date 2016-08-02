@@ -687,24 +687,6 @@ setup_packages()
 	clean_packages ${1}
 }
 
-setup_serial()
-{
-	SERIAL_CONFIG="<enableserial>1</enableserial>"
-	SERIAL_CONFIG="${SERIAL_CONFIG}<serialspeed>${PRODUCT_SPEED}</serialspeed>"
-	SERIAL_CONFIG="${SERIAL_CONFIG}<primaryconsole>serial</primaryconsole>"
-
-	echo "-S${PRODUCT_SPEED} -D" > ${1}/boot.config
-
-	cat >> ${1}/boot/loader.conf << EOF
-boot_multicons="YES"
-boot_serial="YES"
-console="comconsole,vidconsole"
-comconsole_speed="${PRODUCT_SPEED}"
-EOF
-
-	sed -i '' -e "s:</system>:${SERIAL_CONFIG}</system>:" ${1}${CONFIG_XML}
-}
-
 _setup_extras_generic()
 {
 	if [ ! -f ${CONFIGDIR}/extras.conf ]; then

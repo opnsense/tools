@@ -49,7 +49,6 @@ setup_stage ${STAGEDIR} mnt work
 setup_base ${STAGEDIR}/work
 setup_kernel ${STAGEDIR}/work
 setup_packages ${STAGEDIR}/work
-setup_serial ${STAGEDIR}/work
 setup_extras ${STAGEDIR}/work ${SELF}
 
 MD=$(mdconfig -a -t swap -s ${NANO_MEDIASIZE} -x ${NANO_SECTS} -y ${NANO_HEADS})
