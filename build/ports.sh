@@ -88,14 +88,8 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	echo ">>> Building \${PORT_ORIGIN}"
 	make -C ${PORTSDIR}/\${PORT_ORIGIN} install \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
-	    UNAME_r=\$(freebsd-version) || \
-	    PORT_ERROR="\${PORT_ORIGIN} \${PORT_ERROR}"
+	    UNAME_r=\$(freebsd-version)
 done
-
-if [ -n "\${PORT_ERROR}" ]; then
-	echo ">>> The following ports did not finish: \${PORT_ERROR}"
-	exit 1
-fi
 EOF
 
 # unblock SIGINT
