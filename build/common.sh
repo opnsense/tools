@@ -598,16 +598,8 @@ install_packages()
 custom_packages()
 {
 	chroot ${1} /bin/sh -es << EOF
-# clear the internal staging area and package files
-rm -rf /work
-
-# run the package build process
-make -C ${2} DESTDIR=/work ${3} FLAVOUR=${PRODUCT_FLAVOUR} metadata
-make -C ${2} DESTDIR=/work ${3} FLAVOUR=${PRODUCT_FLAVOUR} install
-
-echo -n ">>> Creating custom package for ${2}... "
-pkg create -m /work -r /work -p /work/plist -o ${PACKAGESDIR}/All
-echo "done"
+make -C ${2} ${3} FLAVOUR=${PRODUCT_FLAVOUR} WRKDIR=/work \
+    PKGDIR=${PACKAGESDIR}/All package
 EOF
 }
 
