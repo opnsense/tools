@@ -35,7 +35,6 @@ check_packages ${SELF} ${@}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
-setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
