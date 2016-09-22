@@ -287,6 +287,14 @@ There's also the posh way to boot a final image using bhyve(8):
 
     # make boot-<image>
 
+Normally the build scripts will pick up version numbers based
+on commit tags or given version tags or a date-type string.
+Should it not fit your needs, you can change the name using:
+
+    # make rename-<set>[,<another_set>] NAME=<new_name>
+
+The available targets are: base and kernel.
+
 Last but not least, in case build variables needs to be inspected,
 they can be printed selectively using:
 
