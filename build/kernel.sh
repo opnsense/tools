@@ -42,8 +42,6 @@ git_describe ${SRCDIR}
 
 KERNEL_SET=${SETSDIR}/kernel-${REPO_VERSION}-${PRODUCT_ARCH}
 
-sh ./clean.sh ${SELF}
-
 BUILD_KERNEL="SMP"
 if [ -f ${CONFIGDIR}/${BUILD_KERNEL}.${PRODUCT_ARCH} ]; then
 	BUILD_KERNEL="${BUILD_KERNEL}.${PRODUCT_ARCH}"
@@ -57,7 +55,10 @@ MAKE_ARGS="${MAKE_ARGS} KERNCONF=${BUILD_KERNEL} __MAKE_CONF="
 
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildkernel ${MAKE_ARGS} NO_KERNELCLEAN=yes
 ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
+rm -f $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz
 ${ENV_FILTER} make -s -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
+
+sh ./clean.sh ${SELF}
 
 mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${KERNEL_SET}.txz
 

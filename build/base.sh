@@ -42,8 +42,6 @@ git_describe ${SRCDIR}
 
 BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}
 
-sh ./clean.sh ${SELF}
-
 setup_stage ${STAGEDIR}
 
 MAKE_ARGS="TARGET_ARCH=${PRODUCT_ARCH} TARGET=${PRODUCT_TARGET}"
@@ -51,7 +49,10 @@ MAKE_ARGS="${MAKE_ARGS} SRCCONF=${CONFIGDIR}/src.conf __MAKE_CONF="
 
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS} NO_CLEAN=yes
 ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
+rm -f $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz
 ${ENV_FILTER} make -s -C${SRCDIR}/release base.txz ${MAKE_ARGS}
+
+sh ./clean.sh ${SELF}
 
 mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${BASE_SET}.txz
 
