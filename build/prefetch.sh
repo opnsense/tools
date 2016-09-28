@@ -36,13 +36,16 @@ for ARG in ${@}; do
 	base)
 		sh ./clean.sh ${ARG}
 		URL="${PRODUCT_MIRROR}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_ARCH}"
-		fetch -o ${SETSDIR} ${URL}.obsolete
-		fetch -o ${SETSDIR} ${URL}.txz
+		for SUFFIX in obsolete.sig obsolete txz.sig txz; do
+			fetch -o ${SETSDIR} ${URL}.${SUFFIX}
+		done;
 		;;
 	kernel)
 		sh ./clean.sh ${ARG}
 		URL="${PRODUCT_MIRROR}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_ARCH}"
-		fetch -o ${SETSDIR} ${URL}.txz
+		for SUFFIX in txz.sig txz; do
+			fetch -o ${SETSDIR} ${URL}.${SUFFIX}
+		done;
 		;;
 	packages)
 		sh ./clean.sh ${ARG}
