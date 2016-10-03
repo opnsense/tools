@@ -60,6 +60,10 @@ ${ENV_FILTER} make -s -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
 
 sh ./clean.sh ${SELF}
 
+echo -n ">>> Copying kernel set... "
+
 mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${KERNEL_SET}.txz
+
+echo "done"
 
 generate_signature ${KERNEL_SET}.txz

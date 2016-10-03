@@ -54,7 +54,11 @@ ${ENV_FILTER} make -s -C${SRCDIR}/release base.txz ${MAKE_ARGS}
 
 sh ./clean.sh ${SELF}
 
+echo -n ">>> Copying base set... "
+
 mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${BASE_SET}.txz
+
+echo "done"
 
 echo -n ">>> Generating obsolete file list... "
 

@@ -417,7 +417,7 @@ setup_entropy()
 generate_signature()
 {
 	if [ -n "$(${PRODUCT_SIGNCHK})" ]; then
-		echo -n "Signing $(basename ${1})... "
+		echo -n ">>> Signing $(basename ${1})... "
 		sha256 -q ${1} | ${PRODUCT_SIGNCMD} > ${1}.sig
 		echo "done"
 	fi
