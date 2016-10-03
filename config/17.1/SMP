@@ -60,6 +60,9 @@ device		uplcom
 device		uvisor
 device		uvscom
 
+# Not all architectures have a consistent GENERIC
+device		netmap
+
 # IPSec
 options		IPSEC_NAT_T
 
