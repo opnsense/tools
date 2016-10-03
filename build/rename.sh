@@ -47,5 +47,12 @@ for ARG in ${@}; do
 			mv ${FILE} ${SETSDIR}/kernel-${NAME}-${FILE##*-}
 		done
 		;;
+	packages)
+		echo ">>> Renaming packages set: ${NAME}"
+		for FILE in $(find ${SETSDIR} -name \
+		    "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.*"); do
+			mv ${FILE} ${SETSDIR}/packages-${NAME}-${PRODUCT_FLAVOUR}-${FILE##*-}
+		done
+		;;
 	esac
 done
