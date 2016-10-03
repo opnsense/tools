@@ -664,6 +664,8 @@ bundle_packages()
 	tar -C ${STAGEDIR}${PACKAGESDIR}-new -cf \
 	    ${SETSDIR}/packages-${REPO_RELEASE}.tar .
 	echo "done"
+
+	generate_signature ${SETSDIR}/packages-${REPO_RELEASE}.tar
 }
 
 clean_packages()
