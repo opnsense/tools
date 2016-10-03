@@ -63,9 +63,6 @@ device		uvscom
 # IPSec
 options		IPSEC_NAT_T
 
-# Extra hw
-device		speaker
-
 # HardenedBSD goodies
 #options		PAX
 #options		PAX_ASLR
