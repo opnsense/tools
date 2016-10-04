@@ -291,7 +291,7 @@ Normally the build scripts will pick up version numbers based
 on commit tags or given version tags or a date-type string.
 Should it not fit your needs, you can change the name using:
 
-    # make rename-<set>[,<another_set>] NAME=<new_name>
+    # make rename-<set>[,<another_set>] VERSION=<new_name>
 
 The available targets are: base and kernel.
 

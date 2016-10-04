@@ -34,24 +34,24 @@ SELF=rename
 for ARG in ${@}; do
 	case ${ARG} in
 	base)
-		echo ">>> Renaming base set: ${NAME}"
+		echo ">>> Renaming base set: ${VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "base-*-${PRODUCT_ARCH}.*"); do
-			mv ${FILE} ${SETSDIR}/base-${NAME}-${FILE##*-}
+			mv ${FILE} ${SETSDIR}/base-${VERSION}-${FILE##*-}
 		done
 		;;
 	kernel)
-		echo ">>> Renaming kernel set: ${NAME}"
+		echo ">>> Renaming kernel set: ${VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "kernel-*-${PRODUCT_ARCH}.*"); do
-			mv ${FILE} ${SETSDIR}/kernel-${NAME}-${FILE##*-}
+			mv ${FILE} ${SETSDIR}/kernel-${VERSION}-${FILE##*-}
 		done
 		;;
 	packages)
-		echo ">>> Renaming packages set: ${NAME}"
+		echo ">>> Renaming packages set: ${VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.*"); do
-			mv ${FILE} ${SETSDIR}/packages-${NAME}-${PRODUCT_FLAVOUR}-${FILE##*-}
+			mv ${FILE} ${SETSDIR}/packages-${VERSION}-${PRODUCT_FLAVOUR}-${FILE##*-}
 		done
 		;;
 	esac
