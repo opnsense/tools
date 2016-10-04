@@ -37,20 +37,22 @@ for ARG in ${@}; do
 		sh ./clean.sh ${ARG}
 		URL="${PRODUCT_MIRROR}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_ARCH}"
 		for SUFFIX in obsolete.sig obsolete txz.sig txz; do
-			fetch -o ${SETSDIR} ${URL}.${SUFFIX}
-		done;
+			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
+		done
 		;;
 	kernel)
 		sh ./clean.sh ${ARG}
 		URL="${PRODUCT_MIRROR}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_ARCH}"
 		for SUFFIX in txz.sig txz; do
-			fetch -o ${SETSDIR} ${URL}.${SUFFIX}
-		done;
+			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
+		done
 		;;
 	packages)
 		sh ./clean.sh ${ARG}
 		URL="${PRODUCT_MIRROR}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
-		fetch -o ${SETSDIR} ${URL}.tar
+		for SUFFIX in tar.sig tar; do
+			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
+		done
 		;;
 	esac
 done
