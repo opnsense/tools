@@ -78,7 +78,7 @@ for ARG in ${@}; do
 		;;
 	packages|ports)
 		echo ">>> Removing packages set"
-		rm -f ${SETSDIR}/packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar
+		rm -f ${SETSDIR}/packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.*
 		;;
 	plugins)
 		echo ">>> Removing plugins from packages set"
