@@ -63,6 +63,9 @@ device		uvscom
 # Not all architectures have a consistent GENERIC
 device		netmap
 
+# Crashes when added to loader.conf
+device		speaker
+
 # IPSec
 options		IPSEC_NAT_T
 

@@ -1,8 +1,4 @@
-/boot/brand-opnsense.4th
-/boot/loader.old
-/boot/logo-hourglass.4th
 /boot/logo-hourglassbw.4th
-/boot/zfsloader.old
 /etc/gnats/freefall
 /etc/pam.d/rsh
 /etc/rc.d/atm1
@@ -27,7 +23,6 @@
 /lib/libcrypto.so.7
 /lib/libkvm.so.6
 /lib/libreadline.so.8
-/sbin/init.bak
 /sbin/mount_oldnfs
 /usr/bin/cpasswd
 /usr/bin/csup
