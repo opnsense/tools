@@ -200,14 +200,20 @@ Core packages (pristine copies) can be batch-built using:
 
     # make core-<repo_branch_or_tag>[,...]
 
-Package sets (may be signed depending on whether the key is
-found under /root) ready for web server deployment are automatically
-generated and modified by ports.sh and core.sh.
+Package sets ready for web server deployment are automatically
+generated and modified by ports.sh, plugins.sh and core.sh.
+If signing keys are available, the packages set will be signed
+twice, first embedded into repository metadata (inside) and
+then again as a flat file (outside) to ensure integrity.
 
 Signing for all sets can be redone or applied to a previous run
 that did not sign by invoking:
 
     # make sign
+
+A verification of all available set signatures is done via:
+
+    # make verify
 
 Virtual machine images come in varying disk formats and sizes.
 The default format is vmdk with 20G and 1G swap. If you want
@@ -293,7 +299,7 @@ Should it not fit your needs, you can change the name using:
 
     # make rename-<set>[,<another_set>] VERSION=<new_name>
 
-The available targets are: base and kernel.
+The available targets are: base, kernel and package.
 
 Last but not least, in case build variables needs to be inspected,
 they can be printed selectively using:
