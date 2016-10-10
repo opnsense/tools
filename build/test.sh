@@ -41,18 +41,6 @@ extract_packages ${STAGEDIR}
 install_packages ${STAGEDIR} pkg pear-PHP_CodeSniffer phpunit ${PRODUCT_PKGNAME}
 # don't want to deinstall in case of testing...
 
-# install all plugins, see if files clash
-# between those and PRODUCT_PKGNAME package
-for PKGFILE in $({
-	cd ${STAGEDIR}
-	# ospriv- means development so is ok to break
-	# (left in here for manual testing workflow)
-	#find .${PACKAGESDIR}/All -name "ospriv-*.txz"
-	find .${PACKAGESDIR}/All -name "os-*.txz"
-}); do
-	pkg -c ${BASEDIR} add ${PKGFILE}
-done
-
 echo ">>> Running ${PLUGINSDIR} test suite..."
 chroot ${STAGEDIR} /bin/sh -es <<EOF
 make -C${PLUGINSDIR} lint
