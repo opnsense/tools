@@ -94,8 +94,13 @@ mdconfig -d -u ${MD}
 
 echo -n ">>> Building vm image... "
 
+UEFIBOOT=
+if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
+	UEFIBOOT="-p efi:=${STAGEDIR}/boot/boot1.efifat"
+fi
+
 mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} -b ${STAGEDIR}/boot/pmbr \
-    -p freebsd-boot/bootfs:=${STAGEDIR}/boot/gptboot \
+    ${UEFIBOOT} -p freebsd-boot/bootfs:=${STAGEDIR}/boot/gptboot \
     -p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS}
 
 echo "done"
