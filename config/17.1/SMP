@@ -70,5 +70,5 @@ device		speaker
 options		IPSEC_NAT_T
 
 # HardenedBSD goodies
-#options		PAX
-#options		PAX_ASLR
+options		PAX
+options		PAX_ASLR
