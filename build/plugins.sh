@@ -54,6 +54,11 @@ for PLUGIN in ${PLUGINS_LIST}; do
 		continue
 	fi
 
+	if [ ${PRODUCT_ARCH} = "armv6" ]; then
+		# no plugins for ARM
+		continue
+	fi
+
 	install_packages ${STAGEDIR} ${PLUGIN_DEPS}
 	custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN}
 done
