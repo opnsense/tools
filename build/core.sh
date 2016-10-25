@@ -64,7 +64,8 @@ for CORE_TAG in ${CORE_TAGS}; do
 		fi
 	fi
 
-	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} depends)
+	CORE_ARGS="CORE_ARCH=${PRODUCT_ARCH} ${CORE_ARGS}"
+	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} depends)
 
 	remove_packages ${STAGEDIR} ${CORE_NAME}
 	install_packages ${STAGEDIR} ${CORE_DEPS}
