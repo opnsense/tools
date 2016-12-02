@@ -7,7 +7,6 @@ is a standard BSD 2-Clause as reproduced here for your convenience:
 
     Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
     Copyright (c) 2004-2011 Scott Ullrich <sullrich@gmail.com>
-    Copyright (c) 2005 Poul-Henning Kamp <phk@FreeBSD.org>
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -122,7 +121,7 @@ A vga memstick image is created using:
 
     # make vga
 
-A flash card disk image (NanoBSD) is created using:
+A flash card disk image is created using:
 
     # make nano
 
@@ -214,6 +213,11 @@ that did not sign by invoking:
 A verification of all available set signatures is done via:
 
     # make verify
+
+Nano images can be adjusted in size using an argument as follows,
+with the default of 3800M:
+
+    # make nano-<size>
 
 Virtual machine images come in varying disk formats and sizes.
 The default format is vmdk with 20G and 1G swap. If you want
