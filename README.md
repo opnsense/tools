@@ -214,8 +214,7 @@ A verification of all available set signatures is done via:
 
     # make verify
 
-Nano images can be adjusted in size using an argument as follows,
-with the default of 3800M:
+Nano images can be adjusted in size using an argument as follows:
 
     # make nano-<size>
 

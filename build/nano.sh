@@ -34,7 +34,7 @@ SELF=nano
 
 check_images ${SELF} ${@}
 
-NANOSIZE="3800M"
+NANOSIZE="3500M"
 
 if [ -n "${1}" ]; then
 	NANOSIZE=${1}
