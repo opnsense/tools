@@ -187,12 +187,24 @@ if [ -n "${USED}" ]; then
 		(clear && diff -ru ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
 		    2>/dev/null || true;) | less -r
 
-		echo -n "replace ${PORT} [c/y/N]: "
+		echo -n "replace ${PORT} [c/e/y/N]: "
 		read YN
 		case ${YN} in
 		[yY])
 			rm -fr ${PORTSDIR}/${PORT}
 			cp -a ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
+			;;
+		[eE])
+			rm -fr ${PORTSDIR}/${PORT}
+			cp -a ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
+			(cd ${PORTSDIR}; git checkout -p ${ENTRIES})
+			(cd ${PORTSDIR}; git add ${PORT})
+			(cd ${PORTSDIR}; if ! git diff --quiet HEAD; then
+				git commit -m \
+"${PORT}: partially sync with upstream
+
+Taken from: FreeBSD";
+			fi)
 			;;
 		[cC])
 			rm -fr ${PORTSDIR}/${PORT}
@@ -227,7 +239,7 @@ Taken from: FreeBSD")
 			    2>/dev/null || true;
 		done) | less -r
 
-		echo -n "replace Framework [c/y/N]: "
+		echo -n "replace Framework [c/e/y/N]: "
 		read YN
 		case ${YN} in
 		[yY])
@@ -235,6 +247,20 @@ Taken from: FreeBSD")
 				rm -r ${PORTSDIR}/${ENTRY}
 				cp -a ${PORTSREFDIR}/${ENTRY} ${PORTSDIR}/
 			done
+			;;
+		[eE])
+			for ENTRY in ${ENTRIES}; do
+				rm -r ${PORTSDIR}/${ENTRY}
+				cp -a ${PORTSREFDIR}/${ENTRY} ${PORTSDIR}/
+			done
+			(cd ${PORTSDIR}; git checkout -p ${ENTRIES})
+			(cd ${PORTSDIR}; git add ${ENTRIES})
+			(cd ${PORTSDIR}; if ! git diff --quiet HEAD; then
+				git commit -m \
+"Framework: partially sync with upstream
+
+Taken from: FreeBSD";
+			fi)
 			;;
 		[cC])
 			for ENTRY in ${ENTRIES}; do
