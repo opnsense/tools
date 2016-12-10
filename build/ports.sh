@@ -98,7 +98,7 @@ trap - 2
 echo ">>> Creating binary packages..."
 
 chroot ${STAGEDIR} /bin/sh -es << EOF && \
-    bundle_packages ${STAGEDIR} ${SELF} plugins core
+    bundle_packages ${STAGEDIR} "${SELF}" ports plugins core
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	if pkg query %n \${PORT_ORIGIN##*/} > /dev/null; then
 		# lock the package to keep build deps
@@ -109,7 +109,7 @@ pkg autoremove -y
 pkg create -nao ${PACKAGESDIR}/All -f txz
 EOF
 
-if [ -z "${SELF}" ]; then
+if [ "${SELF}" != "ports" ]; then
 	echo ">>> The ports build did not finish properly :("
 	exit 1
 fi
