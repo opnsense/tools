@@ -76,7 +76,7 @@ Available build options are:
 * ARCH:		the target architecture if not native
 * CONFIG: 	reads the below from the specified file
 * DEVICE:	loads device-specific modifications, e.g. "a10" (default)
-* FLAVOUR:	"OpenSSL" (default), "LibreSSL"
+* FLAVOUR:	"OpenSSL" (default), "LibreSSL", "Base"
 * MIRRORS:	a list of mirrors to prefetch sets from
 * NAME:		"OPNsense" (default)
 * PRIVKEY:	the private key for signing sets
