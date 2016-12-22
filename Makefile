@@ -1,4 +1,4 @@
-STEPS=		base boot cdrom chroot clean core distfiles \
+STEPS=		base boot cdrom chroot clean core distfiles info \
 		kernel nano plugins ports prefetch print rebase \
 		release rename serial sign skim test verify vga \
 		vm xtools

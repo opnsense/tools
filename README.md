@@ -304,6 +304,11 @@ Should it not fit your needs, you can change the name using:
 
 The available targets are: base, kernel and package.
 
+The current state or a tagged state of required build repositories
+on the system can be printed using:
+
+    # make info[-<version>]
+
 Last but not least, in case build variables needs to be inspected,
 they can be printed selectively using:
 
