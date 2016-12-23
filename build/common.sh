@@ -246,6 +246,7 @@ git_describe()
 	VERSION=$(git -C ${1} describe --abbrev=0 --always ${HEAD})
 	REVISION=$(git -C ${1} rev-list --count ${VERSION}..${HEAD})
 	COMMENT=$(git -C ${1} rev-list --max-count=1 ${HEAD} | cut -c1-9)
+	BRANCH=$(git -C ${1} rev-parse --abbrev-ref ${HEAD})
 	REFTYPE=$(git -C ${1} cat-file -t ${HEAD})
 
 	if [ "${REVISION}" != "0" ]; then
@@ -256,6 +257,17 @@ git_describe()
 	export REPO_VERSION=${VERSION}
 	export REPO_COMMENT=${COMMENT}
 	export REPO_REFTYPE=${REFTYPE}
+	export REPO_BRANCH=${BRANCH}
+}
+
+git_branch()
+{
+	# only check for consistency
+	if [ -n "${2}" -a "${2}" != \
+	    "$(git -C ${1} rev-parse --abbrev-ref HEAD)" ]; then
+		echo ">>> ${1} does not match expected branch: ${2}"
+		exit 1
+	fi
 }
 
 git_tag()

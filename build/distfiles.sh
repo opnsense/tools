@@ -41,6 +41,9 @@ cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \
 done
 )
 
+git_branch ${SRCDIR} ${SRCBRANCH}
+git_branch ${PORTSDIR} ${PORTSBRANCH}
+
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}

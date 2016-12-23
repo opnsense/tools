@@ -43,6 +43,7 @@ if [ -f "${XTOOLS_SET}" -a -z "${1}" ]; then
 	exit 0
 fi
 
+git_branch ${SRCDIR} ${SRCBRANCH}
 git_describe ${SRCDIR}
 
 XTOOLS_SET=${SETSDIR}/xtools-${REPO_VERSION}-${PRODUCT_ARCH}.txz

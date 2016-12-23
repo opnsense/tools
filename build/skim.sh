@@ -45,6 +45,7 @@ cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \
 done
 )
 
+git_branch ${PORTSDIR} ${PORTSBRANCH}
 git_update ${PORTSREFDIR} origin/master
 git_checkout ${PORTSDIR} HEAD
 

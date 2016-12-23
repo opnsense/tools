@@ -38,6 +38,7 @@ if [ -f "${BASE_SET}" -a -z "${1}" ]; then
 	exit 0
 fi
 
+git_branch ${SRCDIR} ${SRCBRANCH}
 git_describe ${SRCDIR}
 
 BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}

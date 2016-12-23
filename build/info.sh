@@ -40,7 +40,9 @@ info()
 {
 	git_describe ${2} ${TAGNAME}
 
-	echo "${1} ${2} ${REPO_VERSION} ${REPO_COMMENT} ${REPO_REFTYPE}"
+	cat << EOF
+${1} ${2} ${REPO_VERSION} ${REPO_COMMENT} ${REPO_REFTYPE} ${REPO_BRANCH}
+EOF
 }
 
 info tools ${TOOLSDIR}

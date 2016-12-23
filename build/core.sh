@@ -48,6 +48,7 @@ if [ -z "${*}" ]; then
 	setup_clone ${STAGEDIR} ${COREDIR}
 	CORE_TAGS="bogus"
 else
+	git_branch ${CORDIR} ${COREBRANCH}
 	CORE_TAGS="${*}"
 fi
 

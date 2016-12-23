@@ -88,6 +88,9 @@ Available build options are:
 * UEFI:		"yes" for amd64 hybrid images with optional UEFI boot
 * VERSION:	a version tag (if applicable)
 
+The default CONFIG file is under "config/SUBDIR/build.conf".
+It can also be overrided by "/dev/null".
+
 Build the userland binaries, bootloader and administrative
 files:
 

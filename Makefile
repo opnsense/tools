@@ -14,11 +14,14 @@ lint:
 	@sh -n ${.CURDIR}/build/${STEP}.sh
 . endfor
 
-# Load the custom options from a file:
+# Special vars to load early build.conf settings:
 
-.if defined(CONFIG)
+TOOLSDIR?=	/usr/tools
+SETTINGS?=	16.7
+
+CONFIG?=	${TOOLSDIR}/config/${SETTINGS}/build.conf
+
 .include "${CONFIG}"
-.endif
 
 # Bootstrap the build options if not set:
 
@@ -26,7 +29,6 @@ NAME?=		OPNsense
 TYPE?=		${NAME:tl}
 SUFFIX?=	#-devel
 FLAVOUR?=	OpenSSL
-SETTINGS?=	16.7
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
 DEVICE?=	a10
@@ -43,10 +45,13 @@ VERSION?=	${_VERSION}
 STAGEDIRPREFIX?=/usr/obj
 PORTSREFDIR?=	/usr/freebsd-ports
 PLUGINSDIR?=	/usr/plugins
-TOOLSDIR?=	/usr/tools
+PLUGINSBRANCH?=	master
 PORTSDIR?=	/usr/ports
+PORTSBRANCH?=	master
 COREDIR?=	/usr/core
+COREBRANCH?=	master
 SRCDIR?=	/usr/src
+SRCBRANCH?=	master
 
 # A couple of meta-targets for easy use and ordering:
 

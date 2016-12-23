@@ -38,6 +38,7 @@ if [ -f "${KERNEL_SET}" -a -z "${1}" ]; then
 	exit 0
 fi
 
+git_branch ${SRCDIR} ${SRCBRANCH}
 git_describe ${SRCDIR}
 
 KERNEL_SET=${SETSDIR}/kernel-${REPO_VERSION}-${PRODUCT_ARCH}
