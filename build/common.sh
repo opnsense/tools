@@ -28,19 +28,10 @@
 
 set -e
 
-SCRUB_ARGS=:
+OPTS="a:B:b:C:c:d:E:e:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v:"
+SCRUB_ARGS=":"
 
-usage()
-{
-	echo "Usage: ${0} -f flavour -n name -v version -R freebsd-ports.git" >&2
-	echo "	-C core.git -P ports.git -S src.git -T tools.git -t type" >&2
-	echo "	-k /path/to/privkey -K /path/to/pubkey -m web_mirror" >&2
-	echo "	-d device [ -l customsigncheck -L customsigncommand ]" >&2
-	echo "	[ -o stagedirprefix ] [...]" >&2
-	exit 1
-}
-
-while getopts a:C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v: OPT; do
+while getopts ${OPTS} OPT; do
 	case ${OPT} in
 	a)
 		case ${OPTARG} in
@@ -56,6 +47,14 @@ while getopts a:C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v: OPT; do
 			;;
 		esac
 		;;
+	B)
+		export PORTSBRANCH=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	b)
+		export SRCBRANCH=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
 	C)
 		export COREDIR=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
@@ -66,6 +65,14 @@ while getopts a:C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v: OPT; do
 		;;
 	d)
 		export PRODUCT_DEVICE=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	E)
+		export COREBRANCH=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	e)
+		export PLUGINSBRANCH=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	f)
@@ -161,8 +168,8 @@ while getopts a:C:c:d:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v: OPT; do
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	*)
-		echo "Unknown argument '${OPT}'" >&2
-		usage
+		echo "${0}: Unknown argument '${OPT}'" >&2
+		exit 1
 		;;
 	esac
 done
@@ -176,13 +183,18 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_MIRROR}" -o \
     -z "${PRODUCT_DEVICE}" -o \
     -z "${PRODUCT_SPEED}" -o \
-    -z "${TOOLSDIR}" -o \
+    -z "${PLUGINSBRANCH}" -o \
     -z "${PLUGINSDIR}" -o \
+    -z "${PORTSBRANCH}" -o \
     -z "${PORTSDIR}" -o \
     -z "${PORTSREFDIR}" -o \
+    -z "${TOOLSDIR}" -o \
+    -z "${COREBRANCH}" -o \
     -z "${COREDIR}" -o \
+    -z "${SRCBRANCH}" -o \
     -z "${SRCDIR}" ]; then
-	usage
+	echo "${0}: Missing argument" >&2
+	exit 1
 fi
 
 # misc. foo

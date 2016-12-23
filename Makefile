@@ -92,5 +92,6 @@ ${STEP}: lint
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
 	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
-	    -u "${UEFI:tl}" -U "${SUFFIX}" ${${STEP}_ARGS}
+	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
+	    -E ${COREBRANCH} -u "${UEFI:tl}" -U "${SUFFIX}" ${${STEP}_ARGS}
 .endfor
