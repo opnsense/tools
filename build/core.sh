@@ -31,6 +31,8 @@ SELF=core
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+. ${CONFIGDIR}/core.conf
+
 check_packages ${SELF} ${@}
 
 setup_stage ${STAGEDIR}
@@ -50,8 +52,6 @@ else
 fi
 
 for CORE_TAG in ${CORE_TAGS}; do
-	CORE_NAME=${PRODUCT_PKGNAME}
-	CORE_FAMILY="release"
 	CORE_ARGS="CORE_NAME=${CORE_NAME} CORE_FAMILY=${CORE_FAMILY}"
 
 	if [ -n "${*}" ]; then
@@ -64,7 +64,7 @@ for CORE_TAG in ${CORE_TAGS}; do
 		fi
 	fi
 
-	CORE_ARGS="CORE_ARCH=${PRODUCT_ARCH} ${CORE_ARGS}"
+	CORE_ARGS="CORE_ARCH=${CORE_ARCH} ${CORE_ARGS}"
 	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} depends)
 
 	remove_packages ${STAGEDIR} ${CORE_NAME}
