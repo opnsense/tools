@@ -35,6 +35,10 @@ SELF=core
 
 check_packages ${SELF} ${@}
 
+if [ -z "${*}" ]; then
+	git_branch ${COREDIR} ${COREBRANCH}
+fi
+
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_chroot ${STAGEDIR}
@@ -48,7 +52,6 @@ if [ -z "${*}" ]; then
 	setup_clone ${STAGEDIR} ${COREDIR}
 	CORE_TAGS="bogus"
 else
-	git_branch ${CORDIR} ${COREBRANCH}
 	CORE_TAGS="${*}"
 fi
 
