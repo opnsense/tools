@@ -31,6 +31,26 @@ SELF=plugins
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+PLUGINS_LIST=$(
+cat ${CONFIGDIR}/plugins.conf | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
+	if [ "$(echo ${PLUGIN_ORIGIN} | colrm 2)" = "#" ]; then
+		continue
+	fi
+	if [ -n "${PLUGIN_IGNORE}" ]; then
+		for PLUGIN_QUIRK in $(echo ${PLUGIN_IGNORE} | tr ',' ' '); do
+			if [ ${PLUGIN_QUIRK} = ${PRODUCT_ARCH} ]; then
+				continue 2
+			fi
+			if [ ${PLUGIN_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
+				continue 2
+			fi
+		done
+	fi
+
+	echo ${PLUGIN_ORIGIN}
+done
+)
+
 check_packages ${SELF} ${@}
 
 git_branch ${PLUGINSDIR} ${PLUGINSBRANCH}
@@ -44,8 +64,6 @@ extract_packages ${STAGEDIR}
 remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR} pkg git
 lock_packages ${STAGEDIR}
-
-PLUGINS_LIST=$(make -C ${PLUGINSDIR} list)
 
 for PLUGIN in ${PLUGINS_LIST}; do
 	PLUGIN_NAME=$(make -C ${PLUGINSDIR}/${PLUGIN} name)
