@@ -35,10 +35,6 @@ SELF=core
 
 check_packages ${SELF} ${@}
 
-if [ -z "${CORE_LIST}" ]; then
-	git_branch ${COREDIR} ${COREBRANCH}
-fi
-
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_chroot ${STAGEDIR}
@@ -49,24 +45,16 @@ remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR} pkg git gettext-tools
 lock_packages ${STAGEDIR}
 
-if [ -z "${CORE_LIST}" ]; then
-	setup_clone ${STAGEDIR} ${COREDIR}
-	CORE_TAGS="bogus"
-else
-	CORE_TAGS="${CORE_LIST}"
-fi
+for CORE in ${CORE_LIST}; do
+	CORE_NAME=${PRODUCT_PKGNAME}
+	CORE_ARGS="CORE_NAME=${CORE_NAME} CORE_FAMILY=release"
 
-for CORE_TAG in ${CORE_TAGS}; do
-	CORE_ARGS="CORE_NAME=${CORE_NAME} CORE_FAMILY=${CORE_FAMILY}"
-
-	if [ -n "${CORE_LIST}" ]; then
-		setup_copy ${STAGEDIR} ${COREDIR}
-		git_checkout ${STAGEDIR}${COREDIR} ${CORE_TAG}
-		git_describe ${STAGEDIR}${COREDIR} ${CORE_TAG}
-		if [ "${REPO_REFTYPE}" != tag ]; then
-			CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} name)
-			CORE_ARGS=
-		fi
+	setup_copy ${STAGEDIR} ${COREDIR}
+	git_checkout ${STAGEDIR}${COREDIR} ${CORE}
+	git_describe ${STAGEDIR}${COREDIR} ${CORE}
+	if [ "${REPO_REFTYPE}" != tag ]; then
+		CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} name)
+		CORE_ARGS=
 	fi
 
 	if search_packages ${STAGEDIR} ${CORE_NAME}; then
@@ -74,10 +62,9 @@ for CORE_TAG in ${CORE_TAGS}; do
 		continue
 	fi
 
-	CORE_ARGS="CORE_ARCH=${CORE_ARCH} ${CORE_ARGS}"
+	CORE_ARGS="CORE_ARCH=${PRODUCT_ARCH} ${CORE_ARGS}"
 	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} depends)
 
-	remove_packages ${STAGEDIR} ${CORE_NAME}
 	install_packages ${STAGEDIR} ${CORE_DEPS}
 	custom_packages ${STAGEDIR} ${COREDIR} "${CORE_ARGS}"
 done
