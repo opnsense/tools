@@ -52,7 +52,7 @@ for CORE in ${CORE_LIST}; do
 	git_checkout ${STAGEDIR}${COREDIR} ${CORE}
 	git_describe ${STAGEDIR}${COREDIR} ${CORE}
 
-	if [ "${REPO_REFTYPE}" = tag ]; then
+	if [ "${REPO_REFTYPE}" = tag -o -z "${REPO_BRANCH}" ]; then
 		CORE_ARGS="CORE_RELEASE=yes"
 	fi
 
