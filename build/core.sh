@@ -46,16 +46,17 @@ install_packages ${STAGEDIR} pkg git gettext-tools
 lock_packages ${STAGEDIR}
 
 for CORE in ${CORE_LIST}; do
-	CORE_NAME=${PRODUCT_PKGNAME}
-	CORE_ARGS="CORE_NAME=${CORE_NAME} CORE_FAMILY=release"
+	CORE_ARGS=
 
 	setup_copy ${STAGEDIR} ${COREDIR}
 	git_checkout ${STAGEDIR}${COREDIR} ${CORE}
 	git_describe ${STAGEDIR}${COREDIR} ${CORE}
-	if [ "${REPO_REFTYPE}" != tag ]; then
-		CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} name)
-		CORE_ARGS=
+
+	if [ "${REPO_REFTYPE}" = tag ]; then
+		CORE_ARGS="CORE_RELEASE=yes"
 	fi
+
+	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} name)
 
 	if search_packages ${STAGEDIR} ${CORE_NAME}; then
 		# already built
