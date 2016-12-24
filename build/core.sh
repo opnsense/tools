@@ -35,7 +35,7 @@ SELF=core
 
 check_packages ${SELF} ${@}
 
-if [ -z "${*}" ]; then
+if [ -z "${CORE_LIST}" ]; then
 	git_branch ${COREDIR} ${COREBRANCH}
 fi
 
@@ -44,21 +44,22 @@ setup_base ${STAGEDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
+remove_packages ${STAGEDIR} ${@}
 # register persistent packages to avoid bouncing
 install_packages ${STAGEDIR} pkg git gettext-tools
 lock_packages ${STAGEDIR}
 
-if [ -z "${*}" ]; then
+if [ -z "${CORE_LIST}" ]; then
 	setup_clone ${STAGEDIR} ${COREDIR}
 	CORE_TAGS="bogus"
 else
-	CORE_TAGS="${*}"
+	CORE_TAGS="${CORE_LIST}"
 fi
 
 for CORE_TAG in ${CORE_TAGS}; do
 	CORE_ARGS="CORE_NAME=${CORE_NAME} CORE_FAMILY=${CORE_FAMILY}"
 
-	if [ -n "${*}" ]; then
+	if [ -n "${CORE_LIST}" ]; then
 		setup_copy ${STAGEDIR} ${COREDIR}
 		git_checkout ${STAGEDIR}${COREDIR} ${CORE_TAG}
 		git_describe ${STAGEDIR}${COREDIR} ${CORE_TAG}
@@ -66,6 +67,11 @@ for CORE_TAG in ${CORE_TAGS}; do
 			CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} name)
 			CORE_ARGS=
 		fi
+	fi
+
+	if search_packages ${STAGEDIR} ${CORE_NAME}; then
+		# already built
+		continue
 	fi
 
 	CORE_ARGS="CORE_ARCH=${CORE_ARCH} ${CORE_ARGS}"
