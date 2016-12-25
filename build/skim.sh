@@ -33,8 +33,7 @@ SELF=skim
 
 setup_stage ${STAGEDIR}
 
-MAKE_ARG="__MAKE_CONF=${CONFIGDIR}/make.conf PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}"
-MAKE_CMD="${ENV_FILTER} make"
+MAKE_ARGS="__MAKE_CONF=${CONFIGDIR}/make.conf PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}"
 
 PORTS_LIST=$(
 cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \
@@ -81,13 +80,13 @@ while read PORT_ORIGIN PORT_BROKEN; do
 		SOURCE=${PORTSREFDIR}
 	fi
 
-	PORT_DEPS=$(echo ${PORT}; ${MAKE_CMD} -C ${SOURCE}/${PORT} \
-	    PORTSDIR=${SOURCE} ${MAKE_ARG} all-depends-list | \
+	PORT_DEPS=$(echo ${PORT}; ${ENV_FILTER} make -C ${SOURCE}/${PORT} \
+	    PORTSDIR=${SOURCE} ${MAKE_ARGS} all-depends-list | \
 	    awk -F"${SOURCE}/" '{print $2}')
 
 	for PORT in ${PORT_DEPS}; do
-		PORT_MASTER=$(${MAKE_CMD} -C ${SOURCE}/${PORT} \
-		    -V MASTER_PORT ${MAKE_ARG})
+		PORT_MASTER=$(${ENV_FILTER} make -C ${SOURCE}/${PORT} \
+		    -V MASTER_PORT PORTSDIR=${SOURCE} ${MAKE_ARGS})
 		if [ -n "${PORT_MASTER}" ]; then
 			PORT_DEPS="${PORT_DEPS} ${PORT_MASTER}"
 		fi
