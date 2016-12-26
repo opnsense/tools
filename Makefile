@@ -17,6 +17,7 @@ lint:
 # Special vars to load early build.conf settings:
 
 TOOLSDIR?=	/usr/tools
+TOOLSBRANCH?=	master
 SETTINGS?=	16.7
 
 CONFIG?=	${TOOLSDIR}/config/${SETTINGS}/build.conf
@@ -31,6 +32,7 @@ SUFFIX?=	#-devel
 FLAVOUR?=	OpenSSL
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
+KERNEL?=	SMP
 DEVICE?=	a10
 SPEED?=		115200
 UEFI?=		yes
@@ -86,12 +88,13 @@ VERBOSE_HIDDEN=	@
 .for STEP in ${STEPS}
 ${STEP}: lint
 	${VERBOSE_HIDDEN} cd ${.CURDIR}/build && \
-	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} \
+	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} -F ${KERNEL} \
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
 	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
-	    -E ${COREBRANCH} -u "${UEFI:tl}" -U "${SUFFIX}" ${${STEP}_ARGS}
+	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -u "${UEFI:tl}" \
+	    -U "${SUFFIX}" ${${STEP}_ARGS}
 .endfor

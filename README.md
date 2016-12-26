@@ -71,17 +71,21 @@ All build steps are invoked via make(1):
 
     # make step OPTION="value"
 
+Available early build options are:
+
+* CONFIG: 	reads the below from the specified file
+* SETTINGS:	the name of the requested config directory
+
 Available build options are:
 
 * ARCH:		the target architecture if not native
-* CONFIG: 	reads the below from the specified file
 * DEVICE:	loads device-specific modifications, e.g. "a10" (default)
 * FLAVOUR:	"OpenSSL" (default), "LibreSSL", "Base"
+* KERNEL:	the kernel config to use, e.g. SMP (default)
 * MIRRORS:	a list of mirrors to prefetch sets from
 * NAME:		"OPNsense" (default)
 * PRIVKEY:	the private key for signing sets
 * PUBKEY:	the public key for signing sets
-* SETTINGS:	the name of the selected settings in config/
 * SPEED:	serial speed, e.g. "115200" (default)
 * TYPE:         the base name of the top package to be installed
 * SUFFIX:	the suffix of top package name (empty, "-stable", "-devel")

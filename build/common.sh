@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="a:B:b:C:c:d:E:e:f:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v:"
+OPTS="a:B:b:C:c:d:E:e:f:F:g:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v:"
 SCRUB_ARGS=":"
 
 while getopts ${OPTS} OPT; do
@@ -77,6 +77,14 @@ while getopts ${OPTS} OPT; do
 		;;
 	f)
 		export PRODUCT_FLAVOUR=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	F)
+		export PRODUCT_KERNEL=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	g)
+		export TOOLSBRANCH=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	K)
@@ -183,11 +191,13 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_MIRROR}" -o \
     -z "${PRODUCT_DEVICE}" -o \
     -z "${PRODUCT_SPEED}" -o \
+    -z "${PRODUCT_KERNEL}" -o \
     -z "${PLUGINSBRANCH}" -o \
     -z "${PLUGINSDIR}" -o \
     -z "${PORTSBRANCH}" -o \
     -z "${PORTSDIR}" -o \
     -z "${PORTSREFDIR}" -o \
+    -z "${TOOLSBRANCH}" -o \
     -z "${TOOLSDIR}" -o \
     -z "${COREBRANCH}" -o \
     -z "${COREDIR}" -o \
@@ -699,7 +709,6 @@ clean_packages()
 
 setup_packages()
 {
-	# legacy package extract
 	extract_packages ${1}
 	install_packages ${@} ${PRODUCT_PKGNAME}
 	clean_packages ${1}
