@@ -678,17 +678,24 @@ bundle_packages()
 	# push packages to home location
 	cp ${BASEDIR}${PACKAGESDIR}/All/* ${BASEDIR}${PACKAGESDIR}-new/All
 
-	# needed bootstrap glue when no packages are on the system
-	(cd ${BASEDIR}${PACKAGESDIR}-new/Latest; ln -s ../All/pkg-*.txz pkg.txz)
-
 	SIGNARGS=
 
 	if [ -n "$(${PRODUCT_SIGNCHK})" ]; then
 		SIGNARGS="signing_command: ${PRODUCT_SIGNCMD}"
 	fi
 
-	# generate pkg bootstrap signature
-	generate_signature ${BASEDIR}${PACKAGESDIR}-new/Latest/pkg.txz
+	# generate all signatures and add bootstrap links
+	for PKGFILE in $(cd ${BASEDIR}${PACKAGESDIR}-new; \
+	    find All -type f); do
+		PKGINFO=$(pkg info -F ${BASEDIR}${PACKAGESDIR}-new/${PKGFILE} \
+		    | grep ^Name | awk '{ print $3; }')
+		(
+			cd ${BASEDIR}${PACKAGESDIR}-new/Latest
+			ln -s ../${PKGFILE} ${PKGINFO}.txz
+		)
+		generate_signature \
+		    ${BASEDIR}${PACKAGESDIR}-new/Latest/${PKGINFO}.txz
+	done
 
 	# generate index files
 	pkg repo ${BASEDIR}${PACKAGESDIR}-new/ ${SIGNARGS}
