@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -47,6 +47,13 @@ install_packages ${STAGEDIR} pkg pear-PHP_CodeSniffer phpunit ${PRODUCT_PKGNAME}
 echo ">>> Running ${PLUGINSDIR} test suite..."
 chroot ${STAGEDIR} /bin/sh -es <<EOF
 make -C${PLUGINSDIR} lint
+make -C${PLUGINSDIR} style
+EOF
+
+echo ">>> Running packages test suite..."
+chroot ${STAGEDIR} /bin/sh -es <<EOF
+pkg check -da
+pkg check -sa
 EOF
 
 echo ">>> Running ${COREDIR} test suite..."
