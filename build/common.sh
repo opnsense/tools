@@ -34,18 +34,10 @@ SCRUB_ARGS=":"
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
 	a)
-		case ${OPTARG} in
-		amd64|i386|arm:armv6)
-			export PRODUCT_TARGET=${OPTARG%%:*}
-			export PRODUCT_ARCH=${OPTARG##*:}
-			export PRODUCT_HOST=$(uname -p)
-			SCRUB_ARGS=${SCRUB_ARGS};shift;shift
-			;;
-		*)
-			echo "ARCH wants amd64, arm:armv6 or i386" >&2
-			exit 1
-			;;
-		esac
+		export PRODUCT_TARGET=${OPTARG%%:*}
+		export PRODUCT_ARCH=${OPTARG##*:}
+		export PRODUCT_HOST=$(uname -p)
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	B)
 		export PORTSBRANCH=${OPTARG}
