@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="a:B:b:C:c:d:E:e:f:F:g:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v:"
+OPTS="a:B:b:C:c:d:E:e:f:F:g:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v:V:"
 SCRUB_ARGS=":"
 
 while getopts ${OPTS} OPT; do
@@ -173,6 +173,10 @@ while getopts ${OPTS} OPT; do
 		;;
 	v)
 		export PRODUCT_VERSION=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
+	V)
+		export PRODUCT_ADDITIONS=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	*)
@@ -722,7 +726,7 @@ clean_packages()
 setup_packages()
 {
 	extract_packages ${1}
-	install_packages ${@} ${PRODUCT_PKGNAME}
+	install_packages ${@} ${PRODUCT_PKGNAME} ${PRODUCT_ADDITIONS}
 	clean_packages ${1}
 }
 

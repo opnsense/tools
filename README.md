@@ -50,6 +50,7 @@ Available early build options are:
 
 Available build options are:
 
+* ADDITIONS:	a list of packages/plugins to add to images
 * ARCH:		the target architecture if not native
 * DEVICE:	loads device-specific modifications, e.g. "a10" (default)
 * FLAVOUR:	"OpenSSL" (default), "LibreSSL", "Base"

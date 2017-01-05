@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2017 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -47,7 +47,7 @@ SETTINGS?=	16.7
 
 CONFIG?=	${TOOLSDIR}/config/${SETTINGS}/build.conf
 
-.include "${CONFIG}"
+.-include "${CONFIG}"
 
 # Bootstrap the build options if not set:
 
@@ -58,6 +58,7 @@ FLAVOUR?=	OpenSSL
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
 KERNEL?=	SMP
+ADDITIONS?=	#os-intel-em
 DEVICE?=	a10
 SPEED?=		115200
 UEFI?=		yes
@@ -121,5 +122,5 @@ ${STEP}: lint
 	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -u "${UEFI:tl}" \
-	    -U "${SUFFIX}" ${${STEP}_ARGS}
+	    -U "${SUFFIX}" -V "${ADDITIONS}" ${${STEP}_ARGS}
 .endfor
