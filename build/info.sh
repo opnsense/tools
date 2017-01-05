@@ -27,7 +27,7 @@
 
 set -e
 
-SELF=print
+SELF=info
 
 . ./common.sh && $(${SCRUB_ARGS})
 

@@ -238,7 +238,7 @@ export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
 export PRODUCT_PKGNAMES="${PRODUCT_TYPE} ${PRODUCT_TYPE}-stable ${PRODUCT_TYPE}-devel"
 export PRODUCT_PKGNAME="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
 
-if [ "${SELF}" != print ]; then
+if [ "${SELF}" != print -a "${SELF}" != info ]; then
 	# print environment to showcase all of our variables
 	env | sort
 fi
@@ -672,7 +672,12 @@ bundle_packages()
 
 	if [ -n "${SELF}" ]; then
 		# add build marker to set
-		touch ${BASEDIR}${PACKAGESDIR}-new/.${SELF}_done
+		MARKER="${BASEDIR}${PACKAGESDIR}-new/.${SELF}_done"
+		if [ ! -f ${MARKER} ]; then
+			# append build info if new
+			sh ./info.sh > ${MARKER}
+		fi
+		touch ${MARKER}
 	fi
 
 	# push packages to home location
