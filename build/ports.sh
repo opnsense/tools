@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -38,10 +38,9 @@ cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 	fi
 	if [ -n "${PORT_IGNORE}" ]; then
 		for PORT_QUIRK in $(echo ${PORT_IGNORE} | tr ',' ' '); do
-			if [ ${PORT_QUIRK} = ${PRODUCT_ARCH} ]; then
-				continue 2
-			fi
-			if [ ${PORT_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
+			if [ ${PLUGIN_QUIRK} = ${PRODUCT_TARGET} -o \
+			     ${PLUGIN_QUIRK} = ${PRODUCT_ARCH} -o \
+			     ${PLUGIN_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
 				continue 2
 			fi
 		done

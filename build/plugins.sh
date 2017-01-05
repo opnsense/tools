@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2017 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -38,10 +38,9 @@ cat ${CONFIGDIR}/plugins.conf | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
 	fi
 	if [ -n "${PLUGIN_IGNORE}" ]; then
 		for PLUGIN_QUIRK in $(echo ${PLUGIN_IGNORE} | tr ',' ' '); do
-			if [ ${PLUGIN_QUIRK} = ${PRODUCT_ARCH} ]; then
-				continue 2
-			fi
-			if [ ${PLUGIN_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
+			if [ ${PLUGIN_QUIRK} = ${PRODUCT_TARGET} -o \
+			     ${PLUGIN_QUIRK} = ${PRODUCT_ARCH} -o \
+			     ${PLUGIN_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
 				continue 2
 			fi
 		done
