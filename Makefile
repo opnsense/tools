@@ -86,7 +86,7 @@ SRCBRANCH?=	master
 ports distfiles: base
 plugins: ports
 core: plugins
-packages: core
+packages test: core
 cdrom vm serial vga nano: packages kernel
 sets: distfiles packages kernel
 images: cdrom nano serial vga vm
