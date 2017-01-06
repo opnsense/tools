@@ -38,9 +38,9 @@ cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 	fi
 	if [ -n "${PORT_IGNORE}" ]; then
 		for PORT_QUIRK in $(echo ${PORT_IGNORE} | tr ',' ' '); do
-			if [ ${PLUGIN_QUIRK} = ${PRODUCT_TARGET} -o \
-			     ${PLUGIN_QUIRK} = ${PRODUCT_ARCH} -o \
-			     ${PLUGIN_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
+			if [ ${PORT_QUIRK} = ${PRODUCT_TARGET} -o \
+			     ${PORT_QUIRK} = ${PRODUCT_ARCH} -o \
+			     ${PORT_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
 				continue 2
 			fi
 		done
