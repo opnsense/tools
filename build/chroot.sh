@@ -33,4 +33,4 @@ SELF=chroot
 
 echo ">>> chroot'ing into ${STAGEDIR}/${1}..."
 
-chroot ${STAGEDIR}/${1} /bin/csh
+${ENV_FILTER} chroot ${STAGEDIR}/${1} /bin/csh
