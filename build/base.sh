@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -38,7 +38,7 @@ if [ -f "${BASE_SET}" -a -z "${1}" ]; then
 	exit 0
 fi
 
-git_branch ${SRCDIR} ${SRCBRANCH}
+git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_describe ${SRCDIR}
 
 BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}

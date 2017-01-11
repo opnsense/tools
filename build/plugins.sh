@@ -52,7 +52,7 @@ done
 
 check_packages ${SELF} ${@}
 
-git_branch ${PLUGINSDIR} ${PLUGINSBRANCH}
+git_branch ${PLUGINSDIR} ${PLUGINSBRANCH} PLUGINSBRANCH
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

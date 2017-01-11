@@ -281,9 +281,15 @@ git_describe()
 git_branch()
 {
 	# only check for consistency
-	if [ -n "${2}" -a "${2}" != \
-	    "$(git -C ${1} rev-parse --abbrev-ref HEAD)" ]; then
+	if [ -z "${2}" ]; then
+		return
+	fi
+
+	BRANCH=$(git -C ${1} rev-parse --abbrev-ref HEAD)
+
+	if [ "${2}" != "${BRANCH}" ]; then
 		echo ">>> ${1} does not match expected branch: ${2}"
+		echo ">>> To continue anyway set ${3}=${BRANCH}"
 		exit 1
 	fi
 }

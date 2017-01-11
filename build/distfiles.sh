@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2017 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -41,8 +41,8 @@ cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \
 done
 )
 
-git_branch ${SRCDIR} ${SRCBRANCH}
-git_branch ${PORTSDIR} ${PORTSBRANCH}
+git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
+git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

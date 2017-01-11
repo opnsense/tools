@@ -31,8 +31,8 @@ SELF=test
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-git_branch ${COREDIR} ${COREBRANCH}
-git_branch ${PLUGINSDIR} ${PLUGINSBRANCH}
+git_branch ${COREDIR} ${COREBRANCH} COREBRANCH
+git_branch ${PLUGINSDIR} ${PLUGINSBRANCH} PLUGINSBRANCH
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

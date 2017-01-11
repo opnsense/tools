@@ -52,8 +52,8 @@ done
 
 check_packages ${SELF} ${@}
 
-git_branch ${SRCDIR} ${SRCBRANCH}
-git_branch ${PORTSDIR} ${PORTSBRANCH}
+git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
+git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
