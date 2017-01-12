@@ -4,7 +4,6 @@ ident		SMP
 
 options		DDB
 
-options		EM_MULTIQUEUE
 options		MROUTING
 options		PPS_SYNC
 options		TCP_SIGNATURE
