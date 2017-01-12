@@ -238,9 +238,12 @@ export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
 export PRODUCT_PKGNAMES="${PRODUCT_TYPE} ${PRODUCT_TYPE}-stable ${PRODUCT_TYPE}-devel"
 export PRODUCT_PKGNAME="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
 
-if [ "${SELF}" != print -a "${SELF}" != info ]; then
-	# print environment to showcase all of our variables
-	env | sort
+if [ "${SELF}" != print -a "${SELF}" != info -a "${SELF}" != update ]; then
+	if [ -z "${PRINT_ENV_SKIP}" ]; then
+		export PRINT_ENV_SKIP=1
+		env | sort
+	fi
+	echo ">>> Running build step: ${SELF}"
 fi
 
 git_checkout()
