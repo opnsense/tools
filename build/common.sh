@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="a:B:b:C:c:d:E:e:f:F:g:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v:V:"
+OPTS="a:B:b:C:c:d:E:e:F:f:G:g:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v:V:"
 SCRUB_ARGS=":"
 
 while getopts ${OPTS} OPT; do
@@ -67,12 +67,16 @@ while getopts ${OPTS} OPT; do
 		export PLUGINSBRANCH=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
+	F)
+		export PRODUCT_KERNEL=${OPTARG}
+		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
+		;;
 	f)
 		export PRODUCT_FLAVOUR=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
-	F)
-		export PRODUCT_KERNEL=${OPTARG}
+	G)
+		export PORTSREFBRANCH=${OPTARG}
 		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	g)
@@ -251,9 +255,11 @@ git_checkout()
 
 git_update()
 {
-	git -C ${1} fetch --all --prune
 	if [ -n "${2}" ]; then
-		git_checkout ${1} ${2}
+		git -C ${1} checkout ${2}
+		git -C ${1} pull
+	else
+		git -C ${1} fetch --all --prune
 	fi
 }
 

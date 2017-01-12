@@ -164,6 +164,12 @@ distribution files before running the actual build:
 
     # make distfiles
 
+Updating the individual repositories can be done as follows:
+
+    # make update-<repo1>[,...]
+
+Available update options are: core, plugins, ports, src, tools
+
 Compiled sets can be prefetched from a mirror, while removing
 any previously available set:
 

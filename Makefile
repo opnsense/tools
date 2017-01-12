@@ -25,8 +25,8 @@
 
 STEPS=		base boot cdrom chroot clean core distfiles info \
 		kernel nano plugins ports prefetch print rebase \
-		release rename serial sign skim test verify vga \
-		vm xtools
+		release rename serial sign skim test update verify \
+		vga vm xtools
 .PHONY:		${STEPS}
 
 PAGER?=		less
@@ -72,6 +72,7 @@ _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
 STAGEDIRPREFIX?=/usr/obj
 PORTSREFDIR?=	/usr/freebsd-ports
+PORTSREFBRANCH?=master
 PLUGINSDIR?=	/usr/plugins
 PLUGINSBRANCH?=	master
 PORTSDIR?=	/usr/ports
@@ -121,6 +122,6 @@ ${STEP}: lint
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
 	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
-	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -u "${UEFI:tl}" \
-	    -U "${SUFFIX}" -V "${ADDITIONS}" ${${STEP}_ARGS}
+	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
+	    -u "${UEFI:tl}" -U "${SUFFIX}" -V "${ADDITIONS}" ${${STEP}_ARGS}
 .endfor

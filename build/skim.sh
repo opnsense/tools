@@ -46,7 +46,7 @@ done
 )
 
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
-git_update ${PORTSREFDIR} origin/master
+git_update ${PORTSREFDIR} ${PORTSREFBRANCH}
 git_checkout ${PORTSDIR} HEAD
 
 UNUSED=1
