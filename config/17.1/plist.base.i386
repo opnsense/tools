@@ -17036,6 +17036,7 @@
 ./usr/share/zoneinfo/Asia/Aqtau
 ./usr/share/zoneinfo/Asia/Aqtobe
 ./usr/share/zoneinfo/Asia/Ashgabat
+./usr/share/zoneinfo/Asia/Atyrau
 ./usr/share/zoneinfo/Asia/Baghdad
 ./usr/share/zoneinfo/Asia/Bahrain
 ./usr/share/zoneinfo/Asia/Baku
@@ -17052,6 +17053,7 @@
 ./usr/share/zoneinfo/Asia/Dili
 ./usr/share/zoneinfo/Asia/Dubai
 ./usr/share/zoneinfo/Asia/Dushanbe
+./usr/share/zoneinfo/Asia/Famagusta
 ./usr/share/zoneinfo/Asia/Gaza
 ./usr/share/zoneinfo/Asia/Hebron
 ./usr/share/zoneinfo/Asia/Ho_Chi_Minh
@@ -17219,6 +17221,7 @@
 ./usr/share/zoneinfo/Europe/Samara
 ./usr/share/zoneinfo/Europe/San_Marino
 ./usr/share/zoneinfo/Europe/Sarajevo
+./usr/share/zoneinfo/Europe/Saratov
 ./usr/share/zoneinfo/Europe/Simferopol
 ./usr/share/zoneinfo/Europe/Skopje
 ./usr/share/zoneinfo/Europe/Sofia
