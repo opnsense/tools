@@ -5,9 +5,6 @@ ident		SMP
 # XXX improve updater to cope with /usr handling
 nomakeoptions	DEBUG
 
-# XXX must adapt ddb.conf to enable this properly
-nooptions	KDB_TRACE
-
 options		DDB
 options		GEOM_BDE
 options		GEOM_ELI
