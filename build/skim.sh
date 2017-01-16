@@ -47,7 +47,7 @@ done
 
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 git_update ${PORTSREFDIR} ${PORTSREFBRANCH}
-git_checkout ${PORTSDIR} HEAD
+git_reset ${PORTSDIR} HEAD
 
 UNUSED=1
 USED=1

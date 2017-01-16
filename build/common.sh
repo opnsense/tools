@@ -246,7 +246,7 @@ if [ "${SELF}" != print -a "${SELF}" != info -a "${SELF}" != update ]; then
 	echo ">>> Running build step: ${SELF}"
 fi
 
-git_checkout()
+git_reset()
 {
 	git -C ${1} clean -xdqf .
 	REPO_TAG=${2}
@@ -259,11 +259,8 @@ git_checkout()
 git_update()
 {
 	git -C ${1} fetch --all --prune
-
-	if [ -n "${2}" ]; then
-		git -C ${1} checkout ${2}
-		git -C ${1} pull
-	fi
+	git -C ${1} checkout ${2}
+	git -C ${1} pull
 }
 
 git_describe()

@@ -49,7 +49,7 @@ for CORE in ${CORE_LIST}; do
 	CORE_ARGS=
 
 	setup_copy ${STAGEDIR} ${COREDIR}
-	git_checkout ${STAGEDIR}${COREDIR} ${CORE}
+	git_reset ${STAGEDIR}${COREDIR} ${CORE}
 	git_describe ${STAGEDIR}${COREDIR} ${CORE}
 
 	if [ "${REPO_REFTYPE}" = tag -o -z "${REPO_BRANCH}" ]; then
