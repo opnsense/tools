@@ -258,11 +258,11 @@ git_checkout()
 
 git_update()
 {
+	git -C ${1} fetch --all --prune
+
 	if [ -n "${2}" ]; then
 		git -C ${1} checkout ${2}
 		git -C ${1} pull
-	else
-		git -C ${1} fetch --all --prune
 	fi
 }
 
