@@ -7,7 +7,7 @@ create sets, packages and images for the OPNsense project.
 Setting up a build system
 =========================
 
-Install FreeBSD 10.3-RELEASE (i386 or amd64 depending on your target arch)
+Install FreeBSD 11.0-RELEASE (i386 or amd64 depending on your target)
 on a machine with at least 25GB of hard disk (UFS works better than ZFS)
 and at least 4GB of RAM to successfully build all standard images.  All
 tasks require a root user.  Do the following to grab the repositories
@@ -117,16 +117,23 @@ to install a qemu package for user mode emulation:
 
     # pkg install qemu-user-static
 
-The current target is the Raspberry Pi 1 / 2 using the
-option ARCH=arm:armv6 and is supposed to run best on
-i386 for a matching 32 bit size.
+A viable cross-build target is the Raspberry Pi 2 using
+the following options:
 
-In order to speed up building of an emulated build,
-the xtools set can be build:
+    # make base kernel ARCH=arm:armv6 KERNEL=RPI2
+
+In order to speed up building of using an emulated build,
+the xtools set can be built:
 
     # make xtools ARCH=arm:armv6
 
-The xtools set works similar to the distfiles set.
+The xtools set is used during the packages build similar to
+the distfiles set.
+
+    # make packages ARCH=arm:armv6
+
+We do not provide ARM images at this point.  The sets can
+be used to bootstrap a running FreeBSD on such devices.
 
 About other scripts and tweaks
 ==============================

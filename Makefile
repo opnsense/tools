@@ -43,7 +43,7 @@ lint:
 
 TOOLSDIR?=	/usr/tools
 TOOLSBRANCH?=	master
-SETTINGS?=	16.7
+SETTINGS?=	17.1
 
 CONFIG?=	${TOOLSDIR}/config/${SETTINGS}/build.conf
 
@@ -58,7 +58,7 @@ FLAVOUR?=	OpenSSL
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
 KERNEL?=	SMP
-ADDITIONS?=	#os-intel-em
+ADDITIONS?=	#os-vmware
 DEVICE?=	a10
 SPEED?=		115200
 UEFI?=		yes
