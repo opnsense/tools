@@ -42,9 +42,6 @@ device		zyd
 device		wlan_acl
 device		wlan_xauth
 
-# Not all architectures have a consistent GENERIC
-device		netmap
-
 # Crashes when added to loader.conf
 device		speaker
 
