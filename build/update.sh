@@ -34,23 +34,29 @@ SELF=update
 for ARG in ${@}; do
 	case ${ARG} in
 	core)
-		BRANCH=${COREBRANCH}
+		BRANCHES=${COREBRANCH}
 		DIR=${COREDIR}
+		if [ ${BRANCHES} != master ]; then
+			BRANCHES="master ${BRANCHES}"
+		fi
 		;;
 	plugins)
-		BRANCH=${PLUGINSBRANCH}
+		BRANCHES=${PLUGINSBRANCH}
 		DIR=${PLUGINSDIR}
+		if [ ${BRANCHES} != master ]; then
+			BRANCHES="master ${BRANCHES}"
+		fi
 		;;
 	ports)
-		BRANCH=${PORTSBRANCH}
+		BRANCHES=${PORTSBRANCH}
 		DIR=${PORTSDIR}
 		;;
 	src)
-		BRANCH=${SRCBRANCH}
+		BRANCHES=${SRCBRANCH}
 		DIR=${SRCDIR}
 		;;
 	tools)
-		BRANCH=${TOOLSBRANCH}
+		BRANCHES=${TOOLSBRANCH}
 		DIR=${TOOLSDIR}
 		;;
 	*)
@@ -58,6 +64,8 @@ for ARG in ${@}; do
 		;;
 	esac
 
-	echo ">>> Updating branch ${BRANCH} of ${DIR}..."
-	git_update ${DIR} ${BRANCH}
+	git_fetch ${DIR}
+	for BRANCH in ${BRANCHES}; do
+		git_pull ${DIR} ${BRANCH}
+	done
 done

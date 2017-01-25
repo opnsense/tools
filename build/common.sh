@@ -256,9 +256,17 @@ git_reset()
 	git -C ${1} reset --hard ${REPO_TAG}
 }
 
-git_update()
+git_fetch()
 {
+	echo ">>> Fetching ${DIR}..."
+
 	git -C ${1} fetch --all --prune
+}
+
+git_pull()
+{
+	echo ">>> Pulling branch ${BRANCH} of ${DIR}..."
+
 	git -C ${1} checkout ${2}
 	git -C ${1} pull
 }

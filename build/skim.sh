@@ -46,7 +46,8 @@ done
 )
 
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
-git_update ${PORTSREFDIR} ${PORTSREFBRANCH}
+git_fetch ${PORTSREFDIR}
+git_pull ${PORTSREFDIR} ${PORTSREFBRANCH}
 git_reset ${PORTSDIR} HEAD
 
 UNUSED=1
