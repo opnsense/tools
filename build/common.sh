@@ -258,14 +258,14 @@ git_reset()
 
 git_fetch()
 {
-	echo ">>> Fetching ${DIR}..."
+	echo ">>> Fetching ${1}:"
 
 	git -C ${1} fetch --all --prune
 }
 
 git_pull()
 {
-	echo ">>> Pulling branch ${BRANCH} of ${DIR}..."
+	echo ">>> Pulling branch ${2} of ${1}:"
 
 	git -C ${1} checkout ${2}
 	git -C ${1} pull
