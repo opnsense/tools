@@ -88,7 +88,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	fi
 
 	echo ">>> Building \${PORT_ORIGIN}"
-	make -C ${PORTSDIR}/\${PORT_ORIGIN} install \
+	make -C ${PORTSDIR}/\${PORT_ORIGIN} install clean \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
 	    UNAME_r=\$(freebsd-version)
 done
