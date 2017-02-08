@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2017 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,25 +31,30 @@ SELF=prefetch
 
 . ./common.sh && $(${SCRUB_ARGS})
 
+. ${CONFIGDIR}/core.conf
+
+# XXX does not adapt to FreeBSD version used
+ABI="FreeBSD:11:${PRODUCT_ARCH}/${CORE_ABI}"
+
 for ARG in ${@}; do
 	case ${ARG} in
 	base)
 		sh ./clean.sh ${ARG}
-		URL="${PRODUCT_MIRROR}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_ARCH}"
+		URL="${PRODUCT_MIRROR}/${ABI}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_ARCH}"
 		for SUFFIX in obsolete.sig obsolete txz.sig txz; do
 			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
 		done
 		;;
 	kernel)
 		sh ./clean.sh ${ARG}
-		URL="${PRODUCT_MIRROR}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_ARCH}"
+		URL="${PRODUCT_MIRROR}/${ABI}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_ARCH}"
 		for SUFFIX in txz.sig txz; do
 			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
 		done
 		;;
 	packages)
 		sh ./clean.sh ${ARG}
-		URL="${PRODUCT_MIRROR}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
+		URL="${PRODUCT_MIRROR}/${ABI}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
 		for SUFFIX in tar.sig tar; do
 			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
 		done
