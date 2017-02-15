@@ -56,7 +56,6 @@ git_branch ${PLUGINSDIR} ${PLUGINSBRANCH} PLUGINSBRANCH
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
-setup_clone ${STAGEDIR} ${PLUGINSDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
@@ -64,17 +63,27 @@ remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR} pkg git
 lock_packages ${STAGEDIR}
 
-for PLUGIN in ${PLUGINS_LIST}; do
-	PLUGIN_NAME=$(make -C ${PLUGINSDIR}/${PLUGIN} name)
-	PLUGIN_DEPS=$(make -C ${PLUGINSDIR}/${PLUGIN} depends)
+for BRANCH in master ${PLUGINSBRANCH}; do
+	setup_copy ${STAGEDIR} ${PLUGINSDIR}
+	git_reset ${STAGEDIR}${PLUGINSDIR} ${BRANCH}
 
-	if search_packages ${STAGEDIR} ${PLUGIN_NAME}; then
-		# already built
-		continue
+	PLUGIN_ARGS=
+	if [ ${BRANCH} = master ]; then
+		PLUGIN_ARGS="PLUGIN_DEVEL=yes"
 	fi
 
-	install_packages ${STAGEDIR} ${PLUGIN_DEPS}
-	custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN}
+	for PLUGIN in ${PLUGINS_LIST}; do
+		PLUGIN_NAME=$(make -C ${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} name)
+		PLUGIN_DEPS=$(make -C ${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} depends)
+
+		if search_packages ${STAGEDIR} ${PLUGIN_NAME}; then
+			# already built
+			continue
+		fi
+
+		install_packages ${STAGEDIR} ${PLUGIN_DEPS}
+		custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN} "${PLUGIN_ARGS}"
+	done
 done
 
 bundle_packages ${STAGEDIR} ${SELF}
