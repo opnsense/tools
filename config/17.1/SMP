@@ -51,4 +51,4 @@ options		PAX_ASLR
 options		PAX_SEGVGUARD
 
 # OPNsense additions
-options		PF_SHARE_FORWARD
+#options		PF_SHARE_FORWARD
