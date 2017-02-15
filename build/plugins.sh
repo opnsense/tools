@@ -73,8 +73,15 @@ for BRANCH in master ${PLUGINSBRANCH}; do
 	fi
 
 	for PLUGIN in ${PLUGINS_LIST}; do
-		PLUGIN_NAME=$(make -C ${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} name)
-		PLUGIN_DEPS=$(make -C ${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} depends)
+		if [ ! -d ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ]; then
+			# not on this branch
+			continue
+		fi
+
+		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} \
+		    ${PLUGIN_ARGS} name)
+		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} \
+		    ${PLUGIN_ARGS} depends)
 
 		if search_packages ${STAGEDIR} ${PLUGIN_NAME}; then
 			# already built
@@ -82,7 +89,8 @@ for BRANCH in master ${PLUGINSBRANCH}; do
 		fi
 
 		install_packages ${STAGEDIR} ${PLUGIN_DEPS}
-		custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN} "${PLUGIN_ARGS}"
+		custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN} \
+		    "${PLUGIN_ARGS}"
 	done
 done
 
