@@ -48,6 +48,7 @@ device		speaker
 # HardenedBSD goodies
 options		PAX
 options		PAX_ASLR
+options		PAX_HARDENING
 options		PAX_SEGVGUARD
 
 # OPNsense additions
