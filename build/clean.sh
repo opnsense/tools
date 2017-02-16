@@ -85,7 +85,7 @@ for ARG in ${@}; do
 		setup_stage ${STAGEDIR}
 		setup_base ${STAGEDIR}
 		extract_packages ${STAGEDIR}
-		remove_packages ${STAGEDIR} "os-*" "ospriv-*"
+		remove_packages ${STAGEDIR} "os-*"
 		bundle_packages ${STAGEDIR} ${SELF} plugins
 		;;
 	release)
