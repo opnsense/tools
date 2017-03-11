@@ -59,6 +59,8 @@ setup_base ${STAGEDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
+# XXX we remove normal packages here,
+# but should only apply to plugins...
 remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR} pkg git
 lock_packages ${STAGEDIR}
