@@ -49,7 +49,7 @@ for BRANCH in master ${COREBRANCH}; do
 
 	CORE_ARGS="CORE_ARCH=${PRODUCT_ARCH}"
 
-	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} name)
+	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} name)
 	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} depends)
 
 	if search_packages ${STAGEDIR} ${CORE_NAME}; then
