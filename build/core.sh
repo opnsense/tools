@@ -31,8 +31,6 @@ SELF=core
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-. ${CONFIGDIR}/core.conf
-
 check_packages ${SELF} ${@}
 
 setup_stage ${STAGEDIR}
@@ -45,21 +43,19 @@ remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR} pkg git gettext-tools
 lock_packages ${STAGEDIR}
 
-for CORE in ${CORE_LIST}; do
-	CORE_ARGS=
-
+for BRANCH in master ${COREBRANCH}; do
 	setup_copy ${STAGEDIR} ${COREDIR}
-	git_reset ${STAGEDIR}${COREDIR} ${CORE}
+	git_reset ${STAGEDIR}${COREDIR} ${BRANCH}
 
-	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} name)
+	CORE_ARGS="CORE_ARCH=${PRODUCT_ARCH}"
+
+	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} name)
+	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} depends)
 
 	if search_packages ${STAGEDIR} ${CORE_NAME}; then
 		# already built
 		continue
 	fi
-
-	CORE_ARGS="CORE_ARCH=${PRODUCT_ARCH} ${CORE_ARGS}"
-	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} depends)
 
 	install_packages ${STAGEDIR} ${CORE_DEPS}
 	custom_packages ${STAGEDIR} ${COREDIR} "${CORE_ARGS}"

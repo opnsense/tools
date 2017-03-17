@@ -31,10 +31,8 @@ SELF=prefetch
 
 . ./common.sh && $(${SCRUB_ARGS})
 
-. ${CONFIGDIR}/core.conf
-
 # XXX does not adapt to FreeBSD version used
-ABI="FreeBSD:11:${PRODUCT_ARCH}/${CORE_ABI}"
+ABI="FreeBSD:11:${PRODUCT_ARCH}/${PRODUCT_SETTINGS}"
 
 for ARG in ${@}; do
 	case ${ARG} in
