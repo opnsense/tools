@@ -50,11 +50,6 @@ for CORE in ${CORE_LIST}; do
 
 	setup_copy ${STAGEDIR} ${COREDIR}
 	git_reset ${STAGEDIR}${COREDIR} ${CORE}
-	git_describe ${STAGEDIR}${COREDIR} ${CORE}
-
-	if [ "${REPO_REFTYPE}" = tag -o -z "${REPO_BRANCH}" ]; then
-		CORE_ARGS="CORE_RELEASE=yes"
-	fi
 
 	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} name)
 

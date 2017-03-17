@@ -151,12 +151,12 @@ while getopts ${OPTS} OPT; do
 		;;
 	U)
 		case "${OPTARG}" in
-		''|-stable|-devel)
+		''|-devel)
 			export PRODUCT_SUFFIX=${OPTARG}
 			SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 			;;
 		*)
-			echo "SUFFIX wants empty string, -stable or -devel" >&2
+			echo "SUFFIX wants empty string or '-devel'" >&2
 			exit 1
 			;;
 		esac
@@ -235,7 +235,7 @@ export PRODUCT_PUBKEY=${PRODUCT_PUBKEY:-"${CONFIGDIR}/repo.pub"}
 export PRODUCT_SIGNCMD=${PRODUCT_SIGNCMD:-"${TOOLSDIR}/scripts/pkg_sign.sh ${PRODUCT_PUBKEY} ${PRODUCT_PRIVKEY}"}
 export PRODUCT_SIGNCHK=${PRODUCT_SIGNCHK:-"${TOOLSDIR}/scripts/pkg_fingerprint.sh ${PRODUCT_PUBKEY}"}
 export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
-export PRODUCT_PKGNAMES="${PRODUCT_TYPE} ${PRODUCT_TYPE}-stable ${PRODUCT_TYPE}-devel"
+export PRODUCT_PKGNAMES="${PRODUCT_TYPE} ${PRODUCT_TYPE}-devel"
 export PRODUCT_PKGNAME="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
 
 if [ "${SELF}" != print -a "${SELF}" != info -a "${SELF}" != update ]; then
