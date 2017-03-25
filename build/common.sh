@@ -382,6 +382,22 @@ setup_chroot()
 	chroot ${1} /bin/sh /etc/rc.d/ldconfig start
 }
 
+build_marker()
+{
+	MARKER_DISTDIR="$(make -C${SRCDIR}/release -V DISTDIR)/${1}"
+	MARKER_OBJDIR="$(make -C${SRCDIR}/release -V .OBJDIR)"
+	MARKER_VERDIR="/usr/local/opnsense/version"
+
+	# reset the distribution directory as well
+	setup_stage "${MARKER_OBJDIR}/${MARKER_DISTDIR}"
+
+	MARKER="${MARKER_OBJDIR}/${MARKER_DISTDIR}/${MARKER_VERDIR}"
+
+	mkdir -p "${MARKER}"
+
+	echo "${REPO_VERSION}-${PRODUCT_ARCH}" > "${MARKER}/${1}"
+}
+
 setup_marker()
 {
 	# Let opnsense-update(8) know it's up to date

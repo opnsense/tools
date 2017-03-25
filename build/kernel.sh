@@ -56,6 +56,9 @@ MAKE_ARGS="${MAKE_ARGS} KERNCONF=${PRODUCT_KERNEL} __MAKE_CONF="
 
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildkernel ${MAKE_ARGS} NO_KERNELCLEAN=yes
 ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
+
+build_marker kernel
+
 rm -f $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz
 ${ENV_FILTER} make -s -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
 
