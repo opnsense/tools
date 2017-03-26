@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2017 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -34,6 +34,15 @@ SELF=rename
 for ARG in ${@}; do
 	case ${ARG} in
 	base)
+		setup_stage ${STAGEDIR}
+		echo ">>> Repacking base set..."
+		BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
+		tar -C ${STAGEDIR} -xjf ${BASE_SET}
+		echo ${VERSION}-${PRODUCT_ARCH} > \
+		    ${STAGEDIR}/usr/local/opnsense/version/base
+		rm ${BASE_SET}
+		tar -C ${STAGEDIR} -cvf - . | xz > ${BASE_SET}
+		generate_signature ${BASE_SET}
 		echo ">>> Renaming base set: ${VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "base-*-${PRODUCT_ARCH}.*"); do
@@ -41,6 +50,15 @@ for ARG in ${@}; do
 		done
 		;;
 	kernel)
+		setup_stage ${STAGEDIR}
+		echo ">>> Repacking kernel set..."
+		KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
+		tar -C ${STAGEDIR} -xjf ${KERNEL_SET}
+		echo ${VERSION}-${PRODUCT_ARCH} > \
+		    ${STAGEDIR}/usr/local/opnsense/version/kernel
+		rm ${KERNEL_SET}
+		tar -C ${STAGEDIR} -cvf - . | xz > ${KERNEL_SET}
+		generate_signature ${KERNEL_SET}
 		echo ">>> Renaming kernel set: ${VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "kernel-*-${PRODUCT_ARCH}.*"); do
