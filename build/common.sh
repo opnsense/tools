@@ -398,14 +398,6 @@ build_marker()
 	echo "${REPO_VERSION}-${PRODUCT_ARCH}" > "${MARKER}/${1}"
 }
 
-setup_marker()
-{
-	# XXX compat glue to let opnsense-update(8) know it's up to date
-	MARKER="/usr/local/opnsense/version"
-
-	cp ${1}${MARKER}/${2} ${1}${MARKER}/opnsense-update.${2}
-}
-
 setup_base()
 {
 	echo ">>> Setting up world in ${1}"
@@ -421,8 +413,6 @@ setup_base()
 	# this here, because otherwise read-only install
 	# media wouldn't be able to bootstrap the directory.
 	mkdir -p ${1}/conf
-
-	setup_marker ${1} base
 }
 
 setup_kernel()
@@ -430,8 +420,6 @@ setup_kernel()
 	echo ">>> Setting up kernel in ${1}"
 
 	tar -C ${1} -xpf ${SETSDIR}/kernel-*-${PRODUCT_ARCH}.txz
-
-	setup_marker ${1} kernel
 }
 
 setup_distfiles()
