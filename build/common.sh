@@ -400,25 +400,17 @@ build_marker()
 
 setup_marker()
 {
-	# Let opnsense-update(8) know it's up to date
-	MARKER="/usr/local/opnsense/version/opnsense-update.${3}"
+	# XXX compat glue to let opnsense-update(8) know it's up to date
+	MARKER="/usr/local/opnsense/version"
 
-	if [ ! -f ${1}${MARKER} ]; then
-		# first call means bootstrap the marker file
-		mkdir -p ${1}$(dirname ${MARKER})
-		echo ${2} > ${1}${MARKER}
-	fi
+	cp ${1}${MARKER}/${2} ${1}${MARKER}/opnsense-update.${2}
 }
 
 setup_base()
 {
-	local BASE_SET BASE_VER
-
 	echo ">>> Setting up world in ${1}"
 
-	BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
-
-	tar -C ${1} -xpf ${BASE_SET}
+	tar -C ${1} -xpf ${SETSDIR}/base-*-${PRODUCT_ARCH}.txz
 
 	# /home is needed for LiveCD images, and since it
 	# belongs to the base system, we create it from here.
@@ -430,24 +422,16 @@ setup_base()
 	# media wouldn't be able to bootstrap the directory.
 	mkdir -p ${1}/conf
 
-	BASE_VER=${BASE_SET##${SETSDIR}/base-}
-
-	setup_marker ${1} ${BASE_VER%%.txz} base
+	setup_marker ${1} base
 }
 
 setup_kernel()
 {
-	local KERNEL_SET KERNEL_VER
-
 	echo ">>> Setting up kernel in ${1}"
 
-	KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
+	tar -C ${1} -xpf ${SETSDIR}/kernel-*-${PRODUCT_ARCH}.txz
 
-	tar -C ${1} -xpf ${KERNEL_SET}
-
-	KERNEL_VER=${KERNEL_SET##${SETSDIR}/kernel-}
-
-	setup_marker ${1} ${KERNEL_VER%%.txz} kernel
+	setup_marker ${1} kernel
 }
 
 setup_distfiles()
