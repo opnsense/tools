@@ -49,6 +49,11 @@ for ARG in ${@}; do
 			mv ${FILE} ${SETSDIR}/base-${VERSION}-${FILE##*-}
 		done
 		;;
+	distfiles)
+		echo ">>> Renaming distfiles set: ${VERSION}"
+		mv ${SETSDIR}/distfiles-*.tar \
+		    ${SETSDIR}/distfiles-${VERSION}.tar
+		;;
 	kernel)
 		setup_stage ${STAGEDIR}
 		echo ">>> Repacking kernel set..."
