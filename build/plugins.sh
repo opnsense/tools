@@ -59,8 +59,6 @@ setup_base ${STAGEDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
-# XXX we remove normal packages here,
-# but should only apply to plugins...
 remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR} pkg git
 lock_packages ${STAGEDIR}
@@ -69,21 +67,14 @@ for BRANCH in master ${PLUGINSBRANCH}; do
 	setup_copy ${STAGEDIR} ${PLUGINSDIR}
 	git_reset ${STAGEDIR}${PLUGINSDIR} ${BRANCH}
 
-	PLUGIN_ARGS=
-	if [ ${BRANCH} = master ]; then
-		PLUGIN_ARGS="PLUGIN_DEVEL=yes"
-	fi
-
 	for PLUGIN in ${PLUGINS_LIST}; do
 		if [ ! -d ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ]; then
 			# not on this branch
 			continue
 		fi
 
-		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} \
-		    ${PLUGIN_ARGS} name)
-		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} \
-		    ${PLUGIN_ARGS} depends)
+		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} name)
+		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} depends)
 
 		if search_packages ${STAGEDIR} ${PLUGIN_NAME}; then
 			# already built
@@ -91,8 +82,7 @@ for BRANCH in master ${PLUGINSBRANCH}; do
 		fi
 
 		install_packages ${STAGEDIR} ${PLUGIN_DEPS}
-		custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN} \
-		    "${PLUGIN_ARGS}"
+		custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN}
 	done
 done
 
