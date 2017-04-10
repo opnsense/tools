@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,13 +27,13 @@
 
 set -e
 
-SELF=cdrom
+SELF=dvd
 
 . ./common.sh && $(${SCRUB_ARGS})
 
 check_images ${SELF} ${@}
 
-CDROM="${IMAGESDIR}/${PRODUCT_RELEASE}-cdrom-${PRODUCT_ARCH}.iso"
+DVD="${IMAGESDIR}/${PRODUCT_RELEASE}-dvd-${PRODUCT_ARCH}.iso"
 
 # rewrite the disk label, because we're install media
 LABEL="${LABEL}_Install"
@@ -67,7 +67,7 @@ if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
 	UEFIBOOT="${UEFIBOOT} -o no-emul-boot"
 fi
 
-echo -n ">>> Building cdrom image... "
+echo -n ">>> Building dvd image... "
 
 cat > ${STAGEDIR}/work/etc/fstab << EOF
 # Device	Mountpoint	FStype	Options	Dump	Pass #
@@ -77,6 +77,6 @@ EOF
 
 makefs -t cd9660 ${UEFIBOOT} \
     -o 'bootimage=i386;'"${STAGEDIR}"'/work/boot/cdboot' -o no-emul-boot \
-    -o label=${LABEL} -o rockridge ${CDROM} ${STAGEDIR}/work
+    -o label=${LABEL} -o rockridge ${DVD} ${STAGEDIR}/work
 
 echo "done"

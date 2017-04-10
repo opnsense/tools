@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -37,9 +37,9 @@ for ARG in ${@}; do
 		echo ">>> Removing base set"
 		rm -f ${SETSDIR}/base-*-${PRODUCT_ARCH}.*
 		;;
-	cdrom)
-		echo ">>> Removing cdrom image"
-		rm -f ${IMAGESDIR}/*-cdrom-${PRODUCT_ARCH}.*
+	dvd)
+		echo ">>> Removing dvd image"
+		rm -f ${IMAGESDIR}/*-dvd-${PRODUCT_ARCH}.*
 		;;
 	core)
 		echo ">>> Removing core from packages set"

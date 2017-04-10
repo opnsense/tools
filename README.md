@@ -26,9 +26,9 @@ tasks require a root user.  Do the following to grab the repositories
 TL;DR
 =====
 
-    # make cdrom
+    # make dvd
 
-If successful, a cdrom image can be found here: /tmp/images
+If successful, a dvd image can be found here: /tmp/images
 
 Detailed build steps and options
 ================================
@@ -89,23 +89,23 @@ Wrap up our core as a package:
 
     # make core
 
-A cdrom live image is created using:
+A dvd live image is created using:
 
-    # make cdrom
+    # make dvd
 
-A serial memstick image is created using:
+A serial memstick live image is created using:
 
     # make serial
 
-A vga memstick image is created using:
+A vga memstick live image is created using:
 
     # make vga
 
-A flash card disk image is created using:
+A flash card full disk image is created using:
 
     # make nano
 
-A virtual machine disk image is created using:
+A virtual machine full disk image is created using:
 
     # make vm
 
@@ -151,7 +151,7 @@ define hooks in the form of e.g.:
     }
 
 These hooks are available for all image types, namely
-cdrom, nano, serial, vga and vm.  Device-specific hooks
+dvd, nano, serial, vga and vm.  Device-specific hooks
 are loaded after config-specific hooks and both of them
 can coexist in a given build.
 
@@ -245,7 +245,7 @@ Available clean options are:
 
 * base:		remove base set
 * distfiles:	remove distfiles set
-* cdrom:	remove cdrom image
+* dvd:		remove dvd image
 * core:		remove core from packages set
 * images:	remove all images
 * kernel:	remove kernel set

@@ -23,7 +23,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-STEPS=		base boot cdrom chroot clean core distfiles info \
+STEPS=		base boot chroot clean core distfiles dvd info \
 		kernel nano plugins ports prefetch print rebase \
 		release rename serial sign skim test update verify \
 		vga vm xtools
@@ -88,10 +88,10 @@ ports distfiles: base
 plugins: ports
 core: plugins
 packages test: core
-cdrom vm serial vga nano: packages kernel
+dvd nano serial vga vm: packages kernel
 sets: distfiles packages kernel
-images: cdrom nano serial vga vm
-release: cdrom nano serial vga
+images: dvd nano serial vga vm
+release: dvd nano serial vga
 
 # Expand target arguments for the script append:
 
