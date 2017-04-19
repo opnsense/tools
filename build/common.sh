@@ -573,22 +573,6 @@ lock_packages()
 	done
 }
 
-bootstrap_packages()
-{
-	BASEDIR=${1}
-
-	echo ">>> Bootstrapping packages in ${BASEDIR}"
-
-	for PKG in $(cd ${BASEDIR}; find .${PACKAGESDIR}/All -type f); do
-		# Adds all available packages and removes the
-		# ones that cannot be installed due to missing
-		# dependencies.  This behaviour is desired.
-		if ! pkg -c ${BASEDIR} add ${PKG}; then
-			rm -r ${BASEDIR}/${PKG}
-		fi
-	done
-}
-
 install_packages()
 {
 	BASEDIR=${1}

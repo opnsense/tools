@@ -64,9 +64,15 @@ setup_distfiles ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
 remove_packages ${STAGEDIR} ${@} ${PRODUCT_PKGNAMES} "os-*"
-bootstrap_packages ${STAGEDIR}
 
-echo ">>> Building packages..."
+for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
+	# Tests all available packages and removes the
+	# ones that cannot be installed due to missing
+	# dependencies.  This behaviour is desired.
+	if ! pkg -c ${STAGEDIR} add ${PKGAUTO} ${PKG}; then
+		rm -f ${STAGEDIR}/${PKG}
+	fi
+done
 
 MAKE_CONF="${CONFIGDIR}/make.conf"
 if [ -f ${MAKE_CONF} ]; then
@@ -83,33 +89,37 @@ if ! pkg -N; then
 fi
 
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
-	if pkg query %n \${PORT_ORIGIN##*/} > /dev/null; then
+	pkg set -yaA1
+	pkg set -yA0 pkg
+	pkg autoremove -y
+
+	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT_ORIGIN} -V PKGFILE \
+	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} PACKAGES=${PACKAGESDIR} \
+	    UNAME_r=\$(freebsd-version))
+
+	if [ -f \${PKGFILE} ]; then
 		continue
 	fi
 
-	echo ">>> Building \${PORT_ORIGIN}"
 	make -C ${PORTSDIR}/\${PORT_ORIGIN} install clean \
-	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
-	    UNAME_r=\$(freebsd-version)
+	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} PACKAGES=${PACKAGESDIR} \
+	    USE_PACKAGE_DEPENDS=yes UNAME_r=\$(freebsd-version)
+
+	echo "${PORTS_LIST}" | while read PORT_DEPENDS; do
+		if pkg query %n \${PORT_DEPENDS##*/} > /dev/null; then
+			pkg set -yA0 \${PORT_DEPENDS}
+		fi
+	done
+
+	pkg autoremove -y
+	pkg create -nao ${PACKAGESDIR}/All -f txz
 done
 EOF
 
 # unblock SIGINT
 trap - 2
 
-echo ">>> Creating binary packages..."
-
-chroot ${STAGEDIR} /bin/sh -es << EOF && \
-    bundle_packages ${STAGEDIR} "${SELF}" ports plugins core
-echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
-	if pkg query %n \${PORT_ORIGIN##*/} > /dev/null; then
-		# lock the package to keep build deps
-		pkg lock -qy \${PORT_ORIGIN}
-	fi
-done
-pkg autoremove -y
-pkg create -nao ${PACKAGESDIR}/All -f txz
-EOF
+bundle_packages ${STAGEDIR} "${SELF}" ports plugins core
 
 if [ "${SELF}" != "ports" ]; then
 	echo ">>> The ports build did not finish properly :("
