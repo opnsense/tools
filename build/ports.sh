@@ -66,12 +66,38 @@ extract_packages ${STAGEDIR}
 remove_packages ${STAGEDIR} ${@} ${PRODUCT_PKGNAMES} "os-*"
 
 for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
-	# Tests all available packages and removes the
-	# ones that cannot be installed due to missing
-	# dependencies.  This behaviour is desired.
-	if ! pkg -c ${STAGEDIR} add ${PKGAUTO} ${PKG}; then
-		rm -f ${STAGEDIR}/${PKG}
+	# all packages that install have their dependencies fulfilled
+	if pkg -c ${STAGEDIR} add ${PKG}; then
+		continue
 	fi
+
+	# some packages clash in files with others, check for conflicts
+	PKGORIGIN=$(pkg -c ${STAGEDIR} info -F ${PKG} | grep ^Origin | awk '{ print $3; }')
+	PKGGLOBS=
+	for CONFLICTS in CONFLICTS CONFLICTS_INSTALL; do
+		PKGGLOBS="${PKGGLOBS} $(make -C ${PORTSDIR}/${PKGORIGIN} -V ${CONFLICTS})"
+	done
+	PKGFILES=
+	for PKGGLOB in ${PKGGLOBS}; do
+		# globs are practically useless for pkg :(
+		PKGFILES="${PKGFILES} $(cd ${STAGEDIR}; \
+		    find .${PACKAGESDIR}/All -type f -name "${PKGGLOB}")"
+	done
+	for PKGFILE in ${PKGFILES}; do
+		pkg -c ${STAGEDIR} remove -y \
+		    $(pkg -c ${STAGEDIR} info -F ${PKGFILE} | \
+		    grep ^Origin | awk '{ print $3; }')
+	done
+
+	# if the conflicts are resolved this works now, but remove
+	# the package again as it may clash again later...
+	if pkg -c ${STAGEDIR} add ${PKG}; then
+		pkg -c ${STAGEDIR} remove -y ${PKGORIGIN}
+		continue
+	fi
+
+	# if nothing worked, we are missing a dependency and force a rebuild
+	rm -f ${STAGEDIR}/${PKG}
 done
 
 MAKE_CONF="${CONFIGDIR}/make.conf"
@@ -88,11 +114,13 @@ if ! pkg -N; then
 	    UNAME_r=\$(freebsd-version)
 fi
 
-echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
-	pkg set -yaA1
-	pkg set -yA0 pkg
-	pkg autoremove -y
+pkg set -yaA1
+pkg set -yA0 pkg
+pkg autoremove -y
 
+pkg create -nao ${PACKAGESDIR}/All -f txz
+
+echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT_ORIGIN} -V PKGFILE \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} PACKAGES=${PACKAGESDIR} \
 	    UNAME_r=\$(freebsd-version))
@@ -101,7 +129,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 		continue
 	fi
 
-	make -C ${PORTSDIR}/\${PORT_ORIGIN} install clean \
+	make -C ${PORTSDIR}/\${PORT_ORIGIN} install \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} PACKAGES=${PACKAGESDIR} \
 	    USE_PACKAGE_DEPENDS=yes UNAME_r=\$(freebsd-version)
 
@@ -113,6 +141,14 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 
 	pkg autoremove -y
 	pkg create -nao ${PACKAGESDIR}/All -f txz
+
+	make -C ${PORTSDIR}/\${PORT_ORIGIN} clean \
+	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
+	    UNAME_r=\$(freebsd-version)
+
+	pkg set -yaA1
+	pkg set -yA0 pkg
+	pkg autoremove -y
 done
 EOF
 
