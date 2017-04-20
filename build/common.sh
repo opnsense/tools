@@ -633,8 +633,6 @@ bundle_packages()
 
 	REDOS=${@}
 
-	sh ./clean.sh packages
-
 	git_describe ${PORTSDIR}
 
 	# clean up in case of partial run
@@ -690,6 +688,8 @@ bundle_packages()
 
 	# generate index files
 	pkg repo ${BASEDIR}${PACKAGESDIR}-new/ ${SIGNARGS}
+
+	sh ./clean.sh packages
 
 	REPO_RELEASE="${REPO_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
 	echo -n ">>> Creating package mirror set for ${REPO_RELEASE}... "
