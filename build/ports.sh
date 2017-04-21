@@ -101,13 +101,15 @@ fi
 trap : 2
 
 if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then SELF=; fi
+PKG_ORIGIN="ports-mgmt/pkg"
+
 if ! pkg -N; then
-	make -C ${PORTSDIR}/ports-mgmt/pkg install \
+	make -C ${PORTSDIR}/\${PKG_ORIGIN} install \
 	    UNAME_r=\$(freebsd-version)
 fi
 
 pkg set -yaA1
-pkg set -yA0 pkg
+pkg set -yA0 \${PKG_ORIGIN}
 pkg autoremove -y
 
 pkg create -nao ${PACKAGESDIR}/All -f txz
@@ -117,6 +119,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} PACKAGES=${PACKAGESDIR} \
 	    UNAME_r=\$(freebsd-version))
 
+	# XXX a different version of the same package may exist though
 	if [ -f \${PKGFILE} ]; then
 		continue
 	fi
@@ -126,8 +129,9 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	    USE_PACKAGE_DEPENDS=yes UNAME_r=\$(freebsd-version)
 
 	echo "${PORTS_LIST}" | while read PORT_DEPENDS; do
-		if pkg query %n \${PORT_DEPENDS##*/} > /dev/null; then
-			pkg set -yA0 \${PORT_DEPENDS}
+		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS}" %n)
+		if [ -n "\${PORT_DEPNAME}" ]; then
+			pkg set -yA0 \${PORT_DEPNAME}
 		fi
 	done
 
@@ -139,7 +143,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	    UNAME_r=\$(freebsd-version)
 
 	pkg set -yaA1
-	pkg set -yA0 pkg
+	pkg set -yA0 \${PKG_ORIGIN}
 	pkg autoremove -y
 done
 EOF
