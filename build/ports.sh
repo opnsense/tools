@@ -77,16 +77,8 @@ for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
 	for CONFLICTS in CONFLICTS CONFLICTS_INSTALL; do
 		PKGGLOBS="${PKGGLOBS} $(make -C ${PORTSDIR}/${PKGORIGIN} -V ${CONFLICTS})"
 	done
-	PKGFILES=
 	for PKGGLOB in ${PKGGLOBS}; do
-		# globs are practically useless for pkg :(
-		PKGFILES="${PKGFILES} $(cd ${STAGEDIR}; \
-		    find .${PACKAGESDIR}/All -type f -name "${PKGGLOB}")"
-	done
-	for PKGFILE in ${PKGFILES}; do
-		pkg -c ${STAGEDIR} remove -y \
-		    $(pkg -c ${STAGEDIR} info -F ${PKGFILE} | \
-		    grep ^Origin | awk '{ print $3; }')
+		pkg -c ${STAGEDIR} remove -gy "${PKGGLOB}" || true
 	done
 
 	# if the conflicts are resolved this works now, but remove
