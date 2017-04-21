@@ -686,7 +686,7 @@ bundle_packages()
 		    | grep ^Name | awk '{ print $3; }')
 		(
 			cd ${BASEDIR}${PACKAGESDIR}-new/Latest
-			ln -s ../${PKGFILE} ${PKGINFO}.txz
+			ln -sfn ../${PKGFILE} ${PKGINFO}.txz
 		)
 		generate_signature \
 		    ${BASEDIR}${PACKAGESDIR}-new/Latest/${PKGINFO}.txz
