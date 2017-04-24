@@ -37,10 +37,6 @@ for ARG in ${@}; do
 		echo ">>> Removing base set"
 		rm -f ${SETSDIR}/base-*-${PRODUCT_ARCH}.*
 		;;
-	dvd)
-		echo ">>> Removing dvd image"
-		rm -f ${IMAGESDIR}/*-dvd-${PRODUCT_ARCH}.*
-		;;
 	core)
 		echo ">>> Removing core from packages set"
 		setup_stage ${STAGEDIR}
@@ -53,6 +49,10 @@ for ARG in ${@}; do
 		echo ">>> Removing distfiles set"
 		rm -f ${SETSDIR}/distfiles-*.tar
 		;;
+	dvd)
+		echo ">>> Removing dvd image"
+		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-dvd-${PRODUCT_ARCH}.iso
+		;;
 	images)
 		setup_stage ${IMAGESDIR}
 		;;
@@ -62,7 +62,7 @@ for ARG in ${@}; do
 		;;
 	nano)
 		echo ">>> Removing nano image"
-		rm -f ${IMAGESDIR}/*-nano-${PRODUCT_ARCH}.*
+		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-nano-${PRODUCT_ARCH}.img
 		;;
 	obj)
 		if [ -d ${STAGEDIRPREFIX}${TOOLSDIR} ]; then
@@ -94,7 +94,7 @@ for ARG in ${@}; do
 		;;
 	serial)
 		echo ">>> Removing serial image"
-		rm -f ${IMAGESDIR}/*-serial-${PRODUCT_ARCH}.*
+		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-serial-${PRODUCT_ARCH}.img
 		;;
 	sets)
 		setup_stage ${SETSDIR}
@@ -107,11 +107,11 @@ for ARG in ${@}; do
 		;;
 	vga)
 		echo ">>> Removing vga image"
-		rm -f ${IMAGESDIR}/*-vga-${PRODUCT_ARCH}.*
+		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-vga-${PRODUCT_ARCH}.img
 		;;
 	vm)
 		echo ">>> Removing vm image"
-		rm -f ${IMAGESDIR}/*-vm-${PRODUCT_ARCH}.*
+		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-vm-${PRODUCT_ARCH}.*
 		;;
 	xtools)
 		echo ">>> Removing xtools set"

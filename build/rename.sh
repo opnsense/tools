@@ -54,6 +54,11 @@ for ARG in ${@}; do
 		mv ${SETSDIR}/distfiles-*.tar \
 		    ${SETSDIR}/distfiles-${VERSION}.tar
 		;;
+	dvd)
+		echo ">>> Renaming dvd image: ${VERSION}"
+		mv ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-dvd-${PRODUCT_ARCH}.iso \
+		    ${IMAGESDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-dvd-${PRODUCT_ARCH}.iso
+		;;
 	kernel)
 		setup_stage ${STAGEDIR}
 		echo ">>> Repacking kernel set..."
@@ -70,11 +75,33 @@ for ARG in ${@}; do
 			mv ${FILE} ${SETSDIR}/kernel-${VERSION}-${FILE##*-}
 		done
 		;;
+	nano)
+		echo ">>> Renaming nano image: ${VERSION}"
+		mv ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-nano-${PRODUCT_ARCH}.img \
+		    ${IMAGESDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-nano-${PRODUCT_ARCH}.img
+		;;
 	packages)
 		echo ">>> Renaming packages set: ${VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.*"); do
 			mv ${FILE} ${SETSDIR}/packages-${VERSION}-${PRODUCT_FLAVOUR}-${FILE##*-}
+		done
+		;;
+	serial)
+		echo ">>> Renaming serial image: ${VERSION}"
+		mv ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-serial-${PRODUCT_ARCH}.img \
+		    ${IMAGESDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-serial-${PRODUCT_ARCH}.img
+		;;
+	vga)
+		echo ">>> Renaming vga image: ${VERSION}"
+		mv ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-vga-${PRODUCT_ARCH}.img \
+		    ${IMAGESDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-vga-${PRODUCT_ARCH}.img
+		;;
+	vm)
+		echo ">>> Renaming vm set: ${VERSION}"
+		for FILE in $(find ${SETSDIR} -name \
+		    "*-${PRODUCT_FLAVOUR}-vm-${PRODUCT_ARCH}.*"); do
+			mv ${FILE} ${SETSDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-vm-${FILE##*-}
 		done
 		;;
 	esac
