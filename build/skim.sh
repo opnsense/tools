@@ -201,7 +201,7 @@ if [ -n "${USED}" ]; then
 		[eE])
 			rm -fr ${PORTSDIR}/${PORT}
 			cp -a ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
-			(cd ${PORTSDIR}; git checkout -p ${ENTRIES})
+			(cd ${PORTSDIR}; git checkout -p ${PORT})
 			(cd ${PORTSDIR}; git add ${PORT})
 			(cd ${PORTSDIR}; if ! git diff --quiet HEAD; then
 				git commit -m \
