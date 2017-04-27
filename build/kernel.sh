@@ -29,7 +29,7 @@ set -e
 
 SELF=kernel
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
 

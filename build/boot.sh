@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2107 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@ set -e
 
 SELF=boot
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 if [ -z "${1}" ]; then
 	echo ">> No image given."

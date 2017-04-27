@@ -29,7 +29,7 @@ set -e
 
 SELF=prefetch
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 # XXX does not adapt to FreeBSD version used
 ABI="FreeBSD:11:${PRODUCT_ARCH}/${PRODUCT_SETTINGS}"

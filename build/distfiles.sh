@@ -29,7 +29,7 @@ set -e
 
 SELF=distfiles
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 PORTS_LIST=$(
 cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \

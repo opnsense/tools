@@ -29,7 +29,7 @@ set -e
 
 SELF=verify
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

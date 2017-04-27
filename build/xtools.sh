@@ -29,7 +29,7 @@ set -e
 
 SELF=xtools
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 if [ ${PRODUCT_HOST} = ${PRODUCT_ARCH} ]; then
 	echo ">>> No need to build xtools on native build"

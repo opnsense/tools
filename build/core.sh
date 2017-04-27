@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@ set -e
 
 SELF=core
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 check_packages ${SELF} ${@}
 
@@ -40,7 +40,7 @@ setup_chroot ${STAGEDIR}
 extract_packages ${STAGEDIR}
 remove_packages ${STAGEDIR} ${@}
 # register persistent packages to avoid bouncing
-install_packages ${STAGEDIR} pkg git gettext-tools
+install_packages ${STAGEDIR} pkg git
 lock_packages ${STAGEDIR}
 
 for BRANCH in master ${COREBRANCH}; do

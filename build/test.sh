@@ -29,7 +29,7 @@ set -e
 
 SELF=test
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 git_branch ${COREDIR} ${COREBRANCH} COREBRANCH
 git_branch ${PLUGINSDIR} ${PLUGINSBRANCH} PLUGINSBRANCH

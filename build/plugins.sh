@@ -29,7 +29,7 @@ set -e
 
 SELF=plugins
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 PLUGINS_LIST=$(
 cat ${CONFIGDIR}/plugins.conf | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do

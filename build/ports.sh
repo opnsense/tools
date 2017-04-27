@@ -29,7 +29,7 @@ set -e
 
 SELF=ports
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 PORTS_LIST=$(
 cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do

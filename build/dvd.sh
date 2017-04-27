@@ -29,7 +29,7 @@ set -e
 
 SELF=dvd
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 check_images ${SELF} ${@}
 

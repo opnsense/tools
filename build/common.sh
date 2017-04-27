@@ -29,7 +29,6 @@
 set -e
 
 OPTS="a:B:b:C:c:d:E:e:F:f:G:g:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v:V:"
-SCRUB_ARGS=":"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -37,123 +36,96 @@ while getopts ${OPTS} OPT; do
 		export PRODUCT_TARGET=${OPTARG%%:*}
 		export PRODUCT_ARCH=${OPTARG##*:}
 		export PRODUCT_HOST=$(uname -p)
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	B)
 		export PORTSBRANCH=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	b)
 		export SRCBRANCH=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	C)
 		export COREDIR=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	c)
 		export PRODUCT_SPEED=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	d)
 		export PRODUCT_DEVICE=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	E)
 		export COREBRANCH=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	e)
 		export PLUGINSBRANCH=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	F)
 		export PRODUCT_KERNEL=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	f)
 		export PRODUCT_FLAVOUR=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	G)
 		export PORTSREFBRANCH=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	g)
 		export TOOLSBRANCH=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	K)
 		if [ -n "${OPTARG}" ]; then
 			export PRODUCT_PUBKEY=${OPTARG}
 		fi
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	k)
 		if [ -n "${OPTARG}" ]; then
 			export PRODUCT_PRIVKEY=${OPTARG}
 		fi
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	L)
 		if [ -n "${OPTARG}" ]; then
 			export PRODUCT_SIGNCMD=${OPTARG}
 		fi
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	l)
 		if [ -n "${OPTARG}" ]; then
 			export PRODUCT_SIGNCHK=${OPTARG}
 		fi
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	m)
 		export PRODUCT_MIRROR=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	n)
 		export PRODUCT_NAME=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	o)
 		if [ -n "${OPTARG}" ]; then
 			export STAGEDIRPREFIX=${OPTARG}
 		fi
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	P)
 		export PORTSDIR=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	p)
 		export PLUGINSDIR=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	R)
 		export PORTSREFDIR=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	S)
 		export SRCDIR=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	s)
 		export PRODUCT_SETTINGS=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	T)
 		export TOOLSDIR=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	t)
 		export PRODUCT_TYPE=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	U)
 		case "${OPTARG}" in
 		''|-devel)
 			export PRODUCT_SUFFIX=${OPTARG}
-			SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 			;;
 		*)
 			echo "SUFFIX wants empty string or '-devel'" >&2
@@ -165,15 +137,12 @@ while getopts ${OPTS} OPT; do
 		if [ "${OPTARG}" = "yes" ]; then
 			export PRODUCT_UEFI=${OPTARG}
 		fi
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	v)
 		export PRODUCT_VERSION=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	V)
 		export PRODUCT_ADDITIONS=${OPTARG}
-		SCRUB_ARGS=${SCRUB_ARGS};shift;shift
 		;;
 	*)
 		echo "${0}: Unknown argument '${OPT}'" >&2
@@ -181,6 +150,8 @@ while getopts ${OPTS} OPT; do
 		;;
 	esac
 done
+
+shift $((${OPTIND} - 1))
 
 if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_TYPE}" -o \

@@ -29,7 +29,7 @@ set -e
 
 SELF=base
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
 

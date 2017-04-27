@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2017 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@ set -e
 
 SELF=rebase
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 BASE_OBSOLETE=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.obsolete")
 BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")

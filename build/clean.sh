@@ -29,7 +29,7 @@ set -e
 
 SELF=clean
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 for ARG in ${@}; do
 	case ${ARG} in

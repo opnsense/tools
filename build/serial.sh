@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2016 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@ set -e
 
 SELF=serial
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 check_images ${SELF} ${@}
 

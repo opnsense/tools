@@ -29,7 +29,7 @@ set -e
 
 SELF=skim
 
-. ./common.sh && $(${SCRUB_ARGS})
+. ./common.sh
 
 setup_stage ${STAGEDIR}
 
