@@ -59,8 +59,7 @@ EOF
 echo ">>> Running ${COREDIR} test suite..."
 
 chroot ${STAGEDIR} /bin/sh -es <<EOF
-make -C${COREDIR} setup
 make -C${COREDIR} lint
-make -C${COREDIR} health
 make -C${COREDIR} style
+make -C${COREDIR} test
 EOF
