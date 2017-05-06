@@ -14,6 +14,7 @@
 /etc/rc.d/kerberos
 /etc/rc.d/kfd
 /etc/rc.d/kpasswdd
+/etc/rc.d/local_unbound
 /etc/rc.d/mroute6d
 /etc/rc.d/mrouted
 /etc/rc.d/ntpd
@@ -26,6 +27,7 @@
 /etc/ssh/moduli
 /etc/ssh/ssh_config
 /etc/ssh/sshd_config
+/etc/unbound
 /lib/libcam.so.6
 /lib/libcrypto.so.7
 /lib/libkvm.so.6
@@ -344,6 +346,9 @@
 /usr/lib/libprivateheimipcs.a
 /usr/lib/libprivateheimipcs.so
 /usr/lib/libprivateheimipcs.so.11
+/usr/lib/libprivateunbound.a
+/usr/lib/libprivateunbound.so
+/usr/lib/libprivateunbound.so.5
 /usr/lib/libproc.so.2
 /usr/lib/libreadline.a
 /usr/lib/libreadline.so
@@ -465,8 +470,13 @@
 /usr/sbin/iprop-log
 /usr/sbin/kstash
 /usr/sbin/ktutil
+/usr/sbin/local-unbound-setup
 /usr/sbin/sade
 /usr/sbin/sshd
+/usr/sbin/unbound
+/usr/sbin/unbound-anchor
+/usr/sbin/unbound-checkconf
+/usr/sbin/unbound-control
 /usr/sbin/unbound-control-setup
 /usr/sbin/utxrm
 /usr/share/dtrace/toolkit/execsnoop
@@ -1378,6 +1388,7 @@
 /usr/share/man/man5/ssh_config.5.gz
 /usr/share/man/man5/sshd_config.5.gz
 /usr/share/man/man5/texinfo.5.gz
+/usr/share/man/man5/unbound.conf.5.gz
 /usr/share/man/man8/NIS.8.gz
 /usr/share/man/man8/YP.8.gz
 /usr/share/man/man8/bsdinstall.8.gz
@@ -1413,6 +1424,10 @@
 /usr/share/man/man8/sshd.8.gz
 /usr/share/man/man8/string2key.8.gz
 /usr/share/man/man8/talkd.8.gz
+/usr/share/man/man8/unbound-anchor.8.gz
+/usr/share/man/man8/unbound-checkconf.8.gz
+/usr/share/man/man8/unbound-control.8.gz
+/usr/share/man/man8/unbound.8.gz
 /usr/share/man/man8/utxrm.8.gz
 /usr/share/man/man8/verify_krb5_conf.8.gz
 /usr/share/man/man8/yp.8.gz
@@ -1482,6 +1497,7 @@
 /var/db/etcupdate/current/etc/rc.d/kdc
 /var/db/etcupdate/current/etc/rc.d/kfd
 /var/db/etcupdate/current/etc/rc.d/kpasswdd
+/var/db/etcupdate/current/etc/rc.d/local_unbound
 /var/db/etcupdate/current/etc/rc.d/mroute6d
 /var/db/etcupdate/current/etc/rc.d/mrouted
 /var/db/etcupdate/current/etc/rc.d/ntpd
@@ -1490,6 +1506,7 @@
 /var/db/etcupdate/current/etc/rc.d/rwho
 /var/db/etcupdate/current/etc/rc.d/sendmail
 /var/db/etcupdate/current/etc/rc.sendmail
+/var/db/etcupdate/current/etc/unbound
 /var/db/etcupdate/current/root/.k5login
 /var/db/etcupdate/current/usr/share/nls/POSIX
 /var/db/etcupdate/current/usr/share/nls/en_US.US-ASCII

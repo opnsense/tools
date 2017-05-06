@@ -327,7 +327,6 @@
 ./etc/rc.d/kldxref
 ./etc/rc.d/ldconfig
 ./etc/rc.d/local
-./etc/rc.d/local_unbound
 ./etc/rc.d/localpkg
 ./etc/rc.d/lockd
 ./etc/rc.d/lpd
@@ -436,7 +435,6 @@
 ./etc/termcap
 ./etc/termcap.small
 ./etc/ttys
-./etc/unbound
 ./etc/zfs/
 ./lib/
 ./lib/casper/
@@ -3385,9 +3383,6 @@
 ./usr/lib/libprivateucl.a
 ./usr/lib/libprivateucl.so
 ./usr/lib/libprivateucl.so.1
-./usr/lib/libprivateunbound.a
-./usr/lib/libprivateunbound.so
-./usr/lib/libprivateunbound.so.5
 ./usr/lib/libproc.a
 ./usr/lib/libproc.so
 ./usr/lib/libproc.so.3
@@ -3880,7 +3875,6 @@
 ./usr/sbin/l2ping
 ./usr/sbin/lastlogin
 ./usr/sbin/lmcconfig
-./usr/sbin/local-unbound-setup
 ./usr/sbin/lockstat
 ./usr/sbin/lpc
 ./usr/sbin/lpd
@@ -3984,10 +3978,6 @@
 ./usr/sbin/uefisign
 ./usr/sbin/ugidfw
 ./usr/sbin/uhsoctl
-./usr/sbin/unbound
-./usr/sbin/unbound-anchor
-./usr/sbin/unbound-checkconf
-./usr/sbin/unbound-control
 ./usr/sbin/usbconfig
 ./usr/sbin/usbdump
 ./usr/sbin/utx
@@ -13151,7 +13141,6 @@
 ./usr/share/man/man5/tmpfs.5.gz
 ./usr/share/man/man5/ttys.5.gz
 ./usr/share/man/man5/tzfile.5.gz
-./usr/share/man/man5/unbound.conf.5.gz
 ./usr/share/man/man5/utf8.5.gz
 ./usr/share/man/man5/uuencode.5.gz
 ./usr/share/man/man5/uuencode.format.5.gz
@@ -13623,10 +13612,6 @@
 ./usr/share/man/man8/uefisign.8.gz
 ./usr/share/man/man8/ugidfw.8.gz
 ./usr/share/man/man8/umount.8.gz
-./usr/share/man/man8/unbound-anchor.8.gz
-./usr/share/man/man8/unbound-checkconf.8.gz
-./usr/share/man/man8/unbound-control.8.gz
-./usr/share/man/man8/unbound.8.gz
 ./usr/share/man/man8/usbconfig.8.gz
 ./usr/share/man/man8/usbdump.8.gz
 ./usr/share/man/man8/utx.8.gz
@@ -18676,7 +18661,6 @@
 ./var/db/etcupdate/current/etc/rc.d/kldxref
 ./var/db/etcupdate/current/etc/rc.d/ldconfig
 ./var/db/etcupdate/current/etc/rc.d/local
-./var/db/etcupdate/current/etc/rc.d/local_unbound
 ./var/db/etcupdate/current/etc/rc.d/localpkg
 ./var/db/etcupdate/current/etc/rc.d/lockd
 ./var/db/etcupdate/current/etc/rc.d/lpd
@@ -18782,7 +18766,6 @@
 ./var/db/etcupdate/current/etc/termcap
 ./var/db/etcupdate/current/etc/termcap.small
 ./var/db/etcupdate/current/etc/ttys
-./var/db/etcupdate/current/etc/unbound
 ./var/db/etcupdate/current/root/
 ./var/db/etcupdate/current/root/.cshrc
 ./var/db/etcupdate/current/root/.login
