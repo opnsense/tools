@@ -115,12 +115,22 @@ pkg autoremove -y
 pkg create -nao ${PACKAGESDIR}/All -f txz
 
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
+	# check whether the package has already been built
 	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT_ORIGIN} -V PKGFILE \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} PACKAGES=${PACKAGESDIR} \
 	    UNAME_r=\$(freebsd-version))
-
-	# XXX a different version of the same package may exist though
 	if [ -f \${PKGFILE} ]; then
+		continue
+	fi
+
+	# check whether the package is available as an older version
+	PKGNAME=\$(basename \${PKGFILE})
+	PKGNAME=\${PKGNAME%%-[0-9]*}.txz
+	PKGFILE=${PACKAGESDIR}/Latest/\${PKGNAME}
+	if [ -L \${PKGFILE} ]; then
+		PKGFILE=\$(readlink -f \${PKGFILE})
+		echo ">>> A different version of \${PORT_ORIGIN} exists!"
+		echo ">>> The build may fail or have integrity issues!"
 		continue
 	fi
 
