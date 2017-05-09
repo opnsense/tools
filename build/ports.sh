@@ -126,12 +126,13 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	# check whether the package is available as an older version
 	PKGNAME=\$(basename \${PKGFILE})
 	PKGNAME=\${PKGNAME%%-[0-9]*}.txz
-	PKGFILE=${PACKAGESDIR}/Latest/\${PKGNAME}
-	if [ -L \${PKGFILE} ]; then
-		PKGFILE=\$(readlink -f \${PKGFILE})
-		echo ">>> A different version of \${PORT_ORIGIN} exists!"
-		echo ">>> The build may fail or have integrity issues!"
-		continue
+	PKGLINK=${PACKAGESDIR}/Latest/\${PKGNAME}
+	if [ -L \${PKGLINK} ]; then
+		PKGFILE=\$(readlink -f \${PKGLINK})
+		if [ -f \${PKGFILE} ]; then
+			echo ">>> A different version of \${PORT_ORIGIN} exists!" >> /.pkg-warn
+			continue
+		fi
 	fi
 
 	make -C ${PORTSDIR}/\${PORT_ORIGIN} install \
@@ -162,6 +163,11 @@ EOF
 trap - 2
 
 bundle_packages ${STAGEDIR} "${SELF}" ports plugins core
+
+if [ -f ${STAGEDIR}/.pkg-warn ]; then
+	echo ">>> WARNING: The build may have integrity issues!"
+	cat ${STAGEDIR}/.pkg-warn
+fi
 
 if [ "${SELF}" != "ports" ]; then
 	echo ">>> The ports build did not finish properly :("
