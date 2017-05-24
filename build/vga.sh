@@ -57,10 +57,13 @@ EOF
 makefs -B little -o label=${LABEL} ${STAGEDIR}/root.part ${STAGEDIR}/work
 
 UEFIBOOT=
+GPTDUMMY=
+
 if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
 	UEFIBOOT="-p efi:=${STAGEDIR}/work/boot/boot1.efifat"
+	GPTDUMMY="-p freebsd-swap::512k"
 fi
 
 mkimg -s gpt -o ${VGAIMG} -b ${STAGEDIR}/work/boot/pmbr ${UEFIBOOT} \
-    -p freebsd-boot:=${STAGEDIR}/work/boot/gptboot \
+    -p freebsd-boot:=${STAGEDIR}/work/boot/gptboot ${GPTDUMMY} \
     -p freebsd-ufs:=${STAGEDIR}/root.part

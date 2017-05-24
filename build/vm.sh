@@ -80,7 +80,13 @@ cat > ${STAGEDIR}/mnt/etc/fstab << EOF
 /dev/gpt/rootfs	/		ufs	rw	1	1
 EOF
 
+GPTDUMMY="-p freebsd-swap::512k"
 SWAPARGS=
+UEFIBOOT=
+
+if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
+	UEFIBOOT="-p efi:=${STAGEDIR}/boot/boot1.efifat"
+fi
 
 if [ -n "${VMSWAP}" ]; then
 	SWAPARGS="-p freebsd-swap/swapfs::${VMSWAP}"
@@ -89,18 +95,19 @@ if [ -n "${VMSWAP}" ]; then
 EOF
 fi
 
+if [ -z "${VMSWAP}" -a -z "${UEFIBOOT}" ]; then
+	GPTDUMMY=
+elif [ -n "${VMSWAP}" -a -n "${UEFIBOOT}" ]; then
+	GPTDUMMY=
+fi
+
 umount ${STAGEDIR}/mnt
 mdconfig -d -u ${MD}
 
 echo -n ">>> Building vm image... "
 
-UEFIBOOT=
-if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
-	UEFIBOOT="-p efi:=${STAGEDIR}/boot/boot1.efifat"
-fi
-
 mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} -b ${STAGEDIR}/boot/pmbr \
     ${UEFIBOOT} -p freebsd-boot/bootfs:=${STAGEDIR}/boot/gptboot \
-    -p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS}
+    ${GPTDUMMY} -p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS}
 
 echo "done"
