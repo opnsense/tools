@@ -128,7 +128,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	PKGNAME=\${PKGNAME%%-[0-9]*}.txz
 	PKGLINK=${PACKAGESDIR}/Latest/\${PKGNAME}
 	if [ -L \${PKGLINK} ]; then
-		PKGFILE=\$(readlink -f \${PKGLINK})
+		PKGFILE=\$(readlink -f \${PKGLINK} || true)
 		if [ -f \${PKGFILE} ]; then
 			echo ">>> A different version of \${PORT_ORIGIN} exists!" >> /.pkg-warn
 			continue
