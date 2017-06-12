@@ -123,6 +123,7 @@ while read PORT_ORIGIN PORT_BROKEN; do
 done < ${STAGEDIR}/skim
 
 if [ -n "${UNUSED}" ]; then
+	(cd ${PORTSDIR}; mkdir -p $(make -C ${PORTSREFDIR} -V SUBDIR))
 	for ENTRY in ${PORTSDIR}/*; do
 		ENTRY=${ENTRY##"${PORTSDIR}/"}
 
@@ -181,7 +182,7 @@ if [ -n "${UNUSED}" ]; then
 			git commit -m \
 "*/*: sync with upstream
 
-Taken from: FreeBSD"
+Taken from: HardenedBSD"
 		fi
 	)
 fi
@@ -207,7 +208,7 @@ if [ -n "${USED}" ]; then
 				git commit -m \
 "${PORT}: partially sync with upstream
 
-Taken from: FreeBSD";
+Taken from: HardenedBSD"
 			fi)
 			;;
 		[cC])
@@ -217,7 +218,7 @@ Taken from: FreeBSD";
 			(cd ${PORTSDIR}; git commit -m \
 "${PORT}: sync with upstream
 
-Taken from: FreeBSD")
+Taken from: HardenedBSD")
 			;;
 		esac
 	done
@@ -263,7 +264,7 @@ Taken from: FreeBSD")
 				git commit -m \
 "Framework: partially sync with upstream
 
-Taken from: FreeBSD";
+Taken from: HardenedBSD"
 			fi)
 			;;
 		[cC])
@@ -275,7 +276,7 @@ Taken from: FreeBSD";
 			(cd ${PORTSDIR}; git commit -m \
 "Framework: sync with upstream
 
-Taken from: FreeBSD")
+Taken from: HardenedBSD")
 			;;
 		esac
 	fi
