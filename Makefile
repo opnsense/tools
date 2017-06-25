@@ -79,6 +79,7 @@ PORTSDIR?=	/usr/ports
 PORTSBRANCH?=	master
 COREDIR?=	/usr/core
 COREBRANCH?=	master
+COREENV?=	#CORE_PHP=71
 SRCDIR?=	/usr/src
 SRCBRANCH?=	master
 
@@ -123,5 +124,6 @@ ${STEP}: lint
 	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
-	    -u "${UEFI:tl}" -U "${SUFFIX}" -V "${ADDITIONS}" ${${STEP}_ARGS}
+	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" -V "${ADDITIONS}" \
+	    ${${STEP}_ARGS}
 .endfor

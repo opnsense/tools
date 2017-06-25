@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="a:B:b:C:c:d:E:e:F:f:G:g:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v:V:"
+OPTS="a:B:b:C:c:d:E:e:F:f:G:g:H:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -69,6 +69,9 @@ while getopts ${OPTS} OPT; do
 		;;
 	g)
 		export TOOLSBRANCH=${OPTARG}
+		;;
+	H)
+		export COREENV=${OPTARG}
 		;;
 	K)
 		if [ -n "${OPTARG}" ]; then
