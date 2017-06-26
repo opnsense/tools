@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="a:B:b:C:c:d:E:e:F:f:G:g:H:K:k:L:l:m:n:o:P:p:R:S:s:T:t:U:u:v:V:"
+OPTS="a:B:b:C:c:d:E:e:F:f:G:g:H:K:k:L:l:m:n:o:P:p:Q:R:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -109,6 +109,9 @@ while getopts ${OPTS} OPT; do
 		;;
 	p)
 		export PLUGINSDIR=${OPTARG}
+		;;
+	Q)
+		export PRODUCT_QUICK=${OPTARG}
 		;;
 	R)
 		export PORTSREFDIR=${OPTARG}

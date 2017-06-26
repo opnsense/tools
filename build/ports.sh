@@ -37,13 +37,22 @@ cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 		continue
 	fi
 	if [ -n "${PORT_IGNORE}" ]; then
+		QUICK=
 		for PORT_QUIRK in $(echo ${PORT_IGNORE} | tr ',' ' '); do
 			if [ ${PORT_QUIRK} = ${PRODUCT_TARGET} -o \
 			     ${PORT_QUIRK} = ${PRODUCT_ARCH} -o \
 			     ${PORT_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
 				continue 2
 			fi
+			if [ ${PORT_QUIRK} = "quick" ]; then
+				QUICK=1
+			fi
 		done
+		if [ -n "${PRODUCT_QUICK}" -a -z "${QUICK}" ]; then
+			# speed up build by skipping all annotations,
+			# our core should work without all of them.
+			continue
+		fi
 	fi
 
 	echo ${PORT_ORIGIN}

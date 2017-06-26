@@ -58,6 +58,7 @@ FLAVOUR?=	OpenSSL
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
 KERNEL?=	SMP
+QUICK?=		#yes
 ADDITIONS?=	#os-vmware
 DEVICE?=	a10
 SPEED?=		115200
@@ -124,6 +125,6 @@ ${STEP}: lint
 	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
-	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" -V "${ADDITIONS}" \
-	    ${${STEP}_ARGS}
+	    -H "${COREENV}" -Q "${QUICK}" -u "${UEFI:tl}" -U "${SUFFIX}" \
+	    -V "${ADDITIONS}" ${${STEP}_ARGS}
 .endfor
