@@ -31,7 +31,7 @@ SELF=ports
 
 . ./common.sh
 
-PORTS_LIST=$(
+[ -z ${PORTS_LIST} ] && PORTS_LIST=$(
 cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue

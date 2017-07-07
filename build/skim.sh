@@ -35,7 +35,7 @@ setup_stage ${STAGEDIR}
 
 MAKE_ARGS="__MAKE_CONF=${CONFIGDIR}/make.conf PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}"
 
-PORTS_LIST=$(
+[ -z ${PORTS_LIST} ] && PORTS_LIST=$(
 cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \
     while read PORT_ORIGIN PORT_BROKEN; do
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then

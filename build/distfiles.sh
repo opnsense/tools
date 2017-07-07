@@ -31,7 +31,7 @@ SELF=distfiles
 
 . ./common.sh
 
-PORTS_LIST=$(
+[ -z ${PORTS_LIST} ] && PORTS_LIST=$(
 cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \
     while read PORT_ORIGIN PORT_BROKEN; do
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
