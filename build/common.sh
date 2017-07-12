@@ -766,7 +766,7 @@ setup_stage()
 	if [ -d ${STAGE}/var/run ]; then
 		PIDS=$(find ${STAGE}/var/run -name "*.pid")
 		for PID in ${PIDS}; do
-			pkill -F ${PID};
+			pkill -F ${PID} || true;
 		done
 	fi
 
