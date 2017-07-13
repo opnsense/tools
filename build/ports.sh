@@ -113,7 +113,7 @@ if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then SELF=; fi
 PKG_ORIGIN="ports-mgmt/pkg"
 
 if ! pkg -N; then
-	make -C ${PORTSDIR}/\${PKG_ORIGIN} install \
+	make -s -C ${PORTSDIR}/\${PKG_ORIGIN} install \
 	    UNAME_r=\$(freebsd-version)
 fi
 
@@ -144,7 +144,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 		fi
 	fi
 
-	make -C ${PORTSDIR}/\${PORT_ORIGIN} install \
+	make -s -C ${PORTSDIR}/\${PORT_ORIGIN} install \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} PACKAGES=${PACKAGESDIR} \
 	    USE_PACKAGE_DEPENDS=yes UNAME_r=\$(freebsd-version)
 
@@ -158,7 +158,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	pkg autoremove -y
 	pkg create -nao ${PACKAGESDIR}/All -f txz
 
-	make -C ${PORTSDIR}/\${PORT_ORIGIN} clean \
+	make -s -C ${PORTSDIR}/\${PORT_ORIGIN} clean \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
 	    UNAME_r=\$(freebsd-version)
 
