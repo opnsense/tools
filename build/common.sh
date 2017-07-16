@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="a:B:b:C:c:d:E:e:F:f:G:g:H:K:k:L:l:m:n:o:P:p:Q:R:S:s:T:t:U:u:v:V:"
+OPTS="a:B:b:C:c:d:E:e:F:f:G:g:H:K:k:L:l:m:n:O:o:P:p:Q:R:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -98,6 +98,8 @@ while getopts ${OPTS} OPT; do
 		;;
 	n)
 		export PRODUCT_NAME=${OPTARG}
+		;;
+	O)	export PRODUCT_GITBASE=${OPTARG}
 		;;
 	o)
 		if [ -n "${OPTARG}" ]; then
@@ -169,6 +171,7 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_DEVICE}" -o \
     -z "${PRODUCT_SPEED}" -o \
     -z "${PRODUCT_KERNEL}" -o \
+    -z "${PRODUCT_GITBASE}" -o \
     -z "${PLUGINSBRANCH}" -o \
     -z "${PLUGINSDIR}" -o \
     -z "${PORTSBRANCH}" -o \
@@ -238,6 +241,17 @@ git_fetch()
 	echo ">>> Fetching ${1}:"
 
 	git -C ${1} fetch --all --prune
+}
+
+git_clone()
+{
+	if [ -d "${1}" ]; then
+		return
+	fi
+
+	echo ">>> Cloning ${1}:"
+
+	git clone "${PRODUCT_GITBASE}/$(basename ${1})" ${1}
 }
 
 git_pull()

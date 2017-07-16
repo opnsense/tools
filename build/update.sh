@@ -69,6 +69,7 @@ for ARG in ${ARGS}; do
 		;;
 	esac
 
+	git_clone ${DIR}
 	git_fetch ${DIR}
 	for BRANCH in ${BRANCHES}; do
 		git_pull ${DIR} ${BRANCH}

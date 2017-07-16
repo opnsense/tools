@@ -63,6 +63,7 @@ ADDITIONS?=	#os-vmware
 DEVICE?=	a10
 SPEED?=		115200
 UEFI?=		yes
+GITBASE?=	https://github.com/opnsense
 MIRRORS?=	https://opnsense.c0urier.net \
 		http://mirrors.nycbug.org/pub/opnsense \
 		http://mirror.wdc1.us.leaseweb.net/opnsense \
@@ -126,5 +127,5 @@ ${STEP}: lint
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
 	    -H "${COREENV}" -Q "${QUICK}" -u "${UEFI:tl}" -U "${SUFFIX}" \
-	    -V "${ADDITIONS}" ${${STEP}_ARGS}
+	    -V "${ADDITIONS}" -O "${GITBASE}" ${${STEP}_ARGS}
 .endfor
