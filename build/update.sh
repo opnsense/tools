@@ -31,7 +31,12 @@ SELF=update
 
 . ./common.sh
 
-for ARG in ${@}; do
+ARGS=${@}
+if [ -z "${ARGS}" ]; then
+	ARGS="core plugins ports src tools"
+fi
+
+for ARG in ${ARGS}; do
 	case ${ARG} in
 	core)
 		BRANCHES=${COREBRANCH}
