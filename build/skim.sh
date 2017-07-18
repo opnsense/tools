@@ -45,6 +45,9 @@ cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \
 done
 )
 
+DIFF="$(which colordiff 2> /dev/null || echo cat)"
+LESS="less -R"
+
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 git_fetch ${PORTSREFDIR}
 git_pull ${PORTSREFDIR} ${PORTSREFBRANCH}
@@ -189,8 +192,8 @@ fi
 
 if [ -n "${USED}" ]; then
 	for PORT in ${PORTS_CHANGED}; do
-		(clear && diff -ru ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
-		    2>/dev/null || true;) | less -r
+		(diff -ru ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
+		    2>/dev/null || true) | ${DIFF} | ${LESS}
 
 		echo -n "replace ${PORT} [c/e/y/N]: "
 		read YN
@@ -239,10 +242,10 @@ Taken from: HardenedBSD")
 	done
 
 	if [ -n "${ENTRIES}" ]; then
-		(clear && for ENTRY in ${ENTRIES}; do
+		(for ENTRY in ${ENTRIES}; do
 			diff -ru ${PORTSDIR}/${ENTRY} ${PORTSREFDIR}/${ENTRY} \
-			    2>/dev/null || true;
-		done) | less -r
+			    2>/dev/null || true
+		done) | ${DIFF} | ${LESS}
 
 		echo -n "replace Framework [c/e/y/N]: "
 		read YN
