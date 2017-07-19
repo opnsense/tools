@@ -125,6 +125,8 @@ while read PORT_ORIGIN PORT_BROKEN; do
 	    $(expr \( 100 \* ${PORTS_NUM} \) / ${PORTS_COUNT})
 done < ${STAGEDIR}/skim
 
+echo
+
 if [ -n "${UNUSED}" ]; then
 	(cd ${PORTSDIR}; mkdir -p $(make -C ${PORTSREFDIR} -V SUBDIR))
 	for ENTRY in ${PORTSDIR}/*; do
@@ -195,7 +197,7 @@ if [ -n "${USED}" ]; then
 		(diff -ru ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
 		    2>/dev/null || true) | ${DIFF} | ${LESS}
 
-		echo -n "replace ${PORT} [c/e/y/N]: "
+		echo -n ">>> Replace ${PORT} [c/e/y/N]: "
 		read YN
 		case ${YN} in
 		[yY])
@@ -247,7 +249,7 @@ Taken from: HardenedBSD")
 			    2>/dev/null || true
 		done) | ${DIFF} | ${LESS}
 
-		echo -n "replace Framework [c/e/y/N]: "
+		echo -n ">>> Replace Framework [c/e/y/N]: "
 		read YN
 		case ${YN} in
 		[yY])
