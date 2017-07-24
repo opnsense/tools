@@ -450,7 +450,23 @@ generate_signature()
 	fi
 }
 
-check_images()
+sign_image()
+{
+	if [ ! -f "${PRODUCT_PRIVKEY}" ]; then
+		return
+	fi
+
+	echo -n ">>> Creating signature for ${1}: "
+
+	openssl dgst -sha256 -sign "${PRODUCT_PRIVKEY}" "${1}" | \
+	    openssl base64 > "${2}"
+	openssl base64 -d -in "${2}" > "${2}.tmp"
+	openssl dgst -sha256 -verify "${PRODUCT_PUBKEY}" \
+	    -signature "${2}.tmp" "${1}"
+	rm "${2}.tmp"
+}
+
+check_image()
 {
 	SELF=${1}
 	SKIP=${2}

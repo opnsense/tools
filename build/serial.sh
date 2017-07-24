@@ -32,7 +32,7 @@ SELF=serial
 
 . ./common.sh
 
-check_images ${SELF} ${@}
+check_image ${SELF} ${@}
 
 SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${PRODUCT_ARCH}.img"
 

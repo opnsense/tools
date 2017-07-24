@@ -31,7 +31,7 @@ SELF=vm
 
 . ./common.sh
 
-check_images ${SELF} ${@}
+check_image ${SELF} ${@}
 
 VMFORMAT="vmdk"
 VMSIZE="20G"

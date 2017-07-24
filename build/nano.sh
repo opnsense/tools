@@ -32,7 +32,7 @@ SELF=nano
 
 . ./common.sh
 
-check_images ${SELF} ${@}
+check_image ${SELF} ${@}
 
 NANOSIZE="3G"
 

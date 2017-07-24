@@ -31,7 +31,7 @@ SELF=dvd
 
 . ./common.sh
 
-check_images ${SELF} ${@}
+check_image ${SELF} ${@}
 
 DVD="${IMAGESDIR}/${PRODUCT_RELEASE}-dvd-${PRODUCT_ARCH}.iso"
 

@@ -31,7 +31,7 @@ SELF=vga
 
 . ./common.sh
 
-check_images ${SELF} ${@}
+check_image ${SELF} ${@}
 
 VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${PRODUCT_ARCH}.img"
 

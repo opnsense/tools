@@ -63,7 +63,17 @@ echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
 (cd ${STAGEDIR}/work && md5 ${PRODUCT_RELEASE}-*) \
     > ${STAGEDIR}/tmp/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.md5
 
+for IMAGE in $(find ${STAGEDIR}/work -name "${PRODUCT_RELEASE}-*"); do
+	sign_image ${IMAGE} ${STAGEDIR}/tmp/$(basename ${IMAGE}).sig
+done
+
 mv ${STAGEDIR}/tmp/* ${STAGEDIR}/work/
+
+if [ -f "${PRODUCT_PRIVKEY}" ]; then
+	# checked for private key, but want the public key to
+	# be able to verify the images on the mirror later on
+	cp "${PRODUCT_PUBKEY}" ${STAGEDIR}/work/${PRODUCT_RELEASE}.pub
+fi
 
 echo "done"
 
