@@ -31,14 +31,21 @@ SELF=release
 
 . ./common.sh
 
+RELEASE_SET=$(find ${SETSDIR} -name "release-*-${PRODUCT_ARCH}.tar")
+
+if [ -f "${RELEASE_SET}" -a -z "${1}" ]; then
+	echo ">>> Reusing release set: ${RELEASE_SET}"
+	exit 0
+fi
+
 RELEASE_SET="${SETSDIR}/release-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar"
 
 # make sure the all-encompassing package is a release, too
 setup_stage ${STAGEDIR}
 extract_packages ${STAGEDIR}
 if [ ! -f ${STAGEDIR}${PACKAGESDIR}/All/${PRODUCT_PKGNAME}-${PRODUCT_VERSION}.txz ]; then
-	echo "Release version mismatch:"
-	(cd ${STAGEDIR}${PACKAGESDIR}/All; ls ${PRODUCT_PKGNAME}-*.txz)
+	echo "Release package version mismatch:" \
+	    "$(basename ${STAGEDIR}${PACKAGESDIR}/All/${PRODUCT_PKGNAME}-[0-9]*.txz)"
 	exit 1
 fi
 
@@ -48,8 +55,8 @@ setup_stage ${STAGEDIR} tmp work
 
 echo -n ">>> Compressing images for ${PRODUCT_RELEASE}... "
 
-mv ${IMAGESDIR}/${PRODUCT_RELEASE}-* ${STAGEDIR}/work
-for IMAGE in $(find ${STAGEDIR}/work -name "${PRODUCT_RELEASE}-*"); do
+mv ${IMAGESDIR}/${PRODUCT_NAME}-*-${PRODUCT_ARCH}.* ${STAGEDIR}/work
+for IMAGE in $(find ${STAGEDIR}/work -type f); do
 	bzip2 ${IMAGE} &
 done
 wait
@@ -72,7 +79,8 @@ mv ${STAGEDIR}/tmp/* ${STAGEDIR}/work/
 if [ -f "${PRODUCT_PRIVKEY}" ]; then
 	# checked for private key, but want the public key to
 	# be able to verify the images on the mirror later on
-	cp "${PRODUCT_PUBKEY}" ${STAGEDIR}/work/${PRODUCT_RELEASE}.pub
+	cp "${PRODUCT_PUBKEY}" \
+	    "${STAGEDIR}/work/${PRODUCT_NAME}-${PRODUCT_VERSION}.pub"
 fi
 
 echo "done"
