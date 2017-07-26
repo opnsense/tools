@@ -521,19 +521,10 @@ search_packages()
 	echo ">>> Searching packages in ${BASEDIR}: ${PKGLIST}"
 
 	for PKG in ${PKGLIST}; do
-		# exact matching according to package name
-		for PKGFILE in $(cd ${BASEDIR}${PACKAGESDIR}; \
-		    find All -type f); do
-			PKGINFO=$(pkg -c ${BASEDIR} info -F ${PACKAGESDIR}/${PKGFILE} | grep ^Name | awk '{ print $3; }')
-			if [ ${PKG} = ${PKGINFO} ]; then
-				return 0
-			fi
-		done
-		# match using globbing as a second pass
-		for PKGGLOB in $(cd ${BASEDIR}${PACKAGESDIR}; \
-		    find All -name "${PKG}" -type f); do
+		if [ -n "$(find ${BASEDIR}${PACKAGESDIR}/All \
+		    -name "${PKG}-[0-9]*.txz" -type f)" ]; then
 			return 0
-		done
+		fi
 	done
 
 	return 1
