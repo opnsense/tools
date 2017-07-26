@@ -444,7 +444,7 @@ setup_entropy()
 generate_signature()
 {
 	if [ -n "$(${PRODUCT_SIGNCHK})" ]; then
-		echo -n ">>> Signing $(basename ${1})... "
+		echo -n ">>> Creating ${PRODUCT_SETTINGS} signature for $(basename ${1})... "
 		sha256 -q ${1} | ${PRODUCT_SIGNCMD} > ${1}.sig
 		echo "done"
 	fi
@@ -456,7 +456,7 @@ sign_image()
 		return
 	fi
 
-	echo -n ">>> Creating signature for ${1}: "
+	echo -n ">>> Creating ${PRODUCT_SETTINGS} signature for ${1}: "
 
 	openssl dgst -sha256 -sign "${PRODUCT_PRIVKEY}" "${1}" | \
 	    openssl base64 > "${2}"
