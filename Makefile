@@ -43,7 +43,7 @@ lint:
 
 TOOLSDIR?=	/usr/tools
 TOOLSBRANCH?=	master
-SETTINGS?=	17.1
+SETTINGS?=	17.7
 
 CONFIG?=	${TOOLSDIR}/config/${SETTINGS}/build.conf
 
