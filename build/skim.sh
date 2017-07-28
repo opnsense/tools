@@ -194,6 +194,7 @@ fi
 
 if [ -n "${USED}" ]; then
 	for PORT in ${PORTS_CHANGED}; do
+		clear
 		(diff -ru ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
 		    2>/dev/null || true) | ${DIFF} | ${LESS}
 
@@ -244,6 +245,7 @@ Taken from: HardenedBSD")
 	done
 
 	if [ -n "${ENTRIES}" ]; then
+		clear
 		(for ENTRY in ${ENTRIES}; do
 			diff -ru ${PORTSDIR}/${ENTRY} ${PORTSREFDIR}/${ENTRY} \
 			    2>/dev/null || true
