@@ -43,6 +43,8 @@ fi
 NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${PRODUCT_ARCH}.img"
 NANOBASE="${STAGEDIR}/nanobase"
 
+LABEL="${LABEL}_Nano"
+
 sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR} mnt
