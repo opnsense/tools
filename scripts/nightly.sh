@@ -2,14 +2,15 @@
 
 # nightly build script
 
-make clean-obj,logs
+make clean-obj,logs > /dev/null 2>&1
 
 for STAGE in update base kernel distfiles; do
 	# we don't normally clean these stages
-	time make ${STAGE} 2>&1 > /tmp/logs/${STAGE}.log
+	time make ${STAGE} > /tmp/logs/${STAGE}.log 2>&1
 done
 
 for FLAVOUR in OpenSSL LibreSSL; do
-	make clean-packages FLAVOUR=${FLAVOUR}
-	time make packages FLAVOUR=${FLAVOUR} 2>&1 > /tmp/logs/packages-${FLAVOUR}.log
+	make clean-packages FLAVOUR=${FLAVOUR} > /dev/null 2>&1
+	time make packages FLAVOUR=${FLAVOUR} \
+	    > /tmp/logs/packages-${FLAVOUR}.log 2>&1
 done
