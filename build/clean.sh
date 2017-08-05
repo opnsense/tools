@@ -60,6 +60,9 @@ for ARG in ${@}; do
 		echo ">>> Removing kernel set"
 		rm -f ${SETSDIR}/kernel-*-${PRODUCT_ARCH}.*
 		;;
+	logs)
+		setup_stage ${LOGSDIR}
+		;;
 	nano)
 		echo ">>> Removing nano image"
 		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-nano-${PRODUCT_ARCH}.img

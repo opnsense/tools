@@ -2,7 +2,7 @@
 
 # nightly build script
 
-make clean-obj
+make clean-obj,logs
 
 for STAGE in update base kernel distfiles; do
 	# we don't normally clean these stages

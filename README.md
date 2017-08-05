@@ -245,6 +245,7 @@ Available clean options are:
 * core:		remove core from packages set
 * images:	remove all images
 * kernel:	remove kernel set
+* logs:		remove all logs
 * nano:		remove nano image
 * obj:		remove all object directories
 * packages:	remove packages set
