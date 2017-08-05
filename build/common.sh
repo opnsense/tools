@@ -207,7 +207,8 @@ export PACKAGESDIR="/.pkg"
 # define and bootstrap target directories
 export IMAGESDIR="/tmp/images"
 export SETSDIR="/tmp/sets"
-mkdir -p ${IMAGESDIR} ${SETSDIR}
+export LOGSDIR="/tmp/logs"
+mkdir -p ${IMAGESDIR} ${SETSDIR} ${LOGSDIR}
 
 # automatically expanded product stuff
 export PRODUCT_PRIVKEY=${PRODUCT_PRIVKEY:-"${CONFIGDIR}/repo.key"}
