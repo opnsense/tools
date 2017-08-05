@@ -251,7 +251,9 @@ git_clone()
 	fi
 
 	if [ -d "${1}" ]; then
+		echo -n ">>> Removing ${1}... "
 		rm -r "${1}"
+		echo "done"
 	fi
 
 	echo ">>> Cloning ${1}:"
