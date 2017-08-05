@@ -245,8 +245,12 @@ git_fetch()
 
 git_clone()
 {
-	if [ -d "${1}" ]; then
+	if [ -d "${1}/.git" ]; then
 		return
+	fi
+
+	if [ -d "${1}" ]; then
+		rm -r "${1}"
 	fi
 
 	echo ">>> Cloning ${1}:"

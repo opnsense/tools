@@ -15,13 +15,9 @@ tasks require a root user.  Do the following to grab the repositories
 
     # pkg install git
     # cd /usr
-    # rm -rf src ports
-    # git clone https://github.com/opnsense/plugins
-    # git clone https://github.com/opnsense/ports
     # git clone https://github.com/opnsense/tools
-    # git clone https://github.com/opnsense/core
-    # git clone https://github.com/opnsense/src
     # cd tools
+    # make update
 
 TL;DR
 =====
@@ -171,9 +167,9 @@ distribution files before running the actual build:
 
     # make distfiles
 
-Updating the individual repositories can be done as follows:
+Updating all or individual repositories can be done as follows:
 
-    # make update-<repo1>[,...]
+    # make update[-<repo1>[,...]]
 
 Available update options are: core, plugins, ports, src, tools
 
