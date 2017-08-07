@@ -2,7 +2,7 @@ include		GENERIC
 
 ident		SMP
 
-# XXX improve updater to cope with /usr handling
+# Remove to build a debug kernel:
 nomakeoptions	DEBUG
 
 options		DDB

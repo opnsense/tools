@@ -41,7 +41,8 @@ fi
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_describe ${SRCDIR}
 
-KERNEL_SET=${SETSDIR}/kernel-${REPO_VERSION}-${PRODUCT_ARCH}
+KERNEL_DEBUG_SET=${SETSDIR}/kernel-dbg-${REPO_VERSION}-${PRODUCT_ARCH}.txz
+KERNEL_RELEASE_SET=${SETSDIR}/kernel-${REPO_VERSION}-${PRODUCT_ARCH}.txz
 
 if [ -f ${CONFIGDIR}/${PRODUCT_KERNEL}.${PRODUCT_ARCH} ]; then
 	cp "${CONFIGDIR}/${PRODUCT_KERNEL}.${PRODUCT_ARCH}" \
@@ -59,15 +60,27 @@ ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
 
 build_marker kernel
 
-rm -f $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz
+KERNEL_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz
+DEBUG_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel-dbg.txz
+
+rm -f ${KERNEL_OBJ} ${DEBUG_OBJ}
 ${ENV_FILTER} make -s -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
 
 sh ./clean.sh ${SELF}
 
-echo -n ">>> Copying kernel set... "
+if [ ! -f ${DEBUG_OBJ} ]; then
+	echo -n ">>> Copying release kernel set... "
+	mv ${KERNEL_OBJ} ${KERNEL_RELEASE_SET}
+	echo "done"
+	KERNEL_SET=${KERNEL_RELEASE_SET}
+else
+	setup_stage ${STAGEDIR}
+	echo ">>> Generating debug kernel set:"
+	tar -C ${STAGEDIR} -xjf ${KERNEL_OBJ}
+	tar -C ${STAGEDIR} -xjf ${DEBUG_OBJ}
+	tar -C ${STAGEDIR} -cvf - . | xz > ${KERNEL_DEBUG_SET}
+	KERNEL_SET=${KERNEL_DEBUG_SET}
+fi
 
-mv $(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz ${KERNEL_SET}.txz
-
-echo "done"
-
-generate_signature ${KERNEL_SET}.txz
+rm -f ${KERNEL_OBJ} ${DEBUG_OBJ}
+generate_signature ${KERNEL_SET}
