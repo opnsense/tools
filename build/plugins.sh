@@ -77,11 +77,6 @@ for BRANCH in master ${PLUGINSBRANCH}; do
 	git_reset ${STAGEDIR}${PLUGINSDIR} ${BRANCH}
 
 	for PLUGIN in ${PLUGINS_LIST}; do
-		if [ ! -d ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ]; then
-			# not on this branch
-			continue
-		fi
-
 		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} name)
 		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} depends)
 
