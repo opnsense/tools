@@ -7,8 +7,8 @@ LOGSDIR="/tmp/logs"
 
 for DIR in $(find ${LOGSDIR} -type d -depth 1); do
 	DIR=$(basename ${DIR})
-	tar -C ${LOGSDIR} -czf ${DIR}.tgz ${DIR}
-	rm -r ${LOGSDIR}/${DIR}
+	tar -C ${LOGSDIR} -czf ${LOGSDIR}/${DIR}.tgz ${DIR} \
+            && rm -r ${LOGSDIR}/${DIR}
 done
 
 (make clean-obj 2>&1) > /dev/null
