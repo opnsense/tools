@@ -7,7 +7,7 @@ LOGSDIR="/tmp/logs"
 
 for DIR in $(find ${LOGSDIR} -type d -depth 1); do
 	DIR=$(basename ${DIR})
-	tar -C ${LOGSDIR} -xzf ${DIR}.tgz ${DIR}
+	tar -C ${LOGSDIR} -xzf ${DIR}.tgz ${DIR}
 	rm -r ${LOGSDIR}/${DIR}
 done
 
