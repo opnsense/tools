@@ -41,7 +41,7 @@ info()
 	git_describe ${2} ${TAGNAME}
 
 	cat << EOF
-${1} ${2} ${REPO_VERSION} ${REPO_COMMENT} ${REPO_REFTYPE} ${REPO_BRANCH}
+${1} ${2} ${REPO_VERSION} ${REPO_COMMENT} ${REPO_BRANCH}
 EOF
 }
 
