@@ -33,6 +33,8 @@ SELF=core
 
 check_packages ${SELF} ${@}
 
+git_branch ${COREDIR} ${COREBRANCH} COREBRANCH
+
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_chroot ${STAGEDIR}
