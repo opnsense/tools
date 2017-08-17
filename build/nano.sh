@@ -43,8 +43,6 @@ fi
 NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${PRODUCT_ARCH}.img"
 NANOBASE="${STAGEDIR}/nanobase"
 
-LABEL="${LABEL}_Nano"
-
 sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR} mnt
@@ -52,6 +50,7 @@ setup_stage ${STAGEDIR} mnt
 truncate -s ${NANOSIZE} ${NANOBASE}
 MD=$(mdconfig -f ${NANOBASE})
 newfs /dev/${MD}
+tunefs -L ${LABEL} /dev/${MD}
 mount /dev/${MD} ${STAGEDIR}/mnt
 
 setup_base ${STAGEDIR}/mnt
@@ -64,20 +63,17 @@ setup_packages ${STAGEDIR}/mnt
 setup_extras ${STAGEDIR}/mnt ${SELF}
 setup_entropy ${STAGEDIR}/mnt
 
-echo "/dev/ufs/${LABEL} / ufs rw,async,noatime 1 1" > ${STAGEDIR}/mnt/etc/fstab
+cat > ${STAGEDIR}/mnt/etc/fstab << EOF
+/dev/ufs/${LABEL} / ufs rw,async,noatime 1 1
+EOF
 
 umount ${STAGEDIR}/mnt
 mdconfig -d -u ${MD}
 
 echo -n ">>> Building nano image... "
 
-mkimg -s bsd -f raw -o ${NANOIMG} \
+mkimg -s bsd -o ${NANOIMG} \
     -b ${STAGEDIR}/boot/boot \
     -p freebsd-ufs:=${NANOBASE}
-
-# mkimg does not support BSD label yet
-MD=$(mdconfig -f ${NANOIMG})
-tunefs -L ${LABEL} /dev/${MD}a
-mdconfig -d -u ${MD}
 
 echo "done"
