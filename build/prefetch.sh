@@ -43,8 +43,8 @@ for ARG in ${@}; do
 			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
 		done
 		;;
-	kernel)
-		sh ./clean.sh ${ARG}
+	kernel|kernel-dbg)
+		sh ./clean.sh kernel
 		URL="${PRODUCT_MIRROR}/${ABI}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_ARCH}"
 		for SUFFIX in txz.sig txz; do
 			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
