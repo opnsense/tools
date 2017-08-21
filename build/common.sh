@@ -602,16 +602,12 @@ install_packages()
 		PKGFOUND=
 		for PKGFILE in $({
 			cd ${BASEDIR}
-			find .${PACKAGESDIR}/All -name "${PKG}-*.txz"
+			find .${PACKAGESDIR}/All -name "${PKG}-[0-9]*.txz"
 		}); do
-			PKGINFO=$(pkg -c ${BASEDIR} info -F ${PKGFILE} | grep ^Name | awk '{ print $3; }')
-			if [ ${PKG} = ${PKGINFO} ]; then
-				PKGFOUND=${PKGFILE}
-			fi
+			pkg -c ${BASEDIR} add ${PKGFILE}
+			PKGFOUND=1
 		done
-		if [ -n "${PKGFOUND}" ]; then
-			pkg -c ${BASEDIR} add ${PKGFOUND}
-		else
+		if [ -z "${PKGFOUND}" ]; then
 			echo "Could not find package: ${PKG}" >&2
 			exit 1
 		fi

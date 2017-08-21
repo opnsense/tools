@@ -41,7 +41,7 @@ setup_clone ${STAGEDIR} ${PLUGINSDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
-install_packages ${STAGEDIR} pkg pear-PHP_CodeSniffer phpunit6 ${PRODUCT_PKGNAME}
+install_packages ${STAGEDIR} pkg ${PRODUCT_PKGNAME} "os-*${PRODUCT_SUFFIX}"
 # don't want to deinstall in case of testing...
 
 echo ">>> Running ${PLUGINSDIR} test suite..."
