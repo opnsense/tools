@@ -24,4 +24,6 @@ for FLAVOUR in OpenSSL LibreSSL; do
 	(make clean-packages FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
 	(time make packages FLAVOUR=${FLAVOUR} 2>&1) \
 	    > ${LOGSDIR}/${VERSION}/packages-${FLAVOUR}.log
+	(time make test FLAVOUR=${FLAVOUR} 2>&1) \
+	    > ${LOGSDIR}/${VERSION}/test-${FLAVOUR}.log
 done
