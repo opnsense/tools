@@ -376,6 +376,9 @@ setup_chroot()
 	cp /etc/resolv.conf ${1}/etc
 	mount -t devfs devfs ${1}/dev
 	chroot ${1} /bin/sh /etc/rc.d/ldconfig start
+
+	# prevent the start of configd in build environments
+	echo 'configd_enable="NO"' >> ${1}/etc/rc.conf.local
 }
 
 build_marker()
