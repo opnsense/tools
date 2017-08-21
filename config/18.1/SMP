@@ -1,6 +1,6 @@
 include		GENERIC
 
-ident		SMP_NEXT
+ident		SMP
 
 # Remove to build a debug kernel:
 #nomakeoptions	DEBUG
