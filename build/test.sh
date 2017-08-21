@@ -31,8 +31,8 @@ SELF=test
 
 . ./common.sh
 
-git_branch ${COREDIR} ${COREBRANCH} COREBRANCH
 git_branch ${PLUGINSDIR} ${PLUGINSBRANCH} PLUGINSBRANCH
+git_branch ${COREDIR} ${COREBRANCH} COREBRANCH
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
@@ -41,19 +41,18 @@ setup_clone ${STAGEDIR} ${PLUGINSDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
-install_packages ${STAGEDIR} pkg ${PRODUCT_PKGNAME} "os-*${PRODUCT_SUFFIX}"
-# don't want to deinstall in case of testing...
-
-echo ">>> Running ${PLUGINSDIR} test suite..."
-chroot ${STAGEDIR} /bin/sh -es <<EOF
-make -C${PLUGINSDIR} lint
-make -C${PLUGINSDIR} style
-EOF
+install_packages ${STAGEDIR} "os-*${PRODUCT_SUFFIX}" ${PRODUCT_PKGNAME}
 
 echo ">>> Running packages test suite..."
 chroot ${STAGEDIR} /bin/sh -es <<EOF
 pkg check -da
 pkg check -sa
+EOF
+
+echo ">>> Running ${PLUGINSDIR} test suite..."
+chroot ${STAGEDIR} /bin/sh -es <<EOF
+make -C${PLUGINSDIR} lint
+make -C${PLUGINSDIR} style
 EOF
 
 echo ">>> Running ${COREDIR} test suite..."
