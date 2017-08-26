@@ -36,7 +36,7 @@ setup_base ${STAGEDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
-install_packages ${STAGEDIR} ${PRODUCT_PKGNAME}
+install_packages ${STAGEDIR} ${PRODUCT_CORE}
 
 mkdir -p ${STAGEDIR}${SETSDIR}
 cp ${SETSDIR}/* ${STAGEDIR}${SETSDIR}

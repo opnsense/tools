@@ -41,7 +41,7 @@ setup_clone ${STAGEDIR} ${PLUGINSDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
-install_packages ${STAGEDIR} "os-*${PRODUCT_SUFFIX}" ${PRODUCT_PKGNAME}
+install_packages ${STAGEDIR} ${PRODUCT_CORE} ${PRODUCT_PLUGIN}
 
 echo ">>> Running packages test suite..."
 chroot ${STAGEDIR} /bin/sh -es <<EOF

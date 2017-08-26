@@ -216,8 +216,10 @@ export PRODUCT_PUBKEY=${PRODUCT_PUBKEY:-"${CONFIGDIR}/repo.pub"}
 export PRODUCT_SIGNCMD=${PRODUCT_SIGNCMD:-"${TOOLSDIR}/scripts/pkg_sign.sh ${PRODUCT_PUBKEY} ${PRODUCT_PRIVKEY}"}
 export PRODUCT_SIGNCHK=${PRODUCT_SIGNCHK:-"${TOOLSDIR}/scripts/pkg_fingerprint.sh ${PRODUCT_PUBKEY}"}
 export PRODUCT_RELEASE="${PRODUCT_NAME}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
-export PRODUCT_PKGNAMES="${PRODUCT_TYPE} ${PRODUCT_TYPE}-devel"
-export PRODUCT_PKGNAME="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
+export PRODUCT_CORES="${PRODUCT_TYPE} ${PRODUCT_TYPE}-devel"
+export PRODUCT_CORE="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
+export PRODUCT_PLUGINS="os-*"
+export PRODUCT_PLUGIN="os-*${PRODUCT_SUFFIX}"
 
 if [ "${SELF}" != print -a "${SELF}" != info ]; then
 	if [ -z "${PRINT_ENV_SKIP}" ]; then
@@ -599,10 +601,15 @@ install_packages()
 	# Adds all selected packages and fails if one cannot
 	# be installed.  Used to build a runtime environment.
 	for PKG in pkg ${PKGLIST}; do
+		PKGGLOB=$(echo "${PKG}" | sed 's/[^*]*//')
+		PKGSEARCH="-name ${PKG}-[0-9]*.txz"
 		PKGFOUND=
+		if [ -n "${PKGGLOB}" -a -z "${PRODUCT_SUFFIX}" ]; then
+			PKGSEARCH="${PKGSEARCH} ! -name ${PKG}-devel-[0-9]*.txz"
+		fi
 		for PKGFILE in $({
 			cd ${BASEDIR}
-			find .${PACKAGESDIR}/All -name "${PKG}-[0-9]*.txz"
+			find .${PACKAGESDIR}/All ${PKGSEARCH}
 		}); do
 			pkg -c ${BASEDIR} add ${PKGFILE}
 			PKGFOUND=1
@@ -716,7 +723,7 @@ clean_packages()
 setup_packages()
 {
 	extract_packages ${1}
-	install_packages ${@} ${PRODUCT_PKGNAME} ${PRODUCT_ADDITIONS}
+	install_packages ${@} ${PRODUCT_CORE} ${PRODUCT_ADDITIONS}
 	clean_packages ${1}
 }
 

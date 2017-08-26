@@ -42,7 +42,7 @@ for ARG in ${@}; do
 		setup_stage ${STAGEDIR}
 		setup_base ${STAGEDIR}
 		extract_packages ${STAGEDIR}
-		remove_packages ${STAGEDIR} ${PRODUCT_PKGNAMES}
+		remove_packages ${STAGEDIR} ${PRODUCT_CORES}
 		bundle_packages ${STAGEDIR} ${SELF} core
 		;;
 	distfiles)
@@ -88,7 +88,7 @@ for ARG in ${@}; do
 		setup_stage ${STAGEDIR}
 		setup_base ${STAGEDIR}
 		extract_packages ${STAGEDIR}
-		remove_packages ${STAGEDIR} "os-*"
+		remove_packages ${STAGEDIR} ${PRODUCT_PLUGINS}
 		bundle_packages ${STAGEDIR} ${SELF} plugins
 		;;
 	release)

@@ -72,7 +72,7 @@ setup_chroot ${STAGEDIR}
 setup_distfiles ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
-remove_packages ${STAGEDIR} ${@} ${PRODUCT_PKGNAMES} "os-*"
+remove_packages ${STAGEDIR} ${@} ${PRODUCT_CORES} ${PRODUCT_PLUGINS}
 
 for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
 	# all packages that install have their dependencies fulfilled

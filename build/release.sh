@@ -43,9 +43,9 @@ RELEASE_SET="${SETSDIR}/release-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_
 # make sure the all-encompassing package is a release, too
 setup_stage ${STAGEDIR}
 extract_packages ${STAGEDIR}
-if [ ! -f ${STAGEDIR}${PACKAGESDIR}/All/${PRODUCT_PKGNAME}-${PRODUCT_VERSION}.txz ]; then
+if [ ! -f ${STAGEDIR}${PACKAGESDIR}/All/${PRODUCT_CORE}-${PRODUCT_VERSION}.txz ]; then
 	echo "Release package version mismatch:" \
-	    "$(basename ${STAGEDIR}${PACKAGESDIR}/All/${PRODUCT_PKGNAME}-[0-9]*.txz)"
+	    "$(basename ${STAGEDIR}${PACKAGESDIR}/All/${PRODUCT_CORE}-[0-9]*.txz)"
 	exit 1
 fi
 
