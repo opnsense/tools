@@ -14,6 +14,7 @@ done
 (make clean-obj 2>&1) > /dev/null
 
 mkdir -p ${LOGSDIR}/${VERSION}
+(cd ${LOGSDIR}; ln -sfn ${VERSION} latest)
 
 for STAGE in update info base kernel distfiles; do
 	# we don't normally clean these stages
