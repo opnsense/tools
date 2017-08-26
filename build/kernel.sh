@@ -68,7 +68,7 @@ ${ENV_FILTER} make -s -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
 
 sh ./clean.sh ${SELF}
 
-if [ ! -f ${DEBUG_OBJ} ]; then
+if [ -z "$(tar -tf ${DEBUG_OBJ})" ]; then
 	echo -n ">>> Copying release kernel set... "
 	mv ${KERNEL_OBJ} ${KERNEL_RELEASE_SET}
 	echo "done"
