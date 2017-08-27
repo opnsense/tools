@@ -27,6 +27,7 @@ STEPS=		base boot chroot clean core distfiles dvd info \
 		kernel nano plugins ports prefetch print rebase \
 		release rename serial sign skim test update verify \
 		vga vm xtools
+SCRIPTS=	batch nightly pkg_fingerprint pkg_sign
 .PHONY:		${STEPS}
 
 PAGER?=		less
@@ -34,10 +35,17 @@ PAGER?=		less
 all:
 	@cat ${.CURDIR}/README.md | ${PAGER}
 
-lint:
-. for STEP in ${STEPS}
+lint-steps:
+.for STEP in ${STEPS}
 	@sh -n ${.CURDIR}/build/${STEP}.sh
-. endfor
+.endfor
+
+lint-scripts:
+.for SCRIPT in ${SCRIPTS}
+	@sh -n ${.CURDIR}/scripts/${SCRIPT}.sh
+.endfor
+
+lint: lint-steps lint-scripts
 
 # Special vars to load early build.conf settings:
 
@@ -116,7 +124,7 @@ VERBOSE_HIDDEN=	@
 # script with the proper build options set:
 
 .for STEP in ${STEPS}
-${STEP}: lint
+${STEP}: lint-steps
 	${VERBOSE_HIDDEN} cd ${.CURDIR}/build && \
 	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} -F ${KERNEL} \
 	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
@@ -128,4 +136,10 @@ ${STEP}: lint
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
 	    -H "${COREENV}" -Q "${QUICK}" -u "${UEFI:tl}" -U "${SUFFIX}" \
 	    -V "${ADDITIONS}" -O "${GITBASE}" ${${STEP}_ARGS}
+.endfor
+
+.for SCRIPT in ${SCRIPTS}
+${SCRIPT}: lint-scripts
+	${VERBOSE_HIDDEN} cd ${.CURDIR} && sh ${VERBOSE_FLAGS} \
+	    ./scripts/${SCRIPT}.sh ${${SCRIPT}_ARGS}
 .endfor

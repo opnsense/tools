@@ -2,7 +2,7 @@
 
 PUBKEY=${1}
 
-if [ -f ${PUBKEY} ]; then
+if [ -n "${PUBKEY}" -a -f "${PUBKEY}" ]; then
 	echo "function: \"sha256\""
 	echo "fingerprint: \"$(sha256 -q ${PUBKEY})\""
 fi
