@@ -359,3 +359,19 @@ Last but not least, in case build variables needs to be inspected,
 they can be printed selectively using:
 
     # make print-<variable1>[,<variable2>]
+
+Composite build steps
+---------------------
+
+Build steps are pinned to a particular crypto flavour, but if OpenSSL
+and LibreSSL packages are both required they can be batch-built using:
+
+    # make batch-<step>[,<option>[,...]]
+
+Last but not least, a fully contained nightly build for the system
+is unvoked using:
+
+    # make nightly
+
+Nightly builds are the only builds that write and archive logs under
+/tmp/logs and /tmp/logs/latest points to the last nightly build run.
