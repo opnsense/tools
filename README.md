@@ -29,6 +29,9 @@ If successful, a dvd image can be found here: /tmp/images
 Detailed build steps and options
 ================================
 
+How to specify build options on the command line
+------------------------------------------------
+
 The build is broken down into individual stages: base,
 kernel and ports can be built separately and repeatedly
 without affecting the others.  All stages can be reinvoked
@@ -61,11 +64,20 @@ Available build options are:
 * UEFI:		"yes" for amd64 hybrid images with optional UEFI boot
 * VERSION:	a version tag (if applicable)
 
-The default CONFIG file is under "config/SUBDIR/build.conf".
+How to specify build options via configuration file
+---------------------------------------------------
+
+The default CONFIG file is under "config/SETTINGS/build.conf".
 It can also be overrided by "/dev/null".
 
-Build the userland binaries, bootloader and administrative
-files:
+How to run individual or composite build steps
+----------------------------------------------
+
+Kernel, base, packages and release sets are stored under /tmp/sets
+
+All final images are stored under /tmp/images
+
+Build the userland binaries, bootloader and administrative files:
 
     # make base
 
@@ -105,8 +117,12 @@ A virtual machine full disk image is created using:
 
     # make vm
 
+Release sets can be built using:
+
+    # make release VERSION=product.version.number_revision
+
 Cross-building for other architecures
-=====================================
+-------------------------------------
 
 This feature is currently experimental.  It requires
 to install a qemu package for user mode emulation:
@@ -134,6 +150,9 @@ be used to bootstrap a running FreeBSD on such devices.
 About other scripts and tweaks
 ==============================
 
+Device-specific settings
+------------------------
+
 Device-specific settings can be found and added in the
 device/ directory.  Of special interest are hooks into
 the build process for required non-default settings for
@@ -151,11 +170,26 @@ dvd, nano, serial, vga and vm.  Device-specific hooks
 are loaded after config-specific hooks and both of them
 can coexist in a given build.
 
+Updating the code repositories
+------------------------------
+
+Updating all or individual repositories can be done as follows:
+
+    # make update[-<repo1>[,...]]
+
+Available update options are: core, plugins, ports, src, tools
+
+Regression tests
+----------------
+
 Before building images, you can run the regression tests
 to check the integrity of your core.git modifications plus
 generate output for the style checker:
 
     # make test
+
+Advanced package builds
+-----------------------
 
 For very fast ports rebuilding of already installed packages
 the following works:
@@ -167,24 +201,7 @@ distribution files before running the actual build:
 
     # make distfiles
 
-Updating all or individual repositories can be done as follows:
-
-    # make update[-<repo1>[,...]]
-
-Available update options are: core, plugins, ports, src, tools
-
-Compiled sets can be prefetched from a mirror, while removing
-any previously available set:
-
-    # make prefetch-<option>[,...] VERSION=version.to.prefetch
-
-Available prefetch options are:
-
-* base:		prefetch the base set
-* kernel:	prefetch the kernel set
-* packages:	prefetch the packages set
-
-Core packages (pristine copies) can be batch-built using:
+Core packages can be batch-built using:
 
     # make core-<repo_branch_or_tag>[,...]
 
@@ -193,6 +210,24 @@ generated and modified by ports.sh, plugins.sh and core.sh.
 If signing keys are available, the packages set will be signed
 twice, first embedded into repository metadata (inside) and
 then again as a flat file (outside) to ensure integrity.
+
+Acquiring precompiled sets from the mirrors
+-------------------------------------------
+
+Compiled sets can be prefetched from a mirror if they exist,
+while removing any previously available set:
+
+    # make prefetch-<option>[,...] VERSION=version.to.prefetch
+
+Available prefetch options are:
+
+* base:		prefetch the base set
+* kernel:	prefetch the kernel set
+* kernel-dbg:	prefetch the debug kernel set (if available)
+* packages:	prefetch the packages set
+
+Using signatures to verify integrity
+------------------------------------
 
 Signing for all sets can be redone or applied to a previous run
 that did not sign by invoking:
@@ -203,12 +238,19 @@ A verification of all available set signatures is done via:
 
     # make verify
 
+Nano image size adjustment
+--------------------------
+
 Nano images can be adjusted in size using an argument as follows:
 
     # make nano-<size>
 
+Virtual machine images
+----------------------
+
 Virtual machine images come in varying disk formats and sizes.
-The default format is vmdk with 20G and 1G swap. If you want
+For this reason they are not included in our binary releases.
+The default format is vmdk with 20G and 1G swap.  If you want
 to change that you can manually alter the invoke using:
 
     # make vm-<format>[,<size>[,<swap>]]
@@ -224,13 +266,8 @@ Available virtual machine disk formats are:
 
 The swap argument is either its size or set to "off" to disable.
 
-Release sets can be built using:
-
-    # make release VERSION=product.version.number_revision
-
-Kernel, base, packages and release sets are stored under /tmp/sets
-
-All final images are stored under /tmp/images
+Clearing individual build step progress
+---------------------------------------
 
 A couple of build machine cleanup helpers are available
 via the clean script:
@@ -260,9 +297,12 @@ Available clean options are:
 * vm:		remove vm image
 * xtools:	remove xtools set
 
+How the port tree is synced with its upstream repository
+--------------------------------------------------------
+
 The ports tree has a few of our modifications and is sometimes a
-bit ahead of FreeBSD.  In order to keep the local changes, a skimming
-script is used to review and copy upstream changes:
+bit ahead of HardenedBSD.  In order to keep the local changes, a
+skimming script is used to review and copy upstream changes:
 
     # make skim[-<option>]
 
@@ -272,19 +312,34 @@ Available options are:
 * unused:	copy unused upstream changes
 * (none):	all of the above
 
-In case a release was wrapped up, the base package list and obsoleted
+Rebasing the file lists for the base sets
+-----------------------------------------
+
+In case base files changed, the base package list and obsoleted
 files need to be regenerated.  This is done using:
 
     # make rebase
+
+Switching to the build jail for inspection
+------------------------------------------
 
 Shall any debugging be needed inside the build jail, the following
 command will use chroot(8) to enter the active build jail:
 
     # make chroot[-<subdir>]
 
+Boot images in the native bhyve(8) hypervisor
+---------------------------------------------
+
 There's also the posh way to boot a final image using bhyve(8):
 
     # make boot-<image>
+
+Please note that the system does not have working networking after
+bootup and login is only possible via the Nano and Serial images.
+
+Reading and modifying version numbers of build sets and images
+--------------------------------------------------------------
 
 Normally the build scripts will pick up version numbers based
 on commit tags or given version tags or a date-type string.
@@ -292,7 +347,8 @@ Should it not fit your needs, you can change the name using:
 
     # make rename-<set>[,<another_set>] VERSION=<new_name>
 
-The available targets are: base, kernel and package.
+The available targets are: base, distfiles, dvd, kernel, nano,
+packages, serial, vga and vm.
 
 The current state or a tagged state of required build repositories
 on the system can be printed using:
