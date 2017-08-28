@@ -369,7 +369,7 @@ and LibreSSL packages are both required they can be batch-built using:
     # make batch-<step>[,<option>[,...]]
 
 Last but not least, a fully contained nightly build for the system
-is unvoked using:
+is invoked using:
 
     # make nightly
 
