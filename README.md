@@ -129,10 +129,14 @@ to install a qemu package for user mode emulation:
 
     # pkg install qemu-user-static
 
+It will also require a matching u-boot package, e.g.:
+
+    # pkg install u-boot-rpi2
+
 A viable cross-build target is the Raspberry Pi 2 using
 the following options:
 
-    # make base kernel ARCH=arm:armv6 KERNEL=RPI2
+    # make base kernel ARCH=arm:armv6 KERNEL=SMP-RPI2
 
 In order to speed up building of using an emulated build,
 the xtools set can be built:
@@ -143,9 +147,6 @@ The xtools set is used during the packages build similar to
 the distfiles set.
 
     # make packages ARCH=arm:armv6
-
-We do not provide ARM images at this point.  The sets can
-be used to bootstrap a running FreeBSD on such devices.
 
 About other scripts and tweaks
 ==============================
