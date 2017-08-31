@@ -35,9 +35,7 @@ SELF=serial
 check_image ${SELF} ${@}
 
 SERIALIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-serial-${PRODUCT_ARCH}.img"
-
-# rewrite the disk label, because we're install media
-LABEL="${LABEL}_Install"
+SERIALLABEL="${PRODUCT_NAME}_Install"
 
 sh ./clean.sh ${SELF}
 
@@ -51,11 +49,11 @@ setup_entropy ${STAGEDIR}
 
 cat > ${STAGEDIR}/etc/fstab << EOF
 # Device		Mountpoint	FStype	Options		Dump	Pass#
-/dev/ufs/${LABEL}	/		ufs	ro,noatime	1	1
+/dev/ufs/${SERIALLABEL}	/		ufs	ro,noatime	1	1
 tmpfs			/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
-makefs -t ffs -B little -o label=${LABEL} ${SERIALIMG} ${STAGEDIR}
+makefs -t ffs -B little -o label=${SERIALLABEL} ${SERIALIMG} ${STAGEDIR}
 
 DEV=$(mdconfig -a -t vnode -f "${SERIALIMG}")
 gpart create -s BSD "${DEV}"

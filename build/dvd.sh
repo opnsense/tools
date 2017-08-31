@@ -33,10 +33,8 @@ SELF=dvd
 
 check_image ${SELF} ${@}
 
-DVD="${IMAGESDIR}/${PRODUCT_RELEASE}-dvd-${PRODUCT_ARCH}.iso"
-
-# rewrite the disk label, because we're install media
-LABEL="${LABEL}_Install"
+DVDIMAGE="${IMAGESDIR}/${PRODUCT_RELEASE}-dvd-${PRODUCT_ARCH}.iso"
+DVDLABEL=$(echo "${PRODUCT_NAME}_Install" | tr '[:lower:]' '[:upper:]')
 
 sh ./clean.sh ${SELF}
 
@@ -47,9 +45,6 @@ setup_packages ${STAGEDIR}/work
 setup_extras ${STAGEDIR}/work ${SELF}
 setup_mtree ${STAGEDIR}/work
 setup_entropy ${STAGEDIR}/work
-
-# must be upper case:
-LABEL=$(echo ${LABEL} | tr '[:lower:]' '[:upper:]')
 
 UEFIBOOT=
 if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
@@ -71,12 +66,12 @@ echo -n ">>> Building dvd image... "
 
 cat > ${STAGEDIR}/work/etc/fstab << EOF
 # Device	Mountpoint	FStype	Options	Dump	Pass #
-/dev/iso9660/${LABEL}	/	cd9660	ro	0	0
+/dev/iso9660/${DVDLABEL}	/	cd9660	ro	0	0
 tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
 makefs -t cd9660 ${UEFIBOOT} \
     -o 'bootimage=i386;'"${STAGEDIR}"'/work/boot/cdboot' -o no-emul-boot \
-    -o label=${LABEL} -o rockridge ${DVD} ${STAGEDIR}/work
+    -o label=${DVDLABEL} -o rockridge ${DVDIMAGE} ${STAGEDIR}/work
 
 echo "done"

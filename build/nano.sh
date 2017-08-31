@@ -41,39 +41,28 @@ if [ -n "${1}" ]; then
 fi
 
 NANOIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-nano-${PRODUCT_ARCH}.img"
-NANOBASE="${STAGEDIR}/nanobase"
+NANOSIZE=$(echo ${NANOSIZE} | tr '[:upper:]' '[:lower:]')
+NANOLABEL="${PRODUCT_NAME}_Nano"
 
 sh ./clean.sh ${SELF}
 
-setup_stage ${STAGEDIR} mnt
+setup_stage ${STAGEDIR}
+setup_base ${STAGEDIR}
+setup_kernel ${STAGEDIR}
+setup_packages ${STAGEDIR}
+setup_extras ${STAGEDIR} ${SELF}
+setup_entropy ${STAGEDIR}
 
-truncate -s ${NANOSIZE} ${NANOBASE}
-MD=$(mdconfig -f ${NANOBASE})
-newfs /dev/${MD}
-tunefs -L ${LABEL} /dev/${MD}
-mount /dev/${MD} ${STAGEDIR}/mnt
-
-setup_base ${STAGEDIR}/mnt
-
-# need these again later
-cp -r ${STAGEDIR}/mnt/boot ${STAGEDIR}
-
-setup_kernel ${STAGEDIR}/mnt
-setup_packages ${STAGEDIR}/mnt
-setup_extras ${STAGEDIR}/mnt ${SELF}
-setup_entropy ${STAGEDIR}/mnt
-
-cat > ${STAGEDIR}/mnt/etc/fstab << EOF
-/dev/ufs/${LABEL} / ufs rw,async,noatime 1 1
+cat > ${STAGEDIR}/etc/fstab << EOF
+# Device		Mountpoint	FStype	Options		Dump	Pass#
+/dev/ufs/${NANOLABEL}	/		ufs	rw		1	1
 EOF
 
-umount ${STAGEDIR}/mnt
-mdconfig -d -u ${MD}
+makefs -t ffs -s ${NANOSIZE} -B little \
+    -o label=${NANOLABEL} ${NANOIMG} ${STAGEDIR}
 
-echo -n ">>> Building nano image... "
-
-mkimg -s bsd -o ${NANOIMG} \
-    -b ${STAGEDIR}/boot/boot \
-    -p freebsd-ufs:=${NANOBASE}
-
-echo "done"
+DEV=$(mdconfig -a -t vnode -f "${NANOIMG}" -x 63 -y 255)
+gpart create -s BSD "${DEV}"
+gpart bootcode -b "${STAGEDIR}"/boot/boot "${DEV}"
+gpart add -t freebsd-ufs "${DEV}"
+mdconfig -d -u "${DEV}"

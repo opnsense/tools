@@ -34,9 +34,7 @@ SELF=vga
 check_image ${SELF} ${@}
 
 VGAIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vga-${PRODUCT_ARCH}.img"
-
-# rewrite the disk label, because we're install media
-LABEL="${LABEL}_Install"
+VGALABEL="${PRODUCT_NAME}_Install"
 
 sh ./clean.sh ${SELF}
 
@@ -50,11 +48,11 @@ setup_entropy ${STAGEDIR}/work
 
 cat > ${STAGEDIR}/work/etc/fstab << EOF
 # Device		Mountpoint	FStype	Options		Dump	Pass#
-/dev/ufs/${LABEL}	/		ufs	ro,noatime	1	1
+/dev/ufs/${VGALABEL}	/		ufs	ro,noatime	1	1
 tmpfs			/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
-makefs -B little -o label=${LABEL} ${STAGEDIR}/root.part ${STAGEDIR}/work
+makefs -B little -o label=${VGALABEL} ${STAGEDIR}/root.part ${STAGEDIR}/work
 
 UEFIBOOT=
 GPTDUMMY=
