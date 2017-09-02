@@ -16,7 +16,7 @@ done
 mkdir -p ${LOGSDIR}/${VERSION}
 (cd ${LOGSDIR}; ln -sfn ${VERSION} latest)
 
-for STAGE in update info base kernel distfiles; do
+for STAGE in update info base kernel xtools distfiles; do
 	# we don't normally clean these stages
 	(time make ${STAGE} 2>&1) > ${LOGSDIR}/${VERSION}/${STAGE}.log
 done
