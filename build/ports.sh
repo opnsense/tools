@@ -121,7 +121,7 @@ pkg set -yaA1
 pkg set -yA0 \${PKG_ORIGIN}
 pkg autoremove -y
 
-pkg create -nao ${PACKAGESDIR}/All -f txz
+pkg create -nao ${PACKAGESDIR}/All
 
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	# check whether the package has already been built
@@ -156,7 +156,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	done
 
 	pkg autoremove -y
-	pkg create -nao ${PACKAGESDIR}/All -f txz
+	pkg create -nao ${PACKAGESDIR}/All
 
 	make -s -C ${PORTSDIR}/\${PORT_ORIGIN} clean \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
