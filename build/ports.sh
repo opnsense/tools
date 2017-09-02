@@ -156,7 +156,9 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	done
 
 	pkg autoremove -y
-	pkg create -nao ${PACKAGESDIR}/All
+	for PKGNAME in \$(pkg query %n); do
+		pkg create -no ${PACKAGESDIR}/All \${PKGNAME}
+	done
 
 	make -s -C ${PORTSDIR}/\${PORT_ORIGIN} clean \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
