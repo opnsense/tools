@@ -355,6 +355,32 @@ setup_copy()
 	cp -r ${2} ${1}${2}
 }
 
+setup_xbase()
+{
+	if [ ${PRODUCT_HOST} = ${PRODUCT_ARCH} ]; then
+		return
+	fi
+
+	echo ">>> Cleaning up xtools in ${1}"
+
+	rm -f ${1}/usr/bin/qemu-*-static ${1}/etc/rc.conf.local
+
+	XTOOLS_SET=$(find ${SETSDIR} -name "xtools-*-${PRODUCT_ARCH}.txz")
+	if [ -z "${XTOOLS_SET}" ]; then
+		return
+	fi
+
+	XTOOLS=
+	for XTOOL in $(tar tf ${XTOOLS_SET}); do
+		if [ -d ${1}/${XTOOL} ]; then
+			continue
+		fi
+		XTOOLS="${XTOOLS} ${XTOOL}"
+	done
+
+	tar -C ${1} -xpf ${SETSDIR}/base-*-${PRODUCT_ARCH}.txz ${XTOOLS}
+}
+
 setup_xtools()
 {
 	if [ ${PRODUCT_HOST} = ${PRODUCT_ARCH} ]; then
@@ -413,12 +439,6 @@ build_marker()
 setup_base()
 {
 	echo ">>> Setting up world in ${1}"
-
-	# if we had a base in here before, allow for rewrite
-	chflags -R noschg ${1}
-
-	# manually undo xtools additions
-	rm -f ${1}/usr/bin/qemu-*-static ${1}/etc/rc.conf.local
 
 	tar -C ${1} -xpf ${SETSDIR}/base-*-${PRODUCT_ARCH}.txz
 

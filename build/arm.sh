@@ -68,7 +68,6 @@ mount /dev/${DEV}s2a ${STAGEDIR}/mnt
 
 setup_base ${STAGEDIR}/mnt
 setup_kernel ${STAGEDIR}/mnt
-# xtools poison the installation, but...
 setup_xtools ${STAGEDIR}/mnt
 # XXX PHP needs to be defanged temporarily
 extract_packages ${STAGEDIR}/mnt
@@ -81,9 +80,7 @@ unlock_packages ${STAGEDIR}/mnt
 mv ${STAGEDIR}/php ${STAGEDIR}/mnt/usr/local/bin/php
 setup_extras ${STAGEDIR} ${SELF}/mnt
 setup_entropy ${STAGEDIR}/mnt
-# ... rewriting the base will fix that
-setup_base ${STAGEDIR}/mnt
-setup_kernel ${STAGEDIR}/mnt
+setup_xbase ${STAGEDIR}/mnt
 
 cat > ${STAGEDIR}/mnt/etc/fstab << EOF
 # Device		Mountpoint	FStype	Options		Dump	Pass#
