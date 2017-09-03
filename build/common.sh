@@ -374,6 +374,9 @@ setup_xtools()
 	if [ -n "${XTOOLS_SET}" ]; then
 		tar -C ${1} -xpf ${XTOOLS_SET}
 	fi
+
+	# prevent the start of configd in build environments
+	echo 'configd_enable="NO"' >> ${1}/etc/rc.conf.local
 }
 
 setup_chroot()
@@ -410,6 +413,9 @@ build_marker()
 setup_base()
 {
 	echo ">>> Setting up world in ${1}"
+
+	# if we had a base in here before, allow for rewrite
+	chflags -R noschg ${1}
 
 	# manually undo xtools additions
 	rm -f ${1}/usr/bin/qemu-*-static ${1}/etc/rc.conf.local
@@ -595,6 +601,22 @@ lock_packages()
 
 	for PKG in ${PKGLIST}; do
 		pkg -c ${BASEDIR} lock -qy ${PKG}
+	done
+}
+
+unlock_packages()
+{
+	BASEDIR=${1}
+	shift
+	PKGLIST=${@}
+	if [ -z "${PKGLIST}" ]; then
+		PKGLIST="-a"
+	fi
+
+	echo ">>> Unlocking packages in ${BASEDIR}: ${PKGLIST}"
+
+	for PKG in ${PKGLIST}; do
+		pkg -c ${BASEDIR} unlock -qy ${PKG}
 	done
 }
 
@@ -830,5 +852,10 @@ setup_stage()
 	# additional directories if requested
 	for DIR in ${@}; do
 		mkdir -p ${STAGE}/${DIR}
+	done
+
+	# try to clean up dangling md nodes
+	for NODE in $(mdconfig -l); do
+		mdconfig -d -u ${NODE} || true
 	done
 }

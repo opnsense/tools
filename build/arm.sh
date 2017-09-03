@@ -70,11 +70,20 @@ setup_base ${STAGEDIR}/mnt
 setup_kernel ${STAGEDIR}/mnt
 # xtools poison the installation, but...
 setup_xtools ${STAGEDIR}/mnt
+# XXX PHP needs to be defanged temporarily
+extract_packages ${STAGEDIR}/mnt
+install_packages ${STAGEDIR}/mnt php70
+mv ${STAGEDIR}/mnt/usr/local/bin/php ${STAGEDIR}/php
+cp ${STAGEDIR}/mnt/usr/bin/true ${STAGEDIR}/mnt/usr/local/bin/php
+lock_packages ${STAGEDIR}/mnt
 setup_packages ${STAGEDIR}/mnt
+unlock_packages ${STAGEDIR}/mnt
+mv ${STAGEDIR}/php ${STAGEDIR}/mnt/usr/local/bin/php
 setup_extras ${STAGEDIR} ${SELF}/mnt
 setup_entropy ${STAGEDIR}/mnt
 # ... rewriting the base will fix that
 setup_base ${STAGEDIR}/mnt
+setup_kernel ${STAGEDIR}/mnt
 
 cat > ${STAGEDIR}/mnt/etc/fstab << EOF
 # Device		Mountpoint	FStype	Options		Dump	Pass#

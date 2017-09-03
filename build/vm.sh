@@ -61,9 +61,9 @@ sh ./clean.sh ${SELF}
 setup_stage ${STAGEDIR} mnt
 
 truncate -s ${VMSIZE} ${VMBASE}
-MD=$(mdconfig -f ${VMBASE})
-newfs /dev/${MD}
-mount /dev/${MD} ${STAGEDIR}/mnt
+DEV=$(mdconfig -f ${VMBASE})
+newfs /dev/${DEV}
+mount /dev/${DEV} ${STAGEDIR}/mnt
 
 setup_base ${STAGEDIR}/mnt
 
@@ -102,7 +102,7 @@ elif [ -n "${VMSWAP}" -a -n "${UEFIBOOT}" ]; then
 fi
 
 umount ${STAGEDIR}/mnt
-mdconfig -d -u ${MD}
+mdconfig -d -u ${DEV}
 
 echo -n ">>> Building vm image... "
 

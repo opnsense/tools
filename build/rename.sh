@@ -36,7 +36,7 @@ for ARG in ${@}; do
 	arm)
 		echo ">>> Renaming arm image: ${VERSION}"
 		mv ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.img \
-		    ${IMAGESDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.iso
+		    ${IMAGESDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.img
 		;;
 	base)
 		setup_stage ${STAGEDIR}
