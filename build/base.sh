@@ -47,6 +47,8 @@ setup_stage ${STAGEDIR}
 
 MAKE_ARGS="TARGET_ARCH=${PRODUCT_ARCH} TARGET=${PRODUCT_TARGET}"
 MAKE_ARGS="${MAKE_ARGS} SRCCONF=${CONFIGDIR}/src.conf __MAKE_CONF="
+# XXX for our RPI2 builds, needs a better place in the long run
+MAKE_ARGS="${MAKE_ARGS} UBLDR_LOADADDR=0x2000000"
 
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS} NO_CLEAN=yes
 ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
