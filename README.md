@@ -124,29 +124,35 @@ Release sets can be built using:
 Cross-building for other architecures
 -------------------------------------
 
-This feature is currently experimental.  It requires
-to install a qemu package for user mode emulation:
+This feature is currently experimental and tailored
+for use with the Raspberry Pi 2.  It requires installation
+of the qemu package for user mode emulation:
 
     # pkg install qemu-user-static
 
-It will also require a matching u-boot package, e.g.:
-
-    # pkg install u-boot-rpi2
-
-A viable cross-build target is the Raspberry Pi 2 using
-the following options:
+A cross-build on the operating system sources is
+executed by specifying the target architecture and
+custom kernel:
 
     # make base kernel ARCH=arm:armv6 KERNEL=SMP-RPI2
 
-In order to speed up building of using an emulated build,
-the xtools set can be built:
+In order to speed up building of using an emulated
+packages build, the xtools set can be created like so:
 
     # make xtools ARCH=arm:armv6
 
-The xtools set is used during the packages build similar to
-the distfiles set.
+The xtools set is then used during the packages build
+similar to the distfiles set.
 
     # make packages ARCH=arm:armv6
+
+The image will also require a matching u-boot package:
+
+    # pkg install u-boot-rpi2
+
+The final image is built using:
+
+    # make arm-<size> ARCH=arm:armv6
 
 About other scripts and tweaks
 ==============================
@@ -277,6 +283,7 @@ via the clean script:
 
 Available clean options are:
 
+* arm:		remove arm image
 * base:		remove base set
 * distfiles:	remove distfiles set
 * dvd:		remove dvd image

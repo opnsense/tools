@@ -33,6 +33,11 @@ SELF=rename
 
 for ARG in ${@}; do
 	case ${ARG} in
+	arm)
+		echo ">>> Renaming arm image: ${VERSION}"
+		mv ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.img \
+		    ${IMAGESDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.iso
+		;;
 	base)
 		setup_stage ${STAGEDIR}
 		echo ">>> Repacking base set..."

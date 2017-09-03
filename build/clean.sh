@@ -33,6 +33,10 @@ SELF=clean
 
 for ARG in ${@}; do
 	case ${ARG} in
+	arm)
+		echo ">>> Removing arm image"
+		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.img
+		;;
 	base)
 		echo ">>> Removing base set"
 		rm -f ${SETSDIR}/base-*-${PRODUCT_ARCH}.*

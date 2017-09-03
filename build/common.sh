@@ -355,24 +355,33 @@ setup_copy()
 	cp -r ${2} ${1}${2}
 }
 
+setup_xtools()
+{
+	if [ ${PRODUCT_HOST} = ${PRODUCT_ARCH} ]; then
+		return
+	fi
+
+	echo ">>> Setting up xtools in ${1}"
+
+	# additional emulation layer so that chroot
+	# looks like a native environment later on
+	mkdir -p ${1}/usr/local/bin
+	cp /usr/local/bin/qemu-${PRODUCT_TARGET}-static ${1}/usr/local/bin
+	/usr/local/etc/rc.d/qemu_user_static onerestart
+
+	# copy the native toolchain for extra speed
+	XTOOLS_SET=$(find ${SETSDIR} -name "xtools-*-${PRODUCT_ARCH}.txz")
+	if [ -n "${XTOOLS_SET}" ]; then
+		tar -C ${1} -xpf ${XTOOLS_SET}
+	fi
+}
+
 setup_chroot()
 {
+	# historic glue
+	setup_xtools ${1}
+
 	echo ">>> Setting up chroot in ${1}"
-
-	if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
-		# additional emulation layer so that chroot
-		# looks like a native environment later on
-		mkdir -p ${1}/usr/local/bin
-		cp /usr/local/bin/qemu-${PRODUCT_TARGET}-static \
-		    ${1}/usr/local/bin
-		/usr/local/etc/rc.d/qemu_user_static onerestart
-
-		# copy the native toolchain for extra speed
-		XTOOLS_SET=$(find ${SETSDIR} -name "xtools-*-${PRODUCT_ARCH}.txz")
-		if [ -n "${XTOOLS_SET}" ]; then
-			tar -C ${1} -xpf ${XTOOLS_SET}
-		fi
-	fi
 
 	cp /etc/resolv.conf ${1}/etc
 	mount -t devfs devfs ${1}/dev
@@ -401,6 +410,9 @@ build_marker()
 setup_base()
 {
 	echo ">>> Setting up world in ${1}"
+
+	# manually undo xtools additions
+	rm -f ${1}/usr/bin/qemu-*-static ${1}/etc/rc.conf.local
 
 	tar -C ${1} -xpf ${SETSDIR}/base-*-${PRODUCT_ARCH}.txz
 
