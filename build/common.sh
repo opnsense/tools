@@ -840,7 +840,16 @@ setup_stage()
 {
 	echo ">>> Setting up stage in ${1}"
 
-	MOUNTDIRS="/dev /mnt ${SRCDIR} ${PORTSDIR} ${COREDIR} ${PLUGINSDIR}"
+	MOUNTDIRS="
+/boot/msdos
+/dev
+/mnt
+${SRCDIR}
+${PORTSDIR}
+${COREDIR}
+${PLUGINSDIR}
+/
+"
 	STAGE=${1}
 
 	local PID DIR

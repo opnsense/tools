@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Copyright (c) 2017 Franco Fichtner <franco@opnsense.org>
-# Copyright (c) 2015 The FreeBSD Foundation
+# Copyright (c) 2015-2017 The FreeBSD Foundation
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -50,62 +50,58 @@ ARMLABEL="${PRODUCT_NAME}"
 
 sh ./clean.sh ${SELF}
 
-setup_stage ${STAGEDIR} mnt
+setup_stage ${STAGEDIR}
 
 truncate -s ${ARMSIZE} ${ARMIMG}
 
 DEV=$(mdconfig -a -t vnode -f ${ARMIMG} -x 63 -y 255)
 
 gpart create -s MBR ${DEV}
-gpart add -t '!12' -a 63 -s 50m ${DEV}
+gpart add -t '!12' -a 512k -s 50m ${DEV}
 gpart set -a active -i 1 ${DEV}
 newfs_msdos -L msdosboot -F 16 /dev/${DEV}s1
 gpart add -t freebsd ${DEV}
 gpart create -s bsd ${DEV}s2
 gpart add -t freebsd-ufs -a 64k /dev/${DEV}s2
 newfs -U -L ${ARMLABEL} /dev/${DEV}s2a
-mount /dev/${DEV}s2a ${STAGEDIR}/mnt
+mount /dev/${DEV}s2a ${STAGEDIR}
 
-setup_base ${STAGEDIR}/mnt
-setup_kernel ${STAGEDIR}/mnt
-setup_xtools ${STAGEDIR}/mnt
+setup_base ${STAGEDIR}
+setup_kernel ${STAGEDIR}
+setup_xtools ${STAGEDIR}
 # XXX PHP needs to be defanged temporarily
-extract_packages ${STAGEDIR}/mnt
-install_packages ${STAGEDIR}/mnt php70
-mv ${STAGEDIR}/mnt/usr/local/bin/php ${STAGEDIR}/php
-cp ${STAGEDIR}/mnt/usr/bin/true ${STAGEDIR}/mnt/usr/local/bin/php
-lock_packages ${STAGEDIR}/mnt
-setup_packages ${STAGEDIR}/mnt
-unlock_packages ${STAGEDIR}/mnt
-mv ${STAGEDIR}/php ${STAGEDIR}/mnt/usr/local/bin/php
-setup_extras ${STAGEDIR} ${SELF}/mnt
-setup_entropy ${STAGEDIR}/mnt
-setup_xbase ${STAGEDIR}/mnt
+extract_packages ${STAGEDIR}
+install_packages ${STAGEDIR} php70
+cp -p ${STAGEDIR}/usr/local/bin/php ${STAGEDIR}/php
+cp -p ${STAGEDIR}/usr/bin/true ${STAGEDIR}/usr/local/bin/php
+lock_packages ${STAGEDIR}
+setup_packages ${STAGEDIR}
+unlock_packages ${STAGEDIR}
+cp -p ${STAGEDIR}/php ${STAGEDIR}/usr/local/bin/php
+rm ${STAGEDIR}/php
+setup_extras ${STAGEDIR} ${SELF}
+setup_entropy ${STAGEDIR}
+setup_xbase ${STAGEDIR}
 
-cat > ${STAGEDIR}/mnt/etc/fstab << EOF
+echo -n ">>> Building arm image... "
+
+cat > ${STAGEDIR}/etc/fstab << EOF
 # Device		Mountpoint	FStype	Options		Dump	Pass#
 /dev/ufs/${ARMLABEL}	/		ufs	rw		1	1
 /dev/msdosfs/MSDOSBOOT	/boot/msdos	msdosfs	rw,noatime	0	0
 EOF
 
-mkdir -p ${STAGEDIR}/mnt/boot/msdos
-cp -rp ${STAGEDIR}/mnt/boot ${STAGEDIR}/boot
+mkdir -p ${STAGEDIR}/boot/msdos
+mount_msdosfs /dev/${DEV}s1 ${STAGEDIR}/boot/msdos
 
-umount ${STAGEDIR}/mnt
-mount_msdosfs /dev/${DEV}s1 ${STAGEDIR}/mnt
+cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
+cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/boot/msdos/ubldr.bin
+cp -p ${STAGEDIR}/boot/dtb/rpi2.dtb ${STAGEDIR}/boot/msdos/rpi2.dtb
+cp -p /usr/local/share/u-boot/u-boot-rpi2/* ${STAGEDIR}/boot/msdos
 
-UBOOT_DIR="/usr/local/share/u-boot/u-boot-rpi2"
-UBOOT_FILES="bootcode.bin config.txt fixup.dat fixup_cd.dat \
-    fixup_x.dat start.elf start_cd.elf start_x.elf u-boot.bin"
-
-for _UF in ${UBOOT_FILES}; do
-	cp -p ${UBOOT_DIR}/${_UF} ${STAGEDIR}/mnt
-done
-
-cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/mnt/ubldr
-cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/mnt/ubldr.bin
-cp -p ${STAGEDIR}/boot/dtb/rpi2.dtb ${STAGEDIR}/mnt/rpi2.dtb
-
-umount ${STAGEDIR}/mnt
+umount ${STAGEDIR}/boot/msdos
+umount ${STAGEDIR}
 
 mdconfig -d -u ${DEV}
+
+echo "done"

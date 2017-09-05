@@ -61,7 +61,7 @@ sh ./clean.sh ${SELF}
 setup_stage ${STAGEDIR} mnt
 
 truncate -s ${VMSIZE} ${VMBASE}
-DEV=$(mdconfig -f ${VMBASE})
+DEV=$(mdconfig -t vnode -f ${VMBASE})
 newfs /dev/${DEV}
 mount /dev/${DEV} ${STAGEDIR}/mnt
 

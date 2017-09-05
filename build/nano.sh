@@ -64,5 +64,5 @@ makefs -t ffs -s ${NANOSIZE} -B little \
 DEV=$(mdconfig -a -t vnode -f ${NANOIMG} -x 63 -y 255)
 gpart create -s BSD ${DEV}
 gpart bootcode -b ${STAGEDIR}/boot/boot ${DEV}
-gpart add -t freebsd-ufs ${DEV}
+gpart add -t -a 4k freebsd-ufs ${DEV}
 mdconfig -d -u ${DEV}
