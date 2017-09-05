@@ -586,24 +586,9 @@ remove_packages()
 	echo ">>> Removing packages in ${BASEDIR}: ${PKGLIST}"
 
 	for PKG in ${PKGLIST}; do
-		# match using globbing
-		for PKGGLOB in $(cd ${BASEDIR}${PACKAGESDIR}; \
-		    find All -name "${PKG}" -type f); do
-			rm ${BASEDIR}${PACKAGESDIR}/${PKGGLOB}
-		done
-		# exact matching according to package name or origin
 		for PKGFILE in $(cd ${BASEDIR}${PACKAGESDIR}; \
-		    find All -type f); do
-			PKGINFO=$(pkg -c ${BASEDIR} info -F ${PACKAGESDIR}/${PKGFILE} | grep ^Name | awk '{ print $3; }')
-			if [ ${PKG} = ${PKGINFO} ]; then
-				rm ${BASEDIR}${PACKAGESDIR}/${PKGFILE}
-				break
-			fi
-			PKGORIGIN=$(pkg -c ${BASEDIR} info -F ${PACKAGESDIR}/${PKGFILE} | grep ^Origin | awk '{ print $3; }')
-			if [ ${PKG} = ${PKGORIGIN} ]; then
-				rm ${BASEDIR}${PACKAGESDIR}/${PKGFILE}
-				break
-			fi
+		    find All -name "${PKG}-[0-9]*.txz" -type f); do
+			rm ${BASEDIR}${PACKAGESDIR}/${PKGFILE}
 		done
 	done
 }

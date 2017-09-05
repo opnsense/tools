@@ -36,7 +36,7 @@ all:
 	@cat ${.CURDIR}/README.md | ${PAGER}
 
 lint-steps:
-.for STEP in ${STEPS}
+.for STEP in common ${STEPS}
 	@sh -n ${.CURDIR}/build/${STEP}.sh
 .endfor
 
