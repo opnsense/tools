@@ -255,6 +255,8 @@ git_clone()
 		echo -n ">>> Removing ${1}... "
 		rm -r "${1}"
 		echo "done"
+	else
+		mkdir -p $(dirname ${1})
 	fi
 
 	echo ">>> Cloning ${1}:"
