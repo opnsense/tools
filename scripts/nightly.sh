@@ -22,7 +22,9 @@ for STAGE in update info base kernel xtools distfiles; do
 done
 
 for FLAVOUR in OpenSSL LibreSSL; do
-	(make clean-packages FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
+	if [ -z "${1}" ]; then
+		(make clean-packages FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
+	fi
 	(time make packages FLAVOUR=${FLAVOUR} 2>&1) \
 	    > ${LOGSDIR}/${VERSION}/packages-${FLAVOUR}.log
 	(time make test FLAVOUR=${FLAVOUR} 2>&1) \
