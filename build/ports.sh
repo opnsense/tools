@@ -139,7 +139,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	if [ -L \${PKGLINK} ]; then
 		PKGFILE=\$(readlink -f \${PKGLINK} || true)
 		if [ -f \${PKGFILE} ]; then
-			echo ">>> A different version of \${PORT_ORIGIN} exists!" >> /.pkg-warn
+			echo ">>> Ignored new version of \${PORT_ORIGIN}" >> /.pkg-warn
 			continue
 		fi
 	fi
