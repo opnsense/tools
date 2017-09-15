@@ -496,6 +496,7 @@
 ./lib/libnvpair.so.2
 ./lib/libpcap.so.8
 ./lib/libpjdlog.so.0
+./lib/librt.so.1
 ./lib/libsbuf.so.6
 ./lib/libssp.so.0
 ./lib/libthr.so.3
@@ -3485,7 +3486,6 @@
 ./usr/lib/librpcsvc.so.5
 ./usr/lib/librt.a
 ./usr/lib/librt.so
-./usr/lib/librt.so.1
 ./usr/lib/librtld_db.a
 ./usr/lib/librtld_db.so
 ./usr/lib/librtld_db.so.2

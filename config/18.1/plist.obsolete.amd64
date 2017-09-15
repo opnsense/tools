@@ -39,7 +39,6 @@
 /lib/libcrypto.so.7
 /lib/libkvm.so.6
 /lib/libreadline.so.8
-/lib/librt.so.1
 /root/.k5login
 /sbin/mount_oldnfs
 /usr/bin/asn1_compile
@@ -455,6 +454,7 @@
 /usr/lib/librpcsec_gss.a
 /usr/lib/librpcsec_gss.so
 /usr/lib/librpcsec_gss.so.1
+/usr/lib/librt.so.1
 /usr/lib/libssl.so.7
 /usr/lib/libugidfw.so.4
 /usr/lib/libwind.a
