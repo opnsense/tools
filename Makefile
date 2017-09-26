@@ -27,7 +27,7 @@ STEPS=		arm base boot chroot clean core distfiles dvd info \
 		kernel nano plugins ports prefetch print rebase \
 		release rename serial sign skim test update verify \
 		vga vm xtools
-SCRIPTS=	batch nightly pkg_fingerprint pkg_sign
+SCRIPTS=	batch nightly refresh pkg_fingerprint pkg_sign
 .PHONY:		${STEPS}
 
 PAGER?=		less

@@ -376,10 +376,17 @@ and LibreSSL packages are both required they can be batch-built using:
 
     # make batch-<step>[,<option>[,...]]
 
-Last but not least, a fully contained nightly build for the system
-is invoked using:
+A fully contained nightly build for the system is invoked using:
 
     # make nightly
 
 Nightly builds are the only builds that write and archive logs under
 /tmp/logs and /tmp/logs/latest points to the last nightly build run.
+
+Last but not least, a refresh of OPNsense core and plugins on package
+sets is invoked using:
+
+    # make refresh
+
+It will flush all previous packages except for ports, rebuild core and
+plugins and sign the sets if enabled.  It is used to issue hotfixes.
