@@ -291,7 +291,6 @@
 /usr/include/sys/nv_impl.h
 /usr/include/sys/nvlist_impl.h
 /usr/include/sys/nvpair_impl.h
-/usr/include/sys/pax.h
 /usr/include/wind.h
 /usr/include/wind_err.h
 /usr/include/xdbm.h
