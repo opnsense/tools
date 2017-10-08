@@ -12606,6 +12606,7 @@
 ./usr/share/man/man4/arcmsr.4.gz
 ./usr/share/man/man4/arm/
 ./usr/share/man/man4/arp.4.gz
+./usr/share/man/man4/aslr.4.gz
 ./usr/share/man/man4/asmc.4.gz
 ./usr/share/man/man4/ata.4.gz
 ./usr/share/man/man4/ath.4.gz
