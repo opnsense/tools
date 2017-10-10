@@ -55,8 +55,8 @@ EOF
 
 makefs -t ffs -B little -o label=${SERIALLABEL} ${SERIALIMG} ${STAGEDIR}
 
-DEV=$(mdconfig -a -t vnode -f ${SERIALIMG} -x 63 -y 255)
+DEV=$(mdconfig -a -t vnode -f ${SERIALIMG})
 gpart create -s BSD ${DEV}
 gpart bootcode -b ${STAGEDIR}/boot/boot ${DEV}
-gpart add -a 4k -t freebsd-ufs ${DEV}
+gpart add -t freebsd-ufs ${DEV}
 mdconfig -d -u ${DEV}
