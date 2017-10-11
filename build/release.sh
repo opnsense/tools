@@ -67,8 +67,6 @@ echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
 
 (cd ${STAGEDIR}/work && sha256 ${PRODUCT_RELEASE}-*) \
     > ${STAGEDIR}/tmp/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256
-(cd ${STAGEDIR}/work && md5 ${PRODUCT_RELEASE}-*) \
-    > ${STAGEDIR}/tmp/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.md5
 
 for IMAGE in $(find ${STAGEDIR}/work -name "${PRODUCT_RELEASE}-*"); do
 	sign_image ${IMAGE} ${STAGEDIR}/tmp/$(basename ${IMAGE}).sig
