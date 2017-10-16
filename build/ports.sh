@@ -54,7 +54,6 @@ cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 			continue
 		fi
 	fi
-
 	echo ${PORT_ORIGIN}
 done
 )

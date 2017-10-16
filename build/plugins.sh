@@ -54,7 +54,6 @@ cat ${CONFIGDIR}/plugins.conf | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
 			continue
 		fi
 	fi
-
 	echo ${PLUGIN_ORIGIN}
 done
 )

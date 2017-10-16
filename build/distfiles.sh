@@ -33,9 +33,17 @@ SELF=distfiles
 
 [ -z ${PORTS_LIST} ] && PORTS_LIST=$(
 cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \
-    while read PORT_ORIGIN PORT_BROKEN; do
+    while read PORT_ORIGIN PORT_IGNORE; do
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
+	fi
+	if [ -n "${PORT_IGNORE}" ]; then
+		for PORT_QUIRK in $(echo ${PORT_IGNORE} | tr ',' ' '); do
+			if [ ${PORT_QUIRK} = ${PRODUCT_TARGET} -o \
+			     ${PORT_QUIRK} = ${PRODUCT_ARCH} -o ]; then
+				continue 2
+			fi
+		done
 	fi
 	echo ${PORT_ORIGIN}
 done
