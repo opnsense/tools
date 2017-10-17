@@ -31,7 +31,8 @@ SELF=ports
 
 . ./common.sh
 
-[ -z ${PORTS_LIST} ] && PORTS_LIST=$(
+if [ -z "${PORTS_LIST}" ]; then
+	PORTS_LIST=$(
 cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
@@ -57,6 +58,13 @@ cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 	echo ${PORT_ORIGIN}
 done
 )
+else
+	PORTS_LIST=$(
+for PORT_ORIGIN in ${PORTS_LIST}; do
+	echo ${PORT_ORIGIN}
+done
+)
+fi
 
 check_packages ${SELF} ${@}
 

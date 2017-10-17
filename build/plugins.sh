@@ -31,7 +31,8 @@ SELF=plugins
 
 . ./common.sh
 
-[ -z ${PLUGINS_LIST} ] && PLUGINS_LIST=$(
+if [ -z "${PLUGINS_LIST}" ]; then
+	PLUGINS_LIST=$(
 cat ${CONFIGDIR}/plugins.conf | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
 	if [ "$(echo ${PLUGIN_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
@@ -57,6 +58,13 @@ cat ${CONFIGDIR}/plugins.conf | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
 	echo ${PLUGIN_ORIGIN}
 done
 )
+else
+	PLUGINS_LIST=$(
+for PLUGIN_ORIGIN in ${PLUGIN_LIST}; do
+	echo ${PLUGIN_ORIGIN}
+done
+)
+fi
 
 check_packages ${SELF} ${@}
 
