@@ -24,7 +24,9 @@ TL;DR
 
     # make dvd
 
-If successful, a dvd image can be found here: /tmp/images
+If successful, a dvd image can be found under:
+
+    # make print-IMAGESDIR
 
 Detailed build steps and options
 ================================
@@ -73,9 +75,13 @@ It can also be overrided by "/dev/null".
 How to run individual or composite build steps
 ----------------------------------------------
 
-Kernel, base, packages and release sets are stored under /tmp/sets
+Kernel, base, packages and release sets are stored under:
 
-All final images are stored under /tmp/images
+    # make print-SETSDIR
+
+All final images are stored under:
+
+    # make print-IMAGESDIR
 
 Build the userland binaries, bootloader and administrative files:
 
@@ -380,8 +386,12 @@ A fully contained nightly build for the system is invoked using:
 
     # make nightly
 
-Nightly builds are the only builds that write and archive logs under
-/tmp/logs and /tmp/logs/latest points to the last nightly build run.
+Nightly builds are the only builds that write and archive logs under:
+
+    # make print-LOGSDIR
+
+with ./latest pointing to the last nightly build run.  Older logs are
+archived and available for a number of runs for retrospective analysis.
 
 Last but not least, a refresh of OPNsense core and plugins on package
 sets is invoked using:
