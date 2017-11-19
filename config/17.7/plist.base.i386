@@ -18375,7 +18375,6 @@
 ./usr/share/zoneinfo/Europe/Zaporozhye
 ./usr/share/zoneinfo/Europe/Zurich
 ./usr/share/zoneinfo/Factory
-./usr/share/zoneinfo/GMT
 ./usr/share/zoneinfo/HST
 ./usr/share/zoneinfo/Indian/
 ./usr/share/zoneinfo/Indian/Antananarivo
@@ -18433,6 +18432,7 @@
 ./usr/share/zoneinfo/Pacific/Wake
 ./usr/share/zoneinfo/Pacific/Wallis
 ./usr/share/zoneinfo/SystemV/
+./usr/share/zoneinfo/UTC
 ./usr/share/zoneinfo/WET
 ./usr/share/zoneinfo/posixrules
 ./usr/share/zoneinfo/zone.tab

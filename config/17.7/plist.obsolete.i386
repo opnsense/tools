@@ -1482,6 +1482,7 @@
 /usr/share/zoneinfo/America/Montreal
 /usr/share/zoneinfo/America/Santa_Isabel
 /usr/share/zoneinfo/Asia/Rangoon
+/usr/share/zoneinfo/GMT
 /usr/share/zoneinfo/Pacific/Johnston
 /var/db/etcupdate/current/etc/pam.d/rsh
 /var/db/etcupdate/current/etc/rc.d/atm1
