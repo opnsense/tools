@@ -56,6 +56,12 @@ for ARG in ${ARGS}; do
 		BRANCHES=${PORTSBRANCH}
 		DIR=${PORTSDIR}
 		;;
+	portsref)
+		# XXX needs GITBASE=https://github.com/hardenedbsd
+		BRANCHES=${PORTSREFBRANCH}
+		DIR=${PORTSREFDIR}
+		ACCOUNT=hardenedbsd
+		;;
 	src)
 		BRANCHES=${SRCBRANCH}
 		DIR=${SRCDIR}
