@@ -80,6 +80,7 @@ MIRRORS?=	https://opnsense.c0urier.net \
 		http://mirror.ams1.nl.leaseweb.net/opnsense
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
+VERSION_PHP?=	70
 STAGEDIRPREFIX?=/usr/obj
 PORTSREFDIR?=	/usr/hardenedbsd-ports
 PORTSREFBRANCH?=master
@@ -89,7 +90,7 @@ PORTSDIR?=	/usr/ports
 PORTSBRANCH?=	master
 COREDIR?=	/usr/core
 COREBRANCH?=	master
-COREENV?=	#CORE_PHP=71
+COREENV?=	CORE_PHP=${VERSION_PHP}
 SRCDIR?=	/usr/src
 SRCBRANCH?=	master
 
@@ -135,7 +136,8 @@ ${STEP}: lint-steps
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
 	    -H "${COREENV}" -Q "${QUICK}" -u "${UEFI:tl}" -U "${SUFFIX}" \
-	    -V "${ADDITIONS}" -O "${GITBASE}" ${${STEP}_ARGS}
+	    -V "${ADDITIONS}" -O "${GITBASE}" -q "${VERSION_PHP}" \
+	    ${${STEP}_ARGS}
 .endfor
 
 .for SCRIPT in ${SCRIPTS}

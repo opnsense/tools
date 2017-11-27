@@ -71,7 +71,7 @@ setup_kernel ${STAGEDIR}
 setup_xtools ${STAGEDIR}
 # XXX PHP needs to be defanged temporarily
 extract_packages ${STAGEDIR}
-install_packages ${STAGEDIR} php70
+install_packages ${STAGEDIR} php${PRODUCT_PHP}
 cp -p ${STAGEDIR}/usr/local/bin/php ${STAGEDIR}/php
 cp -p ${STAGEDIR}/usr/bin/true ${STAGEDIR}/usr/local/bin/php
 lock_packages ${STAGEDIR}

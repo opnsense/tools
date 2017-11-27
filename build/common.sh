@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="a:B:b:C:c:d:E:e:F:f:G:g:H:K:k:L:l:m:n:O:o:P:p:Q:R:S:s:T:t:U:u:v:V:"
+OPTS="a:B:b:C:c:d:E:e:F:f:G:g:H:K:k:L:l:m:n:O:o:P:p:Q:q:R:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -115,6 +115,9 @@ while getopts ${OPTS} OPT; do
 	Q)
 		export PRODUCT_QUICK=${OPTARG}
 		;;
+	q)
+		export PRODUCT_PHP=${OPTARG}
+		;;
 	R)
 		export PORTSREFDIR=${OPTARG}
 		;;
@@ -170,6 +173,7 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_MIRROR}" -o \
     -z "${PRODUCT_DEVICE}" -o \
     -z "${PRODUCT_SPEED}" -o \
+    -z "${PRODUCT_PHP}" -o \
     -z "${PRODUCT_KERNEL}" -o \
     -z "${PRODUCT_GITBASE}" -o \
     -z "${PLUGINSBRANCH}" -o \
