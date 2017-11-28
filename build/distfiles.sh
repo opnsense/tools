@@ -87,6 +87,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	echo ">>> Fetching \${PORT_ORIGIN}..."
 	make -C ${PORTSDIR}/\${PORT_ORIGIN} fetch-recursive \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
+	    PRODUCT_PHP=${PRODUCT_PHP} \
 	    UNAME_r=\$(freebsd-version)
 done
 EOF
