@@ -84,6 +84,8 @@ trap : 2
 
 if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTS_LIST=; fi
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
+	# XXX incomplete FLAVOR support, error in fetch-recursive
+	PORT_ORIGIN=\${PORT_ORIGIN%%@*}
 	echo ">>> Fetching \${PORT_ORIGIN}..."
 	make -C ${PORTSDIR}/\${PORT_ORIGIN} fetch-recursive \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \

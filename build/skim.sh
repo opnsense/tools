@@ -91,7 +91,12 @@ PORTS_COUNT=$(wc -l ${STAGEDIR}/skim | awk '{ print $1 }')
 PORTS_NUM=0
 
 while read PORT_ORIGIN PORT_BROKEN; do
-	PORT=${PORT_ORIGIN}
+	FLAVOR=${PORT_ORIGIN##*@}
+	PORT=${PORT_ORIGIN%%@*}
+	if [ ${FLAVOR} = ${PORT} ]; then
+		# not a flavour
+		FLAVOR=
+	fi
 
 	SOURCE=${PORTSDIR}
 	if [ ! -d ${PORTSDIR}/${PORT} ]; then
@@ -99,12 +104,13 @@ while read PORT_ORIGIN PORT_BROKEN; do
 	fi
 
 	PORT_DEPS=$(echo ${PORT}; ${ENV_FILTER} make -C ${SOURCE}/${PORT} \
-	    PORTSDIR=${SOURCE} ${MAKE_ARGS} all-depends-list | \
-	    awk -F"${SOURCE}/" '{print $2}')
+	    PORTSDIR=${SOURCE} FLAVOR=${FLAVOR} ${MAKE_ARGS} \
+	    all-depends-list | awk -F"${SOURCE}/" '{print $2}')
 
 	for PORT in ${PORT_DEPS}; do
 		PORT_MASTER=$(${ENV_FILTER} make -C ${SOURCE}/${PORT} \
-		    -V MASTER_PORT PORTSDIR=${SOURCE} ${MAKE_ARGS})
+		    -V MASTER_PORT FLAVOR=${FLAVOR} PORTSDIR=${SOURCE} \
+		    ${MAKE_ARGS})
 		if [ -n "${PORT_MASTER}" ]; then
 			PORT_DEPS="${PORT_DEPS} ${PORT_MASTER}"
 		fi

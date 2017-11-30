@@ -132,8 +132,15 @@ pkg autoremove -y
 pkg create -nao ${PACKAGESDIR}/All
 
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
+	FLAVOR=\${PORT_ORIGIN##*@}
+	PORT=\${PORT_ORIGIN%%@*}
+	if [ \${FLAVOR} = \${PORT} ]; then
+		# not a flavour
+		FLAVOR=
+	fi
 	# check whether the package has already been built
-	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT_ORIGIN} -V PKGFILE \
+	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT} \
+	    -V PKGFILE FLAVOR=\${FLAVOR} \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
 	    PRODUCT_PHP=${PRODUCT_PHP} \
 	    PACKAGES=${PACKAGESDIR} \
@@ -154,7 +161,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 		fi
 	fi
 
-	make -s -C ${PORTSDIR}/\${PORT_ORIGIN} install \
+	make -s -C ${PORTSDIR}/\${PORT} install FLAVOR=\${FLAVOR} \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
 	    PRODUCT_PHP=${PRODUCT_PHP} \
 	    PACKAGES=${PACKAGESDIR} \
@@ -173,7 +180,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 		pkg create -no ${PACKAGESDIR}/All \${PKGNAME}
 	done
 
-	make -s -C ${PORTSDIR}/\${PORT_ORIGIN} clean \
+	make -s -C ${PORTSDIR}/\${PORT} clean FLAVOR=\${FLAVOR} \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
 	    PRODUCT_PHP=${PRODUCT_PHP} \
 	    UNAME_r=\$(freebsd-version)
