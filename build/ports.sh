@@ -139,12 +139,12 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 		FLAVOR=
 	fi
 	# check whether the package has already been built
-	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT} \
-	    -V PKGFILE FLAVOR=\${FLAVOR} \
+	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT} -V PKGFILE \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
 	    PRODUCT_PHP=${PRODUCT_PHP} \
 	    PACKAGES=${PACKAGESDIR} \
-	    UNAME_r=\$(freebsd-version))
+	    UNAME_r=\$(freebsd-version)) \
+	    FLAVOR=\${FLAVOR}
 	if [ -f \${PKGFILE} ]; then
 		continue
 	fi
@@ -161,12 +161,13 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 		fi
 	fi
 
-	make -s -C ${PORTSDIR}/\${PORT} install FLAVOR=\${FLAVOR} \
+	make -s -C ${PORTSDIR}/\${PORT} install \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
 	    PRODUCT_PHP=${PRODUCT_PHP} \
 	    PACKAGES=${PACKAGESDIR} \
 	    USE_PACKAGE_DEPENDS=yes \
-	    UNAME_r=\$(freebsd-version)
+	    UNAME_r=\$(freebsd-version) \
+	    FLAVOR=\${FLAVOR}
 
 	echo "${PORTS_LIST}" | while read PORT_DEPENDS; do
 		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS}" %n)
@@ -180,10 +181,11 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 		pkg create -no ${PACKAGESDIR}/All \${PKGNAME}
 	done
 
-	make -s -C ${PORTSDIR}/\${PORT} clean FLAVOR=\${FLAVOR} \
+	make -s -C ${PORTSDIR}/\${PORT} clean \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
 	    PRODUCT_PHP=${PRODUCT_PHP} \
-	    UNAME_r=\$(freebsd-version)
+	    UNAME_r=\$(freebsd-version) \
+	    FLAVOR=\${FLAVOR}
 
 	pkg set -yaA1
 	pkg set -yA0 \${PKG_ORIGIN}

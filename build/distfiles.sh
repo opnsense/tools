@@ -84,13 +84,19 @@ trap : 2
 
 if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTS_LIST=; fi
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
+	FLAVOR=\${PORT_ORIGIN##*@}
+	PORT=\${PORT_ORIGIN%%@*}
 	# XXX incomplete FLAVOR support, error in fetch-recursive
-	PORT_ORIGIN=\${PORT_ORIGIN%%@*}
+	#if [ \${FLAVOR} = \${PORT} ]; then
+		# not a flavour
+		FLAVOR=
+	#fi
 	echo ">>> Fetching \${PORT_ORIGIN}..."
-	make -C ${PORTSDIR}/\${PORT_ORIGIN} fetch-recursive \
+	make -C ${PORTSDIR}/\${PORT} fetch-recursive \
 	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
 	    PRODUCT_PHP=${PRODUCT_PHP} \
-	    UNAME_r=\$(freebsd-version)
+	    UNAME_r=\$(freebsd-version) \
+	    FLAVOR=\${FLAVOR}
 done
 EOF
 
