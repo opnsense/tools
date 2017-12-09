@@ -60,7 +60,7 @@ done
 )
 else
 	PLUGINS_LIST=$(
-for PLUGIN_ORIGIN in ${PLUGIN_LIST}; do
+for PLUGIN_ORIGIN in ${PLUGINS_LIST}; do
 	echo ${PLUGIN_ORIGIN}
 done
 )
