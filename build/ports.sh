@@ -109,28 +109,20 @@ for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
 	rm -f ${STAGEDIR}/${PKG}
 done
 
+pkg -c ${STAGEDIR} set -yaA1
+pkg -c ${STAGEDIR} autoremove -y
+
 MAKE_CONF="${CONFIGDIR}/make.conf"
 if [ -f ${MAKE_CONF} ]; then
 	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
 fi
 
+PORTS_LIST=$(echo ports-mgmt/pkg; echo "${PORTS_LIST}")
+
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
 if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then SELF=; fi
-PKG_ORIGIN="ports-mgmt/pkg"
-
-if ! pkg -N; then
-	make -s -C ${PORTSDIR}/\${PKG_ORIGIN} install \
-	    UNAME_r=\$(freebsd-version)
-fi
-
-pkg set -yaA1
-pkg set -yA0 \${PKG_ORIGIN}
-pkg autoremove -y
-
-pkg create -nao ${PACKAGESDIR}/All
-
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	FLAVOR=\${PORT_ORIGIN##*@}
 	PORT=\${PORT_ORIGIN%%@*}
@@ -188,7 +180,7 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	    FLAVOR=\${FLAVOR}
 
 	pkg set -yaA1
-	pkg set -yA0 \${PKG_ORIGIN}
+	pkg set -yA0 ports-mgmt/pkg
 	pkg autoremove -y
 done
 EOF
