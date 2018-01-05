@@ -33,12 +33,6 @@ SELF=skim
 
 setup_stage ${STAGEDIR}
 
-MAKE_ARGS="
-__MAKE_CONF=${CONFIGDIR}/make.conf
-PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
-PRODUCT_PHP=${PRODUCT_PHP}
-"
-
 if [ -z "${PORTS_LIST}" ]; then
 	PORTS_LIST=$(
 cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \
@@ -93,9 +87,14 @@ PORTS_NUM=0
 while read PORT_ORIGIN PORT_BROKEN; do
 	FLAVOR=${PORT_ORIGIN##*@}
 	PORT=${PORT_ORIGIN%%@*}
-	if [ ${FLAVOR} = ${PORT} ]; then
-		# not a flavour
-		FLAVOR=
+	MAKE_ARGS="
+__MAKE_CONF=${CONFIGDIR}/make.conf
+PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
+PRODUCT_PHP=${PRODUCT_PHP}
+"
+
+	if [ ${FLAVOR} != ${PORT} ]; then
+		MAKE_ARGS="${MAKE_ARGS} FLAVOR=${FLAVOR}"
 	fi
 
 	SOURCE=${PORTSDIR}
@@ -104,13 +103,12 @@ while read PORT_ORIGIN PORT_BROKEN; do
 	fi
 
 	PORT_DEPS=$(echo ${PORT}; ${ENV_FILTER} make -C ${SOURCE}/${PORT} \
-	    PORTSDIR=${SOURCE} FLAVOR=${FLAVOR} ${MAKE_ARGS} \
+	    PORTSDIR=${SOURCE} ${MAKE_ARGS} \
 	    all-depends-list | awk -F"${SOURCE}/" '{print $2}')
 
 	for PORT in ${PORT_DEPS}; do
 		PORT_MASTER=$(${ENV_FILTER} make -C ${SOURCE}/${PORT} \
-		    -V MASTER_PORT FLAVOR=${FLAVOR} PORTSDIR=${SOURCE} \
-		    ${MAKE_ARGS})
+		    -V MASTER_PORT PORTSDIR=${SOURCE} ${MAKE_ARGS})
 		if [ -n "${PORT_MASTER}" ]; then
 			PORT_DEPS="${PORT_DEPS} ${PORT_MASTER}"
 		fi
