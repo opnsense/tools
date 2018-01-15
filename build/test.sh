@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2018 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -41,8 +41,8 @@ setup_clone ${STAGEDIR} ${PLUGINSDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
-# XXX disable plugins, quagga and frr conflict
-install_packages ${STAGEDIR} ${PRODUCT_CORE} # ${PRODUCT_PLUGIN}
+# XXX disable plugins, quagga and frr conflict, os-debug for tests
+install_packages ${STAGEDIR} ${PRODUCT_CORE} os-debug # ${PRODUCT_PLUGIN}
 
 echo ">>> Running packages test suite..."
 chroot ${STAGEDIR} /bin/sh -es <<EOF
