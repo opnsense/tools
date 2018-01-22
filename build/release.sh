@@ -68,6 +68,8 @@ echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
 (cd ${STAGEDIR}/work && sha256 ${PRODUCT_RELEASE}-*) \
     > ${STAGEDIR}/tmp/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256
 
+echo "done"
+
 for IMAGE in $(find ${STAGEDIR}/work -name "${PRODUCT_RELEASE}-*"); do
 	sign_image ${IMAGE} ${STAGEDIR}/tmp/$(basename ${IMAGE}).sig
 done
@@ -80,8 +82,6 @@ if [ -f "${PRODUCT_PRIVKEY}" ]; then
 	cp "${PRODUCT_PUBKEY}" \
 	    "${STAGEDIR}/work/${PRODUCT_NAME}-${PRODUCT_SETTINGS}.pub"
 fi
-
-echo "done"
 
 echo -n ">>> Bundling images for ${PRODUCT_RELEASE}... "
 tar -C ${STAGEDIR}/work -cf ${RELEASE_SET} .
