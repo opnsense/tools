@@ -51,7 +51,7 @@ lint: lint-steps lint-scripts
 
 TOOLSDIR?=	/usr/tools
 TOOLSBRANCH?=	master
-SETTINGS?=	18.1
+SETTINGS?=	17.7
 
 CONFIG?=	${TOOLSDIR}/config/${SETTINGS}/build.conf
 
