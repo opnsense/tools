@@ -393,6 +393,10 @@ Nightly builds are the only builds that write and archive logs under:
 with ./latest pointing to the last nightly build run.  Older logs are
 archived and available for a number of runs for retrospective analysis.
 
+To push sets and images to a remote location use the upload target:
+
+    # make upload-<user@sshtarget>,<set_or_image>[,...]
+
 Last but not least, a refresh of OPNsense core and plugins on package
 sets is invoked using:
 
