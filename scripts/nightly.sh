@@ -4,6 +4,10 @@
 
 eval "$(make print-LOGSDIR,PRODUCT_VERSION)"
 
+for RECYCLE in $(cd ${LOGSDIR}; find . -type f | sort -r | tail -n +7); do
+	(cd ${LOGSDIR}; rm ${RECYCLE})
+done
+
 (make clean-obj 2>&1) > /dev/null
 
 mkdir -p ${LOGSDIR}/${PRODUCT_VERSION}
