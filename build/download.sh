@@ -44,7 +44,7 @@ shift
 download()
 {
 	echo ">>> Downloading ${1}..."
-	scp ${SSHTARGET}:"${2}/${3}" ${2}
+	scp -r ${SSHTARGET}:"${2}/${3}" ${2}
 }
 
 for ARG in ${@}; do
