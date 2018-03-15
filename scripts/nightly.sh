@@ -4,16 +4,9 @@
 
 eval "$(make print-LOGSDIR,PRODUCT_VERSION)"
 
-for DIR in $(find ${LOGSDIR} -type d -depth 1); do
-	DIR=$(basename ${DIR})
-	tar -C ${LOGSDIR} -czf ${LOGSDIR}/${DIR}.tgz ${DIR} \
-            && rm -r ${LOGSDIR}/${DIR}
-done
-
 (make clean-obj 2>&1) > /dev/null
 
 mkdir -p ${LOGSDIR}/${PRODUCT_VERSION}
-(cd ${LOGSDIR}; ln -sfn ${PRODUCT_VERSION} latest)
 
 for STAGE in update info base kernel xtools distfiles; do
 	# we don't normally clean these stages
@@ -29,3 +22,7 @@ for FLAVOUR in OpenSSL LibreSSL; do
 	(time make test FLAVOUR=${FLAVOUR} 2>&1) \
 	    > ${LOGSDIR}/${PRODUCT_VERSION}/test-${FLAVOUR}.log
 done
+
+tar -C ${LOGSDIR} -czf ${LOGSDIR}/${PRODUCT_VERSION}.tgz ${PRODUCT_VERSION}
+rm -rf ${LOGSDIR}/latest
+mv ${LOGSDIR}/${PRODUCT_VERSION} ${LOGSDIR}/latest

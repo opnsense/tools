@@ -59,7 +59,7 @@ for ARG in ${@}; do
 		;;
 	logs)
 		sh ./clean.sh ${ARG}
-		download ${ARG} ${LOGSDIR} "[0-9]*.tgz"
+		download ${ARG} ${LOGSDIR} "[0-9]*"
 		;;
 	packages|release)
 		sh ./clean.sh ${ARG}
