@@ -31,20 +31,10 @@ SELF=upload
 
 . ./common.sh
 
-if [ -z "${1}" ]; then
-	echo ">> Missing upload target"
-	exit 1
-fi
-
-SSHTARGET=${1}
-
-# remove first argument
-shift
-
 upload()
 {
-	echo ">>> Uploading ${1}..."
-	(cd ${2}; scp ${3} ${SSHTARGET}:)
+	echo ">>> Uploading ${1} to ${PRODUCT_SERVER}..."
+	(cd ${2}; scp ${3} ${PRODUCT_SERVER}:)
 }
 
 for ARG in ${@}; do

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2018 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="a:B:b:C:c:d:E:e:F:f:G:g:H:K:k:L:l:m:n:O:o:P:p:Q:q:R:S:s:T:t:U:u:v:V:"
+OPTS="a:B:b:C:c:d:E:e:F:f:G:g:H:h:K:k:L:l:m:n:O:o:P:p:Q:q:R:r:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -72,6 +72,9 @@ while getopts ${OPTS} OPT; do
 		;;
 	H)
 		export COREENV=${OPTARG}
+		;;
+	h)
+		export PLUGINENV=${OPTARG}
 		;;
 	K)
 		if [ -n "${OPTARG}" ]; then
@@ -120,6 +123,9 @@ while getopts ${OPTS} OPT; do
 		;;
 	R)
 		export PORTSREFDIR=${OPTARG}
+		;;
+	r)
+		export PRODUCT_SERVER=${OPTARG}
 		;;
 	S)
 		export SRCDIR=${OPTARG}
@@ -173,6 +179,7 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_MIRROR}" -o \
     -z "${PRODUCT_DEVICE}" -o \
     -z "${PRODUCT_SPEED}" -o \
+    -z "${PRODUCT_SERVER}" -o \
     -z "${PRODUCT_PHP}" -o \
     -z "${PRODUCT_KERNEL}" -o \
     -z "${PRODUCT_GITBASE}" -o \

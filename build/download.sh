@@ -31,20 +31,10 @@ SELF=download
 
 . ./common.sh
 
-if [ -z "${1}" ]; then
-	echo ">> Missing download target"
-	exit 1
-fi
-
-SSHTARGET=${1}
-
-# remove first argument
-shift
-
 download()
 {
-	echo ">>> Downloading ${1}..."
-	scp -r ${SSHTARGET}:"${2}/${3}" ${2}
+	echo ">>> Downloading ${1} from ${PRODUCT_SERVER}..."
+	scp ${PRODUCT_SERVER}:"${2}/${3}" ${2}
 }
 
 for ARG in ${@}; do

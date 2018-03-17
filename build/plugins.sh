@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2018 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -83,9 +83,11 @@ for BRANCH in master ${PLUGINSBRANCH}; do
 	setup_copy ${STAGEDIR} ${PLUGINSDIR}
 	git_reset ${STAGEDIR}${PLUGINSDIR} ${BRANCH}
 
+	PLUGIN_ARGS="PLUGIN_ARCH=${PRODUCT_ARCH} ${PLUGINENV}"
+
 	for PLUGIN in ${PLUGINS_LIST}; do
-		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} name)
-		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} depends)
+		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} name)
+		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} depends)
 
 		if search_packages ${STAGEDIR} ${PLUGIN_NAME}; then
 			# already built
@@ -93,7 +95,7 @@ for BRANCH in master ${PLUGINSBRANCH}; do
 		fi
 
 		install_packages ${STAGEDIR} ${PLUGIN_DEPS}
-		custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN}
+		custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN} "${PLUGIN_ARGS}"
 	done
 done
 
