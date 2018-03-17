@@ -395,14 +395,15 @@ archived and available for a number of runs for retrospective analysis.
 
 To push sets and images to a remote location use the upload target:
 
-    # make upload-<user@sshtarget>,<set_or_image>[,...]
+    # make upload-<set_or_image>[,...]
 
 To pull sets and images from a remote location use the download target:
 
-    # make download-<user@sshtarget>,<set_or_image_or_logs>[,...]
+    # make download-<set_or_image_or_logs>[,...]
 
 Logs can be downloaded as well for local inspection.  Note that download
-like prefetch will purge all locally existing targets.
+like prefetch will purge all locally existing targets.  Use SERVER to
+specify the remote end, e.g. SERVER=user@does.not.exist
 
 Last but not least, a refresh of OPNsense core and plugins on package
 sets is invoked using:
