@@ -4,7 +4,7 @@
 
 eval "$(make print-LOGSDIR,PRODUCT_VERSION)"
 
-for RECYCLE in $(cd ${LOGSDIR}; find . -type f | sort -r | tail -n +7); do
+for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | sort -r | tail -n +7); do
 	(cd ${LOGSDIR}; rm ${RECYCLE})
 done
 
