@@ -41,7 +41,7 @@ for ARG in ${@}; do
 	case ${ARG} in
 	arm|dvd|nano|serial|vga|vm)
 		sh ./clean.sh ${ARG}
-		download ${ARG} ${IMAGESDIR} "${ARG}-*-${PRODUCT_FLAVOUR}-*"
+		download ${ARG} ${IMAGESDIR} "*-${PRODUCT_FLAVOUR}-${ARG}-*"
 		;;
 	base|kernel)
 		sh ./clean.sh ${ARG}

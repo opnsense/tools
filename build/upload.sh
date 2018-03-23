@@ -39,14 +39,14 @@ upload()
 
 for ARG in ${@}; do
 	case ${ARG} in
+	arm|dvd|nano|serial|vga|vm)
+		upload ${ARG} ${IMAGESDIR} "*-${PRODUCT_FLAVOUR}-${ARG}-*"
+		;;
 	base|kernel)
 		upload ${ARG} ${SETSDIR} "${ARG}-*"
 		;;
 	packages|release)
 		upload ${ARG} ${SETSDIR} "${ARG}-*-${PRODUCT_FLAVOUR}-*"
-		;;
-	arm|dvd|nano|serial|vga|vm)
-		upload ${ARG} ${IMAGESDIR} "${ARG}-*-${PRODUCT_FLAVOUR}-*"
 		;;
 	esac
 done
