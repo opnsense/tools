@@ -63,7 +63,10 @@ NAME?=		OPNsense
 TYPE?=		${NAME:tl}
 SUFFIX?=	#-devel
 FLAVOUR?=	OpenSSL
+PERL?=		5.24
 PHP?=		71
+PYTHON?=	27
+RUBY?=		25
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
 KERNEL?=	SMP
@@ -123,6 +126,10 @@ VERBOSE_FLAGS=	-x
 VERBOSE_HIDDEN=	@
 .endif
 
+.for VERSION in PERL PHP PYTHON RUBY
+VERSIONS+=	PRODUCT_${VERSION}=\${${VERSION}}
+.endfor
+
 # Expand build steps to launch into the selected
 # script with the proper build options set:
 
@@ -138,8 +145,8 @@ ${STEP}: lint-steps
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
 	    -H "${COREENV}" -Q "${QUICK}" -u "${UEFI:tl}" -U "${SUFFIX}" \
-	    -V "${ADDITIONS}" -O "${GITBASE}" -q "${PHP}" -r "${SERVER}" \
-	    -h "${PLUGINENV}" ${${STEP}_ARGS}
+	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
+	    -q "${VERSIONS}" -h "${PLUGINENV}" ${${STEP}_ARGS}
 .endfor
 
 .for SCRIPT in ${SCRIPTS}

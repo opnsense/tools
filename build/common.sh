@@ -119,7 +119,9 @@ while getopts ${OPTS} OPT; do
 		export PRODUCT_QUICK=${OPTARG}
 		;;
 	q)
-		export PRODUCT_PHP=${OPTARG}
+		for VERSION in ${OPTARG}; do
+			eval "export ${VERSION}"
+		done
 		;;
 	R)
 		export PORTSREFDIR=${OPTARG}
@@ -181,6 +183,9 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_SPEED}" -o \
     -z "${PRODUCT_SERVER}" -o \
     -z "${PRODUCT_PHP}" -o \
+    -z "${PRODUCT_PERL}" -o \
+    -z "${PRODUCT_PYTHON}" -o \
+    -z "${PRODUCT_RUBY}" -o \
     -z "${PRODUCT_KERNEL}" -o \
     -z "${PRODUCT_GITBASE}" -o \
     -z "${PLUGINSBRANCH}" -o \
