@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2018 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -84,18 +84,21 @@ trap : 2
 
 if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTS_LIST=; fi
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
+	MAKE_ARGS="
+PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
+PRODUCT_PERL=${PRODUCT_PERL}
+PRODUCT_PHP=${PRODUCT_PHP}
+PRODUCT_PYTHON=${PRODUCT_PYTHON}
+PRODUCT_RUBY=${PRODUCT_RUBY}
+UNAME_r=\$(freebsd-version)
+"
 	echo ">>> Fetching \${PORT_ORIGIN}..."
 	PORT=\${PORT_ORIGIN%%@*}
 	PORT_DEPENDS=\$(make -C ${PORTSDIR}/\${PORT} all-depends-list \
-	    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
-	    PRODUCT_PHP=${PRODUCT_PHP} \
-	    UNAME_r=\$(freebsd-version))
+	    \${MAKE_ARGS})
 	for PORT_DEPEND in \${PORT_DEPENDS}; do
 		PORT_DEPEND=\${PORT_DEPEND%%@*}
-		make -C \${PORT_DEPEND} fetch \
-		    PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR} \
-		    PRODUCT_PHP=${PRODUCT_PHP} \
-		    UNAME_r=\$(freebsd-version)
+		make -C \${PORT_DEPEND} fetch \${MAKE_ARGS})
 	done
 done
 EOF
