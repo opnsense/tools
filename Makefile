@@ -126,8 +126,8 @@ VERBOSE_FLAGS=	-x
 VERBOSE_HIDDEN=	@
 .endif
 
-.for VERSION in PERL PHP PYTHON RUBY
-VERSIONS+=	PRODUCT_${VERSION}=\${${VERSION}}
+.for _VERSION in PERL PHP PYTHON RUBY
+VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 .endfor
 
 # Expand build steps to launch into the selected
