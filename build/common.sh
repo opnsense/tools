@@ -119,8 +119,8 @@ while getopts ${OPTS} OPT; do
 		export PRODUCT_QUICK=${OPTARG}
 		;;
 	q)
-		for VERSION in ${OPTARG}; do
-			eval "export ${VERSION}"
+		for _VERSION in ${OPTARG}; do
+			eval "export ${_VERSION}"
 		done
 		;;
 	R)
