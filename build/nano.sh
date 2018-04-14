@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2018 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2004-2009 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -55,7 +55,7 @@ setup_entropy ${STAGEDIR}
 
 cat > ${STAGEDIR}/etc/fstab << EOF
 # Device		Mountpoint	FStype	Options		Dump	Pass#
-/dev/ufs/${NANOLABEL}	/		ufs	rw		1	1
+/dev/ufs/${NANOLABEL}	/		ufs	rw		1	1	# notrim
 EOF
 
 makefs -t ffs -s ${NANOSIZE} -B little \
