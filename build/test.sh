@@ -60,11 +60,10 @@ make -C${PLUGINSDIR} lint
 make -C${PLUGINSDIR} style
 EOF
 
-# XXX make test requires installed components, version check needed
-
 echo ">>> Running ${COREDIR} test suite..."
 chroot ${STAGEDIR} /bin/sh -es <<EOF
 make -C${COREDIR} lint
 make -C${COREDIR} style
+# XXX does not work well with PRODUCT_SUFFIX set
 make -C${COREDIR} test
 EOF
