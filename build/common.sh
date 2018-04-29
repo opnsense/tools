@@ -781,7 +781,7 @@ clean_packages()
 setup_packages()
 {
 	extract_packages ${1}
-	install_packages ${@} ${PRODUCT_CORE} ${PRODUCT_ADDITIONS}
+	install_packages ${@} ${PRODUCT_ADDITIONS} ${PRODUCT_CORE}
 	clean_packages ${1}
 }
 
