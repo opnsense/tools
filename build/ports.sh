@@ -122,7 +122,7 @@ PORTS_LIST=$(echo ports-mgmt/pkg; echo "${PORTS_LIST}")
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
-if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then SELF=; fi
+${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || true
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	FLAVOR=\${PORT_ORIGIN##*@}
 	PORT=\${PORT_ORIGIN%%@*}
@@ -146,20 +146,31 @@ UNAME_r=\$(freebsd-version)
 		continue
 	fi
 
-	# check whether the package is available as an older version
+	# check whether the package is available
+	# under a different version number
 	PKGNAME=\$(basename \${PKGFILE})
 	PKGNAME=\${PKGNAME%%-[0-9]*}.txz
 	PKGLINK=${PACKAGESDIR}/Latest/\${PKGNAME}
 	if [ -L \${PKGLINK} ]; then
 		PKGFILE=\$(readlink -f \${PKGLINK} || true)
 		if [ -f \${PKGFILE} ]; then
-			echo ">>> Ignored new version of \${PORT_ORIGIN}" >> /.pkg-warn
+			PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -V PKGVERSION \${MAKE_ARGS})
+			echo ">>> Skipped version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-warn
 			continue
 		fi
 	fi
 
-	make -s -C ${PORTSDIR}/\${PORT} install \
-	    USE_PACKAGE_DEPENDS=yes \${MAKE_ARGS}
+	if ! make -s -C ${PORTSDIR}/\${PORT} install \
+	    USE_PACKAGE_DEPENDS=yes \${MAKE_ARGS}; then
+		PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -V PKGVERSION \${MAKE_ARGS})
+		echo ">>> Aborted version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-err
+		# XXX Eventually continue now that
+		# we can log the progress in pkg-err.
+		# We know that the build is flawed,
+		# but with a bit of luck later build
+		# progress is not lost forever.  :)
+		exit 1
+	fi
 
 	echo "${PORTS_LIST}" | while read PORT_DEPENDS; do
 		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS}" %n)
@@ -184,14 +195,15 @@ EOF
 # unblock SIGINT
 trap - 2
 
-bundle_packages ${STAGEDIR} "${SELF}" ports plugins core
+bundle_packages ${STAGEDIR} ${SELF} ports plugins core
 
 if [ -f ${STAGEDIR}/.pkg-warn ]; then
 	echo ">>> WARNING: The build may have integrity issues!"
 	cat ${STAGEDIR}/.pkg-warn
 fi
 
-if [ "${SELF}" != "ports" ]; then
-	echo ">>> The ports build did not finish properly :("
+if [ -f ${STAGEDIR}/.pkg-err ]; then
+	echo ">>> ERROR: The build encountered fatal issues!"
+	cat ${STAGEDIR}/.pkg-err
 	exit 1
 fi
