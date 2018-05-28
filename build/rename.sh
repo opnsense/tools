@@ -36,7 +36,7 @@ for ARG in ${@}; do
 	arm)
 		echo ">>> Renaming arm image: ${VERSION}"
 		mv ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.img \
-		    ${IMAGESDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.img
+		    ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${VERSION}-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.img
 		;;
 	base)
 		setup_stage ${STAGEDIR}
@@ -62,7 +62,7 @@ for ARG in ${@}; do
 	dvd)
 		echo ">>> Renaming dvd image: ${VERSION}"
 		mv ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-dvd-${PRODUCT_ARCH}.iso \
-		    ${IMAGESDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-dvd-${PRODUCT_ARCH}.iso
+		    ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${VERSION}-${PRODUCT_FLAVOUR}-dvd-${PRODUCT_ARCH}.iso
 		;;
 	kernel)
 		setup_stage ${STAGEDIR}
@@ -83,7 +83,7 @@ for ARG in ${@}; do
 	nano)
 		echo ">>> Renaming nano image: ${VERSION}"
 		mv ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-nano-${PRODUCT_ARCH}.img \
-		    ${IMAGESDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-nano-${PRODUCT_ARCH}.img
+		    ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${VERSION}-${PRODUCT_FLAVOUR}-nano-${PRODUCT_ARCH}.img
 		;;
 	packages)
 		echo ">>> Renaming packages set: ${VERSION}"
@@ -95,18 +95,18 @@ for ARG in ${@}; do
 	serial)
 		echo ">>> Renaming serial image: ${VERSION}"
 		mv ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-serial-${PRODUCT_ARCH}.img \
-		    ${IMAGESDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-serial-${PRODUCT_ARCH}.img
+		    ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${VERSION}-${PRODUCT_FLAVOUR}-serial-${PRODUCT_ARCH}.img
 		;;
 	vga)
 		echo ">>> Renaming vga image: ${VERSION}"
 		mv ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-vga-${PRODUCT_ARCH}.img \
-		    ${IMAGESDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-vga-${PRODUCT_ARCH}.img
+		    ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${VERSION}-${PRODUCT_FLAVOUR}-vga-${PRODUCT_ARCH}.img
 		;;
 	vm)
 		echo ">>> Renaming vm set: ${VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "*-${PRODUCT_FLAVOUR}-vm-${PRODUCT_ARCH}.*"); do
-			mv ${FILE} ${SETSDIR}/${PRODUCT_NAME}-${VERSION}-${PRODUCT_FLAVOUR}-vm-${FILE##*-}
+			mv ${FILE} ${SETSDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${VERSION}-${PRODUCT_FLAVOUR}-vm-${FILE##*-}
 		done
 		;;
 	esac
