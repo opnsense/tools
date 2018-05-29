@@ -21,10 +21,10 @@ for FLAVOUR in OpenSSL LibreSSL; do
 	if [ -z "${1}" ]; then
 		(make clean-packages FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
 	fi
-	(time make packages FLAVOUR=${FLAVOUR} 2>&1) \
-	    > ${LOGSDIR}/${PRODUCT_VERSION}/packages-${FLAVOUR}.log
-	(time make test FLAVOUR=${FLAVOUR} 2>&1) \
-	    > ${LOGSDIR}/${PRODUCT_VERSION}/test-${FLAVOUR}.log
+	for STAGE in ports plugins core test; do
+		(time make ${STAGE} FLAVOUR=${FLAVOUR} 2>&1) \
+		    > ${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${FLAVOUR}.log
+	done
 done
 
 tar -C ${LOGSDIR} -czf ${LOGSDIR}/${PRODUCT_VERSION}.tgz ${PRODUCT_VERSION}
