@@ -158,6 +158,7 @@
 ./etc/inetd.conf
 ./etc/libalias.conf
 ./etc/libmap.conf
+./etc/locate.rc
 ./etc/login.access
 ./etc/login.conf
 ./etc/login.conf.db
@@ -241,6 +242,7 @@
 ./etc/periodic/security/900.tcpwrap
 ./etc/periodic/security/security.functions
 ./etc/periodic/weekly/
+./etc/periodic/weekly/310.locate
 ./etc/periodic/weekly/320.whatis
 ./etc/periodic/weekly/330.catman
 ./etc/periodic/weekly/340.noid
@@ -853,6 +855,7 @@
 ./usr/bin/llvm-tblgen
 ./usr/bin/locale
 ./usr/bin/localedef
+./usr/bin/locate
 ./usr/bin/lock
 ./usr/bin/lockf
 ./usr/bin/logger
@@ -3822,6 +3825,11 @@
 ./usr/libexec/ld-elf.so.1
 ./usr/libexec/lint1
 ./usr/libexec/lint2
+./usr/libexec/locate.bigram
+./usr/libexec/locate.code
+./usr/libexec/locate.concatdb
+./usr/libexec/locate.mklocatedb
+./usr/libexec/locate.updatedb
 ./usr/libexec/lpr/
 ./usr/libexec/lpr/lpf
 ./usr/libexec/lpr/ru/
@@ -7052,6 +7060,7 @@
 ./usr/share/man/man1/ln.1.gz
 ./usr/share/man/man1/locale.1.gz
 ./usr/share/man/man1/localedef.1.gz
+./usr/share/man/man1/locate.1.gz
 ./usr/share/man/man1/lock.1.gz
 ./usr/share/man/man1/lockf.1.gz
 ./usr/share/man/man1/lockstat.1.gz
@@ -13827,6 +13836,7 @@
 ./usr/share/man/man8/lmcconfig.8.gz
 ./usr/share/man/man8/loader.4th.8.gz
 ./usr/share/man/man8/loader.8.gz
+./usr/share/man/man8/locate.updatedb.8.gz
 ./usr/share/man/man8/lockd.8.gz
 ./usr/share/man/man8/lpc.8.gz
 ./usr/share/man/man8/lpd.8.gz
@@ -14032,6 +14042,7 @@
 ./usr/share/man/man8/uefisign.8.gz
 ./usr/share/man/man8/ugidfw.8.gz
 ./usr/share/man/man8/umount.8.gz
+./usr/share/man/man8/updatedb.8.gz
 ./usr/share/man/man8/usbconfig.8.gz
 ./usr/share/man/man8/usbdump.8.gz
 ./usr/share/man/man8/utx.8.gz
@@ -18927,6 +18938,7 @@
 ./var/db/etcupdate/current/etc/inetd.conf
 ./var/db/etcupdate/current/etc/libalias.conf
 ./var/db/etcupdate/current/etc/libmap.conf
+./var/db/etcupdate/current/etc/locate.rc
 ./var/db/etcupdate/current/etc/login.access
 ./var/db/etcupdate/current/etc/login.conf
 ./var/db/etcupdate/current/etc/mac.conf
@@ -19005,6 +19017,7 @@
 ./var/db/etcupdate/current/etc/periodic/security/900.tcpwrap
 ./var/db/etcupdate/current/etc/periodic/security/security.functions
 ./var/db/etcupdate/current/etc/periodic/weekly/
+./var/db/etcupdate/current/etc/periodic/weekly/310.locate
 ./var/db/etcupdate/current/etc/periodic/weekly/320.whatis
 ./var/db/etcupdate/current/etc/periodic/weekly/330.catman
 ./var/db/etcupdate/current/etc/periodic/weekly/340.noid
@@ -19233,6 +19246,7 @@
 ./var/db/freebsd-update/
 ./var/db/hyperv/
 ./var/db/ipf/
+./var/db/locate.database
 ./var/db/mergemaster.mtree
 ./var/db/ntp/
 ./var/db/pkg/
