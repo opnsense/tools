@@ -98,7 +98,7 @@ UNAME_r=\$(freebsd-version)
 	    \${MAKE_ARGS})
 	for PORT_DEPEND in \${PORT_DEPENDS}; do
 		PORT_DEPEND=\${PORT_DEPEND%%@*}
-		make -C \${PORT_DEPEND} fetch \${MAKE_ARGS})
+		make -C \${PORT_DEPEND} fetch \${MAKE_ARGS}
 	done
 done
 EOF
