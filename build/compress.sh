@@ -34,10 +34,10 @@ SELF=compress
 for ARG in ${@}; do
 	case ${ARG} in
 	arm|dvd|nano|serial|vga|vm)
-		for FILE in $(find ${IMAGESDIR} -name \
+		for IMAGE in $(find ${IMAGESDIR} -name \
 		    "*-${PRODUCT_FLAVOUR}-${ARG}-*" \! -name "*.bz2"); do
 			echo -n ">>> Compressing ${ARG} image... "
-			bzip2 ${FILE}
+			bzip2 ${IMAGE}
 			echo "done"
 		done
 		;;
