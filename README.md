@@ -374,6 +374,14 @@ they can be printed selectively using:
 
     # make print-<variable1>[,<variable2>]
 
+Compressing images
+------------------
+
+For distribution images are compressed ussing bzip2(1).  This can
+be invoked manually using:
+
+    # make compress-<image1>[,<image2>]
+
 Composite build steps
 ---------------------
 
