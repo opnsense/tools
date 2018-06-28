@@ -377,8 +377,8 @@ they can be printed selectively using:
 Compressing images
 ------------------
 
-For distribution images are compressed ussing bzip2(1).  This can
-be invoked manually using:
+Images are using bzip2(1) for distribution.  This can be invoked
+manually using:
 
     # make compress-<image1>[,<image2>]
 
