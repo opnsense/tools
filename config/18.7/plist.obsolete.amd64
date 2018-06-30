@@ -233,7 +233,6 @@
 /usr/include/kx509_asn1.h
 /usr/include/lzma/lzma.h
 /usr/include/machine/apicvar.h
-/usr/include/net/if_stf.h
 /usr/include/net/pf_mtag.h
 /usr/include/net/zlib.h
 /usr/include/net/zutil.h

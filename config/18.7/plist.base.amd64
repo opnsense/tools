@@ -2053,6 +2053,7 @@
 ./usr/include/net/if_pflog.h
 ./usr/include/net/if_pfsync.h
 ./usr/include/net/if_sppp.h
+./usr/include/net/if_stf.h
 ./usr/include/net/if_tap.h
 ./usr/include/net/if_tapvar.h
 ./usr/include/net/if_tun.h
