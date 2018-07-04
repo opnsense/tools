@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2018 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -35,7 +35,7 @@ for ARG in ${@}; do
 	case ${ARG} in
 	arm)
 		echo ">>> Removing arm image"
-		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.img
+		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.img*
 		;;
 	base)
 		echo ">>> Removing base set"
@@ -55,7 +55,7 @@ for ARG in ${@}; do
 		;;
 	dvd)
 		echo ">>> Removing dvd image"
-		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-dvd-${PRODUCT_ARCH}.iso
+		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-dvd-${PRODUCT_ARCH}.iso*
 		;;
 	images)
 		setup_stage ${IMAGESDIR}
@@ -69,7 +69,7 @@ for ARG in ${@}; do
 		;;
 	nano)
 		echo ">>> Removing nano image"
-		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-nano-${PRODUCT_ARCH}.img
+		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-nano-${PRODUCT_ARCH}.img*
 		;;
 	obj)
 		if [ -d ${STAGEDIRPREFIX}${TOOLSDIR} ]; then
@@ -101,7 +101,7 @@ for ARG in ${@}; do
 		;;
 	serial)
 		echo ">>> Removing serial image"
-		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-serial-${PRODUCT_ARCH}.img
+		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-serial-${PRODUCT_ARCH}.img*
 		;;
 	sets)
 		setup_stage ${SETSDIR}
@@ -114,7 +114,7 @@ for ARG in ${@}; do
 		;;
 	vga)
 		echo ">>> Removing vga image"
-		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-vga-${PRODUCT_ARCH}.img
+		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-vga-${PRODUCT_ARCH}.img*
 		;;
 	vm)
 		echo ">>> Removing vm image"
