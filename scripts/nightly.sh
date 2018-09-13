@@ -30,3 +30,5 @@ done
 tar -C ${LOGSDIR} -czf ${LOGSDIR}/${PRODUCT_VERSION}.tgz ${PRODUCT_VERSION}
 rm -rf ${LOGSDIR}/latest
 mv ${LOGSDIR}/${PRODUCT_VERSION} ${LOGSDIR}/latest
+
+make upload-logs SERVER=${SERVER} UPLOADDIR=${UPLOADDIR}

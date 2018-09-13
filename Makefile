@@ -83,6 +83,7 @@ MIRRORS?=	https://opnsense.c0urier.net \
 		http://mirror.fra10.de.leaseweb.net/opnsense \
 		http://mirror.ams1.nl.leaseweb.net/opnsense
 SERVER?=	user@does.not.exist
+UPLOADDIR?=
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
 STAGEDIRPREFIX?=/usr/obj
@@ -146,7 +147,8 @@ ${STEP}: lint-steps
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
 	    -H "${COREENV}" -Q "${QUICK}" -u "${UEFI:tl}" -U "${SUFFIX}" \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
-	    -q "${VERSIONS}" -h "${PLUGINENV}" ${${STEP}_ARGS}
+	    -q "${VERSIONS}" -h "${PLUGINENV}" -I "${UPLOADDIR}" \
+	    ${${STEP}_ARGS}
 .endfor
 
 .for SCRIPT in ${SCRIPTS}

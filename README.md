@@ -413,6 +413,9 @@ Logs can be downloaded as well for local inspection.  Note that download
 like prefetch will purge all locally existing targets.  Use SERVER to
 specify the remote end, e.g. SERVER=user@does.not.exist
 
+Additionally, UPLOADDIR can be used to specify a remote location.  At
+this point only "logs" upload cleares and creates directories on the fly.
+
 Last but not least, a refresh of OPNsense core and plugins on package
 sets is invoked using:
 

@@ -34,7 +34,7 @@ SELF=upload
 upload()
 {
 	echo ">>> Uploading ${1} to ${PRODUCT_SERVER}..."
-	(cd ${2}; scp ${3} ${PRODUCT_SERVER}:)
+	(cd ${2}; scp ${3} ${PRODUCT_SERVER}:${UPLOADDIR})
 }
 
 for ARG in ${@}; do
@@ -44,6 +44,19 @@ for ARG in ${@}; do
 		;;
 	base|kernel)
 		upload ${ARG} ${SETSDIR} "${ARG}-*"
+		;;
+	logs)
+		if [ -z "${UPLOADDIR}" -o "${UPLOADDIR}" = "/" ]; then
+			echo ">>> Abort due to dangerous UPLOADDIR=\"${UPLOADDIR}\""
+			exit 1
+		fi
+		_UPLOADDIR="${UPLOADDIR}/${PRODUCT_SETTINGS}/${PRODUCT_ARCH}/logs"
+		ssh ${PRODUCT_SERVER} mkdir -p "${_UPLOADDIR}"
+		ssh ${PRODUCT_SERVER} rm -rf "${_UPLOADDIR}/*"
+		for LOG in $(find ${LOGSDIR} -name "*.tgz"); do
+			cat ${LOG} | ssh ${PRODUCT_SERVER} \
+			    tar -C "${_UPLOADDIR}" -xzf -
+		done
 		;;
 	packages|release)
 		upload ${ARG} ${SETSDIR} "${ARG}-*-${PRODUCT_FLAVOUR}-*"
