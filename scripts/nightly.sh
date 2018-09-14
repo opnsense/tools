@@ -22,8 +22,9 @@ for FLAVOUR in OpenSSL LibreSSL; do
 		(make clean-packages FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
 	fi
 	for STAGE in ports plugins core test; do
-		(time make ${STAGE} FLAVOUR=${FLAVOUR} 2>&1) \
-		    > ${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${FLAVOUR}.log
+		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${FLAVOUR}.log
+		(time make ${STAGE} FLAVOUR=${FLAVOUR} 2>&1) > ${LOG}
+		tail -n 1000 ${LOG} > ${LOG}.tail
 	done
 done
 
