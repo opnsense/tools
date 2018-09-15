@@ -46,20 +46,7 @@ for ARG in ${@}; do
 		upload ${ARG} ${SETSDIR} "${ARG}-*"
 		;;
 	logs)
-		if [ -z "${UPLOADDIR}" -o "${UPLOADDIR}" = "/" ]; then
-			echo ">>> Abort due to dangerous UPLOADDIR=\"${UPLOADDIR}\""
-			exit 1
-		fi
-		_UPLOADDIR="${UPLOADDIR}/${PRODUCT_SETTINGS}/${PRODUCT_ARCH}/logs"
-		echo ">>> Preparing ${_UPLOADDIR}"
-		ssh ${PRODUCT_SERVER} mkdir -p "${_UPLOADDIR}"
-		ssh ${PRODUCT_SERVER} rm -rf "${_UPLOADDIR}/*"
-		for LOG in $(find ${LOGSDIR} -name "*.tgz"); do
-			echo -n ">>> Uploading ${LOG##*/}... "
-			cat ${LOG} | ssh ${PRODUCT_SERVER} \
-			    tar -C "${_UPLOADDIR}" -xzf -
-			echo "done"
-		done
+		upload ${ARG} ${LOGSDIR} "[0-9]*"
 		;;
 	packages|release)
 		upload ${ARG} ${SETSDIR} "${ARG}-*-${PRODUCT_FLAVOUR}-*"
