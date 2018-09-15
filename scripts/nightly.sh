@@ -2,7 +2,7 @@
 
 # nightly build script
 
-eval "$(make print-LOGSDIR,PRODUCT_VERSION)"
+eval "$(make print-LOGSDIR,PRODUCT_VERSION,PRODUCT_ARCH)"
 
 for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | sort -r | tail -n +7); do
 	(cd ${LOGSDIR}; rm ${RECYCLE})
@@ -28,7 +28,7 @@ for FLAVOUR in OpenSSL LibreSSL; do
 	done
 done
 
-tar -C ${LOGSDIR} -czf ${LOGSDIR}/${PRODUCT_VERSION}.tgz ${PRODUCT_VERSION}
+tar -C ${LOGSDIR} -czf ${LOGSDIR}/${PRODUCT_VERSION}-${PRODUCT_ARCH}.tgz ${PRODUCT_VERSION}
 rm -rf ${LOGSDIR}/latest
 mv ${LOGSDIR}/${PRODUCT_VERSION} ${LOGSDIR}/latest
 
