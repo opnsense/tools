@@ -552,9 +552,6 @@
 /usr/libexec/sftp-server
 /usr/libexec/ssh-keysign
 /usr/libexec/ssh-pkcs11-helper
-/usr/local/opnsense/version/opnsense-update
-/usr/local/opnsense/version/opnsense-update.base
-/usr/local/opnsense/version/opnsense-update.kernel
 /usr/sbin/bsdinstall
 /usr/sbin/dtruss
 /usr/sbin/faithd
