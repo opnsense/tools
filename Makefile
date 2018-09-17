@@ -23,10 +23,10 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-STEPS=		arm base boot chroot clean compress core distfiles download \
-		dvd info kernel nano plugins ports prefetch print rebase \
-		release rename serial sign skim test update upload verify \
-		vga vm xtools
+STEPS=		arm base boot chroot clean compress confirm core distfiles \
+		download dvd info kernel nano plugins ports prefetch print \
+		rebase release rename serial sign skim test update upload \
+		verify vga vm xtools
 SCRIPTS=	batch nightly refresh pkg_fingerprint pkg_sign
 .PHONY:		${STEPS}
 

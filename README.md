@@ -416,6 +416,11 @@ specify the remote end, e.g. SERVER=user@does.not.exist
 Additionally, UPLOADDIR can be used to specify a remote location.  At
 this point only "logs" upload cleares and creates directories on the fly.
 
+If you want to script interactive prompts you may use the confirm target
+to operate yes or no questions before an action:
+
+    # make info confirm dvd
+
 Last but not least, a refresh of OPNsense core and plugins on package
 sets is invoked using:
 

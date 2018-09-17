@@ -241,13 +241,17 @@ export PRODUCT_CORE="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
 export PRODUCT_PLUGINS="os-*"
 export PRODUCT_PLUGIN="os-*${PRODUCT_SUFFIX}"
 
-if [ "${SELF}" != print -a "${SELF}" != info ]; then
+case "${SELF}" in
+confirm|info|print)
+	;;
+*)
 	if [ -z "${PRINT_ENV_SKIP}" ]; then
 		export PRINT_ENV_SKIP=1
 		env | sort
 	fi
 	echo ">>> Running build step: ${SELF}"
-fi
+	;;
+esac
 
 git_reset()
 {
