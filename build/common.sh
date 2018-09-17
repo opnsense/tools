@@ -336,22 +336,48 @@ git_tag()
 {
 	# Fuzzy-match a tag and return it for the caller.
 
-	POOL=$(git -C ${1} tag | grep ^${2}\$ || true)
+	POOL=$(git -C ${1} tag | awk '$1 == "'"${2}"'"')
 	if [ -z "${POOL}" ]; then
 		VERSION=${2%.*}
 		FUZZY=${2##${VERSION}.}
+		MAX=0
 
-		for _POOL in $(git -C ${1} tag | grep ^${VERSION} | sort -r); do
+		if [ "$(echo "${VERSION}" | \
+		    grep -c '[.]')" = "0" ]; then
+			FUZZY=
+		fi
+	fi
+
+	if [ -z "${POOL}" -a -n "${FUZZY}" ]; then
+		for _POOL in $(git -C ${1} tag | \
+		    awk 'index($1, "'"${VERSION}"'")'); do
 			_POOL=${_POOL##${VERSION}}
 			if [ -z "${_POOL}" ]; then
-				POOL=${VERSION}${_POOL}
-				break
+				continue
 			fi
-			if [ ${_POOL##.} -lt ${FUZZY} ]; then
-				POOL=${VERSION}${_POOL}
-				break
+			_POOL=${_POOL##.}
+			if [ "$(echo "${_POOL}${FUZZY}" | \
+			    grep -c '[a-z.]')" != "0" ]; then
+				continue
+			fi
+			if [ ${_POOL} -lt ${FUZZY} -a \
+			    ${_POOL} -gt ${MAX} ]; then
+				MAX=${_POOL}
+				continue
 			fi
 		done
+
+		if [ ${MAX} -gt 0 ]; then
+			POOL=${VERSION}.${MAX}
+		else
+			POOL=${VERSION}
+		fi
+
+		# make sure there is no garbage match
+		POOL_TEST=$(git -C ${1} tag | awk '$1 == "'"${POOL}"'"')
+		if [ "${POOL_TEST}" != "${POOL}" ]; then
+			POOL=
+		fi
 	fi
 
 	if [ -z "${POOL}" ]; then
@@ -359,7 +385,7 @@ git_tag()
 		exit 1
 	fi
 
-	echo ">>> ${1} matches tag ${2} -> ${POOL}"
+	echo ">>> ${1} matches tag ${POOL}"
 
 	export REPO_TAG=${POOL}
 }
