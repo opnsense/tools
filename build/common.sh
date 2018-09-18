@@ -223,8 +223,8 @@ export DEVICEDIR="${TOOLSDIR}/device"
 export PACKAGESDIR="/.pkg"
 
 # define and bootstrap target directories
-export TARGETDIRPREFIX="/usr/local/opnsense"
-export TARGETDIR="${TARGETDIRPREFIX}/build/${PRODUCT_SETTINGS}/${PRODUCT_ARCH}"
+export TARGETDIRPREFIX="/usr/local/opnsense/build"
+export TARGETDIR="${TARGETDIRPREFIX}/${PRODUCT_SETTINGS}/${PRODUCT_ARCH}"
 export IMAGESDIR="${TARGETDIR}/images"
 export LOGSDIR="${TARGETDIR}/logs"
 export SETSDIR="${TARGETDIR}/sets"
