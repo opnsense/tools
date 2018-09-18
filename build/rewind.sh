@@ -60,6 +60,12 @@ for ARG in ${ARGS}; do
 		;;
 	esac
 
+	# XXX When we start rewind set a marker
+	# for the build process to ignore master
+	# branch development package builds.
+	#
+	# This flag may be cleared by "make update".
+
 	git_tag ${DIR} ${PRODUCT_VERSION}
 	continue; # XXX here be dragons
 	git_pull ${DIR} ${BRANCH}
