@@ -28,7 +28,7 @@ for FLAVOUR in OpenSSL LibreSSL; do
 	done
 done
 
-tar -C ${TARGETDIRPREFIX} -cjf \
+tar -C ${TARGETDIRPREFIX} -cJf \
     ${LOGSDIR}/${PRODUCT_VERSION}-${PRODUCT_ARCH}.txz \
     ${LOGSDIR##${TARGETDIRPREFIX}/}/${PRODUCT_VERSION}
 
