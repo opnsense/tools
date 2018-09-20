@@ -47,6 +47,10 @@ for ARG in ${@}; do
 		sh ./clean.sh ${ARG}
 		download ${ARG} ${SETSDIR} "${ARG}-*"
 		;;
+	log)
+		# one log only, do not clear
+		download ${ARG} ${LOGSDIR} "${PRODUCT_VERSION}-*"
+		;;
 	logs)
 		sh ./clean.sh ${ARG}
 		download ${ARG} ${LOGSDIR} "[0-9]*"
