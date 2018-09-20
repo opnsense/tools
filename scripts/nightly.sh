@@ -4,7 +4,8 @@
 
 eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,TARGETDIRPREFIX)"
 
-for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | sort -r | tail -n +7); do
+for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | \
+    sort -r | tail -n +7); do
 	(cd ${LOGSDIR}; rm ${RECYCLE})
 done
 
@@ -13,8 +14,9 @@ done
 mkdir -p ${LOGSDIR}/${PRODUCT_VERSION}
 
 for STAGE in update info base kernel xtools distfiles; do
+	LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}.log
 	# we don't normally clean these stages
-	(time make ${STAGE} 2>&1) > ${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}.log
+	(time make ${STAGE} 2>&1) > ${LOG}
 done
 
 for FLAVOUR in OpenSSL LibreSSL; do
@@ -35,4 +37,5 @@ tar -C ${TARGETDIRPREFIX} -cJf \
 rm -rf ${LOGSDIR}/latest
 mv ${LOGSDIR}/${PRODUCT_VERSION} ${LOGSDIR}/latest
 
-(make upload-logs SERVER=${SERVER} UPLOADDIR=${UPLOADDIR} 2>&1) > /dev/null
+(make upload-log SERVER=${SERVER} UPLOADDIR=${UPLOADDIR} \
+    VERSION=${PRODUCT_VERSION} 2>&1) > /dev/null

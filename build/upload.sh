@@ -45,6 +45,9 @@ for ARG in ${@}; do
 	base|kernel)
 		upload ${ARG} ${SETSDIR} "${ARG}-*"
 		;;
+	log)
+		upload ${ARG} ${LOGSDIR} "${PRODUCT_VERSION}-*"
+		;;
 	logs)
 		upload ${ARG} ${LOGSDIR} "[0-9]*"
 		;;
