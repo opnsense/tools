@@ -204,25 +204,27 @@ generate output for the style checker:
 Advanced package builds
 -----------------------
 
-For very fast ports rebuilding of already installed packages
-the following works:
-
-    # make ports-<packagename>[,...]
-
-For even faster ports building it may be of use to cache all
-distribution files before running the actual build:
-
-    # make distfiles
-
-Core packages can be batch-built using:
-
-    # make core-<repo_branch_or_tag>[,...]
-
 Package sets ready for web server deployment are automatically
-generated and modified by ports.sh, plugins.sh and core.sh.
+generated and modified by ports, plugins and core setps.
+
 If signing keys are available, the packages set will be signed
 twice, first embedded into repository metadata (inside) and
 then again as a flat file (outside) to ensure integrity.
+
+For faster ports building it may be of use to cache all distribution
+files before running the actual build:
+
+    # make distfiles
+
+For targeted rebuilding of already built packages the following
+works:
+
+    # make ports-<packagename>[,...]
+    # make plugins-<packagename>[,...]
+    # make core-<packagename>[,...]
+
+Please note that reissuing ports builds will clear plugins and
+core progress.
 
 Acquiring precompiled sets from the mirrors
 -------------------------------------------
@@ -398,16 +400,16 @@ Nightly builds are the only builds that write and archive logs under:
 
     # make print-LOGSDIR
 
-with ./latest pointing to the last nightly build run.  Older logs are
-archived and available for a number of runs for retrospective analysis.
+with ./latest containing the last nightly build run.  Older logs are
+archived and available for a whole week for retrospective analysis.
 
 To push sets and images to a remote location use the upload target:
 
-    # make upload-<set_or_image>[,...]
+    # make upload-<set>[,...]
 
 To pull sets and images from a remote location use the download target:
 
-    # make download-<set_or_image_or_logs>[,...]
+    # make download-<set>[,...]
 
 Logs can be downloaded as well for local inspection.  Note that download
 like prefetch will purge all locally existing targets.  Use SERVER to
