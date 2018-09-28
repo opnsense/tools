@@ -19,15 +19,20 @@ for STAGE in update info base kernel xtools distfiles; do
 	(time make ${STAGE} 2>&1) > ${LOG}
 done
 
-for FLAVOUR in OpenSSL LibreSSL; do
-	if [ -z "${1}" ]; then
+if [ -z "${1}" ]; then
+	for FLAVOUR in OpenSSL LibreSSL; do
 		(make clean-packages FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
-	fi
-	for STAGE in ports plugins core test; do
-		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${FLAVOUR}.log
-		(time make ${STAGE} FLAVOUR=${FLAVOUR} 2>&1) > ${LOG}
-		tail -n 1000 ${LOG} > ${LOG}.tail
 	done
+fi
+
+for STAGE in ports plugins core test; do
+	for FLAVOUR in OpenSSL LibreSSL; do
+		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${FLAVOUR}.log
+		((time make ${STAGE} FLAVOUR=${FLAVOUR} 2>&1) > ${LOG}; \
+		    tail -n 1000 ${LOG} > ${LOG}.tail) &
+	done
+
+	wait
 done
 
 tar -C ${TARGETDIRPREFIX} -cJf \
