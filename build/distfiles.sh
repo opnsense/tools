@@ -42,7 +42,7 @@ cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \
 	if [ -n "${PORT_IGNORE}" ]; then
 		for PORT_QUIRK in $(echo ${PORT_IGNORE} | tr ',' ' '); do
 			if [ ${PORT_QUIRK} = ${PRODUCT_TARGET} -o \
-			     ${PORT_QUIRK} = ${PRODUCT_ARCH} -o ]; then
+			     ${PORT_QUIRK} = ${PRODUCT_ARCH} ]; then
 				continue 2
 			fi
 		done
