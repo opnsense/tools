@@ -233,7 +233,10 @@ UNAME_r=\$(freebsd-version)
 	fi
 
 	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT} -V PKGFILE \${MAKE_ARGS})
-	rm -f \${PKGFILE}
+	if [ -f \${PKGFILE} ]; then
+		echo ">>> Removing cached package for \${PORT_ORIGIN}"
+		rm \${PKGFILE}
+	fi
 done
 EOF
 
