@@ -99,36 +99,7 @@ setup_distfiles ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
 remove_packages ${STAGEDIR} ${@} ${PRODUCT_CORES} ${PRODUCT_PLUGINS}
-
-for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
-	# all packages that install have their dependencies fulfilled
-	if pkg -c ${STAGEDIR} add ${PKG}; then
-		continue
-	fi
-
-	# some packages clash in files with others, check for conflicts
-	PKGORIGIN=$(pkg -c ${STAGEDIR} info -F ${PKG} | grep ^Origin | awk '{ print $3; }')
-	PKGGLOBS=
-	for CONFLICTS in CONFLICTS CONFLICTS_INSTALL; do
-		PKGGLOBS="${PKGGLOBS} $(make -C ${PORTSDIR}/${PKGORIGIN} -V ${CONFLICTS})"
-	done
-	for PKGGLOB in ${PKGGLOBS}; do
-		pkg -c ${STAGEDIR} remove -gy "${PKGGLOB}" || true
-	done
-
-	# if the conflicts are resolved this works now, but remove
-	# the package again as it may clash again later...
-	if pkg -c ${STAGEDIR} add ${PKG}; then
-		pkg -c ${STAGEDIR} remove -y ${PKGORIGIN}
-		continue
-	fi
-
-	# if nothing worked, we are missing a dependency and force a rebuild
-	rm -f ${STAGEDIR}/${PKG}
-done
-
-pkg -c ${STAGEDIR} set -yaA1
-pkg -c ${STAGEDIR} autoremove -y
+cleanup_packages ${STAGEDIR}
 
 MAKE_CONF="${CONFIGDIR}/make.conf"
 if [ -f ${MAKE_CONF} ]; then
@@ -192,8 +163,9 @@ UNAME_r=\$(freebsd-version)
 
 	(echo "${PORTS_LIST}"; echo "${PORTS_CACHE}") | \
 	    while read PORT_DEPENDS; do
-		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS}" %n)
+		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS%%@*}" %n)
 		if [ -n "\${PORT_DEPNAME}" ]; then
+			echo ">>> Locking package dependency \${PORT_DEPNAME}"
 			pkg set -yA0 \${PORT_DEPNAME}
 		fi
 	done

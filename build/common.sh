@@ -646,6 +646,43 @@ remove_packages()
 	done
 }
 
+cleanup_packages()
+{
+	BASEDIR=${1}
+
+	for PKG in $(cd ${1}; find .${PACKAGESDIR}/All -type f); do
+		# all packages that install have their dependencies fulfilled
+		if pkg -c ${1} add ${PKG}; then
+			continue
+		fi
+
+		# some packages clash in files with others, check for conflicts
+		PKGORIGIN=$(pkg -c ${1} info -F ${PKG} | \
+		    grep ^Origin | awk '{ print $3; }')
+		PKGGLOBS=
+		for CONFLICTS in CONFLICTS CONFLICTS_INSTALL; do
+			PKGGLOBS="${PKGGLOBS} $(make -C ${PORTSDIR}/${PKGORIGIN} -V ${CONFLICTS})"
+		done
+		for PKGGLOB in ${PKGGLOBS}; do
+			pkg -c ${1} remove -gy "${PKGGLOB}" || true
+		done
+
+		# if the conflicts are resolved this works now, but remove
+		# the package again as it may clash again later...
+		if pkg -c ${1} add ${PKG}; then
+			pkg -c ${1} remove -y ${PKGORIGIN}
+			continue
+		fi
+
+		# if nothing worked, we are missing a dependency and force
+		# a rebuild for it and its reverse dependencies later on
+		rm -f ${1}/${PKG}
+	done
+
+	pkg -c ${1} set -yaA1
+	pkg -c ${1} autoremove -y
+}
+
 lock_packages()
 {
 	BASEDIR=${1}
