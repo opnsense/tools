@@ -52,3 +52,4 @@ options		PAX
 options		PAX_ASLR
 options		PAX_HARDENING
 options		PAX_SEGVGUARD
+options		PAX_INSECURE_MODE
