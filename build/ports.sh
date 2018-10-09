@@ -108,6 +108,15 @@ fi
 
 PORTS_LIST=$(echo ports-mgmt/pkg; echo "${PORTS_LIST}")
 
+cat > ${STAGEDIR}/bin/echotime <<EOF
+#!/bin/sh
+echo "[\$(date '+%Y%m%d%H%M%S')]" \${*}
+EOF
+
+chmod 755 ${STAGEDIR}/bin/echotime
+
+echo "ECHO_MSG=echotime" >> ${STAGEDIR}/etc/make.conf
+
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
