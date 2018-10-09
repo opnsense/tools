@@ -458,19 +458,23 @@ setup_xtools()
 	echo 'configd_enable="NO"' >> ${1}/etc/rc.conf.local
 }
 
+setup_norun()
+{
+	# prevent the start of configd
+	echo 'configd_enable="NO"' >> ${1}/etc/rc.conf.local
+}
+
 setup_chroot()
 {
 	# historic glue
 	setup_xtools ${1}
+	setup_norun ${1}
 
 	echo ">>> Setting up chroot in ${1}"
 
 	cp /etc/resolv.conf ${1}/etc
 	mount -t devfs devfs ${1}/dev
 	chroot ${1} /bin/sh /etc/rc.d/ldconfig start
-
-	# prevent the start of configd in build environments
-	echo 'configd_enable="NO"' >> ${1}/etc/rc.conf.local
 }
 
 build_marker()
@@ -843,16 +847,17 @@ bundle_packages()
 	generate_signature ${SETSDIR}/packages-${REPO_RELEASE}.tar
 }
 
-clean_packages()
-{
-	rm -rf ${1}${PACKAGESDIR}
-}
-
 setup_packages()
 {
+	setup_norun ${1}
 	extract_packages ${1}
 	install_packages ${@} ${PRODUCT_ADDITIONS} ${PRODUCT_CORE}
-	clean_packages ${1}
+
+	# remove package repository
+	rm -rf ${1}${PACKAGESDIR}
+
+	# stop blocking start of configd
+	rm ${1}/etc/rc.conf.local
 }
 
 _setup_extras_generic()
