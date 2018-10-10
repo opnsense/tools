@@ -101,6 +101,7 @@ elif [ -n "${VMSWAP}" -a -n "${UEFIBOOT}" ]; then
 	GPTDUMMY=
 fi
 
+fuser -cuk ${STAGEDIR}/mnt
 umount ${STAGEDIR}/mnt
 mdconfig -d -u ${DEV}
 
