@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2018 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -60,6 +60,7 @@ __MAKE_CONF=
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildkernel ${MAKE_ARGS} NO_KERNELCLEAN=yes
 ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
 
+# XXX remove me later
 build_marker kernel
 
 KERNEL_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz
@@ -70,19 +71,23 @@ ${ENV_FILTER} make -s -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
 
 sh ./clean.sh ${SELF}
 
+setup_stage ${STAGEDIR} work
+
+tar -C ${STAGEDIR}/work -xjpf ${KERNEL_OBJ}
+
 if [ -z "$(test -f ${DEBUG_OBJ} && tar -tf ${DEBUG_OBJ})" ]; then
-	echo -n ">>> Copying release kernel set... "
-	mv ${KERNEL_OBJ} ${KERNEL_RELEASE_SET}
-	echo "done"
+	echo ">>> Generating release kernel set:"
 	KERNEL_SET=${KERNEL_RELEASE_SET}
 else
-	setup_stage ${STAGEDIR}
+	tar -C ${STAGEDIR}/work -xjpf ${DEBUG_OBJ}
 	echo ">>> Generating debug kernel set:"
-	tar -C ${STAGEDIR} -xjf ${KERNEL_OBJ}
-	tar -C ${STAGEDIR} -xjf ${DEBUG_OBJ}
-	tar -C ${STAGEDIR} -cvf - . | xz > ${KERNEL_DEBUG_SET}
 	KERNEL_SET=${KERNEL_DEBUG_SET}
 fi
 
 rm -f ${KERNEL_OBJ} ${DEBUG_OBJ}
+
+# XXX mtree magic
+
+tar -C ${STAGEDIR}/work -cvf - . | xz > ${KERNEL_SET}
+
 generate_signature ${KERNEL_SET}
