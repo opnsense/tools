@@ -39,14 +39,14 @@ for ARG in ${@}; do
 		    ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.img
 		;;
 	base)
-		setup_stage ${STAGEDIR}
+		setup_stage ${STAGEDIR} work
 		echo ">>> Repacking base set..."
 		BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
-		tar -C ${STAGEDIR} -xjf ${BASE_SET}
-		echo ${PRODUCT_VERSION}-${PRODUCT_ARCH} > \
-		    ${STAGEDIR}/usr/local/opnsense/version/base
+		tar -C ${STAGEDIR}/work -xJpf ${BASE_SET}
+		REPO_VERSION=${PRODUCT_VERSION}
+		setup_version ${STAGEDIR} work ${ARG}
 		rm ${BASE_SET}
-		tar -C ${STAGEDIR} -cvf - . | xz > ${BASE_SET}
+		tar -C ${STAGEDIR}/work -cvf - . | xz > ${BASE_SET}
 		generate_signature ${BASE_SET}
 		echo ">>> Renaming base set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
@@ -65,14 +65,14 @@ for ARG in ${@}; do
 		    ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-dvd-${PRODUCT_ARCH}.iso
 		;;
 	kernel)
-		setup_stage ${STAGEDIR}
+		setup_stage ${STAGEDIR} work
 		echo ">>> Repacking kernel set..."
 		KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
-		tar -C ${STAGEDIR} -xjf ${KERNEL_SET}
-		echo ${PRODUCT_VERSION}-${PRODUCT_ARCH} > \
-		    ${STAGEDIR}/usr/local/opnsense/version/kernel
+		tar -C ${STAGEDIR}/work -xJpf ${KERNEL_SET}
+		REPO_VERSION=${PRODUCT_VERSION}
+		setup_version ${STAGEDIR} work ${ARG}
 		rm ${KERNEL_SET}
-		tar -C ${STAGEDIR} -cvf - . | xz > ${KERNEL_SET}
+		tar -C ${STAGEDIR}/work -cvf - . | xz > ${KERNEL_SET}
 		generate_signature ${KERNEL_SET}
 		echo ">>> Renaming kernel set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \

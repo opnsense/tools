@@ -60,34 +60,42 @@ __MAKE_CONF=
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildkernel ${MAKE_ARGS} NO_KERNELCLEAN=yes
 ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
 
-# XXX remove me later
-build_marker kernel
+# reset the distribution directory
+KERNEL_DISTDIR="$(make -C${SRCDIR}/release -V DISTDIR)/${SELF}"
+KERNEL_OBJDIR="$(make -C${SRCDIR}/release -V .OBJDIR)"
+setup_stage "${KERNEL_OBJDIR}/${KERNEL_DISTDIR}"
 
+# remove older object archives, too
 KERNEL_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz
 DEBUG_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel-dbg.txz
-
 rm -f ${KERNEL_OBJ} ${DEBUG_OBJ}
+
+# We used kernel.txz because we did not rewrite it,
+# but as time went on and version info was embedded
+# for tighter signature verification handling it is
+# a convoluted action, but the archive gives us a
+# full update set so we repack it instead of using
+# src-related commands here too loosely...
 ${ENV_FILTER} make -s -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
 
 sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR} work
 
-tar -C ${STAGEDIR}/work -xjpf ${KERNEL_OBJ}
+echo ">>> Generating kernel set:"
 
-if [ -z "$(test -f ${DEBUG_OBJ} && tar -tf ${DEBUG_OBJ})" ]; then
-	echo ">>> Generating release kernel set:"
-	KERNEL_SET=${KERNEL_RELEASE_SET}
-else
-	tar -C ${STAGEDIR}/work -xjpf ${DEBUG_OBJ}
-	echo ">>> Generating debug kernel set:"
+tar -C ${STAGEDIR}/work -xJpf ${KERNEL_OBJ}
+
+KERNEL_SET=${KERNEL_RELEASE_SET}
+
+if [ -n "$(test -f ${DEBUG_OBJ} && tar -tf ${DEBUG_OBJ})" ]; then
+	tar -C ${STAGEDIR}/work -xJpf ${DEBUG_OBJ}
 	KERNEL_SET=${KERNEL_DEBUG_SET}
 fi
 
+setup_version ${STAGEDIR} work ${SELF}
+
 rm -f ${KERNEL_OBJ} ${DEBUG_OBJ}
-
-# XXX mtree magic
-
 tar -C ${STAGEDIR}/work -cvf - . | xz > ${KERNEL_SET}
 
 generate_signature ${KERNEL_SET}

@@ -493,6 +493,27 @@ build_marker()
 	echo "${REPO_VERSION}-${PRODUCT_ARCH}" > "${MARKER}/${1}"
 }
 
+setup_version()
+{
+	VERSIONDIR="${1}/${2}/usr/local/opnsense/version"
+
+	# clear previous in case of rename
+	rm -rf ${VERSIONDIR}
+	mkdir -p ${VERSIONDIR}
+
+	if [ ${2} = "base" ]; then
+		# XXX obsolete file handling
+	fi
+
+	# embed version info into target file
+	echo ${REPO_VERSION}-${PRODUCT_ARCH} > ${VERSIONDIR}/${3}
+
+	# mtree generation must come LAST
+	mtree -c -k uid,gid,mode,size,sha256digest -p ${1}/${2} > ${1}/mtree
+	mv ${1}/mtree ${VERSIONDIR}/${3}.mtree
+	chmod 600 ${VERSIONDIR}/${3}.mtree
+}
+
 setup_base()
 {
 	echo ">>> Setting up world in ${1}"
