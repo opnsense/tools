@@ -27,7 +27,7 @@ STEPS=		arm base boot chroot clean compress confirm core distfiles \
 		download dvd info kernel nano plugins ports prefetch print \
 		rebase release rename rewind serial sign skim test update \
 		upload verify vga vm xtools
-SCRIPTS=	batch nightly refresh pkg_fingerprint pkg_sign
+SCRIPTS=	batch nightly refresh
 .PHONY:		${STEPS}
 
 PAGER?=		less
@@ -40,12 +40,12 @@ lint-steps:
 	@sh -n ${.CURDIR}/build/${STEP}.sh
 .endfor
 
-lint-scripts:
+lint-composite:
 .for SCRIPT in ${SCRIPTS}
-	@sh -n ${.CURDIR}/scripts/${SCRIPT}.sh
+	@sh -n ${.CURDIR}/composite/${SCRIPT}.sh
 .endfor
 
-lint: lint-steps lint-scripts
+lint: lint-steps lint-composite
 
 # Special vars to load early build.conf settings:
 
@@ -152,7 +152,7 @@ ${STEP}: lint-steps
 .endfor
 
 .for SCRIPT in ${SCRIPTS}
-${SCRIPT}: lint-scripts
+${SCRIPT}: lint-composite
 	${VERBOSE_HIDDEN} cd ${.CURDIR} && sh ${VERBOSE_FLAGS} \
-	    ./scripts/${SCRIPT}.sh ${${SCRIPT}_ARGS}
+	    ./composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
 .endfor
