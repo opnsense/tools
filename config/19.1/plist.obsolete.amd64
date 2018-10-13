@@ -3,6 +3,7 @@
 /etc/gnats/freefall
 /etc/libmap32.conf
 /etc/pam.d/rsh
+/etc/pkg/HardenedBSD.conf
 /etc/rc.d/archdep
 /etc/rc.d/atm1
 /etc/rc.d/atm2
@@ -1700,6 +1701,7 @@
 /usr/share/zoneinfo/Pacific/Johnston
 /var/db/etcupdate/current/etc/libmap32.conf
 /var/db/etcupdate/current/etc/pam.d/rsh
+/var/db/etcupdate/current/etc/pkg/HardenedBSD.conf
 /var/db/etcupdate/current/etc/rc.d/archdep
 /var/db/etcupdate/current/etc/rc.d/atm1
 /var/db/etcupdate/current/etc/rc.d/atm2

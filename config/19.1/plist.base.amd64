@@ -259,7 +259,6 @@
 ./etc/phones
 ./etc/pkg/
 ./etc/pkg/FreeBSD.conf
-./etc/pkg/HardenedBSD.conf
 ./etc/ppp/
 ./etc/ppp/ppp.conf
 ./etc/printcap
@@ -3974,6 +3973,7 @@
 ./usr/local/opnsense/
 ./usr/local/opnsense/version/
 ./usr/local/opnsense/version/base
+./usr/local/opnsense/version/base.mtree
 ./usr/obj/
 ./usr/sbin/
 ./usr/sbin/ac
@@ -19346,7 +19346,6 @@
 ./var/db/etcupdate/current/etc/phones
 ./var/db/etcupdate/current/etc/pkg/
 ./var/db/etcupdate/current/etc/pkg/FreeBSD.conf
-./var/db/etcupdate/current/etc/pkg/HardenedBSD.conf
 ./var/db/etcupdate/current/etc/ppp/
 ./var/db/etcupdate/current/etc/ppp/ppp.conf
 ./var/db/etcupdate/current/etc/printcap
