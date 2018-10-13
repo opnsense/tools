@@ -95,7 +95,6 @@ fi
 
 setup_version ${STAGEDIR} work ${SELF}
 
-rm -f ${KERNEL_OBJ} ${DEBUG_OBJ}
 tar -C ${STAGEDIR}/work -cvf - . | xz > ${KERNEL_SET}
 
 generate_signature ${KERNEL_SET}

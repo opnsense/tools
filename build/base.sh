@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2018 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -41,10 +41,6 @@ fi
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_describe ${SRCDIR}
 
-BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}
-
-setup_stage ${STAGEDIR}
-
 MAKE_ARGS="
 TARGET_ARCH=${PRODUCT_ARCH}
 TARGET=${PRODUCT_TARGET}
@@ -58,18 +54,30 @@ MAKE_ARGS="${MAKE_ARGS} UBLDR_LOADADDR=0x2000000"
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS} NO_CLEAN=yes
 ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
 
-build_marker base
+# reset the distribution directory
+BASE_DISTDIR="$(make -C${SRCDIR}/release -V DISTDIR)/${SELF}"
+BASE_OBJDIR="$(make -C${SRCDIR}/release -V .OBJDIR)"
+setup_stage "${BASE_OBJDIR}/${BASE_DISTDIR}"
 
-rm -f $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz
+# remove older object archives, too
+BASE_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/base.txz
+rm -f ${BASE_OBJ}
+
 ${ENV_FILTER} make -s -C${SRCDIR}/release base.txz ${MAKE_ARGS}
 
 sh ./clean.sh ${SELF}
 
-echo -n ">>> Copying base set... "
+setup_stage ${STAGEDIR} work
 
-mv $(make -C${SRCDIR}/release -V .OBJDIR)/base.txz ${BASE_SET}.txz
+echo ">>> Generating kernel set:"
 
-echo "done"
+BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}
+
+tar -C ${STAGEDIR}/work -xJpf ${BASE_OBJ}
+
+setup_version ${STAGEDIR} work ${SELF}
+
+tar -C ${STAGEDIR}/work -cvf - . | xz > ${BASE_SET}.txz
 
 echo -n ">>> Generating obsolete file list... "
 
