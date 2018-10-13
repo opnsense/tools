@@ -3849,6 +3849,7 @@
 ./usr/local/opnsense/
 ./usr/local/opnsense/version/
 ./usr/local/opnsense/version/base
+./usr/local/opnsense/version/base.mtree
 ./usr/obj/
 ./usr/sbin/
 ./usr/sbin/ac
