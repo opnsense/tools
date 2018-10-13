@@ -558,7 +558,7 @@ generate_signature()
 		echo "done"
 	else
 		# do not keep a stale signature
-		rm ${1}.sig
+		rm -f ${1}.sig
 	fi
 }
 
