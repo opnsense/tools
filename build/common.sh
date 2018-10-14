@@ -485,8 +485,8 @@ setup_version()
 	rm -rf ${VERSIONDIR}
 	mkdir -p ${VERSIONDIR}
 
-	if [ ${2} = "base" ]; then
-		# XXX obsolete file handling
+	if [ -f ${CONFIGDIR}/plist.${2}.${PRODUCT_ARCH} ]; then
+		: # XXX obsolete file handling
 	fi
 
 	# embed version info into target file
@@ -556,6 +556,9 @@ generate_signature()
 		echo -n ">>> Creating ${PRODUCT_SETTINGS} signature for $(basename ${1})... "
 		sha256 -q ${1} | ${PRODUCT_SIGNCMD} > ${1}.sig
 		echo "done"
+	else
+		# do not keep a stale signature
+		rm ${1}.sig
 	fi
 }
 
