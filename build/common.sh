@@ -485,8 +485,9 @@ setup_version()
 	rm -rf ${VERSIONDIR}
 	mkdir -p ${VERSIONDIR}
 
-	if [ -f ${CONFIGDIR}/plist.${3}.${PRODUCT_ARCH} ]; then
-		: # XXX obsolete file handling
+	# inject obsolete file from previous copy
+	if [ -f "${4}" ]; then
+		cp ${4} ${VERSIONDIR}/${3}.obsolete
 	fi
 
 	# embed version info into target file

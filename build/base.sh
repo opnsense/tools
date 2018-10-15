@@ -69,27 +69,30 @@ sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR} work
 
-echo ">>> Generating kernel set:"
+echo ">>> Generating base set:"
 
-BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}
+BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}.txz
 
 setup_set ${STAGEDIR}/work ${BASE_OBJ}
-setup_version ${STAGEDIR} ${STAGEDIR}/work ${SELF}
-generate_set ${STAGEDIR}/work ${BASE_SET}.txz
+
+# XXX needs to be in obsolete file list for control purposes
+mkdir -p ${STAGEDIR}/work/usr/local/opnsense/version
+touch ${STAGEDIR}/work/usr/local/opnsense/version/base
+touch ${STAGEDIR}/work/usr/local/opnsense/version/base.mtree
+touch ${STAGEDIR}/work/usr/local/opnsense/version/base.obsolete
 
 echo -n ">>> Generating obsolete file list... "
 
-tar -tf ${BASE_SET}.txz | \
-    sed -e 's/^\.//g' -e '/\/$/d' | sort > ${STAGEDIR}/setdiff.new
+(cd ${STAGEDIR}/work; find . ! -type d) | sed -e 's/^\.//g' | \
+    sort > ${STAGEDIR}/setdiff.new
 
 : > ${STAGEDIR}/setdiff.old
-if [ -s ${CONFIGDIR}/plist.base.${PRODUCT_ARCH} ]; then
-	cat ${CONFIGDIR}/plist.base.${PRODUCT_ARCH} | \
-	    sed -e 's/^\.//g' -e '/\/$/d' | sort > ${STAGEDIR}/setdiff.old
+if [ -f ${CONFIGDIR}/plist.base.${PRODUCT_ARCH} ]; then
+	cp ${CONFIGDIR}/plist.base.${PRODUCT_ARCH} ${STAGEDIR}/setdiff.old
 fi
 
 : > ${STAGEDIR}/setdiff.tmp
-if [ -s ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH} ]; then
+if [ -f ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH} ]; then
 	diff -u ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH} \
 	    ${STAGEDIR}/setdiff.new | grep '^-/' | \
 	    cut -b 2- > ${STAGEDIR}/setdiff.tmp
@@ -97,9 +100,14 @@ fi
 
 (cat ${STAGEDIR}/setdiff.tmp; diff -u ${STAGEDIR}/setdiff.old \
     ${STAGEDIR}/setdiff.new | grep '^-/' | cut -b 2-) | \
-    sort -u > ${BASE_SET}.obsolete
+    sort -u > ${STAGEDIR}/obsolete
 
 echo "done"
 
-generate_signature ${BASE_SET}.txz
-generate_signature ${BASE_SET}.obsolete
+setup_version ${STAGEDIR} ${STAGEDIR}/work ${SELF} ${STAGEDIR}/obsolete
+generate_set ${STAGEDIR}/work ${BASE_SET}
+generate_signature ${BASE_SET}
+
+# XXX obsolete set usage will be removed in 19.1
+cp ${STAGEDIR}/obsolete ${BASE_SET%%.txz}.obsolete
+generate_signature ${BASE_SET%%.txz}.obsolete

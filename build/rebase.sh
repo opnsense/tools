@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2018 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -34,5 +34,6 @@ SELF=rebase
 BASE_OBSOLETE=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.obsolete")
 BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
 
-tar -tf ${BASE_SET} | sort > ${CONFIGDIR}/plist.base.${PRODUCT_ARCH}
+tar -tf ${BASE_SET} | sed -e 's/^\.//g' -e '/\/$/d' | sort > \
+    ${CONFIGDIR}/plist.base.${PRODUCT_ARCH}
 cp ${BASE_OBSOLETE} ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH}

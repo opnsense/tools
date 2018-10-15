@@ -43,8 +43,10 @@ for ARG in ${@}; do
 		echo ">>> Repacking base set..."
 		BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
 		setup_set ${STAGEDIR}/work ${BASE_SET}
+		cp ${STAGEDIR}/work/usr/local/opnsense/version/base.obsolete \
+		    ${STAGEDIR}/obsolete
 		REPO_VERSION=${PRODUCT_VERSION}
-		setup_version ${STAGEDIR} ${STAGEDIR}/work ${ARG}
+		setup_version ${STAGEDIR} ${STAGEDIR}/work ${ARG} ${STAGEDIR}/obsolete
 		rm ${BASE_SET}
 		generate_set ${STAGEDIR}/work ${BASE_SET}
 		generate_signature ${BASE_SET}
