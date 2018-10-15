@@ -73,11 +73,9 @@ echo ">>> Generating kernel set:"
 
 BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}
 
-tar -C ${STAGEDIR}/work -xJpf ${BASE_OBJ}
-
-setup_version ${STAGEDIR} work ${SELF}
-
-tar -C ${STAGEDIR}/work -cvf - . | xz > ${BASE_SET}.txz
+setup_set ${STAGEDIR}/work ${BASE_OBJ}
+setup_version ${STAGEDIR} ${STAGEDIR}/work ${SELF}
+generate_set ${STAGEDIR}/work ${BASE_SET}.txz
 
 echo -n ">>> Generating obsolete file list... "
 

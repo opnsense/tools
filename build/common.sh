@@ -479,13 +479,13 @@ setup_chroot()
 
 setup_version()
 {
-	VERSIONDIR="${1}/${2}/usr/local/opnsense/version"
+	VERSIONDIR="${2}/usr/local/opnsense/version"
 
 	# clear previous in case of rename
 	rm -rf ${VERSIONDIR}
 	mkdir -p ${VERSIONDIR}
 
-	if [ -f ${CONFIGDIR}/plist.${2}.${PRODUCT_ARCH} ]; then
+	if [ -f ${CONFIGDIR}/plist.${3}.${PRODUCT_ARCH} ]; then
 		: # XXX obsolete file handling
 	fi
 
@@ -493,7 +493,7 @@ setup_version()
 	echo ${REPO_VERSION}-${PRODUCT_ARCH} > ${VERSIONDIR}/${3}
 
 	# mtree generation must come LAST
-	mtree -c -k uid,gid,mode,size,sha256digest -p ${1}/${2} > ${1}/mtree
+	mtree -c -k uid,gid,mode,size,sha256digest -p ${2} > ${1}/mtree
 	mv ${1}/mtree ${VERSIONDIR}/${3}.mtree
 	chmod 600 ${VERSIONDIR}/${3}.mtree
 }
@@ -548,6 +548,16 @@ setup_entropy()
 	chown 0:0 ${1}/entropy
 
 	umask 022
+}
+
+setup_set()
+{
+	tar -C ${1} -xJpf ${2}
+}
+
+generate_set()
+{
+	tar -C ${1} -cvf - . | xz > ${2}
 }
 
 generate_signature()

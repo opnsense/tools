@@ -84,17 +84,15 @@ setup_stage ${STAGEDIR} work
 
 echo ">>> Generating kernel set:"
 
-tar -C ${STAGEDIR}/work -xJpf ${KERNEL_OBJ}
+setup_set ${STAGEDIR}/work ${KERNEL_OBJ}
 
 KERNEL_SET=${KERNEL_RELEASE_SET}
 
 if [ -n "$(test -f ${DEBUG_OBJ} && tar -tf ${DEBUG_OBJ})" ]; then
-	tar -C ${STAGEDIR}/work -xJpf ${DEBUG_OBJ}
+	setup_set ${STAGEDIR}/work ${DEBUG_OBJ}
 	KERNEL_SET=${KERNEL_DEBUG_SET}
 fi
 
-setup_version ${STAGEDIR} work ${SELF}
-
-tar -C ${STAGEDIR}/work -cvf - . | xz > ${KERNEL_SET}
-
+setup_version ${STAGEDIR} ${STAGEDIR}/work ${SELF}
+generate_set ${STAGEDIR}/work ${KERNEL_SET}
 generate_signature ${KERNEL_SET}

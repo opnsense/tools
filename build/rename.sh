@@ -42,11 +42,11 @@ for ARG in ${@}; do
 		setup_stage ${STAGEDIR} work
 		echo ">>> Repacking base set..."
 		BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
-		tar -C ${STAGEDIR}/work -xJpf ${BASE_SET}
+		setup_set ${STAGEDIR}/work ${BASE_SET}
 		REPO_VERSION=${PRODUCT_VERSION}
-		setup_version ${STAGEDIR} work ${ARG}
+		setup_version ${STAGEDIR} ${STAGEDIR}/work ${ARG}
 		rm ${BASE_SET}
-		tar -C ${STAGEDIR}/work -cvf - . | xz > ${BASE_SET}
+		generate_set ${STAGEDIR}/work ${BASE_SET}
 		generate_signature ${BASE_SET}
 		echo ">>> Renaming base set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
@@ -68,11 +68,11 @@ for ARG in ${@}; do
 		setup_stage ${STAGEDIR} work
 		echo ">>> Repacking kernel set..."
 		KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
-		tar -C ${STAGEDIR}/work -xJpf ${KERNEL_SET}
+		setup_set ${STAGEDIR}/work ${KERNEL_SET}
 		REPO_VERSION=${PRODUCT_VERSION}
-		setup_version ${STAGEDIR} work ${ARG}
+		setup_version ${STAGEDIR} ${STAGEDIR}/work ${ARG}
 		rm ${KERNEL_SET}
-		tar -C ${STAGEDIR}/work -cvf - . | xz > ${KERNEL_SET}
+		generate_set ${STAGEDIR}/work ${KERNEL_SET}
 		generate_signature ${KERNEL_SET}
 		echo ">>> Renaming kernel set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
