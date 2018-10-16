@@ -31,9 +31,11 @@ SELF=rebase
 
 . ./common.sh
 
-BASE_OBSOLETE=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.obsolete")
 BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
 
 tar -tf ${BASE_SET} | sed -e 's/^\.//g' -e '/\/$/d' | sort > \
     ${CONFIGDIR}/plist.base.${PRODUCT_ARCH}
+
+# XXX remove obsolete "set" usage, it's in the base set
+BASE_OBSOLETE=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.obsolete")
 cp ${BASE_OBSOLETE} ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH}
