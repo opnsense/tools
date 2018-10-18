@@ -226,7 +226,6 @@
 /etc/pf.os
 /etc/phones
 /etc/pkg/FreeBSD.conf
-/etc/pkg/HardenedBSD.conf
 /etc/ppp/ppp.conf
 /etc/printcap
 /etc/profile
@@ -3671,6 +3670,8 @@
 /usr/libexec/ulog-helper
 /usr/libexec/vfontedpr
 /usr/local/opnsense/version/base
+/usr/local/opnsense/version/base.mtree
+/usr/local/opnsense/version/base.obsolete
 /usr/sbin/ac
 /usr/sbin/accton
 /usr/sbin/acpiconf
@@ -18326,7 +18327,6 @@
 /var/db/etcupdate/current/etc/pf.os
 /var/db/etcupdate/current/etc/phones
 /var/db/etcupdate/current/etc/pkg/FreeBSD.conf
-/var/db/etcupdate/current/etc/pkg/HardenedBSD.conf
 /var/db/etcupdate/current/etc/ppp/ppp.conf
 /var/db/etcupdate/current/etc/printcap
 /var/db/etcupdate/current/etc/profile
