@@ -43,7 +43,6 @@ cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 		for PORT_QUIRK in $(echo ${PORT_IGNORE} | tr ',' ' '); do
 			if [ ${PORT_QUIRK} = ${PRODUCT_TARGET} -o \
 			     ${PORT_QUIRK} = ${PRODUCT_ARCH} -o \
-			     ${PORT_QUIRK} = "cache" -o \
 			     ${PORT_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
 				continue 2
 			fi
@@ -60,28 +59,11 @@ cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 	echo ${PORT_ORIGIN}
 done
 )
-	PORTS_CACHE=$(
-cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
-	eval PORT_ORIGIN=${PORT_ORIGIN}
-	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
-		continue
-	fi
-	if [ -n "${PORT_IGNORE}" ]; then
-		for PORT_QUIRK in $(echo ${PORT_IGNORE} | tr ',' ' '); do
-			if [ ${PORT_QUIRK} = "cache" ]; then
-				echo ${PORT_ORIGIN}
-				continue 2
-			fi
-		done
-	fi
-done
-)
 else
 	PORTS_LIST=$(
 for PORT_ORIGIN in ${PORTS_LIST}; do
 	echo ${PORT_ORIGIN}
 done
-	PORTS_CACHE=
 )
 fi
 
@@ -121,11 +103,14 @@ echo "ECHO_MSG=echotime" >> ${STAGEDIR}/etc/make.conf
 trap : 2
 
 ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || true
+# create a caching mirror for all temporary package dependencies
+cp -r ${PACKAGESDIR} ${PACKAGESDIR}-cache
+
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	FLAVOR=\${PORT_ORIGIN##*@}
 	PORT=\${PORT_ORIGIN%%@*}
 	MAKE_ARGS="
-PACKAGES=${PACKAGESDIR}
+PACKAGES=${PACKAGESDIR}-cache
 PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
 PRODUCT_PERL=${PRODUCT_PERL}
 PRODUCT_PHP=${PRODUCT_PHP}
@@ -170,8 +155,11 @@ UNAME_r=\$(freebsd-version)
 		exit 1
 	fi
 
-	(echo "${PORTS_LIST}"; echo "${PORTS_CACHE}") | \
-	    while read PORT_DEPENDS; do
+	for PKGNAME in \$(pkg query %n); do
+		pkg create -no ${PACKAGESDIR}-cache/All \${PKGNAME}
+	done
+
+	echo "${PORTS_LIST}" | while read PORT_DEPENDS; do
 		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS%%@*}" %n)
 		if [ -n "\${PORT_DEPNAME}" ]; then
 			echo ">>> Locking package dependency \${PORT_DEPNAME}"
@@ -180,6 +168,7 @@ UNAME_r=\$(freebsd-version)
 	done
 
 	pkg autoremove -y
+
 	for PKGNAME in \$(pkg query %n); do
 		pkg create -no ${PACKAGESDIR}/All \${PKGNAME}
 	done
@@ -194,32 +183,6 @@ EOF
 
 # unblock SIGINT
 trap - 2
-
-${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || true
-echo "${PORTS_CACHE}" | while read PORT_ORIGIN; do
-	FLAVOR=\${PORT_ORIGIN##*@}
-	PORT=\${PORT_ORIGIN%%@*}
-	MAKE_ARGS="
-PACKAGES=${PACKAGESDIR}
-PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
-PRODUCT_PERL=${PRODUCT_PERL}
-PRODUCT_PHP=${PRODUCT_PHP}
-PRODUCT_PYTHON=${PRODUCT_PYTHON}
-PRODUCT_RUBY=${PRODUCT_RUBY}
-UNAME_r=\$(freebsd-version)
-"
-
-	if [ \${FLAVOR} != \${PORT} ]; then
-		MAKE_ARGS="\${MAKE_ARGS} FLAVOR=\${FLAVOR}"
-	fi
-
-	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT} -V PKGFILE \${MAKE_ARGS})
-	if [ -f \${PKGFILE} ]; then
-		echo ">>> Removing cached package for \${PORT_ORIGIN}"
-		rm \${PKGFILE}
-	fi
-done
-EOF
 
 bundle_packages ${STAGEDIR} ${SELF} ports plugins core
 

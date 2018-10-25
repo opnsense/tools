@@ -35,10 +35,11 @@ How to specify build options on the command line
 ------------------------------------------------
 
 The build is broken down into individual stages: base,
-kernel and ports can be built separately and repeatedly
-without affecting the others.  All stages can be reinvoked
-and continue building without cleaning the previous progress.
-A final stage assembles all three stages into a target image.
+kernel, ports, plugins and core can be built separately and
+repeatedly without affecting the other stages.  All stages
+can be reinvoked and continue building without cleaning the
+previous progress.  A final stage assembles all five stages
+into a target image.
 
 All build steps are invoked via make(1):
 
@@ -205,7 +206,10 @@ Advanced package builds
 -----------------------
 
 Package sets ready for web server deployment are automatically
-generated and modified by ports, plugins and core setps.
+generated and modified by ports, plugins and core setps.  The
+build automatically caches temporary build dependencies to avoid
+spurious rebuilds.  These packages are later discarded to provide
+a slim runtime set only.
 
 If signing keys are available, the packages set will be signed
 twice, first embedded into repository metadata (inside) and
