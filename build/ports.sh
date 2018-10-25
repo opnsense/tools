@@ -104,7 +104,8 @@ trap : 2
 
 ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || true
 # create a caching mirror for all temporary package dependencies
-cp -r ${PACKAGESDIR} ${PACKAGESDIR}-cache
+mkdir -p ${PACKAGESDIR}-cache
+cp -r ${PACKAGESDIR}/All ${PACKAGESDIR}-cache/All
 
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	FLAVOR=\${PORT_ORIGIN##*@}
@@ -162,7 +163,7 @@ UNAME_r=\$(freebsd-version)
 	echo "${PORTS_LIST}" | while read PORT_DEPENDS; do
 		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS%%@*}" %n)
 		if [ -n "\${PORT_DEPNAME}" ]; then
-			echo ">>> Locking package dependency \${PORT_DEPNAME}"
+			echo ">>> Locking package dependency: \${PORT_DEPNAME}"
 			pkg set -yA0 \${PORT_DEPNAME}
 		fi
 	done
@@ -170,7 +171,14 @@ UNAME_r=\$(freebsd-version)
 	pkg autoremove -y
 
 	for PKGNAME in \$(pkg query %n); do
-		pkg create -no ${PACKAGESDIR}/All \${PKGNAME}
+		OLD=\$(find ${PACKAGESDIR}/All -name "\${PKGNAME}-[0-9]*.txz")
+		if [ -n "\${OLD}" ]; then
+			# already found
+			continue
+		fi
+		NEW=\$(find ${PACKAGESDIR}-cache/All -name "\${PKGNAME}-[0-9]*.txz")
+		echo ">>> Saving runtime package: \${PKGNAME}"
+		cp \${NEW} ${PACKAGESDIR}/All
 	done
 
 	make -s -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
