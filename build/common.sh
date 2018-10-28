@@ -187,7 +187,8 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_SERVER}" -o \
     -z "${PRODUCT_PHP}" -o \
     -z "${PRODUCT_PERL}" -o \
-    -z "${PRODUCT_PYTHON}" -o \
+    -z "${PRODUCT_PYTHON2}" -o \
+    -z "${PRODUCT_PYTHON3}" -o \
     -z "${PRODUCT_RUBY}" -o \
     -z "${PRODUCT_KERNEL}" -o \
     -z "${PRODUCT_GITBASE}" -o \
