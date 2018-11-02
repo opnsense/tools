@@ -370,10 +370,10 @@ Should it not fit your needs, you can change the name using:
 The available targets are: base, distfiles, dvd, kernel, nano,
 packages, serial, vga and vm.
 
-The current state or a tagged state of required build repositories
-on the system can be printed using:
+The current state of the associated build repositories checked
+out on the system can be printed using:
 
-    # make info[-<version>]
+    # make info
 
 Last but not least, in case build variables needs to be inspected,
 they can be printed selectively using:

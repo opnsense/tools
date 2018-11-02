@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2018 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,14 +31,9 @@ SELF=info
 
 . ./common.sh
 
-TAGNAME=
-if [ -n "${1}" ]; then
-	TAGNAME=${1}
-fi
-
 info()
 {
-	git_describe ${2} ${TAGNAME}
+	git_describe ${2}
 
 	cat << EOF
 ${1} ${2} ${REPO_VERSION} ${REPO_COMMENT} ${REPO_BRANCH}
