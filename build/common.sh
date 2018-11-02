@@ -498,6 +498,9 @@ setup_version()
 	mtree -c -k uid,gid,mode,size,sha256digest -p ${2} > ${1}/mtree
 	mv ${1}/mtree ${VERSIONDIR}/${3}.mtree
 	chmod 600 ${VERSIONDIR}/${3}.mtree
+
+	# for testing, custom builds, etc.
+	#touch ${VERSIONDIR}/${3}.lock
 }
 
 setup_base()
