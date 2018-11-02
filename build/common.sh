@@ -865,6 +865,8 @@ bundle_packages()
 	echo "done"
 
 	generate_signature ${SETSDIR}/packages-${REPO_RELEASE}.tar
+
+	(cd ${SETSDIR}; ls -lah packages-*)
 }
 
 setup_packages()
