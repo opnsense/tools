@@ -42,16 +42,20 @@ for STAGE in update info base kernel xtools distfiles; do
 	(time make ${STAGE} 2>&1) > ${LOG}
 done
 
+FORCE=
+
 if [ -z "${1}" ]; then
 	for FLAVOUR in OpenSSL LibreSSL; do
 		(make clean-packages FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
 	done
+else
+	FORCE="-force"
 fi
 
 for STAGE in ports plugins core test; do
 	for FLAVOUR in OpenSSL LibreSSL; do
 		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${FLAVOUR}.log
-		((time make ${STAGE} FLAVOUR=${FLAVOUR} 2>&1) > ${LOG}; \
+		((time make ${STAGE}${FORCE} FLAVOUR=${FLAVOUR} 2>&1) > ${LOG}; \
 		    tail -n 1000 ${LOG} > ${LOG}.tail) &
 	done
 
