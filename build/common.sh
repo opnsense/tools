@@ -788,8 +788,7 @@ install_packages()
 custom_packages()
 {
 	chroot ${1} /bin/sh -es << EOF
-make -C ${2} ${3} FLAVOUR=${PRODUCT_FLAVOUR} WRKDIR=/work \
-    PKGDIR=${PACKAGESDIR}/All package
+make -C ${2} ${3} FLAVOUR=${PRODUCT_FLAVOUR} PKGDIR=${PACKAGESDIR}/All package
 EOF
 }
 
