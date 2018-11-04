@@ -869,7 +869,7 @@ bundle_packages()
 
 	generate_signature ${SETSDIR}/packages-${REPO_RELEASE}.tar
 
-	(cd ${SETSDIR}; ls -lah packages-*)
+	(cd ${SETSDIR}; ls -lah packages-${REPO_RELEASE}.*)
 }
 
 setup_packages()
