@@ -495,9 +495,12 @@ setup_version()
 	echo ${REPO_VERSION}-${PRODUCT_ARCH} > ${VERSIONDIR}/${3}
 
 	# mtree generation must come LAST
-	mtree -c -k uid,gid,mode,size,sha256digest -p ${2} > ${1}/mtree
+	echo "./var" > ${1}/mtree.exclude
+	mtree -c -k uid,gid,mode,size,sha256digest -p ${2} \
+	    -X ${1}/mtree.exclude > ${1}/mtree
 	mv ${1}/mtree ${VERSIONDIR}/${3}.mtree
 	chmod 600 ${VERSIONDIR}/${3}.mtree
+	rm ${1}/mtree.exclude
 
 	# for testing, custom builds, etc.
 	#touch ${VERSIONDIR}/${3}.lock
