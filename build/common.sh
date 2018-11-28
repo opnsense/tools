@@ -486,7 +486,7 @@ setup_version()
 	rm -rf ${VERSIONDIR}
 
 	# estimate size while version dir is gone
-	local SIZE=$(tar -C ${2} -c -f - . | wc -c)
+	local SIZE=$(tar -C ${2} -c -f - . | wc -c | awk '{ print $1 }')
 
 	# start over
 	mkdir -p ${VERSIONDIR}
