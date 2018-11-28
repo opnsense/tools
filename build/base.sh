@@ -80,6 +80,7 @@ mkdir -p ${STAGEDIR}/work/usr/local/opnsense/version
 touch ${STAGEDIR}/work/usr/local/opnsense/version/base
 touch ${STAGEDIR}/work/usr/local/opnsense/version/base.mtree
 touch ${STAGEDIR}/work/usr/local/opnsense/version/base.obsolete
+touch ${STAGEDIR}/work/usr/local/opnsense/version/base.size
 
 echo -n ">>> Generating obsolete file list... "
 

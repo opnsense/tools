@@ -3567,6 +3567,7 @@
 /usr/local/opnsense/version/base
 /usr/local/opnsense/version/base.mtree
 /usr/local/opnsense/version/base.obsolete
+/usr/local/opnsense/version/base.size
 /usr/sbin/ac
 /usr/sbin/accton
 /usr/sbin/acpiconf

@@ -484,12 +484,20 @@ setup_version()
 
 	# clear previous in case of rename
 	rm -rf ${VERSIONDIR}
+
+	# estimate size while version dir is gone
+	local SIZE=$(tar -C ${2} -c -f - . | wc -c)
+
+	# start over
 	mkdir -p ${VERSIONDIR}
 
 	# inject obsolete file from previous copy
 	if [ -f "${4}" ]; then
 		cp ${4} ${VERSIONDIR}/${3}.obsolete
 	fi
+
+	# embed size for general information
+	echo "${SIZE}" > ${VERSIONDIR}/${3}.size
 
 	# embed version info into target file
 	echo ${REPO_VERSION}-${PRODUCT_ARCH} > ${VERSIONDIR}/${3}
