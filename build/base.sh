@@ -78,6 +78,7 @@ setup_set ${STAGEDIR}/work ${BASE_OBJ}
 # XXX needs to be in obsolete file list for control purposes
 mkdir -p ${STAGEDIR}/work/usr/local/opnsense/version
 touch ${STAGEDIR}/work/usr/local/opnsense/version/base
+touch ${STAGEDIR}/work/usr/local/opnsense/version/base.arch
 touch ${STAGEDIR}/work/usr/local/opnsense/version/base.mtree
 touch ${STAGEDIR}/work/usr/local/opnsense/version/base.obsolete
 touch ${STAGEDIR}/work/usr/local/opnsense/version/base.size

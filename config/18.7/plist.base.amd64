@@ -3565,6 +3565,7 @@
 /usr/libexec/ulog-helper
 /usr/libexec/vfontedpr
 /usr/local/opnsense/version/base
+/usr/local/opnsense/version/base.arch
 /usr/local/opnsense/version/base.mtree
 /usr/local/opnsense/version/base.obsolete
 /usr/local/opnsense/version/base.size

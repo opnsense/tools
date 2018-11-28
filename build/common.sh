@@ -499,7 +499,11 @@ setup_version()
 	# embed size for general information
 	echo "${SIZE}" > ${VERSIONDIR}/${3}.size
 
-	# embed version info into target file
+	# embed target architecture
+	echo "${PRODUCT_ARCH}" > ${VERSIONDIR}/${3}.arch
+
+	# embed version for update checks
+	# XXX historic architecture annotation pending removal
 	echo ${REPO_VERSION}-${PRODUCT_ARCH} > ${VERSIONDIR}/${3}
 
 	# mtree generation must come LAST
