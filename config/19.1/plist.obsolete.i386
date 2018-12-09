@@ -666,6 +666,9 @@
 /usr/local/opnsense/version/core.abi
 /usr/local/opnsense/version/core.last
 /usr/local/opnsense/version/core.name
+/usr/local/opnsense/version/opnsense.abi
+/usr/local/opnsense/version/opnsense.last
+/usr/local/opnsense/version/opnsense.name
 /usr/sbin/bsdinstall
 /usr/sbin/dtruss
 /usr/sbin/faithd
