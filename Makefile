@@ -32,6 +32,8 @@ SCRIPTS=	batch nightly refresh
 
 PAGER?=		less
 
+.MAKE.JOB.PREFIX?=	# tampers with some of our make invokes
+
 all:
 	@cat ${.CURDIR}/README.md | ${PAGER}
 
