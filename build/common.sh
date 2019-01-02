@@ -840,12 +840,11 @@ bundle_packages()
 
 	if [ -n "${SELF}" ]; then
 		# add build marker to set
-		MARKER="${BASEDIR}${PACKAGESDIR}-new/.${SELF}_done"
-		if [ ! -f ${MARKER} ]; then
+		if [ ! -f ${BASEDIR}/.pkg-err ]; then
 			# append build info if new
-			sh ./info.sh > ${MARKER}
+			sh ./info.sh > \
+			    ${BASEDIR}${PACKAGESDIR}-new/.${SELF}_done
 		fi
-		touch ${MARKER}
 	fi
 
 	# push packages to home location

@@ -47,7 +47,7 @@ for ARG in ${@}; do
 		setup_base ${STAGEDIR}
 		extract_packages ${STAGEDIR}
 		remove_packages ${STAGEDIR} ${PRODUCT_CORES}
-		bundle_packages ${STAGEDIR} ${SELF} core
+		bundle_packages ${STAGEDIR} '' core
 		;;
 	distfiles)
 		echo ">>> Removing distfiles set"
@@ -93,7 +93,7 @@ for ARG in ${@}; do
 		setup_base ${STAGEDIR}
 		extract_packages ${STAGEDIR}
 		remove_packages ${STAGEDIR} ${PRODUCT_PLUGINS}
-		bundle_packages ${STAGEDIR} ${SELF} plugins
+		bundle_packages ${STAGEDIR} '' plugins
 		;;
 	release)
 		echo ">>> Removing release set"
