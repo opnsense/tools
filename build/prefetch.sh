@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -39,7 +39,7 @@ for ARG in ${@}; do
 	base)
 		sh ./clean.sh ${ARG}
 		URL="${PRODUCT_MIRROR}/${ABI}/sets/${ARG}-${PRODUCT_VERSION}-${PRODUCT_ARCH}"
-		for SUFFIX in obsolete.sig obsolete txz.sig txz; do
+		for SUFFIX in txz.sig txz; do
 			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
 		done
 		;;
