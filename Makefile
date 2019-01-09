@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -87,7 +87,7 @@ VERSION?=	${_VERSION}
 STAGEDIRPREFIX?=/usr/obj
 PORTSREFDIR?=	/usr/hardenedbsd-ports
 PORTSREFBRANCH?=master
-PLUGINSENV?=	PLUGIN_PHP=${PHP}
+PLUGINSENV?=	PLUGIN_PHP=${PHP} PLUGIN_ABI=${SETTINGS}
 PLUGINSDIR?=	/usr/plugins
 PLUGINSBRANCH?=	master
 PORTSDIR?=	/usr/ports
