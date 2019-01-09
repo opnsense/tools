@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -109,7 +109,3 @@ echo "done"
 setup_version ${STAGEDIR} ${STAGEDIR}/work ${SELF} ${STAGEDIR}/obsolete
 generate_set ${STAGEDIR}/work ${BASE_SET}
 generate_signature ${BASE_SET}
-
-# XXX obsolete set usage will be removed in 19.1
-cp ${STAGEDIR}/obsolete ${BASE_SET%%.txz}.obsolete
-generate_signature ${BASE_SET%%.txz}.obsolete
