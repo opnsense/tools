@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2019 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -503,8 +503,7 @@ setup_version()
 	echo "${PRODUCT_ARCH}" > ${VERSIONDIR}/${3}.arch
 
 	# embed version for update checks
-	# XXX historic architecture annotation pending removal
-	echo ${REPO_VERSION}-${PRODUCT_ARCH} > ${VERSIONDIR}/${3}
+	echo "${REPO_VERSION}" > ${VERSIONDIR}/${3}
 
 	# mtree generation must come LAST
 	echo "./var" > ${1}/mtree.exclude
