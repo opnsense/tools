@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,4 +25,4 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-make clean-obj,plugins,core packages
+make clean-obj,${1:-"plugins,core"} packages
