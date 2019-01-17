@@ -430,7 +430,8 @@ to operate yes or no questions before an action:
 Last but not least, a refresh of OPNsense core and plugins on package
 sets is invoked using:
 
-    # make refresh
+    # make refresh[-<step>]
 
 It will flush all previous packages except for ports, rebuild core and
-plugins and sign the sets if enabled.  It is used to issue hotfixes.
+plugins and sign the sets if enabled.  It can also explicity set "core"
+or "packages".  It is used to issue hotfixes.
