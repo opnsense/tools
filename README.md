@@ -434,4 +434,4 @@ sets is invoked using:
 
 It will flush all previous packages except for ports, rebuild core and
 plugins and sign the sets if enabled.  It can also explicity set "core"
-or "packages".  It is used to issue hotfixes.
+or "plugins".  It is used to issue hotfixes.
