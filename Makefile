@@ -53,7 +53,7 @@ lint: lint-steps lint-composite
 
 TOOLSDIR?=	/usr/tools
 TOOLSBRANCH?=	master
-SETTINGS?=	18.7
+SETTINGS?=	19.1
 
 CONFIG?=	${TOOLSDIR}/config/${SETTINGS}/build.conf
 
