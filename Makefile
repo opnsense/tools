@@ -27,7 +27,7 @@ STEPS=		arm base boot chroot clean compress confirm core distfiles \
 		download dvd info kernel nano plugins ports prefetch print \
 		rebase release rename rewind serial sign skim test update \
 		upload verify vga vm xtools
-SCRIPTS=	batch nightly refresh
+SCRIPTS=	batch hotfix nightly
 .PHONY:		${STEPS}
 
 PAGER?=		less

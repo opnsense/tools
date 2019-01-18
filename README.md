@@ -427,11 +427,11 @@ to operate yes or no questions before an action:
 
     # make info confirm dvd
 
-Last but not least, a refresh of OPNsense core and plugins on package
+Last but not least, a rebuild of OPNsense core and plugins on package
 sets is invoked using:
 
-    # make refresh[-<step>]
+    # make hotfix[-<step>]
 
 It will flush all previous packages except for ports, rebuild core and
 plugins and sign the sets if enabled.  It can also explicity set "core"
-or "plugins".  It is used to issue hotfixes.
+or "plugins".
