@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -42,20 +42,19 @@ for STAGE in update info base kernel xtools distfiles; do
 	(time make ${STAGE} 2>&1) > ${LOG}
 done
 
-FORCE=
-
-if [ -z "${1}" ]; then
-	for FLAVOUR in OpenSSL LibreSSL; do
-		(make clean-packages FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
-	done
-else
-	FORCE="-force"
+CLEAN=packages
+if [ -n "${1}" ]; then
+	CLEAN=plugins,core
 fi
+
+for FLAVOUR in OpenSSL LibreSSL; do
+	(make clean-${CLEAN} FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
+done
 
 for STAGE in ports plugins core test; do
 	for FLAVOUR in OpenSSL LibreSSL; do
 		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${FLAVOUR}.log
-		((time make ${STAGE}${FORCE} FLAVOUR=${FLAVOUR} 2>&1) > ${LOG}; \
+		((time make ${STAGE} FLAVOUR=${FLAVOUR} 2>&1) > ${LOG}; \
 		    tail -n 1000 ${LOG} > ${LOG}.tail) &
 	done
 
