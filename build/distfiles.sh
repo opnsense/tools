@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -95,6 +95,7 @@ UNAME_r=\$(freebsd-version)
 "
 	echo ">>> Fetching \${PORT_ORIGIN}..."
 	PORT=\${PORT_ORIGIN%%@*}
+	make -C ${PORTSDIR}/\${PORT} fetch \${MAKE_ARGS}
 	PORT_DEPENDS=\$(make -C ${PORTSDIR}/\${PORT} all-depends-list \
 	    \${MAKE_ARGS})
 	for PORT_DEPEND in \${PORT_DEPENDS}; do
