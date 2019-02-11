@@ -132,7 +132,7 @@ Cross-building for other architecures
 -------------------------------------
 
 This feature is currently experimental and tailored
-for use with the Raspberry Pi 2.  It requires installation
+for use with the Banana Pi.  It requires installation
 of the qemu package for user mode emulation:
 
     # pkg install qemu-user-static
@@ -141,7 +141,7 @@ A cross-build on the operating system sources is
 executed by specifying the target architecture and
 custom kernel:
 
-    # make base kernel ARCH=arm:armv6 KERNEL=SMP-RPI2
+    # make base kernel ARCH=arm:armv6 KERNEL=SMP-BPI
 
 In order to speed up building of using an emulated
 packages build, the xtools set can be created like so:
@@ -155,7 +155,7 @@ similar to the distfiles set.
 
 The image will also require a matching u-boot package:
 
-    # pkg install u-boot-rpi2
+    # pkg install u-boot-bananapi
 
 The final image is built using:
 
