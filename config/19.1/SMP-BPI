@@ -21,9 +21,6 @@ options		TCP_SIGNATURE
 device		wlan_acl
 device		wlan_xauth
 
-# XXX build error
-nodevice	re
-
 # Not all architectures have a consistent GENERIC
 device		netmap
 
