@@ -46,10 +46,8 @@ TARGET_ARCH=${PRODUCT_ARCH}
 TARGET=${PRODUCT_TARGET}
 SRCCONF=${CONFIGDIR}/src.conf
 __MAKE_CONF=
+${MAKE_ARGS_DEV}
 "
-
-# XXX for our BPI builds, needs a better place in the long run
-MAKE_ARGS="${MAKE_ARGS} UBLDR_LOADADDR=0x42000000"
 
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS} NO_CLEAN=yes
 ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -55,6 +55,7 @@ TARGET=${PRODUCT_TARGET}
 KERNCONF=${PRODUCT_KERNEL}
 SRCCONF=${CONFIGDIR}/src.conf
 __MAKE_CONF=
+${MAKE_ARGS_DEV}
 "
 
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildkernel ${MAKE_ARGS} NO_KERNELCLEAN=yes

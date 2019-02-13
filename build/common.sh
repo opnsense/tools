@@ -242,6 +242,11 @@ export PRODUCT_CORE="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
 export PRODUCT_PLUGINS="os-*"
 export PRODUCT_PLUGIN="os-*${PRODUCT_SUFFIX}"
 
+# load device-specific environment
+if [ -f ${DEVICEDIR}/${PRODUCT_DEVICE}.conf ]; then
+	. ${DEVICEDIR}/${PRODUCT_DEVICE}.conf
+fi
+
 case "${SELF}" in
 confirm|info|print)
 	;;
