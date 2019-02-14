@@ -25,6 +25,13 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+FLAVOURS="OpenSSL LibreSSL"
+CLEAN=packages
+
+if [ -n "${1}" ]; then
+	CLEAN=plugins,core
+fi
+
 eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX)"
 
 for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | \
@@ -42,17 +49,12 @@ for STAGE in update info base kernel xtools distfiles; do
 	(time make ${STAGE} 2>&1) > ${LOG}
 done
 
-CLEAN=packages
-if [ -n "${1}" ]; then
-	CLEAN=plugins,core
-fi
-
-for FLAVOUR in OpenSSL LibreSSL; do
+for FLAVOUR in ${FLAVOURS}; do
 	(make clean-${CLEAN} FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
 done
 
 for STAGE in ports plugins core test; do
-	for FLAVOUR in OpenSSL LibreSSL; do
+	for FLAVOUR in ${FLAVOURS}; do
 		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${FLAVOUR}.log
 		((time make ${STAGE} FLAVOUR=${FLAVOUR} 2>&1) > ${LOG}; \
 		    tail -n 1000 ${LOG} > ${LOG}.tail) &
