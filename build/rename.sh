@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -73,7 +73,12 @@ for ARG in ${@}; do
 	kernel)
 		setup_stage ${STAGEDIR} work
 		echo ">>> Repacking kernel set..."
-		KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
+		KERNEL_SET=$(find ${SETSDIR} -name "kernel-dbg-*-${PRODUCT_ARCH}.txz")
+		KERNEL_NAME="kernel-dbg"
+		if [ -z "${KERNEL_SET}" ]; then
+			KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
+			KERNEL_NAME="kernel"
+		fi
 		setup_set ${STAGEDIR}/work ${KERNEL_SET}
 		REPO_VERSION=${PRODUCT_VERSION}
 		setup_version ${STAGEDIR} ${STAGEDIR}/work ${ARG}
@@ -83,7 +88,7 @@ for ARG in ${@}; do
 		echo ">>> Renaming kernel set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "kernel-*-${PRODUCT_ARCH}.*"); do
-			mv ${FILE} ${SETSDIR}/kernel-${PRODUCT_VERSION}-${FILE##*-}
+			mv ${FILE} ${SETSDIR}/${KERNEL_NAME}-${PRODUCT_VERSION}-${FILE##*-}
 		done
 		;;
 	nano)
