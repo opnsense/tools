@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2018-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,6 +31,11 @@ SELF=rewind
 
 . ./common.sh
 
+if [ -n "${DEVELBRANCH}" ]; then
+	echo ">>> Cannot rewind, please unset DEVELBRANCH=${DEVELBRANCH}"
+	exit 1
+fi
+
 ARGS="src ports plugins core tools"
 
 for ARG in ${ARGS}; do
@@ -60,14 +65,7 @@ for ARG in ${ARGS}; do
 		;;
 	esac
 
-	# XXX When we start rewind set a marker
-	# for the build process to ignore master
-	# branch development package builds.
-	#
-	# This flag may be cleared by "make update".
-
 	git_tag ${DIR} ${PRODUCT_VERSION}
-	continue; # XXX here be dragons
 	git_pull ${DIR} ${BRANCH}
 	git_reset ${DIR}
 done

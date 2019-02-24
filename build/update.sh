@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -39,18 +39,12 @@ fi
 for ARG in ${ARGS}; do
 	case ${ARG} in
 	core)
-		BRANCHES=${COREBRANCH}
+		BRANCHES="${DEVELBRANCH} ${COREBRANCH}"
 		DIR=${COREDIR}
-		if [ ${BRANCHES} != master ]; then
-			BRANCHES="master ${BRANCHES}"
-		fi
 		;;
 	plugins)
-		BRANCHES=${PLUGINSBRANCH}
+		BRANCHES="${DEVELBRANCH} ${PLUGINSBRANCH}"
 		DIR=${PLUGINSDIR}
-		if [ ${BRANCHES} != master ]; then
-			BRANCHES="master ${BRANCHES}"
-		fi
 		;;
 	ports)
 		BRANCHES=${PORTSBRANCH}

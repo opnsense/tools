@@ -81,10 +81,12 @@ MIRRORS?=	https://opnsense.c0urier.net \
 		http://mirror.fra10.de.leaseweb.net/opnsense \
 		http://mirror.ams1.nl.leaseweb.net/opnsense
 SERVER?=	user@does.not.exist
-UPLOADDIR?=
+UPLOADDIR?=	# empty
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
 STAGEDIRPREFIX?=/usr/obj
+# XXX GITBASE modifier
+PORTSREFBASE?=	https://github.com/hardenedbsd
 PORTSREFDIR?=	/usr/hardenedbsd-ports
 PORTSREFBRANCH?=master
 PLUGINSENV?=	PLUGIN_PHP=${PHP} PLUGIN_ABI=${SETTINGS}
@@ -97,6 +99,9 @@ COREBRANCH?=	master
 COREENV?=	CORE_PHP=${PHP} CORE_ABI=${SETTINGS}
 SRCDIR?=	/usr/src
 SRCBRANCH?=	master
+
+# for ports and core
+DEVELBRANCH?=	#master
 
 # A couple of meta-targets for easy use and ordering:
 
@@ -146,7 +151,7 @@ ${STEP}: lint-steps
 	    -H "${COREENV}" -Q "${QUICK}" -u "${UEFI:tl}" -U "${SUFFIX}" \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
 	    -q "${VERSIONS}" -h "${PLUGINENV}" -I "${UPLOADDIR}" \
-	    ${${STEP}_ARGS}
+	    -D "${DEVELBRANCH}" ${${STEP}_ARGS}
 .endfor
 
 .for SCRIPT in ${SCRIPTS}
