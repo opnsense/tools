@@ -39,7 +39,7 @@ fi
 for ARG in ${ARGS}; do
 	case ${ARG} in
 	core)
-		BRANCHES="${DEVELBRANCH} ${COREBRANCH}"
+		BRANCHES="${DEVELBRANCH} ${COREBRANCH}"
 		DIR=${COREDIR}
 		;;
 	plugins)
