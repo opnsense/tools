@@ -104,7 +104,7 @@ case "${PRODUCT_DEVICE}" in
 		;;
 	
 	bpi)
-		#cp -p ${STAGEDIR}/boot/dtb/rpi2.dtb ${STAGEDIR}/boot/msdos/rpi2.dtb		TODO/Fix: Needs proper blob (dtb) for bananapi, unless it's same as rpi2 dtb. 
+		cp -p ${STAGEDIR}/boot/dtb/bananapi.dtb ${STAGEDIR}/boot/msdos/bananapi.dtb 
 		cp -p /usr/local/share/u-boot/u-boot-bananapi/* ${STAGEDIR}/boot/msdos
 		;;
 esac
