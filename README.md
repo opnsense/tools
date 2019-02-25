@@ -141,17 +141,17 @@ A cross-build on the operating system sources is
 executed by specifying the target architecture and
 custom kernel:
 
-    # make base kernel ARCH=arm:armv6 DEVICE=bpi
+    # make base kernel DEVICE=bpi
 
 In order to speed up building of using an emulated
 packages build, the xtools set can be created like so:
 
-    # make xtools ARCH=arm:armv6 DEVICE=bpi
+    # make xtools DEVICE=bpi
 
 The xtools set is then used during the packages build
 similar to the distfiles set.
 
-    # make packages ARCH=arm:armv6 DEVICE=bpi
+    # make packages DEVICE=bpi
 
 The image will also require a matching u-boot package:
 
@@ -159,7 +159,7 @@ The image will also require a matching u-boot package:
 
 The final image is built using:
 
-    # make arm-<size> ARCH=arm:armv6 DEVICE=bpi
+    # make arm-<size> DEVICE=bpi
 
 About other scripts and tweaks
 ==============================
