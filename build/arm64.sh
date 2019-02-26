@@ -28,12 +28,12 @@
 
 set -e
 
-SELF=arm
+SELF=arm64
 
 . ./common.sh
 
-if [ ${PRODUCT_ARCH} != armv6 ]; then
-	echo ">>> Cannot build arm image with arch ${PRODUCT_ARCH}"
+if [ ${PRODUCT_ARCH} != aarch64 ]; then
+	echo ">>> Cannot build arm64 image with arch ${PRODUCT_ARCH}"
 	exit 1
 fi
 
@@ -45,7 +45,7 @@ if [ -n "${1}" ]; then
 	ARMSIZE=${1}
 fi
 
-ARMIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-arm-${PRODUCT_ARCH}.img"
+ARMIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-arm64-${PRODUCT_ARCH}.img"
 ARMLABEL="${PRODUCT_NAME}"
 
 sh ./clean.sh ${SELF}
@@ -83,7 +83,7 @@ setup_extras ${STAGEDIR} ${SELF}
 setup_entropy ${STAGEDIR}
 setup_xbase ${STAGEDIR}
 
-echo -n ">>> Building arm image... "
+echo -n ">>> Building arm64 image... "
 
 cat > ${STAGEDIR}/etc/fstab << EOF
 # Device		Mountpoint	FStype	Options		Dump	Pass#
@@ -98,13 +98,9 @@ cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
 cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/boot/msdos/ubldr.bin
 
 case "${PRODUCT_DEVICE}" in
-bpi)
-	cp -p ${STAGEDIR}/boot/dtb/bananapi.dtb ${STAGEDIR}/boot/msdos/bananapi.dtb
-	cp -p /usr/local/share/u-boot/u-boot-bananapi/* ${STAGEDIR}/boot/msdos
-	;;
-rpi2)
-	cp -p ${STAGEDIR}/boot/dtb/rpi2.dtb ${STAGEDIR}/boot/msdos/rpi2.dtb
-	cp -p /usr/local/share/u-boot/u-boot-rpi2/* ${STAGEDIR}/boot/msdos
+rpi3)
+	cp -p ${STAGEDIR}/boot/dtb/rpi3.dtb ${STAGEDIR}/boot/msdos/rpi3.dtb
+	cp -p /usr/local/share/u-boot/u-boot-rpi3/* ${STAGEDIR}/boot/msdos
 	;;
 esac
 

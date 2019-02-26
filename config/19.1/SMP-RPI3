@@ -1,4 +1,4 @@
-include		RPI3
+include		GENERIC
 
 ident		SMP-RPI3
 
