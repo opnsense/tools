@@ -56,7 +56,7 @@ done
 for STAGE in ports plugins core test; do
 	for FLAVOUR in ${FLAVOURS}; do
 		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${FLAVOUR}.log
-		((time make ${STAGE} FLAVOUR=${FLAVOUR} 2>&1) > ${LOG}; \
+		((time make ${STAGE}-nightly FLAVOUR=${FLAVOUR} 2>&1) > ${LOG}; \
 		    tail -n 1000 ${LOG} > ${LOG}.tail) &
 	done
 
