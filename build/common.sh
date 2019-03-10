@@ -455,11 +455,11 @@ setup_xtools()
 	# looks like a native environment later on
 	mkdir -p ${1}/usr/local/bin
 	case ${PRODUCT_TARGET} in
-	arm)
-		cp /usr/local/bin/qemu-${PRODUCT_TARGET}-static ${1}/usr/local/bin
-		;;
 	arm64)
 		cp /usr/local/bin/qemu-${PRODUCT_ARCH}-static ${1}/usr/local/bin
+		;;
+	*)
+		cp /usr/local/bin/qemu-${PRODUCT_TARGET}-static ${1}/usr/local/bin
 		;;
 	esac
 	/usr/local/etc/rc.d/qemu_user_static onerestart
