@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -59,7 +59,7 @@ if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
 	mdconfig -d -u ${DEV}
 
 	UEFIBOOT="-o bootimage=i386;${STAGEDIR}/efiboot.img"
-	UEFIBOOT="${UEFIBOOT} -o no-emul-boot"
+	UEFIBOOT="${UEFIBOOT} -o no-emul-boot -o platformid=efi"
 fi
 
 echo -n ">>> Building dvd image... "
@@ -70,8 +70,8 @@ cat > ${STAGEDIR}/work/etc/fstab << EOF
 tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
-makefs -t cd9660 ${UEFIBOOT} \
+makefs -t cd9660 \
     -o 'bootimage=i386;'"${STAGEDIR}"'/work/boot/cdboot' -o no-emul-boot \
-    -o label=${DVDLABEL} -o rockridge ${DVDIMAGE} ${STAGEDIR}/work
+    ${UEFIBOOT} -o label=${DVDLABEL} -o rockridge ${DVDIMAGE} ${STAGEDIR}/work
 
 echo "done"
