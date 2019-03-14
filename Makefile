@@ -150,7 +150,7 @@ ${STEP}: lint-steps
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
 	    -H "${COREENV}" -Q "${QUICK}" -u "${UEFI:tl}" -U "${SUFFIX}" \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
-	    -q "${VERSIONS}" -h "${PLUGINENV}" -I "${UPLOADDIR}" \
+	    -q "${VERSIONS}" -h "${PLUGINSENV}" -I "${UPLOADDIR}" \
 	    -D "${DEVELBRANCH}" ${${STEP}_ARGS}
 .endfor
 

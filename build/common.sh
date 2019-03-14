@@ -77,7 +77,7 @@ while getopts ${OPTS} OPT; do
 		export COREENV=${OPTARG}
 		;;
 	h)
-		export PLUGINENV=${OPTARG}
+		export PLUGINSENV=${OPTARG}
 		;;
 	K)
 		if [ -n "${OPTARG}" ]; then
