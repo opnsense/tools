@@ -23,7 +23,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-STEPS=		arm arm64 base boot chroot clean compress confirm core distfiles \
+STEPS=		arm base boot chroot clean compress confirm core distfiles \
 		download dvd info kernel nano plugins ports prefetch print \
 		rebase release rename rewind serial sign skim test update \
 		upload verify vga vm xtools
