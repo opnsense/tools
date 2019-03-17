@@ -32,7 +32,8 @@ SELF=arm
 
 . ./common.sh
 
-if [ ${PRODUCT_ARCH} != armv6 ]; then
+if [ ${PRODUCT_ARCH} != armv6 -a \
+    ${PRODUCT_ARCH} != aarch64 ]; then
 	echo ">>> Cannot build arm image with arch ${PRODUCT_ARCH}"
 	exit 1
 fi
@@ -98,13 +99,17 @@ cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
 cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/boot/msdos/ubldr.bin
 
 case "${PRODUCT_DEVICE}" in
+bpi)
+	cp -p ${STAGEDIR}/boot/dtb/bananapi.dtb ${STAGEDIR}/boot/msdos/bananapi.dtb
+	cp -p /usr/local/share/u-boot/u-boot-bananapi/* ${STAGEDIR}/boot/msdos
+	;;
 rpi2)
 	cp -p ${STAGEDIR}/boot/dtb/rpi2.dtb ${STAGEDIR}/boot/msdos/rpi2.dtb
 	cp -p /usr/local/share/u-boot/u-boot-rpi2/* ${STAGEDIR}/boot/msdos
 	;;
-bpi)
-	cp -p ${STAGEDIR}/boot/dtb/bananapi.dtb ${STAGEDIR}/boot/msdos/bananapi.dtb
-	cp -p /usr/local/share/u-boot/u-boot-bananapi/* ${STAGEDIR}/boot/msdos
+rpi3)
+	cp -p ${STAGEDIR}/boot/dtb/rpi3.dtb ${STAGEDIR}/boot/msdos/rpi3.dtb
+	cp -p /usr/local/share/u-boot/u-boot-rpi3/* ${STAGEDIR}/boot/msdos
 	;;
 esac
 
