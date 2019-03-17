@@ -32,7 +32,8 @@ SELF=arm
 
 . ./common.sh
 
-if [ ${PRODUCT_ARCH} != armv6 ] && [ ${PRODUCT_ARCH} != aarch64 ]; then
+if [ ${PRODUCT_ARCH} != armv6 -a \
+    ${PRODUCT_ARCH} != aarch64 ]; then
 	echo ">>> Cannot build arm image with arch ${PRODUCT_ARCH}"
 	exit 1
 fi
