@@ -92,6 +92,7 @@ cat > ${STAGEDIR}/etc/fstab << EOF
 EOF
 
 mkdir -p ${STAGEDIR}/boot/msdos
+mkdir -p ${STAGEDIR}/boot/msdos/overlays
 mount_msdosfs /dev/${DEV}s1 ${STAGEDIR}/boot/msdos
 
 cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
@@ -105,10 +106,25 @@ bpi)
 rpi2)
 	cp -p ${STAGEDIR}/boot/dtb/rpi2.dtb ${STAGEDIR}/boot/msdos/rpi2.dtb
 	cp -p /usr/local/share/u-boot/u-boot-rpi2/* ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/bcm2709-rpi-2-b.dtb ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/bootcode.bin ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/config.txt ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/fixup* ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/start* ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/overlays/mmc.dtbo ${STAGEDIR}/boot/msdos/overlays
 	;;
 rpi3)
 	cp -p ${STAGEDIR}/boot/dtb/rpi3.dtb ${STAGEDIR}/boot/msdos/rpi3.dtb
 	cp -p /usr/local/share/u-boot/u-boot-rpi3/* ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b.dtb ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b-plus.dtb ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/bootcode.bin ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/config_rpi3.txt ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/fixup* ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/start* ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/overlays/mmc.dtbo ${STAGEDIR}/boot/msdos/overlays
+	cp -p /usr/local/share/rpi-firmware/overlays/pwm.dtbo ${STAGEDIR}/boot/msdos/overlays
+	cp -p /usr/local/share/rpi-firmware/overlays/pi3-disable-bt.dtbo ${STAGEDIR}/boot/msdos/overlays
 	;;
 esac
 
