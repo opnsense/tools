@@ -92,9 +92,9 @@ cat > ${STAGEDIR}/etc/fstab << EOF
 EOF
 
 mkdir -p ${STAGEDIR}/boot/msdos
-mkdir -p ${STAGEDIR}/boot/msdos/overlays
 mount_msdosfs /dev/${DEV}s1 ${STAGEDIR}/boot/msdos
 
+mkdir -p ${STAGEDIR}/boot/msdos/overlays
 cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
 cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/boot/msdos/ubldr.bin
 
