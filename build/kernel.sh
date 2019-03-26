@@ -31,7 +31,14 @@ SELF=kernel
 
 . ./common.sh
 
-KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}-${PRODUCT_DEVICE}.txz")
+case ${PRODUCT_ARCH} in
+arm|arm64)
+	KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}-${PRODUCT_DEVICE}.txz")
+	;;
+*)
+	KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
+	;;
+esac
 
 if [ -f "${KERNEL_SET}" -a -z "${1}" ]; then
 	echo ">>> Reusing kernel set: ${KERNEL_SET}"
