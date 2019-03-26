@@ -31,7 +31,7 @@ SELF=kernel
 
 . ./common.sh
 
-case ${PRODUCT_ARCH} in
+case ${PRODUCT_TARGET} in
 arm|arm64)
 	KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}-${PRODUCT_DEVICE}.txz")
 	;;
