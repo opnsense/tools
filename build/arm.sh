@@ -103,6 +103,10 @@ bpi)
 	cp -p ${STAGEDIR}/boot/dtb/bananapi.dtb ${STAGEDIR}/boot/msdos/bananapi.dtb
 	cp -p /usr/local/share/u-boot/u-boot-bananapi/* ${STAGEDIR}/boot/msdos
 	;;
+orangepi-pc2)
+	cp -p ${STAGEDIR}/boot/dtb/sun50i-h5-orangepi-pc2.dtb ${STAGEDIR}/boot/msdos/sun50i-h5-orangepi-pc2.dtb
+	cp -p /usr/local/share/u-boot/u-boot-orangepi-pc2/* ${STAGEDIR}/boot/msdos
+	;;
 rpi2)
 	cp -p ${STAGEDIR}/boot/dtb/rpi2.dtb ${STAGEDIR}/boot/msdos/rpi2.dtb
 	cp -p /usr/local/share/u-boot/u-boot-rpi2/* ${STAGEDIR}/boot/msdos
