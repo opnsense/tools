@@ -35,7 +35,7 @@ for ARG in ${@}; do
 	case ${ARG} in
 	arm)
 		echo ">>> Removing arm image"
-		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}.img*
+		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}-${PRODUCT_DEVICE}.img*
 		;;
 	base)
 		echo ">>> Removing base set"
