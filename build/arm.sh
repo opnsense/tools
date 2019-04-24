@@ -100,7 +100,7 @@ cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/boot/msdos/ubldr.bin
 
 case "${PRODUCT_DEVICE}" in
 bpi)
-	cp -p ${STAGEDIR}/boot/dtb/sun7i-a20-bananapi.dtb ${STAGEDIR}/boot/msdos/sun7i-a20-bananapi.dtb
+	cp -p ${STAGEDIR}/boot/dtb/bananapi.dtb ${STAGEDIR}/boot/msdos/sun7i-a20-bananapi.dtb
 	cp -p /usr/local/share/u-boot/u-boot-bananapi/* ${STAGEDIR}/boot/msdos
 	;;
 odroid-xu3)
