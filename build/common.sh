@@ -222,11 +222,16 @@ EDITOR=${EDITOR} PAGER=${PAGER} ABI_FILE=${ABI_FILE}"
 
 # define build and config directories
 export CONFIGDIR="${TOOLSDIR}/config/${PRODUCT_SETTINGS}"
-export STAGEDIR="${STAGEDIRPREFIX}${CONFIGDIR}/${PRODUCT_FLAVOUR}:${PRODUCT_ARCH}"
 export DEVICEDIR="${TOOLSDIR}/device"
 export PACKAGESDIR="/.pkg"
 
+# load device-specific environment
+if [ -f ${DEVICEDIR}/${PRODUCT_DEVICE}.conf ]; then
+	. ${DEVICEDIR}/${PRODUCT_DEVICE}.conf
+fi
+
 # define and bootstrap target directories
+export STAGEDIR="${STAGEDIRPREFIX}${CONFIGDIR}/${PRODUCT_FLAVOUR}:${PRODUCT_ARCH}"
 export TARGETDIRPREFIX="/usr/local/opnsense/build"
 export TARGETDIR="${TARGETDIRPREFIX}/${PRODUCT_SETTINGS}/${PRODUCT_ARCH}"
 export IMAGESDIR="${TARGETDIR}/images"
@@ -245,10 +250,6 @@ export PRODUCT_CORE="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
 export PRODUCT_PLUGINS="os-*"
 export PRODUCT_PLUGIN="os-*${PRODUCT_SUFFIX}"
 
-# load device-specific environment
-if [ -f ${DEVICEDIR}/${PRODUCT_DEVICE}.conf ]; then
-	. ${DEVICEDIR}/${PRODUCT_DEVICE}.conf
-fi
 
 case "${SELF}" in
 confirm|info|print)
