@@ -131,35 +131,31 @@ Release sets can be built using:
 Cross-building for other architecures
 -------------------------------------
 
-This feature is currently experimental and tailored
-for use with the Banana Pi.  It requires installation
-of packages for cross building / user mode emulation:
+This feature is currently experimental and requires installation
+of packages for cross building / user mode emulation and additional
+boot files to be installed as prompted by the build system.
 
-    # pkg install arm-gnueabi-binutils qemu-user-static
+A cross-build on the operating system sources is executed by
+specifying the target architecture and custom kernel:
 
-A cross-build on the operating system sources is
-executed by specifying the target architecture and
-custom kernel:
+    # make base kernel DEVICE=bpi
 
-    # make base kernel ARCH=arm:armv6 DEVICE=bpi
+In order to speed up building of using an emulated packages build,
+the xtools set can be created like so:
 
-In order to speed up building of using an emulated
-packages build, the xtools set can be created like so:
+    # make xtools DEVICE=bpi
 
-    # make xtools ARCH=arm:armv6 DEVICE=bpi
+The xtools set is then used during the packages build similar to
+the distfiles set.
 
-The xtools set is then used during the packages build
-similar to the distfiles set.
-
-    # make packages ARCH=arm:armv6 DEVICE=bpi
-
-The image will also require a matching u-boot package:
-
-    # pkg install u-boot-bananapi
+    # make packages DEVICE=bpi
 
 The final image is built using:
 
-    # make arm-<size> ARCH=arm:armv6 DEVICE=bpi
+    # make arm-<size> DEVICE=bpi
+
+Currently available device are: bpi, odroid-xu3, orangepi-pc2,
+rpi2 and rpi3.
 
 About other scripts and tweaks
 ==============================
