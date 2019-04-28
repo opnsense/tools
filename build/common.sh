@@ -262,6 +262,13 @@ confirm|info|print)
 	;;
 esac
 
+for WANT in git ${PRODUCT_WANTS}; do
+	if ! pkg info ${WANT} > /dev/null; then
+		echo ">>> Required build package '${WANT}' is not installed."
+		exit 1
+	fi
+done
+
 git_reset()
 {
 	git -C ${1} clean -xdqf .
