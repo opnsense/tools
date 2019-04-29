@@ -103,6 +103,10 @@ bpi)
 	cp -p ${STAGEDIR}/boot/dtb/bananapi.dtb ${STAGEDIR}/boot/msdos/sun7i-a20-bananapi.dtb
 	cp -p /usr/local/share/u-boot/u-boot-bananapi/* ${STAGEDIR}/boot/msdos
 	;;
+nanopi-neo2
+	cp -p ${STAGEDIR}/boot/dtb/sun50i-h5-nanopi-neo2.dtb ${STAGEDIR}/boot/msdos/sun50i-h5-nanopi-neo2.dtb
+	cp -p /usr/local/share/u-boot/u-boot-nanopi-neo2/* ${STAGEDIR}/boot/msdos
+	;;
 odroid-xu3)
 	cp -p ${STAGEDIR}/boot/dtb/exynos5422-odroidxu3.dtb ${STAGEDIR}/boot/msdos/exynos5422-odroidxu3.dtb
 	cp -p /usr/local/share/u-boot/u-boot-odroid-xu3/* ${STAGEDIR}/boot/msdos
