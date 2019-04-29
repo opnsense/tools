@@ -1,0 +1,11 @@
+# https://www.friendlyarm.com/index.php?route=product/product&product_id=180
+
+export MAKE_ARGS_DEV="
+CROSS_BINUTILS_PREFIX=/usr/local/aarch64-unknown-freebsd11.2/bin
+UBLDR_LOADADDR=0x40080000
+"
+
+export PRODUCT_KERNEL=SMP-NANOPI-NEO2
+export PRODUCT_TARGET=arm64
+export PRODUCT_ARCH=aarch64
+export PRODUCT_WANTS="aarch64-binutils qemu-user-static u-boot-nanopi-neo2"
