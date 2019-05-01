@@ -93,10 +93,17 @@ EOF
 
 mkdir -p ${STAGEDIR}/boot/msdos
 mount_msdosfs /dev/${DEV}s1 ${STAGEDIR}/boot/msdos
-
 mkdir -p ${STAGEDIR}/boot/msdos/overlays
-cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
-cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/boot/msdos/ubldr.bin
+
+case "${PRODUCT_ARCH}" in
+armv6)
+	cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
+	cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/boot/msdos/ubldr.bin
+	;;
+aarch64)
+	cp -p ${STAGEDIR}/boot/loader.efi ${STAGEDIR}/boot/msdos/bootaa64.efi
+	;;
+esac
 
 case "${PRODUCT_DEVICE}" in
 bpi)
@@ -130,7 +137,7 @@ rpi2)
 	cp -p /usr/local/share/rpi-firmware/overlays/mmc.dtbo ${STAGEDIR}/boot/msdos/overlays
 	;;
 rpi3)
-	cp -p ${STAGEDIR}/boot/dtb/bcm2837-rpi-3-b.dtb ${STAGEDIR}/boot/msdos/bcm2837-rpi-3-b.dtb
+	#cp -p ${STAGEDIR}/boot/dtb/bcm2837-rpi-3-b.dtb ${STAGEDIR}/boot/msdos/bcm2837-rpi-3-b.dtb
 	cp -p /usr/local/share/u-boot/u-boot-rpi3/* ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b.dtb ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b-plus.dtb ${STAGEDIR}/boot/msdos
