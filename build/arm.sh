@@ -107,6 +107,10 @@ nanopi-neo2
 	cp -p ${STAGEDIR}/boot/dtb/sun50i-h5-nanopi-neo2.dtb ${STAGEDIR}/boot/msdos/sun50i-h5-nanopi-neo2.dtb
 	cp -p /usr/local/share/u-boot/u-boot-nanopi-neo2/* ${STAGEDIR}/boot/msdos
 	;;
+nanopi-r1
+	cp -p ${STAGEDIR}/boot/dtb/sun8i-h3-nanopi-neo ${STAGEDIR}/boot/msdos/sun8i-h3-nanopi-neo
+	cp -p /usr/local/share/u-boot/u-boot-nanopi-neo/* ${STAGEDIR}/boot/msdos
+	;;
 odroid-xu3)
 	cp -p ${STAGEDIR}/boot/dtb/exynos5422-odroidxu3.dtb ${STAGEDIR}/boot/msdos/exynos5422-odroidxu3.dtb
 	cp -p /usr/local/share/u-boot/u-boot-odroid-xu3/* ${STAGEDIR}/boot/msdos
