@@ -1,6 +1,6 @@
 include		ALLWINNER
 
-ident		SMP-NANOPI-R1
+ident		SMP-NANOPI-NEO
 
 # Remove to build a debug kernel:
 nomakeoptions	DEBUG
