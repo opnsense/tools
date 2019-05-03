@@ -106,7 +106,7 @@ aarch64)
 esac
 
 case "${PRODUCT_DEVICE}" in
-bpi)
+bpi-m1)
 	cp -p ${STAGEDIR}/boot/dtb/bananapi.dtb ${STAGEDIR}/boot/msdos/sun7i-a20-bananapi.dtb
 	cp -p /usr/local/share/u-boot/u-boot-bananapi/* ${STAGEDIR}/boot/msdos
 	;;
@@ -129,6 +129,7 @@ orangepi-pc2)
 rpi2)
 	cp -p ${STAGEDIR}/boot/dtb/bcm2836-rpi-2-b.dtb ${STAGEDIR}/boot/msdos/bcm2836-rpi-2-b.dtb
 	cp -p /usr/local/share/u-boot/u-boot-rpi2/* ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/barmstub8.bin ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bcm2709-rpi-2-b.dtb ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bootcode.bin ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/config.txt ${STAGEDIR}/boot/msdos
@@ -139,6 +140,7 @@ rpi2)
 rpi3)
 	#cp -p ${STAGEDIR}/boot/dtb/bcm2837-rpi-3-b.dtb ${STAGEDIR}/boot/msdos/bcm2837-rpi-3-b.dtb
 	cp -p /usr/local/share/u-boot/u-boot-rpi3/* ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/barmstub8.bin ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b.dtb ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b-plus.dtb ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bootcode.bin ${STAGEDIR}/boot/msdos
