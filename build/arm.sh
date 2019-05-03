@@ -154,7 +154,7 @@ rpi3)
 	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b.dtb ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b-plus.dtb ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bootcode.bin ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/config_rpi3.txt ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/config_rpi3.txt ${STAGEDIR}/boot/msdos/config.txt
 	cp -p /usr/local/share/rpi-firmware/fixup* ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/start* ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/overlays/mmc.dtbo ${STAGEDIR}/boot/msdos/overlays
