@@ -1,11 +1,11 @@
-# https://www.friendlyarm.com/index.php?route=product/product&product_id=248
+# https://www.friendlyarm.com/index.php?route=product/product&product_id=132
 
 export MAKE_ARGS_DEV="
 CROSS_BINUTILS_PREFIX=/usr/local/arm-gnueabi-freebsd11.2/bin
 UBLDR_LOADADDR=0x40080000
 "
 
-export PRODUCT_KERNEL=SMP-NANOPI-R1
+export PRODUCT_KERNEL=SMP-NANOPI-NEO
 export PRODUCT_TARGET=arm
 export PRODUCT_ARCH=armv6
 export PRODUCT_WANTS="arm-gnueabi-binutils qemu-user-static u-boot-nanopi-neo"
