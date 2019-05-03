@@ -64,6 +64,16 @@ gpart add -t freebsd ${DEV}
 gpart create -s bsd ${DEV}s2
 gpart add -t freebsd-ufs -a 64k /dev/${DEV}s2
 newfs -U -L ${ARMLABEL} /dev/${DEV}s2a
+
+# Allwinner bootable u-boot bin
+case "${PRODUCT_DEVICE}" in
+bpi-m1)
+	dd if="/usr/local/share/u-boot/u-boot-bananapi/u-boot-sunxi-with-spl.bin" of=/dev/${DEV} bs=1k seek=8 conv=sync
+	;;
+nanopi-neo|nanopi-neo2|orangepi-pc2)
+	dd if="/usr/local/share/u-boot/u-boot-${PRODUCT_DEVICE}/u-boot-sunxi-with-spl.bin" of=/dev/${DEV} bs=1k seek=8 conv=sync
+	;;
+esac
 mount /dev/${DEV}s2a ${STAGEDIR}
 
 setup_base ${STAGEDIR}
@@ -129,7 +139,7 @@ orangepi-pc2)
 rpi2)
 	cp -p ${STAGEDIR}/boot/dtb/bcm2836-rpi-2-b.dtb ${STAGEDIR}/boot/msdos/bcm2836-rpi-2-b.dtb
 	cp -p /usr/local/share/u-boot/u-boot-rpi2/* ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/barmstub8.bin ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/armstub8.bin ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bcm2709-rpi-2-b.dtb ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bootcode.bin ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/config.txt ${STAGEDIR}/boot/msdos
@@ -140,7 +150,7 @@ rpi2)
 rpi3)
 	#cp -p ${STAGEDIR}/boot/dtb/bcm2837-rpi-3-b.dtb ${STAGEDIR}/boot/msdos/bcm2837-rpi-3-b.dtb
 	cp -p /usr/local/share/u-boot/u-boot-rpi3/* ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/barmstub8.bin ${STAGEDIR}/boot/msdos
+	cp -p /usr/local/share/rpi-firmware/armstub8.bin ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b.dtb ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b-plus.dtb ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bootcode.bin ${STAGEDIR}/boot/msdos
