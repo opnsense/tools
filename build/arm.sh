@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2019 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2015-2017 The FreeBSD Foundation
 #
 # Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,10 @@ truncate -s ${ARMSIZE} ${ARMIMG}
 
 DEV=$(mdconfig -a -t vnode -f ${ARMIMG} -x 63 -y 255)
 
+ARM_FAT_SIZE=${ARM_FAT_SIZE:-"50m"}
+
 gpart create -s MBR ${DEV}
-gpart add -t '!12' -a 512k -s 50m ${DEV}
+gpart add -t '!12' -a 512k -s ${ARM_FAT_SIZE} ${DEV}
 gpart set -a active -i 1 ${DEV}
 newfs_msdos -L msdosboot -F 16 /dev/${DEV}s1
 gpart add -t freebsd ${DEV}
@@ -94,15 +96,11 @@ EOF
 mkdir -p ${STAGEDIR}/boot/msdos
 mount_msdosfs /dev/${DEV}s1 ${STAGEDIR}/boot/msdos
 
-mkdir -p ${STAGEDIR}/boot/msdos/overlays
-cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
-cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/boot/msdos/ubldr.bin
+if [ -n "$(type arm_install_uboot 2> /dev/null)" ]; then
+	arm_install_uboot
+fi
 
 case "${PRODUCT_DEVICE}" in
-bpi)
-	cp -p ${STAGEDIR}/boot/dtb/bananapi.dtb ${STAGEDIR}/boot/msdos/sun7i-a20-bananapi.dtb
-	cp -p /usr/local/share/u-boot/u-boot-bananapi/* ${STAGEDIR}/boot/msdos
-	;;
 odroid-xu3)
 	cp -p ${STAGEDIR}/boot/dtb/exynos5422-odroidxu3.dtb ${STAGEDIR}/boot/msdos/exynos5422-odroidxu3.dtb
 	cp -p /usr/local/share/u-boot/u-boot-odroid-xu3/* ${STAGEDIR}/boot/msdos
@@ -112,6 +110,9 @@ orangepi-pc2)
 	cp -p /usr/local/share/u-boot/u-boot-orangepi-pc2/* ${STAGEDIR}/boot/msdos
 	;;
 rpi2)
+	mkdir -p ${STAGEDIR}/boot/msdos/overlays
+	cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
+	cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/boot/msdos/ubldr.bin
 	cp -p ${STAGEDIR}/boot/dtb/bcm2836-rpi-2-b.dtb ${STAGEDIR}/boot/msdos/bcm2836-rpi-2-b.dtb
 	cp -p /usr/local/share/u-boot/u-boot-rpi2/* ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bcm2709-rpi-2-b.dtb ${STAGEDIR}/boot/msdos
@@ -122,6 +123,9 @@ rpi2)
 	cp -p /usr/local/share/rpi-firmware/overlays/mmc.dtbo ${STAGEDIR}/boot/msdos/overlays
 	;;
 rpi3)
+	mkdir -p ${STAGEDIR}/boot/msdos/overlays
+	cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
+	cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/boot/msdos/ubldr.bin
 	cp -p ${STAGEDIR}/boot/dtb/bcm2837-rpi-3-b.dtb ${STAGEDIR}/boot/msdos/bcm2837-rpi-3-b.dtb
 	cp -p /usr/local/share/u-boot/u-boot-rpi3/* ${STAGEDIR}/boot/msdos
 	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b.dtb ${STAGEDIR}/boot/msdos

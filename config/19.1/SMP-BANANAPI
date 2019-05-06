@@ -1,6 +1,6 @@
 include		ALLWINNER
 
-ident		SMP-BPI
+ident		SMP-BANANAPI
 
 # Remove to build a debug kernel:
 nomakeoptions	DEBUG
