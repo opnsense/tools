@@ -561,7 +561,7 @@ setup_kernel()
 {
 	echo ">>> Setting up kernel in ${1}"
 
-	tar -C ${1} -xpf ${SETSDIR}/kernel-*-${PRODUCT_ARCH}.txz
+	tar -C ${1} -xpf ${SETSDIR}/kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 }
 
 setup_distfiles()

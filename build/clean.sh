@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -62,7 +62,7 @@ for ARG in ${@}; do
 		;;
 	kernel)
 		echo ">>> Removing kernel set"
-		rm -f ${SETSDIR}/kernel-*-${PRODUCT_ARCH}.*
+		rm -f ${SETSDIR}/kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*
 		;;
 	logs)
 		setup_stage ${LOGSDIR}

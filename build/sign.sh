@@ -36,7 +36,7 @@ if [ -f "${BASE_SET}" ]; then
 	generate_signature ${BASE_SET}
 fi
 
-KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
+KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
 if [ -f "${KERNEL_SET}" ]; then
 	generate_signature ${KERNEL_SET}
 fi

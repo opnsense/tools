@@ -73,10 +73,10 @@ for ARG in ${@}; do
 	kernel)
 		setup_stage ${STAGEDIR} work
 		echo ">>> Repacking kernel set..."
-		KERNEL_SET=$(find ${SETSDIR} -name "kernel-dbg-*-${PRODUCT_ARCH}.txz")
+		KERNEL_SET=$(find ${SETSDIR} -name "kernel-dbg-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
 		KERNEL_NAME="kernel-dbg"
 		if [ -z "${KERNEL_SET}" ]; then
-			KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
+			KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
 			KERNEL_NAME="kernel"
 		fi
 		setup_set ${STAGEDIR}/work ${KERNEL_SET}
@@ -87,7 +87,7 @@ for ARG in ${@}; do
 		generate_signature ${KERNEL_SET}
 		echo ">>> Renaming kernel set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
-		    "kernel-*-${PRODUCT_ARCH}.*"); do
+		    "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*"); do
 			mv ${FILE} ${SETSDIR}/${KERNEL_NAME}-${PRODUCT_VERSION}-${FILE##*-}
 		done
 		;;

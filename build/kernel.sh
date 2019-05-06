@@ -31,7 +31,7 @@ SELF=kernel
 
 . ./common.sh
 
-KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}.txz")
+KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
 
 if [ -f "${KERNEL_SET}" -a -z "${1}" ]; then
 	echo ">>> Reusing kernel set: ${KERNEL_SET}"
@@ -41,8 +41,8 @@ fi
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_describe ${SRCDIR}
 
-KERNEL_DEBUG_SET=${SETSDIR}/kernel-dbg-${REPO_VERSION}-${PRODUCT_ARCH}.txz
-KERNEL_RELEASE_SET=${SETSDIR}/kernel-${REPO_VERSION}-${PRODUCT_ARCH}.txz
+KERNEL_DEBUG_SET=${SETSDIR}/kernel-dbg-${REPO_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
+KERNEL_RELEASE_SET=${SETSDIR}/kernel-${REPO_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 
 if [ -f ${CONFIGDIR}/${PRODUCT_KERNEL} ]; then
 	cp "${CONFIGDIR}/${PRODUCT_KERNEL}" \
