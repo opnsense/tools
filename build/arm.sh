@@ -71,16 +71,7 @@ mount /dev/${DEV}s2a ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_kernel ${STAGEDIR}
 setup_xtools ${STAGEDIR}
-# XXX PHP needs to be defanged temporarily
-extract_packages ${STAGEDIR}
-install_packages ${STAGEDIR} php${PRODUCT_PHP}
-cp -p ${STAGEDIR}/usr/local/bin/php ${STAGEDIR}/php
-cp -p ${STAGEDIR}/usr/bin/true ${STAGEDIR}/usr/local/bin/php
-lock_packages ${STAGEDIR}
 setup_packages ${STAGEDIR}
-unlock_packages ${STAGEDIR}
-cp -p ${STAGEDIR}/php ${STAGEDIR}/usr/local/bin/php
-rm ${STAGEDIR}/php
 setup_extras ${STAGEDIR} ${SELF}
 setup_entropy ${STAGEDIR}
 setup_xbase ${STAGEDIR}
