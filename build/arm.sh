@@ -100,20 +100,7 @@ arm_unmount()
 
 echo -n ">>> Building arm image... "
 
-if [ -n "$(type arm_install_uboot 2> /dev/null)" ]; then
-	arm_install_uboot
-fi
-
-case "${PRODUCT_DEVICE}" in
-odroid-xu3)
-	cp -p ${STAGEDIR}/boot/dtb/exynos5422-odroidxu3.dtb ${STAGEDIR}/boot/msdos/exynos5422-odroidxu3.dtb
-	cp -p /usr/local/share/u-boot/u-boot-odroid-xu3/* ${STAGEDIR}/boot/msdos
-	;;
-orangepi-pc2)
-	cp -p ${STAGEDIR}/boot/dtb/sun50i-h5-orangepi-pc2.dtb ${STAGEDIR}/boot/msdos/sun50i-h5-orangepi-pc2.dtb
-	cp -p /usr/local/share/u-boot/u-boot-orangepi-pc2/* ${STAGEDIR}/boot/msdos
-	;;
-esac
+arm_install_uboot
 
 arm_unmount
 mdconfig -d -u ${DEV}

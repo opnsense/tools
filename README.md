@@ -154,8 +154,7 @@ The final image is built using:
 
     # make arm-<size> DEVICE=BANANAPI
 
-Currently available device are: BANANAPI, odroid-xu3, orangepi-pc2,
-and RPI2.
+Currently available device are: BANANAPI and RPI2.
 
 About other scripts and tweaks
 ==============================
