@@ -225,10 +225,13 @@ export CONFIGDIR="${TOOLSDIR}/config/${PRODUCT_SETTINGS}"
 export DEVICEDIR="${TOOLSDIR}/device"
 export PACKAGESDIR="/.pkg"
 
-# load device-specific environment
-if [ -f ${DEVICEDIR}/${PRODUCT_DEVICE}.conf ]; then
-	. ${DEVICEDIR}/${PRODUCT_DEVICE}.conf
+if [ ! -f ${DEVICEDIR}/${PRODUCT_DEVICE}.conf ]; then
+	echo ">>> No configuration found for device ${PRODUCT_DEVICE}." >&2
+	exit 1
 fi
+
+# load device-specific environment
+. ${DEVICEDIR}/${PRODUCT_DEVICE}.conf
 
 # define and bootstrap target directories
 export STAGEDIR="${STAGEDIRPREFIX}${CONFIGDIR}/${PRODUCT_FLAVOUR}:${PRODUCT_ARCH}"
@@ -265,7 +268,7 @@ esac
 
 for WANT in git ${PRODUCT_WANTS}; do
 	if ! pkg info ${WANT} > /dev/null; then
-		echo ">>> Required build package '${WANT}' is not installed."
+		echo ">>> Required build package '${WANT}' is not installed." >&2
 		exit 1
 	fi
 done
