@@ -94,6 +94,19 @@ EOF
 mkdir -p ${STAGEDIR}/boot/msdos
 mount_msdosfs /dev/${DEV}s1 ${STAGEDIR}/boot/msdos
 
+arm_mount()
+{
+	mount /dev/${DEV}s2a ${STAGEDIR}
+	mount_msdosfs /dev/${DEV}s1 ${STAGEDIR}/boot/msdos
+}
+
+arm_unmount()
+{
+	sync
+	umount ${STAGEDIR}/boot/msdos
+	umount ${STAGEDIR}
+}
+
 echo -n ">>> Building arm image... "
 
 if [ -n "$(type arm_install_uboot 2> /dev/null)" ]; then
@@ -140,10 +153,7 @@ rpi3)
 	;;
 esac
 
-sync
-umount ${STAGEDIR}/boot/msdos
-umount ${STAGEDIR}
-
+arm_unmount
 mdconfig -d -u ${DEV}
 
 echo "done"

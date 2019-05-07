@@ -635,7 +635,7 @@ check_image()
 	SELF=${1}
 	SKIP=${2}
 
-	IMAGE=$(find ${IMAGESDIR} -name "*-${SELF}-${PRODUCT_ARCH}.*")
+	IMAGE=$(find ${IMAGESDIR} -name "*-${SELF}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*")
 
 	if [ -f "${IMAGE}" -a -z "${SKIP}" ]; then
 		echo ">>> Reusing ${SELF} image: ${IMAGE}"
