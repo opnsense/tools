@@ -138,23 +138,23 @@ boot files to be installed as prompted by the build system.
 A cross-build on the operating system sources is executed by
 specifying the target architecture and custom kernel:
 
-    # make base kernel DEVICE=bananapi
+    # make base kernel DEVICE=BANANAPI
 
 In order to speed up building of using an emulated packages build,
 the xtools set can be created like so:
 
-    # make xtools DEVICE=bananapi
+    # make xtools DEVICE=BANANAPI
 
 The xtools set is then used during the packages build similar to
 the distfiles set.
 
-    # make packages DEVICE=bananapi
+    # make packages DEVICE=BANANAPI
 
 The final image is built using:
 
-    # make arm-<size> DEVICE=bananapi
+    # make arm-<size> DEVICE=BANANAPI
 
-Currently available device are: bananapi, odroid-xu3, orangepi-pc2,
+Currently available device are: BANANAPI, odroid-xu3, orangepi-pc2,
 rpi2 and rpi3.
 
 About other scripts and tweaks

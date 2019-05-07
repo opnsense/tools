@@ -85,8 +85,6 @@ setup_extras ${STAGEDIR} ${SELF}
 setup_entropy ${STAGEDIR}
 setup_xbase ${STAGEDIR}
 
-echo -n ">>> Building arm image... "
-
 cat > ${STAGEDIR}/etc/fstab << EOF
 # Device		Mountpoint	FStype	Options		Dump	Pass#
 /dev/ufs/${ARMLABEL}	/		ufs	rw		1	1
@@ -95,6 +93,8 @@ EOF
 
 mkdir -p ${STAGEDIR}/boot/msdos
 mount_msdosfs /dev/${DEV}s1 ${STAGEDIR}/boot/msdos
+
+echo -n ">>> Building arm image... "
 
 if [ -n "$(type arm_install_uboot 2> /dev/null)" ]; then
 	arm_install_uboot
@@ -140,6 +140,7 @@ rpi3)
 	;;
 esac
 
+sync
 umount ${STAGEDIR}/boot/msdos
 umount ${STAGEDIR}
 
