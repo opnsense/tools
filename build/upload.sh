@@ -40,10 +40,10 @@ upload()
 for ARG in ${@}; do
 	case ${ARG} in
 	arm|dvd|nano|serial|vga|vm)
-		upload ${ARG} ${IMAGESDIR} "*-${PRODUCT_FLAVOUR}-${ARG}-*"
+		upload ${ARG} ${IMAGESDIR} "*-${PRODUCT_FLAVOUR}-*${ARG}-*${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}*"
 		;;
 	base|kernel)
-		upload ${ARG} ${SETSDIR} "${ARG}-*"
+		upload ${ARG} ${SETSDIR} "${ARG}-*${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}*"
 		;;
 	log)
 		upload ${ARG} ${LOGSDIR} "${PRODUCT_VERSION}-*"
