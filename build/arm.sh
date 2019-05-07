@@ -113,22 +113,6 @@ orangepi-pc2)
 	cp -p ${STAGEDIR}/boot/dtb/sun50i-h5-orangepi-pc2.dtb ${STAGEDIR}/boot/msdos/sun50i-h5-orangepi-pc2.dtb
 	cp -p /usr/local/share/u-boot/u-boot-orangepi-pc2/* ${STAGEDIR}/boot/msdos
 	;;
-rpi3)
-	mkdir -p ${STAGEDIR}/boot/msdos/overlays
-	cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
-	cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/boot/msdos/ubldr.bin
-	cp -p ${STAGEDIR}/boot/dtb/bcm2837-rpi-3-b.dtb ${STAGEDIR}/boot/msdos/bcm2837-rpi-3-b.dtb
-	cp -p /usr/local/share/u-boot/u-boot-rpi3/* ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b.dtb ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/bcm2710-rpi-3-b-plus.dtb ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/bootcode.bin ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/config_rpi3.txt ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/fixup* ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/start* ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/overlays/mmc.dtbo ${STAGEDIR}/boot/msdos/overlays
-	cp -p /usr/local/share/rpi-firmware/overlays/pwm.dtbo ${STAGEDIR}/boot/msdos/overlays
-	cp -p /usr/local/share/rpi-firmware/overlays/pi3-disable-bt.dtbo ${STAGEDIR}/boot/msdos/overlays
-	;;
 esac
 
 arm_unmount
