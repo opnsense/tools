@@ -113,19 +113,6 @@ orangepi-pc2)
 	cp -p ${STAGEDIR}/boot/dtb/sun50i-h5-orangepi-pc2.dtb ${STAGEDIR}/boot/msdos/sun50i-h5-orangepi-pc2.dtb
 	cp -p /usr/local/share/u-boot/u-boot-orangepi-pc2/* ${STAGEDIR}/boot/msdos
 	;;
-rpi2)
-	mkdir -p ${STAGEDIR}/boot/msdos/overlays
-	cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
-	cp -p ${STAGEDIR}/boot/ubldr.bin ${STAGEDIR}/boot/msdos/ubldr.bin
-	cp -p ${STAGEDIR}/boot/dtb/bcm2836-rpi-2-b.dtb ${STAGEDIR}/boot/msdos/bcm2836-rpi-2-b.dtb
-	cp -p /usr/local/share/u-boot/u-boot-rpi2/* ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/bcm2709-rpi-2-b.dtb ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/bootcode.bin ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/config.txt ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/fixup* ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/start* ${STAGEDIR}/boot/msdos
-	cp -p /usr/local/share/rpi-firmware/overlays/mmc.dtbo ${STAGEDIR}/boot/msdos/overlays
-	;;
 rpi3)
 	mkdir -p ${STAGEDIR}/boot/msdos/overlays
 	cp -p ${STAGEDIR}/boot/ubldr ${STAGEDIR}/boot/msdos/ubldr
