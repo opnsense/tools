@@ -31,7 +31,7 @@ SELF=sign
 
 . ./common.sh
 
-BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
+BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
 if [ -f "${BASE_SET}" ]; then
 	generate_signature ${BASE_SET}
 fi

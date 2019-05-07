@@ -43,7 +43,7 @@ for ARG in ${@}; do
 	base)
 		setup_stage ${STAGEDIR} work
 		echo ">>> Repacking base set..."
-		BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
+		BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
 		setup_set ${STAGEDIR}/work ${BASE_SET}
 		cp ${STAGEDIR}/work/usr/local/opnsense/version/base.obsolete \
 		    ${STAGEDIR}/obsolete
@@ -54,7 +54,8 @@ for ARG in ${@}; do
 		generate_signature ${BASE_SET}
 		echo ">>> Renaming base set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
-		    "base-*-${PRODUCT_ARCH}.*"); do
+		    "base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*"); do
+			# XXX likely doesn't work for PRODUCT_DEVICE
 			mv ${FILE} ${SETSDIR}/base-${PRODUCT_VERSION}-${FILE##*-}
 		done
 		;;
@@ -88,6 +89,7 @@ for ARG in ${@}; do
 		echo ">>> Renaming kernel set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*"); do
+			# XXX likely doesn't work for PRODUCT_DEVICE
 			mv ${FILE} ${SETSDIR}/${KERNEL_NAME}-${PRODUCT_VERSION}-${FILE##*-}
 		done
 		;;

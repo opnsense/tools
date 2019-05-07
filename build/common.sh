@@ -448,7 +448,7 @@ setup_xbase()
 		XTOOLS="${XTOOLS} ${XTOOL}"
 	done
 
-	tar -C ${1} -xpf ${SETSDIR}/base-*-${PRODUCT_ARCH}.txz ${XTOOLS}
+	tar -C ${1} -xpf ${SETSDIR}/base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz ${XTOOLS}
 }
 
 setup_xtools()
@@ -544,7 +544,7 @@ setup_base()
 {
 	echo ">>> Setting up world in ${1}"
 
-	tar -C ${1} -xpf ${SETSDIR}/base-*-${PRODUCT_ARCH}.txz
+	tar -C ${1} -xpf ${SETSDIR}/base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 
 	# /home is needed for LiveCD images, and since it
 	# belongs to the base system, we create it from here.

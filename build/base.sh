@@ -31,7 +31,7 @@ SELF=base
 
 . ./common.sh
 
-BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
+BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
 
 if [ -f "${BASE_SET}" -a -z "${1}" ]; then
 	echo ">>> Reusing base set: ${BASE_SET}"
@@ -69,7 +69,7 @@ setup_stage ${STAGEDIR} work
 
 echo ">>> Generating base set:"
 
-BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}.txz
+BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}${PRODUCUT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 
 setup_set ${STAGEDIR}/work ${BASE_OBJ}
 

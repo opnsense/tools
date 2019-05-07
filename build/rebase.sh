@@ -33,7 +33,7 @@ SELF=rebase
 
 setup_stage ${STAGEDIR}
 
-BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}.txz")
+BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
 BASE_OBSOLETE=/usr/local/opnsense/version/base.obsolete
 
 tar -tf ${BASE_SET} | sed -e 's/^\.//g' -e '/\/$/d' | sort > \

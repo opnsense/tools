@@ -39,7 +39,7 @@ for ARG in ${@}; do
 		;;
 	base)
 		echo ">>> Removing base set"
-		rm -f ${SETSDIR}/base-*-${PRODUCT_ARCH}.*
+		rm -f ${SETSDIR}/base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*
 		;;
 	core)
 		echo ">>> Removing core from packages set"
