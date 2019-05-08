@@ -55,6 +55,8 @@ for STAGE in update info base kernel xtools distfiles; do
 	(time make ${STAGE} 2>&1) > ${LOG}
 done
 
+set +e
+
 for FLAVOUR in ${FLAVOURS}; do
 	(make clean-${CLEAN} FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
 done
