@@ -50,6 +50,7 @@ while getopts ${OPTS} OPT; do
 		export PRODUCT_SPEED=${OPTARG}
 		;;
 	d)
+		export PRODUCT_DEVICE_REAL=${OPTARG}
 		export PRODUCT_DEVICE=${OPTARG}
 		;;
 	D)
@@ -185,7 +186,7 @@ if [ -z "${PRODUCT_NAME}" -o \
     -z "${PRODUCT_VERSION}" -o \
     -z "${PRODUCT_SETTINGS}" -o \
     -z "${PRODUCT_MIRROR}" -o \
-    -z "${PRODUCT_DEVICE}" -o \
+    -z "${PRODUCT_DEVICE_REAL}" -o \
     -z "${PRODUCT_SPEED}" -o \
     -z "${PRODUCT_SERVER}" -o \
     -z "${PRODUCT_PHP}" -o \
@@ -225,13 +226,13 @@ export CONFIGDIR="${TOOLSDIR}/config/${PRODUCT_SETTINGS}"
 export DEVICEDIR="${TOOLSDIR}/device"
 export PACKAGESDIR="/.pkg"
 
-if [ ! -f ${DEVICEDIR}/${PRODUCT_DEVICE}.conf ]; then
-	echo ">>> No configuration found for device ${PRODUCT_DEVICE}." >&2
+if [ ! -f ${DEVICEDIR}/${PRODUCT_DEVICE_REAL}.conf ]; then
+	echo ">>> No configuration found for device ${PRODUCT_DEVICE_REAL}." >&2
 	exit 1
 fi
 
 # load device-specific environment
-. ${DEVICEDIR}/${PRODUCT_DEVICE}.conf
+. ${DEVICEDIR}/${PRODUCT_DEVICE_REAL}.conf
 
 # reload the kernel according to device specifications
 export PRODUCT_KERNEL="${PRODUCT_KERNEL}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}"
