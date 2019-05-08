@@ -30,6 +30,10 @@ set -e
 FLAVOURS="OpenSSL LibreSSL"
 CLEAN=packages
 
+if [ ${PRODUCT_ARCH} = armv6 -o ${PRODUCT_ARCH} = aarch64 ]; then
+	FLAVOURS="OpenSSL"
+fi
+
 if [ -n "${1}" ]; then
 	CLEAN=plugins,core
 fi
