@@ -34,7 +34,7 @@ SELF=download
 download()
 {
 	echo ">>> Downloading ${1} from ${PRODUCT_SERVER}..."
-	scp ${PRODUCT_SERVER}:"${2}/${3}" ${2}
+	(cd ${2}; echo "get ${2}/${3}" | sftp ${PRODUCT_SERVER})
 }
 
 for ARG in ${@}; do
