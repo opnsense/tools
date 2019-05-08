@@ -81,7 +81,7 @@ MIRRORS?=	https://opnsense.c0urier.net \
 		http://mirror.fra10.de.leaseweb.net/opnsense \
 		http://mirror.ams1.nl.leaseweb.net/opnsense
 SERVER?=	user@does.not.exist
-UPLOADDIR?=	# empty
+UPLOADDIR?=	.
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
 STAGEDIRPREFIX?=/usr/obj

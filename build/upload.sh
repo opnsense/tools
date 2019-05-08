@@ -34,7 +34,7 @@ SELF=upload
 upload()
 {
 	echo ">>> Uploading ${1} to ${PRODUCT_SERVER}..."
-	(cd ${2}; scp ${3} ${PRODUCT_SERVER}:${UPLOADDIR})
+	(echo "cd ${UPLOADDIR}"; echo "put ${2}/${3}") | sftp ${PRODUCT_SERVER}
 }
 
 for ARG in ${@}; do
