@@ -30,6 +30,8 @@ set -e
 FLAVOURS="OpenSSL LibreSSL"
 CLEAN=packages
 
+eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX)"
+
 if [ ${PRODUCT_ARCH} = armv6 -o ${PRODUCT_ARCH} = aarch64 ]; then
 	FLAVOURS="OpenSSL"
 fi
@@ -37,8 +39,6 @@ fi
 if [ -n "${1}" ]; then
 	CLEAN=plugins,core
 fi
-
-eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX)"
 
 for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | \
     sort -r | tail -n +7); do
