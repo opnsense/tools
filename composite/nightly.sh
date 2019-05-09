@@ -25,8 +25,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-set -e
-
 FLAVOURS="OpenSSL LibreSSL"
 CLEAN=packages
 
@@ -54,8 +52,6 @@ for STAGE in update info base kernel xtools distfiles; do
 	# we don't normally clean these stages
 	(time make ${STAGE} 2>&1) > ${LOG}
 done
-
-set +e
 
 for FLAVOUR in ${FLAVOURS}; do
 	(make clean-${CLEAN} FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
