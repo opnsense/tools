@@ -58,7 +58,7 @@ cat > ${STAGEDIR}/etc/fstab << EOF
 /dev/ufs/${NANOLABEL}	/		ufs	rw		1	1	# notrim
 EOF
 
-makefs -t ffs -s ${NANOSIZE} -B little \
+makefs -t ffs -s ${NANOSIZE} -B little -f 250000 \
     -o label=${NANOLABEL} ${NANOIMG} ${STAGEDIR}
 
 DEV=$(mdconfig -a -t vnode -f ${NANOIMG})
