@@ -190,7 +190,7 @@ if [ -n "${UNUSED}" ]; then
 			echo ">>> Refreshing ${PORT}"
 
 			rm -fr ${PORTSDIR}/${PORT}
-			cp -r ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
+			cp -R ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
 		done
 	done
 

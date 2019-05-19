@@ -429,7 +429,7 @@ setup_copy()
 	# in case we want to clobber HEAD
 	rm -rf ${1}${2}
 	mkdir -p $(dirname ${1}${2})
-	cp -r ${2} ${1}${2}
+	cp -R ${2} ${1}${2}
 }
 
 setup_xbase()

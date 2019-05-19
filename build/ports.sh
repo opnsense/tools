@@ -105,7 +105,7 @@ trap : 2
 ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || true
 # create a caching mirror for all temporary package dependencies
 mkdir -p ${PACKAGESDIR}-cache
-cp -r ${PACKAGESDIR}/All ${PACKAGESDIR}-cache/All
+cp -R ${PACKAGESDIR}/All ${PACKAGESDIR}-cache/All
 
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	FLAVOR=\${PORT_ORIGIN##*@}

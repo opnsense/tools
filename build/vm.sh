@@ -68,7 +68,7 @@ mount /dev/${DEV} ${STAGEDIR}/mnt
 setup_base ${STAGEDIR}/mnt
 
 # need these again later
-cp -r ${STAGEDIR}/mnt/boot ${STAGEDIR}
+cp -R ${STAGEDIR}/mnt/boot ${STAGEDIR}
 
 setup_kernel ${STAGEDIR}/mnt
 setup_packages ${STAGEDIR}/mnt
