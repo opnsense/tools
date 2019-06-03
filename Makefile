@@ -68,7 +68,6 @@ FLAVOUR?=	OpenSSL
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
 KERNEL?=	SMP
-QUICK?=		#yes
 ADDITIONS?=	os-dyndns${SUFFIX}
 DEVICE?=	A10
 SPEED?=		115200
@@ -150,7 +149,7 @@ ${STEP}: lint-steps
 	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
-	    -H "${COREENV}" -Q "${QUICK}" -u "${UEFI:tl}" -U "${SUFFIX}" \
+	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
 	    -q "${VERSIONS}" -h "${PLUGINSENV}" -I "${UPLOADDIR}" \
 	    -D "${DEVELBRANCH}" ${${STEP}_ARGS}

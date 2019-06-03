@@ -38,22 +38,13 @@ cat ${CONFIGDIR}/plugins.conf | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
 		continue
 	fi
 	if [ -n "${PLUGIN_IGNORE}" ]; then
-		QUICK=
 		for PLUGIN_QUIRK in $(echo ${PLUGIN_IGNORE} | tr ',' ' '); do
 			if [ ${PLUGIN_QUIRK} = ${PRODUCT_TARGET} -o \
 			     ${PLUGIN_QUIRK} = ${PRODUCT_ARCH} -o \
 			     ${PLUGIN_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
 				continue 2
 			fi
-			if [ ${PLUGIN_QUIRK} = "quick" ]; then
-				QUICK=1
-			fi
 		done
-		if [ -n "${PRODUCT_QUICK}" -a -z "${QUICK}" ]; then
-			# speed up build by skipping all annotations,
-			# our core should work without all of them.
-			continue
-		fi
 	fi
 	echo ${PLUGIN_ORIGIN}
 done
