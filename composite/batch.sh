@@ -25,8 +25,8 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-for FLAVOUR in OpenSSL LibreSSL; do
-	make clean-obj ${*} FLAVOUR=${FLAVOUR}
+for _FLAVOUR in ${FLAVOUR}; do
+	make clean-obj ${*} FLAVOUR=${_FLAVOUR}
 done
 
 make clean-obj

@@ -64,7 +64,7 @@ CONFIG?=	${TOOLSDIR}/config/${SETTINGS}/build.conf
 NAME?=		OPNsense
 TYPE?=		${NAME:tl}
 SUFFIX?=	#-devel
-FLAVOUR?=	OpenSSL
+FLAVOUR?=	OpenSSL LibreSSL # first one is default
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
 KERNEL?=	SMP
@@ -142,7 +142,7 @@ VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 ${STEP}: lint-steps
 	${VERBOSE_HIDDEN} cd ${.CURDIR}/build && \
 	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} -F ${KERNEL} \
-	    -f ${FLAVOUR} -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
+	    -f "${FLAVOUR}" -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
@@ -157,6 +157,6 @@ ${STEP}: lint-steps
 
 .for SCRIPT in ${SCRIPTS}
 ${SCRIPT}: lint-composite
-	${VERBOSE_HIDDEN} cd ${.CURDIR} && sh ${VERBOSE_FLAGS} \
-	    ./composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
+	${VERBOSE_HIDDEN} cd ${.CURDIR} && FLAVOUR="${FLAVOUR}" \
+	    sh ${VERBOSE_FLAGS} ./composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
 .endfor

@@ -25,14 +25,9 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-FLAVOURS="OpenSSL LibreSSL"
 CLEAN=packages
 
 eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX)"
-
-if [ ${PRODUCT_ARCH} = armv6 -o ${PRODUCT_ARCH} = aarch64 ]; then
-	FLAVOURS="OpenSSL"
-fi
 
 if [ -n "${1}" ]; then
 	CLEAN=plugins,core
@@ -53,14 +48,14 @@ for STAGE in update info base kernel xtools distfiles; do
 	(time make ${STAGE} 2>&1) > ${LOG}
 done
 
-for FLAVOUR in ${FLAVOURS}; do
-	(make clean-${CLEAN} FLAVOUR=${FLAVOUR} 2>&1) > /dev/null
+for _FLAVOUR in ${FLAVOUR}; do
+	(make clean-${CLEAN} FLAVOUR=${_FLAVOUR} 2>&1) > /dev/null
 done
 
 for STAGE in ports plugins core test; do
-	for FLAVOUR in ${FLAVOURS}; do
-		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${FLAVOUR}.log
-		((time make ${STAGE}-nightly FLAVOUR=${FLAVOUR} 2>&1) > ${LOG}; \
+	for _FLAVOUR in ${FLAVOUR}; do
+		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${_FLAVOUR}.log
+		((time make ${STAGE}-nightly FLAVOUR=${_FLAVOUR} 2>&1) > ${LOG}; \
 		    tail -n 1000 ${LOG} > ${LOG}.tail) &
 	done
 

@@ -66,7 +66,7 @@ while getopts ${OPTS} OPT; do
 		export PRODUCT_KERNEL=${OPTARG}
 		;;
 	f)
-		export PRODUCT_FLAVOUR=${OPTARG}
+		export PRODUCT_FLAVOUR=${OPTARG%% *}
 		;;
 	G)
 		export PORTSREFBRANCH=${OPTARG}
