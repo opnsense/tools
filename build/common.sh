@@ -1011,7 +1011,7 @@ ${PLUGINSDIR}
 	# might have been a chroot
 	for DIR in ${MOUNTDIRS}; do
 		if [ -d ${STAGE}${DIR} ]; then
-			umount ${STAGE}${DIR} 2> /dev/null || true
+			umount -f ${STAGE}${DIR} 2> /dev/null || true
 		fi
 	done
 
