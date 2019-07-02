@@ -370,6 +370,11 @@ out on the system can be printed using:
 
     # make info
 
+Repositories that have signing keys can show the current
+fingerprint using:
+
+    # make fingerprint
+
 Last but not least, in case build variables needs to be inspected,
 they can be printed selectively using:
 

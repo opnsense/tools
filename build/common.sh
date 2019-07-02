@@ -256,7 +256,7 @@ export PRODUCT_PLUGIN="os-*${PRODUCT_SUFFIX}"
 
 
 case "${SELF}" in
-confirm|info|print)
+confirm|fingerprint|info|print)
 	;;
 *)
 	if [ -z "${PRINT_ENV_SKIP}" ]; then
