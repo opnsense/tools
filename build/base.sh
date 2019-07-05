@@ -88,12 +88,13 @@ echo -n ">>> Generating obsolete file list... "
 
 : > ${STAGEDIR}/setdiff.old
 if [ -f ${CONFIGDIR}/plist.base.${PRODUCT_ARCH} ]; then
-	cp ${CONFIGDIR}/plist.base.${PRODUCT_ARCH} ${STAGEDIR}/setdiff.old
+	sort -u < ${CONFIGDIR}/plist.base.${PRODUCT_ARCH} > ${STAGEDIR}/setdiff.old
 fi
 
 : > ${STAGEDIR}/setdiff.tmp
 if [ -f ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH} ]; then
-	diff -u ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH} \
+	sort -u < ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH} > ${STAGEDIR}/setdiff.sort
+	diff -u ${STAGEDIR}/setdiff.sort \
 	    ${STAGEDIR}/setdiff.new | grep '^-/' | \
 	    cut -b 2- > ${STAGEDIR}/setdiff.tmp
 fi
