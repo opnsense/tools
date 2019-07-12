@@ -1891,7 +1891,9 @@
 /usr/include/net/netisr.h
 /usr/include/net/netisr_internal.h
 /usr/include/net/netmap.h
+/usr/include/net/netmap_legacy.h
 /usr/include/net/netmap_user.h
+/usr/include/net/netmap_virt.h
 /usr/include/net/paravirt.h
 /usr/include/net/pfil.h
 /usr/include/net/pfkeyv2.h
