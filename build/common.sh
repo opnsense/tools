@@ -490,6 +490,8 @@ setup_norun()
 {
 	# prevent the start of configd
 	echo 'configd_enable="NO"' >> ${1}/etc/rc.conf.local
+
+	mount -t devfs devfs ${1}/dev 2> /dev/null || true
 }
 
 setup_chroot()
@@ -501,7 +503,6 @@ setup_chroot()
 	echo ">>> Setting up chroot in ${1}"
 
 	cp /etc/resolv.conf ${1}/etc
-	mount -t devfs devfs ${1}/dev
 	chroot ${1} /bin/sh /etc/rc.d/ldconfig start
 }
 
@@ -922,6 +923,9 @@ setup_packages()
 
 	# stop blocking start of configd
 	rm ${1}/etc/rc.conf.local
+
+	# remove device node required by pkg
+	umount -f ${1}/dev
 }
 
 _setup_extras_generic()
