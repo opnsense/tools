@@ -538,11 +538,9 @@ setup_version()
 	mtree -c -k uid,gid,mode,size,sha256digest -p ${2} \
 	    -X ${1}/mtree.exclude > ${1}/mtree
 	mv ${1}/mtree ${VERSIONDIR}/${3}.mtree
-	chmod 600 ${VERSIONDIR}/${3}.mtree
 	rm ${1}/mtree.exclude
-
-	# generate a signature for mtree if possible
 	generate_signature ${VERSIONDIR}/${3}.mtree
+	chmod 600 ${VERSIONDIR}/${3}.mtree*
 
 	# for testing, custom builds, etc.
 	#touch ${VERSIONDIR}/${3}.lock
