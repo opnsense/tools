@@ -36,8 +36,8 @@ setup_stage ${STAGEDIR}
 BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
 BASE_OBSOLETE=/usr/local/opnsense/version/base.obsolete
 
-tar -tf ${BASE_SET} | sed -e 's/^\.//g' -e '/\/$/d' | sort > \
-    ${CONFIGDIR}/plist.base.${PRODUCT_ARCH}
+tar -tf ${BASE_SET} | sed -e 's/^\.//g' -e '/\/$/d' | \
+    grep -v '\.mtree\.sig$' | sort > ${CONFIGDIR}/plist.base.${PRODUCT_ARCH}
 
 tar -C ${STAGEDIR} -xf ${BASE_SET} .${BASE_OBSOLETE}
 cp ${STAGEDIR}${BASE_OBSOLETE} ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH}

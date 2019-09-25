@@ -73,7 +73,7 @@ BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRO
 
 setup_set ${STAGEDIR}/work ${BASE_OBJ}
 
-# XXX needs to be in obsolete file list for control purposes
+# needs to be in obsolete file list for control purposes
 mkdir -p ${STAGEDIR}/work/usr/local/opnsense/version
 touch ${STAGEDIR}/work/usr/local/opnsense/version/base
 touch ${STAGEDIR}/work/usr/local/opnsense/version/base.arch

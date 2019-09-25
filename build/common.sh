@@ -541,6 +541,9 @@ setup_version()
 	chmod 600 ${VERSIONDIR}/${3}.mtree
 	rm ${1}/mtree.exclude
 
+	# generate a signature for mtree if possible
+	generate_signature ${VERSIONDIR}/${3}.mtree
+
 	# for testing, custom builds, etc.
 	#touch ${VERSIONDIR}/${3}.lock
 }
