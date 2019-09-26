@@ -176,37 +176,43 @@ done
 
 shift $((${OPTIND} - 1))
 
-if [ -z "${PRODUCT_NAME}" -o \
-    -z "${PRODUCT_TYPE}" -o \
-    -z "${PRODUCT_ARCH}" -o \
-    -z "${PRODUCT_FLAVOUR}" -o \
-    -z "${PRODUCT_VERSION}" -o \
-    -z "${PRODUCT_SETTINGS}" -o \
-    -z "${PRODUCT_MIRROR}" -o \
-    -z "${PRODUCT_DEVICE_REAL}" -o \
-    -z "${PRODUCT_SPEED}" -o \
-    -z "${PRODUCT_SERVER}" -o \
-    -z "${PRODUCT_PHP}" -o \
-    -z "${PRODUCT_PERL}" -o \
-    -z "${PRODUCT_PYTHON2}" -o \
-    -z "${PRODUCT_PYTHON3}" -o \
-    -z "${PRODUCT_RUBY}" -o \
-    -z "${PRODUCT_KERNEL}" -o \
-    -z "${PRODUCT_GITBASE}" -o \
-    -z "${PLUGINSBRANCH}" -o \
-    -z "${PLUGINSDIR}" -o \
-    -z "${PORTSBRANCH}" -o \
-    -z "${PORTSDIR}" -o \
-    -z "${PORTSREFDIR}" -o \
-    -z "${TOOLSBRANCH}" -o \
-    -z "${TOOLSDIR}" -o \
-    -z "${COREBRANCH}" -o \
-    -z "${COREDIR}" -o \
-    -z "${SRCBRANCH}" -o \
-    -z "${SRCDIR}" ]; then
-	echo "${0}: Missing argument" >&2
-	exit 1
-fi
+CHECK_MISSING="
+PRODUCT_NAME
+PRODUCT_TYPE
+PRODUCT_ARCH
+PRODUCT_FLAVOUR
+PRODUCT_VERSION
+PRODUCT_SETTINGS
+PRODUCT_MIRROR
+PRODUCT_DEVICE_REAL
+PRODUCT_SPEED
+PRODUCT_SERVER
+PRODUCT_PHP
+PRODUCT_PERL
+PRODUCT_PYTHON2
+PRODUCT_PYTHON3
+PRODUCT_RUBY
+PRODUCT_KERNEL
+PRODUCT_GITBASE
+PLUGINSBRANCH
+PLUGINSDIR
+PORTSBRANCH
+PORTSDIR
+PORTSREFDIR
+TOOLSBRANCH
+TOOLSDIR
+COREBRANCH
+COREDIR
+SRCBRANCH
+SRCDIR
+"
+
+for MISSING in ${CHECK_MISSING}; do
+	if [ -z "$(eval "echo \${${MISSING}}")" ]; then
+		echo "${0}: Missing argument ${MISSING}" >&2
+		exit 1
+	fi
+done
 
 # misc. foo
 export CPUS=$(sysctl kern.smp.cpus | awk '{ print $2 }')
