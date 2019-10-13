@@ -33,7 +33,7 @@ SELF=ports
 
 if [ -z "${PORTS_LIST}" ]; then
 	PORTS_LIST=$(
-cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
+cat ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 	eval PORT_ORIGIN=${PORT_ORIGIN}
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
