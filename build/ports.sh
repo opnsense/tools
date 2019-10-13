@@ -79,8 +79,6 @@ if [ -f ${MAKE_CONF} ]; then
 	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
 fi
 
-PORTS_LIST=$(echo ports-mgmt/pkg; echo "${PORTS_LIST}")
-
 cat > ${STAGEDIR}/bin/echotime <<EOF
 #!/bin/sh
 echo "[\$(date '+%Y%m%d%H%M%S')]" \${*}
@@ -177,7 +175,6 @@ UNAME_r=\$(freebsd-version)
 	make -s -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
 
 	pkg set -yaA1
-	pkg set -yA0 ports-mgmt/pkg
 	pkg autoremove -y
 done
 EOF
