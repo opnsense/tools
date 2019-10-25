@@ -32,7 +32,7 @@ SELF=arm
 
 . ./common.sh
 
-if [ ${PRODUCT_ARCH} != armv6 -a ${PRODUCT_ARCH} != aarch64 ]; then
+if [ ${PRODUCT_ARCH} != armv6 -a ${PRODUCT_ARCH} != armv7 -a ${PRODUCT_ARCH} != aarch64 ]; then
 	echo ">>> Cannot build arm image with arch ${PRODUCT_ARCH}"
 	exit 1
 fi
@@ -56,7 +56,7 @@ truncate -s ${ARMSIZE} ${ARMIMG}
 
 DEV=$(mdconfig -a -t vnode -f ${ARMIMG} -x 63 -y 255)
 
-ARM_FAT_SIZE=${ARM_FAT_SIZE:-"50m"}
+ARM_FAT_SIZE=${ARM_FAT_SIZE:-"50m -b 1m"}
 
 gpart create -s MBR ${DEV}
 gpart add -t '!12' -a 512k -s ${ARM_FAT_SIZE} ${DEV}
@@ -101,7 +101,6 @@ arm_unmount()
 echo -n ">>> Building arm image... "
 
 arm_install_uboot
-
 arm_unmount
 mdconfig -d -u ${DEV}
 
