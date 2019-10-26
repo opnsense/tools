@@ -64,6 +64,7 @@ rm -f ${BASE_OBJ}
 # XXX Temporary fix for cross build
 if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
 	ln -s ${OBJDIR}/${PRODUCT_TARGET}.${PRODUCT_ARCH}/release/base.txz ${BASE_OBJ}
+fi
 
 ${ENV_FILTER} make -s -C${SRCDIR}/release base.txz ${MAKE_ARGS}
 

@@ -77,6 +77,7 @@ rm -f ${KERNEL_OBJ} ${DEBUG_OBJ}
 # XXX Temporary fix for cross build
 if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
 	ln -s ${OBJDIR}/${PRODUCT_TARGET}.${PRODUCT_ARCH}/release/kernel.txz ${KERNEL_OBJ}
+fi
 
 # We used kernel.txz because we did not rewrite it,
 # but as time went on and version info was embedded
