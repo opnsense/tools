@@ -74,6 +74,10 @@ KERNEL_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz
 DEBUG_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel-dbg.txz
 rm -f ${KERNEL_OBJ} ${DEBUG_OBJ}
 
+# XXX Temporary fix for cross build
+if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
+	ln -s ${OBJDIR}/${PRODUCT_TARGET}.${PRODUCT_ARCH}/release/kernel.txz ${KERNEL_OBJ}
+
 # We used kernel.txz because we did not rewrite it,
 # but as time went on and version info was embedded
 # for tighter signature verification handling it is

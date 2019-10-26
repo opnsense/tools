@@ -61,6 +61,10 @@ setup_stage "${BASE_OBJDIR}/${BASE_DISTDIR}"
 BASE_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/base.txz
 rm -f ${BASE_OBJ}
 
+# XXX Temporary fix for cross build
+if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
+	ln -s ${OBJDIR}/${PRODUCT_TARGET}.${PRODUCT_ARCH}/release/base.txz ${BASE_OBJ}
+
 ${ENV_FILTER} make -s -C${SRCDIR}/release base.txz ${MAKE_ARGS}
 
 sh ./clean.sh ${SELF}
