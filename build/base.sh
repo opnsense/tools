@@ -73,7 +73,7 @@ BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRO
 
 # XXX Temporary fix for cross build
 if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
-	ln -s ${OBJDIR}/${PRODUCT_TARGET}.${PRODUCT_ARCH}/release/base.txz ${BASE_OBJ}
+	ln -s /usr/obj/usr/src/${PRODUCT_TARGET}.${PRODUCT_ARCH}/release/base.txz ${BASE_OBJ}
 fi
 
 setup_set ${STAGEDIR}/work ${BASE_OBJ}

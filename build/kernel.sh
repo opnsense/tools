@@ -90,7 +90,7 @@ echo ">>> Generating kernel set:"
 
 # XXX Temporary fix for cross build
 if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
-	ln -s ${OBJDIR}/${PRODUCT_TARGET}.${PRODUCT_ARCH}/release/kernel.txz ${KERNEL_OBJ}
+	ln -s /usr/obj/usr/src/${PRODUCT_TARGET}.${PRODUCT_ARCH}/release/kernel.txz ${KERNEL_OBJ}
 fi
 
 setup_set ${STAGEDIR}/work ${KERNEL_OBJ}
