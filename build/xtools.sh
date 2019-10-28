@@ -56,6 +56,8 @@ MAKE_ARGS="TARGET_ARCH=${PRODUCT_ARCH} TARGET=${PRODUCT_TARGET}"
 MAKE_ARGS="${MAKE_ARGS} SRCCONF=${CONFIGDIR}/src.conf __MAKE_CONF="
 
 ${ENV_FILTER} make -C${SRCDIR} -j${CPUS} native-xtools ${MAKE_ARGS} NO_CLEAN=yes
+# XXX Temporary fix for cross build
+${ENV_FILTER} make -C${SRCDIR} -j${CPUS} native-xtools-install ${MAKE_ARGS} NO_CLEAN=yes
 
 XTOOLS_DIR=$(make -C${SRCDIR} -f Makefile.inc1 -V OBJTREE ${MAKE_ARGS})/nxb-bin
 
