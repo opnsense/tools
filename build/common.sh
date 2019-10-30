@@ -260,6 +260,8 @@ export PRODUCT_CORE="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
 export PRODUCT_PLUGINS="os-*"
 export PRODUCT_PLUGIN="os-*${PRODUCT_SUFFIX}"
 
+# get the current version for the selected source repository
+eval export SRC$(grep ^REVISION= ${SRCDIR}/sys/conf/newvers.sh)
 
 case "${SELF}" in
 confirm|fingerprint|info|print)
