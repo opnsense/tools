@@ -31,8 +31,7 @@ SELF=prefetch
 
 . ./common.sh
 
-# XXX does not adapt to FreeBSD version used
-ABI="FreeBSD:11:${PRODUCT_ARCH}/${PRODUCT_SETTINGS}"
+ABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}/${PRODUCT_SETTINGS}"
 
 for ARG in ${@}; do
 	case ${ARG} in
