@@ -103,5 +103,3 @@ echo -n ">>> Building arm image... "
 arm_install_uboot
 arm_unmount
 mdconfig -d -u ${DEV}
-
-echo "done"
