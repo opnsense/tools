@@ -33,7 +33,7 @@ SELF=ports
 
 if [ -z "${PORTS_LIST}" ]; then
 	PORTS_LIST=$(
-cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
+cat ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 	eval PORT_ORIGIN=${PORT_ORIGIN}
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
@@ -78,8 +78,6 @@ MAKE_CONF="${CONFIGDIR}/make.conf"
 if [ -f ${MAKE_CONF} ]; then
 	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
 fi
-
-PORTS_LIST=$(echo ports-mgmt/pkg; echo "${PORTS_LIST}")
 
 cat > ${STAGEDIR}/bin/echotime <<EOF
 #!/bin/sh
@@ -177,7 +175,6 @@ UNAME_r=\$(freebsd-version)
 	make -s -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
 
 	pkg set -yaA1
-	pkg set -yA0 ports-mgmt/pkg
 	pkg autoremove -y
 done
 EOF

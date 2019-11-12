@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -35,7 +35,7 @@ setup_stage ${STAGEDIR}
 
 if [ -z "${PORTS_LIST}" ]; then
 	PORTS_LIST=$(
-cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf | \
+cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf | \
     while read PORT_ORIGIN PORT_IGNORE; do
 	eval PORT_ORIGIN=${PORT_ORIGIN}
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then

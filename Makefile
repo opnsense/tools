@@ -24,8 +24,8 @@
 # SUCH DAMAGE.
 
 STEPS=		arm base boot chroot clean compress confirm core distfiles \
-		download dvd fingerprint info kernel nano plugins ports \
-		prefetch print rebase release rename rewind serial sign \
+		download dvd fingerprint info kernel nano packages plugins \
+		ports prefetch print rebase release rename rewind serial sign \
 		skim test update upload verify vga vm xtools
 SCRIPTS=	batch hotfix nightly
 
