@@ -20,6 +20,25 @@ options		TCP_SIGNATURE
 # XXX required for GEOM
 device		xz
 
+# Additional built-in devices
+device		bwi
+device		bwn
+device		rum
+device		run
+device		u3g
+device		uark
+device		uath
+device		uftdi
+device		umct
+device		umodem
+device		upgt
+device		uplcom
+device		ural
+device		urtw
+device		uvisor
+device		uvscom
+device		zyd
+
 # Wireless features
 device		wlan_acl
 device		wlan_xauth
