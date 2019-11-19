@@ -45,7 +45,13 @@ mkdir -p ${LOGSDIR}/${PRODUCT_VERSION}
 for STAGE in update info base kernel xtools distfiles; do
 	LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}.log
 	# we don't normally clean these stages
-	(time make ${STAGE} 2>&1) > ${LOG}
+	(time make ${STAGE} 2>&1 || touch ${LOG}.err) > ${LOG}
+
+	if [ -f ${LOG}.err ]; then
+		echo ">>> Stage ${STAGE} was aborted due to an error" > ${LOG}.err
+		FLAVOUR=
+		break
+	fi
 done
 
 for _FLAVOUR in ${FLAVOUR}; do
@@ -55,11 +61,28 @@ done
 for STAGE in ports plugins core test; do
 	for _FLAVOUR in ${FLAVOUR}; do
 		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${_FLAVOUR}.log
-		((time make ${STAGE}-nightly FLAVOUR=${_FLAVOUR} 2>&1) > ${LOG}; \
+		((time make ${STAGE}-nightly FLAVOUR=${_FLAVOUR} 2>&1 || touch ${LOG}.err) > ${LOG}; \
 		    tail -n 1000 ${LOG} > ${LOG}.tail) &
 	done
 
 	wait
+
+	for _FLAVOUR in ${FLAVOUR}; do
+		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${_FLAVOUR}.log
+		if [ -f ${LOG}.err ]; then
+			echo ">>> Stage ${STAGE}-${_FLAVOUR} was aborted due to an error" > ${LOG}.err
+
+			___FLAVOUR=
+
+			for __FLAVOUR in ${FLAVOUR}; do
+				if [ ${__FLAVOUR} != ${_FLAVOUR} ]; then
+					___FLAVOUR="${___FLAVOUR} ${__FLAVOUR}"
+				fi
+			done
+
+			FLAVOUR=${___FLAVOUR}
+		fi
+	done
 done
 
 tar -C ${TARGETDIRPREFIX} -cJf \
