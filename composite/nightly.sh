@@ -42,6 +42,8 @@ done
 
 mkdir -p ${LOGSDIR}/${PRODUCT_VERSION}
 
+FLAVOUR_TOP=${FLAVOUR}
+
 for STAGE in update info base kernel xtools distfiles; do
 	LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}.log
 	# we don't normally clean these stages
@@ -84,6 +86,8 @@ for STAGE in ports plugins core test; do
 		fi
 	done
 done
+
+FLAVOUR=${FLAVOUR_TOP}
 
 tar -C ${TARGETDIRPREFIX} -cJf \
     ${LOGSDIR}/${PRODUCT_VERSION}-${PRODUCT_ARCH}.txz \
