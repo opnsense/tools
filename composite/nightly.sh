@@ -26,6 +26,8 @@
 # SUCH DAMAGE.
 
 CLEAN=packages
+FLAVOUR_TOP=${FLAVOUR}
+LINES=500
 
 eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX)"
 
@@ -41,8 +43,6 @@ done
 (make clean-obj 2>&1) > /dev/null
 
 mkdir -p ${LOGSDIR}/${PRODUCT_VERSION}
-
-FLAVOUR_TOP=${FLAVOUR}
 
 for STAGE in update info base kernel xtools distfiles; do
 	LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}.log
@@ -63,8 +63,7 @@ done
 for STAGE in ports plugins core test; do
 	for _FLAVOUR in ${FLAVOUR}; do
 		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${_FLAVOUR}.log
-		((time make ${STAGE}-nightly FLAVOUR=${_FLAVOUR} 2>&1 || touch ${LOG}.err) > ${LOG}; \
-		    tail -n 1000 ${LOG} > ${LOG}.tail) &
+		(time make ${STAGE}-nightly FLAVOUR=${_FLAVOUR} 2>&1 || touch ${LOG}.err) > ${LOG} &
 	done
 
 	wait
@@ -72,7 +71,8 @@ for STAGE in ports plugins core test; do
 	for _FLAVOUR in ${FLAVOUR}; do
 		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${_FLAVOUR}.log
 		if [ -f ${LOG}.err ]; then
-			echo ">>> Stage ${STAGE}-${_FLAVOUR} was aborted due to an error" > ${LOG}.err
+			echo ">>> Stage ${STAGE}-${_FLAVOUR} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
+		        tail -n ${LINES} ${LOG} >> ${LOG}.err
 
 			___FLAVOUR=
 
