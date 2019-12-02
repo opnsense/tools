@@ -41,11 +41,11 @@ for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | \
 	(cd ${LOGSDIR}; rm ${RECYCLE})
 done
 
+mkdir -p ${LOGSDIR}/${PRODUCT_VERSION}
+
 LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-clean.log"
 
 (time make clean-obj 2>&1) > ${LOG}
-
-mkdir -p ${LOGSDIR}/${PRODUCT_VERSION}
 
 for STAGE in update info base kernel xtools distfiles; do
 	STAGENUM=$(expr ${STAGENUM} + 1)
