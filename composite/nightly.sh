@@ -27,7 +27,8 @@
 
 CLEAN=packages
 FLAVOUR_TOP=${FLAVOUR}
-LINES=500
+LINES=400
+STAGENUM=0
 
 eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX)"
 
@@ -40,12 +41,17 @@ for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | \
 	(cd ${LOGSDIR}; rm ${RECYCLE})
 done
 
-(make clean-obj 2>&1) > /dev/null
+LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-clean.log"
+
+(time make clean-obj 2>&1) > ${LOG}
 
 mkdir -p ${LOGSDIR}/${PRODUCT_VERSION}
 
 for STAGE in update info base kernel xtools distfiles; do
-	LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}.log
+	STAGENUM=$(expr ${STAGENUM} + 1)
+
+	LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}.log"
+
 	# we don't normally clean these stages
 	(time make ${STAGE} 2>&1 || touch ${LOG}.err) > ${LOG}
 
@@ -56,20 +62,25 @@ for STAGE in update info base kernel xtools distfiles; do
 	fi
 done
 
+STAGENUM=$(expr ${STAGENUM} + 1)
+
 for _FLAVOUR in ${FLAVOUR}; do
-	(make clean-${CLEAN} FLAVOUR=${_FLAVOUR} 2>&1) > /dev/null
+	LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-clean-${_FLAVOUR}.log"
+	(time make clean-${CLEAN} FLAVOUR=${_FLAVOUR} 2>&1) > ${LOG}
 done
 
 for STAGE in ports plugins core test; do
+	STAGENUM=$(expr ${STAGENUM} + 1)
+
 	for _FLAVOUR in ${FLAVOUR}; do
-		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${_FLAVOUR}.log
+		LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}-${_FLAVOUR}.log"
 		(time make ${STAGE}-nightly FLAVOUR=${_FLAVOUR} 2>&1 || touch ${LOG}.err) > ${LOG} &
 	done
 
 	wait
 
 	for _FLAVOUR in ${FLAVOUR}; do
-		LOG=${LOGSDIR}/${PRODUCT_VERSION}/${STAGE}-${_FLAVOUR}.log
+		LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}-${_FLAVOUR}.log"
 		if [ -f ${LOG}.err ]; then
 			echo ">>> Stage ${STAGE}-${_FLAVOUR} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
 		        tail -n ${LINES} ${LOG} >> ${LOG}.err
