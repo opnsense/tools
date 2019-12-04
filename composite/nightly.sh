@@ -28,6 +28,8 @@
 CLEAN=packages
 FLAVOUR_TOP=${FLAVOUR}
 LINES=400
+STAGE1="update info base kernel xtools distfiles"
+STAGE2="ports plugins core test"
 STAGENUM=0
 
 eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX)"
@@ -45,9 +47,15 @@ mkdir -p ${LOGSDIR}/${PRODUCT_VERSION}
 
 LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-clean.log"
 
-(time make clean-obj 2>&1) > ${LOG}
+(time make clean-obj 2>&1 || touch ${LOG}.err) > ${LOG}
 
-for STAGE in update info base kernel xtools distfiles; do
+if [ -f ${LOG}.err ]; then
+	echo ">>> Stage clean was aborted due to an error" > ${LOG}.err
+	FLAVOUR=
+	STAGE1=
+fi
+
+for STAGE in ${STAGE1}; do
 	STAGENUM=$(expr ${STAGENUM} + 1)
 
 	LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}.log"
@@ -66,10 +74,24 @@ STAGENUM=$(expr ${STAGENUM} + 1)
 
 for _FLAVOUR in ${FLAVOUR}; do
 	LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-clean-${_FLAVOUR}.log"
-	(time make clean-${CLEAN} FLAVOUR=${_FLAVOUR} 2>&1) > ${LOG}
+	(time make clean-${CLEAN} FLAVOUR=${_FLAVOUR} 2>&1 || touch ${LOG}.err) > ${LOG}
+
+	if [ -f ${LOG}.err ]; then
+		echo ">>> Stage clean-${_FLAVOUR} was aborted due to an error" > ${LOG}.err
+
+		___FLAVOUR=
+
+		for __FLAVOUR in ${FLAVOUR}; do
+			if [ ${__FLAVOUR} != ${_FLAVOUR} ]; then
+				___FLAVOUR="${___FLAVOUR} ${__FLAVOUR}"
+			fi
+		done
+
+		FLAVOUR=${___FLAVOUR}
+	fi
 done
 
-for STAGE in ports plugins core test; do
+for STAGE in ${STAGE2}; do
 	STAGENUM=$(expr ${STAGENUM} + 1)
 
 	for _FLAVOUR in ${FLAVOUR}; do
