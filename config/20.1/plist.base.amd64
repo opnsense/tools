@@ -53,6 +53,7 @@
 /boot/boot1.efifat
 /boot/boot2
 /boot/brand-fbsd.4th
+/boot/brand-hbsd.4th
 /boot/brand.4th
 /boot/cdboot
 /boot/check-password.4th
@@ -78,6 +79,8 @@
 /boot/logo-beastie.4th
 /boot/logo-beastiebw.4th
 /boot/logo-fbsdbw.4th
+/boot/logo-hardenedbsd.4th
+/boot/logo-hardenedbsdbw.4th
 /boot/logo-orb.4th
 /boot/logo-orbbw.4th
 /boot/lua/cli.lua
@@ -90,6 +93,8 @@
 /boot/lua/logo-beastie.lua
 /boot/lua/logo-beastiebw.lua
 /boot/lua/logo-fbsdbw.lua
+/boot/lua/logo-hardenedbsd.lua
+/boot/lua/logo-hardenedbsdbw.lua
 /boot/lua/logo-orb.lua
 /boot/lua/logo-orbbw.lua
 /boot/lua/menu.lua
@@ -265,7 +270,6 @@
 /etc/rc.d/adjkerntz
 /etc/rc.d/amd
 /etc/rc.d/apm
-/etc/rc.d/archdep
 /etc/rc.d/automount
 /etc/rc.d/automountd
 /etc/rc.d/autounmountd
@@ -463,6 +467,7 @@
 /lib/libdtrace.so.2
 /lib/libedit.so.7
 /lib/libelf.so.2
+/lib/libexecinfo.so.1
 /lib/libgcc_s.so.1
 /lib/libgeom.so.5
 /lib/libipsec.so.4
@@ -479,7 +484,9 @@
 /lib/libnvpair.so.2
 /lib/libpcap.so.8
 /lib/libpjdlog.so.0
+/lib/libprivateifconfig.so.1
 /lib/librss.so.1
+/lib/librt.so.1
 /lib/libsbuf.so.6
 /lib/libssp.so.0
 /lib/libthr.so.3
@@ -665,6 +672,7 @@
 /usr/bin/bspatch
 /usr/bin/bthost
 /usr/bin/btsockstat
+/usr/bin/bugpoint
 /usr/bin/bunzip2
 /usr/bin/byacc
 /usr/bin/bzcat
@@ -692,6 +700,7 @@
 /usr/bin/clang
 /usr/bin/clang++
 /usr/bin/clang-cpp
+/usr/bin/clang-format
 /usr/bin/clang-tblgen
 /usr/bin/clear
 /usr/bin/cmp
@@ -731,6 +740,9 @@
 /usr/bin/egrep
 /usr/bin/elf2aout
 /usr/bin/elfdump
+/usr/bin/elftc-ar
+/usr/bin/elftc-nm
+/usr/bin/elftc-ranlib
 /usr/bin/enigma
 /usr/bin/env
 /usr/bin/etdump
@@ -762,6 +774,7 @@
 /usr/bin/getent
 /usr/bin/getopt
 /usr/bin/getopts
+/usr/bin/gnu-objdump
 /usr/bin/gprof
 /usr/bin/grep
 /usr/bin/groups
@@ -805,12 +818,35 @@
 /usr/bin/lex
 /usr/bin/lex++
 /usr/bin/limits
+/usr/bin/llc
 /usr/bin/lldb
+/usr/bin/lli
+/usr/bin/llvm-ar
+/usr/bin/llvm-as
+/usr/bin/llvm-bcanalyzer
 /usr/bin/llvm-cov
+/usr/bin/llvm-cxxdump
+/usr/bin/llvm-cxxfilt
+/usr/bin/llvm-diff
+/usr/bin/llvm-dis
+/usr/bin/llvm-dwarfdump
+/usr/bin/llvm-extract
+/usr/bin/llvm-link
+/usr/bin/llvm-lto
+/usr/bin/llvm-lto2
+/usr/bin/llvm-mc
+/usr/bin/llvm-mca
+/usr/bin/llvm-modextract
+/usr/bin/llvm-nm
+/usr/bin/llvm-objcopy
 /usr/bin/llvm-objdump
+/usr/bin/llvm-pdbutil
 /usr/bin/llvm-profdata
+/usr/bin/llvm-ranlib
+/usr/bin/llvm-rtdyld
 /usr/bin/llvm-symbolizer
 /usr/bin/llvm-tblgen
+/usr/bin/llvm-xray
 /usr/bin/locale
 /usr/bin/localedef
 /usr/bin/locate
@@ -876,6 +912,7 @@
 /usr/bin/opieinfo
 /usr/bin/opiekey
 /usr/bin/opiepasswd
+/usr/bin/opt
 /usr/bin/otp-md4
 /usr/bin/otp-md5
 /usr/bin/otp-sha1
@@ -1723,6 +1760,7 @@
 /usr/include/libgen.h
 /usr/include/libgeom.h
 /usr/include/libgpio.h
+/usr/include/libhbsdcontrol.h
 /usr/include/libifconfig.h
 /usr/include/libipt/intel-pt.h
 /usr/include/libipt/pt_compiler.h
@@ -2685,6 +2723,7 @@
 /usr/include/sys/nvpair.h
 /usr/include/sys/osd.h
 /usr/include/sys/param.h
+/usr/include/sys/pax.h
 /usr/include/sys/pciio.h
 /usr/include/sys/pcpu.h
 /usr/include/sys/pctrie.h
@@ -3067,6 +3106,7 @@
 /usr/lib/clang/8.0.1/lib/freebsd/libclang_rt.asan-x86_64.a
 /usr/lib/clang/8.0.1/lib/freebsd/libclang_rt.asan-x86_64.so
 /usr/lib/clang/8.0.1/lib/freebsd/libclang_rt.asan_cxx-x86_64.a
+/usr/lib/clang/8.0.1/lib/freebsd/libclang_rt.cfi-x86_64.a
 /usr/lib/clang/8.0.1/lib/freebsd/libclang_rt.msan-x86_64.a
 /usr/lib/clang/8.0.1/lib/freebsd/libclang_rt.msan_cxx-x86_64.a
 /usr/lib/clang/8.0.1/lib/freebsd/libclang_rt.profile-x86_64.a
@@ -3264,7 +3304,6 @@
 /usr/lib/libelf.so
 /usr/lib/libexecinfo.a
 /usr/lib/libexecinfo.so
-/usr/lib/libexecinfo.so.1
 /usr/lib/libfetch.a
 /usr/lib/libfetch.so
 /usr/lib/libfetch.so.6
@@ -3290,6 +3329,9 @@
 /usr/lib/libgpio.a
 /usr/lib/libgpio.so
 /usr/lib/libgpio.so.0
+/usr/lib/libhbsdcontrol.a
+/usr/lib/libhbsdcontrol.so
+/usr/lib/libhbsdcontrol.so.0
 /usr/lib/libipsec.a
 /usr/lib/libipsec.so
 /usr/lib/libipt.a
@@ -3370,6 +3412,7 @@
 /usr/lib/libprivateevent.so
 /usr/lib/libprivateevent.so.1
 /usr/lib/libprivateifconfig.a
+/usr/lib/libprivateifconfig.so
 /usr/lib/libprivateldns.a
 /usr/lib/libprivateldns.so
 /usr/lib/libprivateldns.so.5
@@ -3403,7 +3446,6 @@
 /usr/lib/librss.so
 /usr/lib/librt.a
 /usr/lib/librt.so
-/usr/lib/librt.so.1
 /usr/lib/librtld_db.a
 /usr/lib/librtld_db.so
 /usr/lib/librtld_db.so.2
@@ -3899,6 +3941,7 @@
 /usr/sbin/getpmac
 /usr/sbin/gpioctl
 /usr/sbin/gstat
+/usr/sbin/hbsdcontrol
 /usr/sbin/hccontrol
 /usr/sbin/hcsecd
 /usr/sbin/hcseriald
@@ -5958,6 +6001,7 @@
 /usr/share/locale/zh_TW.Big5/LC_MESSAGES
 /usr/share/locale/zh_TW.Big5/LC_MONETARY
 /usr/share/locale/zh_TW.Big5/LC_NUMERIC
+/usr/share/locale/zh_TW.Big5/LC_TIME
 /usr/share/locale/zh_TW.UTF-8/LC_COLLATE
 /usr/share/locale/zh_TW.UTF-8/LC_CTYPE
 /usr/share/locale/zh_TW.UTF-8/LC_MESSAGES
@@ -6001,6 +6045,7 @@
 /usr/share/man/man1/bspatch.1.gz
 /usr/share/man/man1/bthost.1.gz
 /usr/share/man/man1/btsockstat.1.gz
+/usr/share/man/man1/bugpoint.1.gz
 /usr/share/man/man1/builtin.1.gz
 /usr/share/man/man1/builtins.1.gz
 /usr/share/man/man1/bunzip2.1.gz
@@ -6208,9 +6253,22 @@
 /usr/share/man/man1/limit.1.gz
 /usr/share/man/man1/limits.1.gz
 /usr/share/man/man1/link.1.gz
+/usr/share/man/man1/llc.1.gz
 /usr/share/man/man1/lldb.1.gz
+/usr/share/man/man1/lli.1.gz
+/usr/share/man/man1/llvm-ar.1.gz
+/usr/share/man/man1/llvm-as.1.gz
+/usr/share/man/man1/llvm-bcanalyzer.1.gz
 /usr/share/man/man1/llvm-cov.1.gz
+/usr/share/man/man1/llvm-diff.1.gz
+/usr/share/man/man1/llvm-dis.1.gz
+/usr/share/man/man1/llvm-dwarfdump.1.gz
+/usr/share/man/man1/llvm-extract.1.gz
+/usr/share/man/man1/llvm-link.1.gz
+/usr/share/man/man1/llvm-mca.1.gz
+/usr/share/man/man1/llvm-nm.1.gz
 /usr/share/man/man1/llvm-objdump.1.gz
+/usr/share/man/man1/llvm-pdbutil.1.gz
 /usr/share/man/man1/llvm-profdata.1.gz
 /usr/share/man/man1/llvm-symbolizer.1.gz
 /usr/share/man/man1/llvm-tblgen.1.gz
@@ -6288,6 +6346,7 @@
 /usr/share/man/man1/opieinfo.1.gz
 /usr/share/man/man1/opiekey.1.gz
 /usr/share/man/man1/opiepasswd.1.gz
+/usr/share/man/man1/opt.1.gz
 /usr/share/man/man1/otp-md4.1.gz
 /usr/share/man/man1/otp-md5.1.gz
 /usr/share/man/man1/otp-sha1.1.gz
@@ -6308,7 +6367,6 @@
 /usr/share/man/man1/pr.1.gz
 /usr/share/man/man1/printenv.1.gz
 /usr/share/man/man1/printf.1.gz
-/usr/share/man/man1/proccontrol.1.gz
 /usr/share/man/man1/procstat.1.gz
 /usr/share/man/man1/protect.1.gz
 /usr/share/man/man1/ps.1.gz
@@ -9202,6 +9260,10 @@
 /usr/share/man/man3/has_key_sp.3.gz
 /usr/share/man/man3/has_mouse_sp.3.gz
 /usr/share/man/man3/hash.3.gz
+/usr/share/man/man3/hbsdcontrol_rm_extattr.3.gz
+/usr/share/man/man3/hbsdcontrol_rm_feature_state.3.gz
+/usr/share/man/man3/hbsdcontrol_set_extattr.3.gz
+/usr/share/man/man3/hbsdcontrol_set_feature_state.3.gz
 /usr/share/man/man3/hcreate.3.gz
 /usr/share/man/man3/hcreate_r.3.gz
 /usr/share/man/man3/hdestroy.3.gz
@@ -9564,6 +9626,7 @@
 /usr/share/man/man3/libcasper_service.3.gz
 /usr/share/man/man3/libefivar.3.gz
 /usr/share/man/man3/libgeom.3.gz
+/usr/share/man/man3/libhbsdcontrol.3.gz
 /usr/share/man/man3/libmagic.3.gz
 /usr/share/man/man3/libmemstat.3.gz
 /usr/share/man/man3/libmp.3.gz
@@ -9573,6 +9636,7 @@
 /usr/share/man/man3/libstdbuf.3.gz
 /usr/share/man/man3/libtacplus.3.gz
 /usr/share/man/man3/libthr.3.gz
+/usr/share/man/man3/libucl.3.gz
 /usr/share/man/man3/libufs.3.gz
 /usr/share/man/man3/libugidfw.3.gz
 /usr/share/man/man3/libusb.3.gz
@@ -11957,6 +12021,7 @@
 /usr/share/man/man4/apic.4.gz
 /usr/share/man/man4/arcmsr.4.gz
 /usr/share/man/man4/arp.4.gz
+/usr/share/man/man4/aslr.4.gz
 /usr/share/man/man4/asmc.4.gz
 /usr/share/man/man4/at45d.4.gz
 /usr/share/man/man4/ata.4.gz
@@ -12112,6 +12177,7 @@
 /usr/share/man/man4/gpioled.4.gz
 /usr/share/man/man4/gre.4.gz
 /usr/share/man/man4/h_ertt.4.gz
+/usr/share/man/man4/hardening.4.gz
 /usr/share/man/man4/hifn.4.gz
 /usr/share/man/man4/hme.4.gz
 /usr/share/man/man4/hpet.4.gz
@@ -12809,6 +12875,8 @@
 /usr/share/man/man5/gettytab.5.gz
 /usr/share/man/man5/group.5.gz
 /usr/share/man/man5/hast.conf.5.gz
+/usr/share/man/man5/hbsd-update-build.conf.5.gz
+/usr/share/man/man5/hbsd-update.conf.5.gz
 /usr/share/man/man5/hcsecd.conf.5.gz
 /usr/share/man/man5/hostapd.conf.5.gz
 /usr/share/man/man5/hosts.5.gz
@@ -13118,6 +13186,7 @@
 /usr/share/man/man8/halt.8.gz
 /usr/share/man/man8/hastctl.8.gz
 /usr/share/man/man8/hastd.8.gz
+/usr/share/man/man8/hbsdcontrol.8.gz
 /usr/share/man/man8/hccontrol.8.gz
 /usr/share/man/man8/hcsecd.8.gz
 /usr/share/man/man8/hcseriald.8.gz
@@ -15718,6 +15787,7 @@
 /usr/share/mk/bsd.dtb.mk
 /usr/share/mk/bsd.endian.mk
 /usr/share/mk/bsd.files.mk
+/usr/share/mk/bsd.hardenedbsd.mk
 /usr/share/mk/bsd.incs.mk
 /usr/share/mk/bsd.info.mk
 /usr/share/mk/bsd.init.mk
@@ -20699,7 +20769,6 @@
 /var/db/etcupdate/current/etc/rc.d/adjkerntz
 /var/db/etcupdate/current/etc/rc.d/amd
 /var/db/etcupdate/current/etc/rc.d/apm
-/var/db/etcupdate/current/etc/rc.d/archdep
 /var/db/etcupdate/current/etc/rc.d/automount
 /var/db/etcupdate/current/etc/rc.d/automountd
 /var/db/etcupdate/current/etc/rc.d/autounmountd

@@ -68,10 +68,6 @@
 /usr/bin/ksu
 /usr/bin/kswitch
 /usr/bin/lint
-/usr/bin/llvm-objdump
-/usr/bin/lzegrep
-/usr/bin/lzfgrep
-/usr/bin/lzgrep
 /usr/bin/make-roken
 /usr/bin/makeinfo
 /usr/bin/mkulzma
@@ -93,9 +89,6 @@
 /usr/bin/tblgen
 /usr/bin/texindex
 /usr/bin/verify_krb5_conf
-/usr/bin/xzegrep
-/usr/bin/xzfgrep
-/usr/bin/xzgrep
 /usr/include/altq/altq.h
 /usr/include/altq/altq_cbq.h
 /usr/include/altq/altq_cdnr.h
@@ -273,7 +266,6 @@
 /usr/include/ntlm_err.h
 /usr/include/nv.h
 /usr/include/ocsp_asn1.h
-/usr/include/omp.h
 /usr/include/parse_bytes.h
 /usr/include/parse_time.h
 /usr/include/parse_units.h
@@ -489,9 +481,9 @@
 /usr/lib/libdevinfo.so.5
 /usr/lib/libdwarf.so.3
 /usr/lib/libelf.so.1
+/usr/lib/libexecinfo.so.1
 /usr/lib/libgcov.a
 /usr/lib/libgomp.a
-/usr/lib/libgomp.so
 /usr/lib/libgomp.so.1
 /usr/lib/libgssapi.a
 /usr/lib/libgssapi.so
@@ -691,7 +683,6 @@
 /usr/share/man/man1/compile_et.1.gz
 /usr/share/man/man1/cpasswd.1.gz
 /usr/share/man/man1/csup.1.gz
-/usr/share/man/man1/dtc.1.gz
 /usr/share/man/man1/dtruss.1.gz
 /usr/share/man/man1/fdformat.1.gz
 /usr/share/man/man1/gdb.1.gz
@@ -710,12 +701,10 @@
 /usr/share/man/man1/krb5-config.1.gz
 /usr/share/man/man1/kswitch.1.gz
 /usr/share/man/man1/lint.1.gz
-/usr/share/man/man1/lzegrep.1.gz
-/usr/share/man/man1/lzfgrep.1.gz
-/usr/share/man/man1/lzgrep.1.gz
 /usr/share/man/man1/makeinfo.1.gz
 /usr/share/man/man1/makewhatis.1.gz
 /usr/share/man/man1/otp-sha.1.gz
+/usr/share/man/man1/proccontrol.1.gz
 /usr/share/man/man1/scp.1.gz
 /usr/share/man/man1/send-pr.1.gz
 /usr/share/man/man1/sendbug.1.gz
@@ -730,9 +719,6 @@
 /usr/share/man/man1/talk.1.gz
 /usr/share/man/man1/tblgen.1.gz
 /usr/share/man/man1/texindex.1.gz
-/usr/share/man/man1/xzegrep.1.gz
-/usr/share/man/man1/xzfgrep.1.gz
-/usr/share/man/man1/xzgrep.1.gz
 /usr/share/man/man2/cap_rights_get.2.gz
 /usr/share/man/man3/HDB.3.gz
 /usr/share/man/man3/NgSendMsgReply.3.gz
