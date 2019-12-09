@@ -512,6 +512,7 @@
 /root/.cshrc
 /root/.login
 /root/.profile
+/root/.vimrc
 /sbin/adjkerntz
 /sbin/bectl
 /sbin/bsdlabel
@@ -20921,6 +20922,7 @@
 /var/db/etcupdate/current/root/.cshrc
 /var/db/etcupdate/current/root/.login
 /var/db/etcupdate/current/root/.profile
+/var/db/etcupdate/current/root/.vimrc
 /var/db/etcupdate/current/var/crash/minfree
 /var/db/etcupdate/log
 /var/db/locate.database
