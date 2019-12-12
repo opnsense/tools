@@ -31,6 +31,8 @@ SELF=prefetch
 
 . ./common.sh
 
+git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
+
 ABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}/${PRODUCT_SETTINGS}"
 
 for ARG in ${@}; do
