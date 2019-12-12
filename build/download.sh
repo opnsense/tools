@@ -50,6 +50,7 @@ for ARG in ${@}; do
 	distfiles)
 		sh ./clean.sh ${ARG}
 		download ${ARG} ${SETSDIR} "${ARG}-*"
+		;;
 	log)
 		# one log only, do not clear
 		download ${ARG} ${LOGSDIR} "${PRODUCT_VERSION}-*"
