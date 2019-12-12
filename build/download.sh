@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2018-2019 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -47,6 +47,9 @@ for ARG in ${@}; do
 		sh ./clean.sh ${ARG}
 		download ${ARG} ${SETSDIR} "${ARG}-*"
 		;;
+	distfiles)
+		sh ./clean.sh ${ARG}
+		download ${ARG} ${SETSDIR} "${ARG}-*"
 	log)
 		# one log only, do not clear
 		download ${ARG} ${LOGSDIR} "${PRODUCT_VERSION}-*"
