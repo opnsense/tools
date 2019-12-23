@@ -85,10 +85,11 @@ UPLOADDIR?=	.
 _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
 STAGEDIRPREFIX?=/usr/obj
-# XXX GITBASE modifier
-PORTSREFBASE?=	https://github.com/hardenedbsd
+
+PORTSREFURL?=	https://github.com/hardenedbsd/hardenedbsd-ports
 PORTSREFDIR?=	/usr/hardenedbsd-ports
 PORTSREFBRANCH?=master
+
 PLUGINSENV?=	PLUGIN_PHP=${PHP} PLUGIN_ABI=${SETTINGS} \
 		PLUGIN_PYTHON=${PYTHON3}
 PLUGINSDIR?=	/usr/plugins
@@ -153,7 +154,7 @@ ${STEP}: lint-steps
 	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
 	    -q "${VERSIONS}" -h "${PLUGINSENV}" -I "${UPLOADDIR}" \
-	    -D "${DEVELBRANCH}" ${${STEP}_ARGS}
+	    -D "${DEVELBRANCH}" -A "${PORTSREFURL}" ${${STEP}_ARGS}
 .endfor
 
 .for SCRIPT in ${SCRIPTS}

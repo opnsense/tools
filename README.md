@@ -186,7 +186,7 @@ Updating all or individual repositories can be done as follows:
 
     # make update[-<repo1>[,...]]
 
-Available update options are: core, plugins, ports, src, tools
+Available update options are: core, plugins, ports, portsref, src, tools
 
 Regression tests
 ----------------

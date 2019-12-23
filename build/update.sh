@@ -37,6 +37,8 @@ if [ -z "${ARGS}" ]; then
 fi
 
 for ARG in ${ARGS}; do
+	URL=
+
 	case ${ARG} in
 	core)
 		BRANCHES="${DEVELBRANCH} ${COREBRANCH}"
@@ -51,10 +53,9 @@ for ARG in ${ARGS}; do
 		DIR=${PORTSDIR}
 		;;
 	portsref)
-		# XXX needs GITBASE=https://github.com/hardenedbsd
 		BRANCHES=${PORTSREFBRANCH}
 		DIR=${PORTSREFDIR}
-		ACCOUNT=hardenedbsd
+		URL=${PORTSREFURL}
 		;;
 	src)
 		BRANCHES=${SRCBRANCH}
@@ -69,7 +70,7 @@ for ARG in ${ARGS}; do
 		;;
 	esac
 
-	git_clone ${DIR}
+	git_clone ${DIR} "${URL}"
 	git_fetch ${DIR}
 	for BRANCH in ${BRANCHES}; do
 		git_pull ${DIR} ${BRANCH}

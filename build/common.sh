@@ -28,10 +28,13 @@
 
 set -e
 
-OPTS="a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:K:k:L:l:m:n:O:o:P:p:q:R:r:S:s:T:t:U:u:v:V:"
+OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:K:k:L:l:m:n:O:o:P:p:q:R:r:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
+	A)
+		export PORTSREFURL=${OPTARG}
+		;;
 	a)
 		export PRODUCT_TARGET=${OPTARG%%:*}
 		export PRODUCT_ARCH=${OPTARG##*:}
@@ -315,7 +318,13 @@ git_clone()
 
 	echo ">>> Cloning ${1}:"
 
-	git clone "${PRODUCT_GITBASE}/$(basename ${1})" ${1}
+	URL=${2}
+
+	if [ -z "${URL}" ]; then
+		URL=${PRODUCT_GITBASE}/$(basename ${1})
+	fi
+
+	git clone "${URL}" ${1}
 }
 
 git_pull()
