@@ -86,7 +86,7 @@ _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
 STAGEDIRPREFIX?=/usr/obj
 
-PORTSREFURL?=	https://github.com/hardenedbsd/hardenedbsd-ports
+PORTSREFURL?=	https://git-01.md.hardenedbsd.org/HardenedBSD/hardenedbsd-ports.git
 PORTSREFDIR?=	/usr/hardenedbsd-ports
 PORTSREFBRANCH?=master
 
