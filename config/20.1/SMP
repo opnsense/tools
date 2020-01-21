@@ -17,14 +17,12 @@ options		MROUTING
 options		PPS_SYNC
 options		TCP_SIGNATURE
 
-# XXX required for GEOM
-device		xz
-
 # Additional built-in devices
 device		bwi
 device		bwn
 device		rum
 device		run
+device		siba_bwn
 device		u3g
 device		uark
 device		uath
