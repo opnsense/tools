@@ -565,7 +565,7 @@ setup_version()
 
 setup_base()
 {
-	echo ">>> Setting up world in ${1}"
+	echo ">>> Setting up base in ${1}"
 
 	tar -C ${1} -xpf ${SETSDIR}/base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 
