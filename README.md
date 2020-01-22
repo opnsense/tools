@@ -246,7 +246,7 @@ Using signatures to verify integrity
 Signing for all sets can be redone or applied to a previous run
 that did not sign by invoking:
 
-    # make sign
+    # make sign-base,kernel,packages
 
 A verification of all available set signatures is done via:
 
