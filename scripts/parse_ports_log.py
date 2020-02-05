@@ -1,12 +1,13 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.7
 import collections
 import argparse
 from datetime import datetime
 
 
 def log_reader(filename):
-    with open(filename) as f_in:
+    with open(filename ,'rb') as f_in:
         for line in f_in:
+            line = line.decode()
             if len(line) >= 22 and line[0] == '[' and line[15] == ']' and line[1:15].isdigit() \
                     and line[17:21] == '===>' and line.find(' for ') > -1:
                 if line.strip().endswith('for building'):
