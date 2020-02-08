@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -45,9 +45,10 @@ for ARG in ${@}; do
 		echo ">>> Removing core from packages set"
 		setup_stage ${STAGEDIR}
 		setup_base ${STAGEDIR}
-		extract_packages ${STAGEDIR}
-		remove_packages ${STAGEDIR} ${PRODUCT_CORES}
-		bundle_packages ${STAGEDIR} '' core
+		if extract_packages ${STAGEDIR}; then
+			remove_packages ${STAGEDIR} ${PRODUCT_CORES}
+			bundle_packages ${STAGEDIR} '' core
+		fi
 		;;
 	distfiles)
 		echo ">>> Removing distfiles set"
@@ -91,9 +92,10 @@ for ARG in ${@}; do
 		echo ">>> Removing plugins from packages set"
 		setup_stage ${STAGEDIR}
 		setup_base ${STAGEDIR}
-		extract_packages ${STAGEDIR}
-		remove_packages ${STAGEDIR} ${PRODUCT_PLUGINS}
-		bundle_packages ${STAGEDIR} '' plugins
+		if extract_packages ${STAGEDIR}; then
+			remove_packages ${STAGEDIR} ${PRODUCT_PLUGINS}
+			bundle_packages ${STAGEDIR} '' plugins
+		fi
 		;;
 	release)
 		echo ">>> Removing release set"
