@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -70,9 +70,10 @@ setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
 setup_distfiles ${STAGEDIR}
 
-extract_packages ${STAGEDIR}
-remove_packages ${STAGEDIR} ${@} ${PRODUCT_CORES} ${PRODUCT_PLUGINS}
-cleanup_packages ${STAGEDIR}
+if extract_packages ${STAGEDIR}; then
+	remove_packages ${STAGEDIR} ${@} ${PRODUCT_CORES} ${PRODUCT_PLUGINS}
+	cleanup_packages ${STAGEDIR}
+fi
 
 MAKE_CONF="${CONFIGDIR}/make.conf"
 if [ -f ${MAKE_CONF} ]; then
