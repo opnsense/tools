@@ -699,6 +699,8 @@ extract_packages()
 		return 0
 	fi
 
+	echo ">>> Extract failed: no packages set found";
+
 	return 1
 }
 
