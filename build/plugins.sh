@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2020 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -74,7 +74,7 @@ for BRANCH in ${DEVELBRANCH} ${PLUGINSBRANCH}; do
 	setup_copy ${STAGEDIR} ${PLUGINSDIR}
 	git_reset ${STAGEDIR}${PLUGINSDIR} ${BRANCH}
 
-	PLUGIN_ARGS="PLUGIN_ARCH=${PRODUCT_ARCH} ${PLUGINSENV}"
+	PLUGIN_ARGS="PLUGIN_ARCH=${PRODUCT_ARCH} PLUGIN_FLAVOUR=${PRODUCT_FLAVOUR} ${PLUGINSENV}"
 
 	for PLUGIN in ${PLUGINS_LIST}; do
 		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} name)

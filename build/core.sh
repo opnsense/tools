@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -48,7 +48,7 @@ for BRANCH in ${DEVELBRANCH} ${COREBRANCH}; do
 	setup_copy ${STAGEDIR} ${COREDIR}
 	git_reset ${STAGEDIR}${COREDIR} ${BRANCH}
 
-	CORE_ARGS="CORE_ARCH=${PRODUCT_ARCH} ${COREENV}"
+	CORE_ARGS="CORE_ARCH=${PRODUCT_ARCH} CORE_FLAVOUR=${PRODUCT_FLAVOUR} ${COREENV}"
 
 	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} name)
 	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} depends)
