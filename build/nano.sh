@@ -55,7 +55,7 @@ setup_entropy ${STAGEDIR}
 
 cat > ${STAGEDIR}/etc/fstab << EOF
 # Device		Mountpoint	FStype	Options		Dump	Pass#
-/dev/ufs/${NANOLABEL}	/		ufs	rw		1	1	# notrim
+/dev/ufs/${NANOLABEL}	/		ufs	rw,noatime	1	1	# notrim
 EOF
 
 makefs -t ffs -s ${NANOSIZE} -B little -f 400000 \
