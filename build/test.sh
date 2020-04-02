@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -56,13 +56,13 @@ EOF
 
 echo ">>> Running ${PLUGINSDIR} test suite..."
 chroot ${STAGEDIR} /bin/sh -es <<EOF
-make -C${PLUGINSDIR} lint
-make -C${PLUGINSDIR} style
+make -C${PLUGINSDIR} ${PLUGINSENV} lint
+make -C${PLUGINSDIR} ${PLUGINSENV} style
 EOF
 
 echo ">>> Running ${COREDIR} test suite..."
 chroot ${STAGEDIR} /bin/sh -es <<EOF
-make -C${COREDIR} lint
-make -C${COREDIR} style
-make -C${COREDIR} test
+make -C${COREDIR} ${COREENV} lint
+make -C${COREDIR} ${COREENV} style
+make -C${COREDIR} ${COREENV} test
 EOF
