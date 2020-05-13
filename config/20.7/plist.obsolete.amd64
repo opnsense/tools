@@ -1655,6 +1655,7 @@
 /usr/share/openssl/man/man3/EVP_PKEY_ctrl_str.3.gz
 /usr/share/openssl/man/man3/d2i_509_CRL_fp.3.gz
 /usr/share/openssl/man/whatis
+/usr/share/zoneinfo/America/Godthab
 /usr/share/zoneinfo/America/Montreal
 /usr/share/zoneinfo/America/Santa_Isabel
 /usr/share/zoneinfo/Asia/Rangoon
