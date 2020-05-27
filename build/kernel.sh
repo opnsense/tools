@@ -98,5 +98,13 @@ if [ -n "$(test -f ${DEBUG_OBJ} && tar -tf ${DEBUG_OBJ})" ]; then
 fi
 
 setup_version ${STAGEDIR} ${STAGEDIR}/work ${SELF}
+
+# XXX try to fix wrong kldxref
+if [ "${SRCREVISION}" = "12.1" ]; then
+	setup_base ${STAGEDIR}
+	setup_chroot ${STAGEDIR}
+	chroot ${STAGEDIR} /usr/sbin/kldxref /work/boot/kernel
+fi
+
 generate_set ${STAGEDIR}/work ${KERNEL_SET}
 generate_signature ${KERNEL_SET}
