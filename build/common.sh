@@ -264,6 +264,7 @@ export PRODUCT_PLUGIN="os-*${PRODUCT_SUFFIX}"
 
 # get the current version for the selected source repository
 eval export SRC$(grep ^REVISION= ${SRCDIR}/sys/conf/newvers.sh)
+export SRCABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}"
 
 case "${SELF}" in
 confirm|fingerprint|info|print)
@@ -619,10 +620,12 @@ setup_entropy()
 setup_set()
 {
 	tar -C ${1} -xJpf ${2}
+	rm -f {1}/.abi_hint
 }
 
 generate_set()
 {
+	echo ${SRCABI} > ${1}/.abi_hint
 	tar -C ${1} -cvf - . | xz > ${2}
 }
 
@@ -923,8 +926,7 @@ bundle_packages()
 	# generate index files
 	pkg repo ${BASEDIR}${PACKAGESDIR}-new/ ${SIGNARGS}
 
-	local ABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}"
-	echo ${ABI} > ${BASEDIR}${PACKAGESDIR}-new/.abi_hint
+	echo ${SRCABI} > ${BASEDIR}${PACKAGESDIR}-new/.abi_hint
 
 	sh ./clean.sh packages
 
