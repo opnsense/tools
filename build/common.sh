@@ -923,6 +923,9 @@ bundle_packages()
 	# generate index files
 	pkg repo ${BASEDIR}${PACKAGESDIR}-new/ ${SIGNARGS}
 
+	local ABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}"
+	echo ${ABI} > ${BASEDIR}${PACKAGESDIR}-new/.abi_hint
+
 	sh ./clean.sh packages
 
 	REPO_RELEASE="${REPO_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
