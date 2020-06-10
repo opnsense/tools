@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2020 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -64,7 +64,8 @@ for STAGE in ${STAGE1}; do
 	(time make ${STAGE} 2>&1 || touch ${LOG}.err) > ${LOG}
 
 	if [ -f ${LOG}.err ]; then
-		echo ">>> Stage ${STAGE} was aborted due to an error" > ${LOG}.err
+		echo ">>> Stage ${STAGE} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
+		tail -n ${LINES} ${LOG} >> ${LOG}.err
 		FLAVOUR=
 		break
 	fi
