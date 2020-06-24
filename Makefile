@@ -101,7 +101,7 @@ COREENV?=	CORE_PHP=${PHP} CORE_ABI=${SETTINGS} CORE_PYTHON=${PYTHON}
 SRCDIR?=	/usr/src
 SRCBRANCH?=	master
 
-# for ports and core
+# for plugins and core
 DEVELBRANCH?=	#master
 
 # A couple of meta-targets for easy use and ordering:
