@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -40,6 +40,16 @@ fi
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_describe ${SRCDIR}
+
+CLANGFIXUPFILE=${SRCDIR}/contrib/compiler-rt/lib/cfi/cfi_blacklist.txt
+CLANGFIXUPDIR=/usr/lib/clang/8.0.1/share
+
+if [ -f ${CLANGFIXUPFILE} ]; then
+	# FreeBSD 12.1 requires this file to be installed in
+	# the host, but it is not in the default install.
+	mkdir -p ${CLANGFIXUPDIR}
+	cp ${CLANGFIXUPFILE} ${CLANGFIXUPDIR}
+fi
 
 MAKE_ARGS="
 TARGET_ARCH=${PRODUCT_ARCH}
