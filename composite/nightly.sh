@@ -55,22 +55,6 @@ if [ -f ${LOG}.err ]; then
 	STAGE1=
 fi
 
-for STAGE in ${STAGE1}; do
-	STAGENUM=$(expr ${STAGENUM} + 1)
-
-	LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}.log"
-
-	# we don't normally clean these stages
-	(time make ${STAGE} 2>&1 || touch ${LOG}.err) > ${LOG}
-
-	if [ -f ${LOG}.err ]; then
-		echo ">>> Stage ${STAGE} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
-		tail -n ${LINES} ${LOG} >> ${LOG}.err
-		FLAVOUR=
-		break
-	fi
-done
-
 STAGENUM=$(expr ${STAGENUM} + 1)
 
 for _FLAVOUR in ${FLAVOUR}; do
@@ -89,6 +73,22 @@ for _FLAVOUR in ${FLAVOUR}; do
 		done
 
 		FLAVOUR=${___FLAVOUR}
+	fi
+done
+
+for STAGE in ${STAGE1}; do
+	STAGENUM=$(expr ${STAGENUM} + 1)
+
+	LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}.log"
+
+	# we don't normally clean these stages
+	(time make ${STAGE} 2>&1 || touch ${LOG}.err) > ${LOG}
+
+	if [ -f ${LOG}.err ]; then
+		echo ">>> Stage ${STAGE} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
+		tail -n ${LINES} ${LOG} >> ${LOG}.err
+		FLAVOUR=
+		break
 	fi
 done
 
