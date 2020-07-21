@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2107 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2020 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -40,9 +40,10 @@ IMAGE=$(find ${IMAGESDIR} -name "*-${1}-${PRODUCT_ARCH}.*")
 
 echo ">>> Booting image ${IMAGE}..."
 
+ifconfig tap create # XXX requires tap0 to be created now
 kldstat -qm vmm || kldload vmm
-bhyveload -m 512 -d ${IMAGE} vm0
-bhyve -c 1 -m 512 -AHP \
+bhyveload -m 1024 -d ${IMAGE} vm0
+bhyve -c 1 -m 1024 -AHP \
     -s 0:0,hostbridge \
     -s 1:0,virtio-net,tap0 \
     -s 2:0,ahci-hd,${IMAGE} \
