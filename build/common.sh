@@ -340,13 +340,8 @@ git_pull()
 git_describe()
 {
 	HEAD=${2:-"HEAD"}
-	VERSIONARGS="--abbrev=0 --always"
 
-	if [ "${PRODUCT_SETTINGS}" = "20.1" ]; then
-		VERSIONARGS="${VERSIONARGS} --exclude=20.7.r*"
-	fi
-
-	VERSION=$(git -C ${1} describe ${VERSIONARGS} ${HEAD})
+	VERSION=$(git -C ${1} describe --abbrev=0 --always ${HEAD})
 	REVISION=$(git -C ${1} rev-list --count ${VERSION}..${HEAD})
 	COMMENT=$(git -C ${1} rev-list --max-count=1 ${HEAD} | cut -c1-9)
 	BRANCH=$(git -C ${1} rev-parse --abbrev-ref ${HEAD})
