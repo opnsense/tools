@@ -58,6 +58,8 @@ __MAKE_CONF=
 ${MAKE_ARGS_DEV}
 "
 
+echo ">>>>>> DEBUG: ${MAKE_ARGS}"
+
 if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
 	${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} kernel-toolchain ${MAKE_ARGS}
 fi
@@ -70,8 +72,13 @@ KERNEL_OBJDIR="$(make -C${SRCDIR}/release -V .OBJDIR)"
 setup_stage "${KERNEL_OBJDIR}/${KERNEL_DISTDIR}"
 
 # remove older object archives, too
-KERNEL_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz
-DEBUG_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel-dbg.txz
+if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
+        KERNEL_OBJ=$(make -C/usr/obj/${SRCDIR}/${PRODUCT_TARGET}.${PRODUCT_ARCH}/release -V .OBJDIR)/kernel.txz
+        DEBUG_OBJ=$(make -C/usr/obj/${SRCDIR}/${PRODUCT_TARGET}.${PRODUCT_ARCH}/release -V .OBJDIR)/kernel-dbg.txz
+else
+        KERNEL_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz
+        DEBUG_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel-dbg.txz
+fi
 rm -f ${KERNEL_OBJ} ${DEBUG_OBJ}
 
 # We used kernel.txz because we did not rewrite it,

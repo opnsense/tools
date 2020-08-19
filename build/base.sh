@@ -68,7 +68,11 @@ BASE_OBJDIR="$(make -C${SRCDIR}/release -V .OBJDIR)"
 setup_stage "${BASE_OBJDIR}/${BASE_DISTDIR}"
 
 # remove older object archives, too
-BASE_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/base.txz
+if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
+        BASE_OBJ=$(make -C/usr/obj${SRCDIR}/${PRODUCT_TARGET}.${PRODUCT_ARCH}/release -V .OBJDIR)/base.txz
+else
+        BASE_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/base.txz
+fi
 rm -f ${BASE_OBJ}
 
 ${ENV_FILTER} make -s -C${SRCDIR}/release base.txz ${MAKE_ARGS}
