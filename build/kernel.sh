@@ -58,8 +58,6 @@ __MAKE_CONF=
 ${MAKE_ARGS_DEV}
 "
 
-echo ">>>>>> DEBUG: ${MAKE_ARGS}"
-
 if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
 	${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} kernel-toolchain ${MAKE_ARGS}
 fi
