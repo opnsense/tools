@@ -63,16 +63,12 @@ ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS} NO_CLEAN=yes
 ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
 
 # reset the distribution directory
-BASE_DISTDIR="$(make -C${SRCDIR}/release -V DISTDIR)/${SELF}"
-BASE_OBJDIR="$(make -C${SRCDIR}/release -V .OBJDIR)"
+BASE_DISTDIR="$(make -C${SRCDIR}/release -V DISTDIR ${MAKE_ARGS})/${SELF}"
+BASE_OBJDIR="$(make -C${SRCDIR}/release -V .OBJDIR ${MAKE_ARGS})"
 setup_stage "${BASE_OBJDIR}/${BASE_DISTDIR}"
 
 # remove older object archives, too
-if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
-        BASE_OBJ=$(make -C/usr/obj${SRCDIR}/${PRODUCT_TARGET}.${PRODUCT_ARCH}/release -V .OBJDIR)/base.txz
-else
-        BASE_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/base.txz
-fi
+BASE_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR ${MAKE_ARGS})/base.txz
 rm -f ${BASE_OBJ}
 
 ${ENV_FILTER} make -s -C${SRCDIR}/release base.txz ${MAKE_ARGS}
