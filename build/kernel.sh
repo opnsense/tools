@@ -65,13 +65,13 @@ ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildkernel ${MAKE_ARGS} NO_KERNELCL
 ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
 
 # reset the distribution directory
-KERNEL_DISTDIR="$(make -C${SRCDIR}/release -V DISTDIR)/${SELF}"
-KERNEL_OBJDIR="$(make -C${SRCDIR}/release -V .OBJDIR)"
+KERNEL_DISTDIR="$(make -C${SRCDIR}/release -V DISTDIR ${MAKE_ARGS})/${SELF}"
+KERNEL_OBJDIR="$(make -C${SRCDIR}/release -V .OBJDIR ${MAKE_ARGS})"
 setup_stage "${KERNEL_OBJDIR}/${KERNEL_DISTDIR}"
 
 # remove older object archives, too
-KERNEL_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel.txz
-DEBUG_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/kernel-dbg.txz
+KERNEL_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR ${MAKE_ARGS})/kernel.txz
+DEBUG_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR ${MAKE_ARGS})/kernel-dbg.txz
 rm -f ${KERNEL_OBJ} ${DEBUG_OBJ}
 
 # We used kernel.txz because we did not rewrite it,
