@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -41,6 +41,16 @@ fi
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_describe ${SRCDIR}
 
+CLANGFIXUPFILE=${SRCDIR}/contrib/compiler-rt/lib/cfi/cfi_blacklist.txt
+CLANGFIXUPDIR=/usr/lib/clang/8.0.1/share
+
+if [ -f ${CLANGFIXUPFILE} ]; then
+	# FreeBSD 12.1 requires this file to be installed in
+	# the host, but it is not in the default install.
+	mkdir -p ${CLANGFIXUPDIR}
+	cp ${CLANGFIXUPFILE} ${CLANGFIXUPDIR}
+fi
+
 MAKE_ARGS="
 TARGET_ARCH=${PRODUCT_ARCH}
 TARGET=${PRODUCT_TARGET}
@@ -53,12 +63,12 @@ ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS} NO_CLEAN=yes
 ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
 
 # reset the distribution directory
-BASE_DISTDIR="$(make -C${SRCDIR}/release -V DISTDIR)/${SELF}"
-BASE_OBJDIR="$(make -C${SRCDIR}/release -V .OBJDIR)"
+BASE_DISTDIR="$(make -C${SRCDIR}/release -V DISTDIR ${MAKE_ARGS})/${SELF}"
+BASE_OBJDIR="$(make -C${SRCDIR}/release -V .OBJDIR ${MAKE_ARGS})"
 setup_stage "${BASE_OBJDIR}/${BASE_DISTDIR}"
 
 # remove older object archives, too
-BASE_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR)/base.txz
+BASE_OBJ=$(make -C${SRCDIR}/release -V .OBJDIR ${MAKE_ARGS})/base.txz
 rm -f ${BASE_OBJ}
 
 ${ENV_FILTER} make -s -C${SRCDIR}/release base.txz ${MAKE_ARGS}

@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2020 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -54,7 +54,7 @@ lint: lint-steps lint-composite
 
 TOOLSDIR?=	/usr/tools
 TOOLSBRANCH?=	master
-SETTINGS?=	20.1
+SETTINGS?=	20.7
 
 CONFIG?=	${TOOLSDIR}/config/${SETTINGS}/build.conf
 
@@ -92,14 +92,14 @@ PORTSREFBRANCH?=master
 
 PLUGINSENV?=	PLUGIN_PHP=${PHP} PLUGIN_ABI=${SETTINGS} PLUGIN_PYTHON=${PYTHON}
 PLUGINSDIR?=	/usr/plugins
-PLUGINSBRANCH?=	master
+PLUGINSBRANCH?=	stable/${SETTINGS}
 PORTSDIR?=	/usr/ports
 PORTSBRANCH?=	master
 COREDIR?=	/usr/core
-COREBRANCH?=	master
+COREBRANCH?=	stable/${SETTINGS}
 COREENV?=	CORE_PHP=${PHP} CORE_ABI=${SETTINGS} CORE_PYTHON=${PYTHON}
 SRCDIR?=	/usr/src
-SRCBRANCH?=	master
+SRCBRANCH?=	stable/${SETTINGS}
 
 # for plugins and core
 DEVELBRANCH?=	#master

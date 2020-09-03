@@ -59,11 +59,7 @@ ${ENV_FILTER} make -C${SRCDIR} -j${CPUS} native-xtools ${MAKE_ARGS} NO_CLEAN=yes
 
 XTOOLS_DIR=$(make -C${SRCDIR} -f Makefile.inc1 -V OBJTREE ${MAKE_ARGS})/nxb-bin
 
-if [ "${SRCREVISION}" = "12.1" ]; then
-	# XXX as long as we support 11.2 we need this as a conditional and
-	# maybe later we want to directly install into a stage dir...
-	${ENV_FILTER} make -C${SRCDIR} -j${CPUS} native-xtools-install ${MAKE_ARGS} NO_CLEAN=yes DESTDIR=${XTOOLS_DIR}/..
-fi
+${ENV_FILTER} make -C${SRCDIR} -j${CPUS} native-xtools-install ${MAKE_ARGS} NO_CLEAN=yes DESTDIR=${XTOOLS_DIR}/..
 
 echo -n ">>> Generating xtools set... "
 

@@ -301,7 +301,7 @@ git_fetch()
 {
 	echo ">>> Fetching ${1}:"
 
-	git -C ${1} fetch --tags --prune
+	git -C ${1} fetch --tags --prune origin
 }
 
 git_clone()

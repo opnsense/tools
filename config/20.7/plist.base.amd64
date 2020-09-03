@@ -4089,6 +4089,7 @@
 /usr/sbin/usbconfig
 /usr/sbin/usbdump
 /usr/sbin/utx
+/usr/sbin/valectl
 /usr/sbin/vidcontrol
 /usr/sbin/vidfont
 /usr/sbin/vigr
@@ -13449,6 +13450,7 @@
 /usr/share/man/man8/usbconfig.8.gz
 /usr/share/man/man8/usbdump.8.gz
 /usr/share/man/man8/utx.8.gz
+/usr/share/man/man8/valectl.8.gz
 /usr/share/man/man8/version.4th.8.gz
 /usr/share/man/man8/vigr.8.gz
 /usr/share/man/man8/vipw.8.gz

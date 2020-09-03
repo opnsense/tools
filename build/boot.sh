@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2107 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2020 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -33,18 +33,29 @@ SELF=boot
 
 if [ -z "${1}" ]; then
 	echo ">> No image given."
-	exit 0
+	exit 1
 fi
 
 IMAGE=$(find ${IMAGESDIR} -name "*-${1}-${PRODUCT_ARCH}.*")
 
+if [ ! -f "${IMAGE}" ]; then
+	echo ">> No image found."
+	exit 1
+fi
+
 echo ">>> Booting image ${IMAGE}..."
 
+TAPDEV=tap0
+
+if ! ifconfig ${TAPDEV}; then
+	TAPDEV=$(ifconfig tap create)
+fi
+
 kldstat -qm vmm || kldload vmm
-bhyveload -m 512 -d ${IMAGE} vm0
-bhyve -c 1 -m 512 -AHP \
+bhyveload -m 1024 -d ${IMAGE} vm0
+bhyve -c 1 -m 1024 -AHP \
     -s 0:0,hostbridge \
-    -s 1:0,virtio-net,tap0 \
+    -s 1:0,virtio-net,${TAPDEV} \
     -s 2:0,ahci-hd,${IMAGE} \
     -s 31,lpc -l com1,stdio \
     vm0 || true
