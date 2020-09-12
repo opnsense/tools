@@ -278,11 +278,16 @@ confirm|fingerprint|info|print)
 	;;
 esac
 
-PKGBIN=$(which pkg || true)
+for WANT in git pkg; do
+	if [ -z "$(which ${WANT})" ]; then
+		echo ">>> Required binary '${WANT}' is not installed." >&2
+		exit 1
+	fi
+done
 
-for WANT in git ${PRODUCT_WANTS}; do
-	if ! ${PKGBIN} info ${WANT} > /dev/null; then
-		echo ">>> Required build package '${WANT}' is not installed." >&2
+for WANT in ${PRODUCT_WANTS}; do
+	if ! pkg info ${WANT} > /dev/null; then
+		echo ">>> Required package '${WANT}' is not installed." >&2
 		exit 1
 	fi
 done
