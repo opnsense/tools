@@ -32,7 +32,7 @@ SELF=arm
 
 . ./common.sh
 
-if [ ${PRODUCT_ARCH} != armv6 -a ${PRODUCT_ARCH} != aarch64 ]; then
+if [ ${PRODUCT_ARCH} != armv6 -a ${PRODUCT_ARCH} != armv7 -a ${PRODUCT_ARCH} != aarch64 ]; then
 	echo ">>> Cannot build arm image with arch ${PRODUCT_ARCH}"
 	exit 1
 fi
@@ -56,7 +56,7 @@ truncate -s ${ARMSIZE} ${ARMIMG}
 
 DEV=$(mdconfig -a -t vnode -f ${ARMIMG} -x 63 -y 255)
 
-ARM_FAT_SIZE=${ARM_FAT_SIZE:-"50m"}
+ARM_FAT_SIZE=${ARM_FAT_SIZE:-"50m -b 1m"}
 
 gpart create -s MBR ${DEV}
 gpart add -t '!12' -a 512k -s ${ARM_FAT_SIZE} ${DEV}
@@ -80,6 +80,7 @@ cat > ${STAGEDIR}/etc/fstab << EOF
 # Device		Mountpoint	FStype	Options		Dump	Pass#
 /dev/ufs/${ARMLABEL}	/		ufs	rw		1	1
 /dev/msdosfs/MSDOSBOOT	/boot/msdos	msdosfs	rw,noatime	0	0
+tmpfs			/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
 mkdir -p ${STAGEDIR}/boot/msdos
