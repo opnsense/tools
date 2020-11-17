@@ -239,8 +239,9 @@ fi
 # load device-specific environment
 . ${DEVICEDIR}/${PRODUCT_DEVICE_REAL}.conf
 
+# XXX mark this for deletion
 # reload the kernel according to device specifications
-export PRODUCT_KERNEL="${PRODUCT_KERNEL}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}"
+# export PRODUCT_KERNEL="${PRODUCT_KERNEL}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}"
 
 # define and bootstrap target directories
 export STAGEDIR="${STAGEDIRPREFIX}${CONFIGDIR}/${PRODUCT_FLAVOUR}:${PRODUCT_ARCH}"
