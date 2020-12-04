@@ -625,7 +625,7 @@ setup_entropy()
 setup_set()
 {
 	tar -C ${1} -xJpf ${2}
-	rm -f {1}/.abi_hint
+	rm -f ${1}/.abi_hint
 }
 
 generate_set()
