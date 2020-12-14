@@ -77,8 +77,6 @@ sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR} work
 
-echo ">>> Generating base set:"
-
 BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 
 setup_set ${STAGEDIR}/work ${BASE_OBJ}

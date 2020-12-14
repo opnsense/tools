@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -85,8 +85,6 @@ ${ENV_FILTER} make -s -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
 sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR} work
-
-echo ">>> Generating kernel set:"
 
 setup_set ${STAGEDIR}/work ${KERNEL_OBJ}
 

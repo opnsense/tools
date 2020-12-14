@@ -630,6 +630,8 @@ setup_set()
 
 generate_set()
 {
+	echo ">>> Generating set:"
+
 	echo ${SRCABI} > ${1}/.abi_hint
 	tar -C ${1} -cvf - . | xz > ${2}
 }
