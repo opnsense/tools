@@ -353,6 +353,15 @@ There's also the posh way to boot a final image using bhyve(8):
 Please note that the system does not have working networking after
 bootup and login is only possible via the Nano and Serial images.
 
+Generating a make.conf for use in running OPNsense
+--------------------------------------------------
+
+A ports tree in a running OPNsense can be used to build packages
+not published on the mirrors.  To generate the make.conf contents
+for standalone use on the host use:
+
+    # make make.conf
+
 Reading and modifying version numbers of build sets and images
 --------------------------------------------------------------
 

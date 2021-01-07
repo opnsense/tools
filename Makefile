@@ -29,7 +29,7 @@ STEPS=		arm base boot chroot clean compress confirm core distfiles \
 		skim test update upload verify vga vm xtools
 SCRIPTS=	batch hotfix nightly
 
-.PHONY:		${STEPS} ${SCRIPTS}
+.PHONY:		${STEPS} ${SCRIPTS} make.conf
 
 PAGER?=		less
 
@@ -133,6 +133,7 @@ VERBOSE_HIDDEN=	@
 
 .for _VERSION in LUA PERL PHP PYTHON RUBY
 VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
+VERSIONS_SED+=	-e "s:%%${_VERSION}%%:${${_VERSION}}:g"
 .endfor
 
 # Expand build steps to launch into the selected
@@ -160,3 +161,6 @@ ${SCRIPT}: lint-composite
 	${VERBOSE_HIDDEN} cd ${.CURDIR} && FLAVOUR="${FLAVOUR}" \
 	    sh ${VERBOSE_FLAGS} ./composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
 .endfor
+
+make.conf:
+	@sed ${VERSIONS_SED} ${TOOLSDIR}/config/${SETTINGS}/make.conf
