@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -52,12 +52,14 @@ cat > ${STAGEDIR}/work/etc/fstab << EOF
 tmpfs			/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
-makefs -B little -o label=${VGALABEL} ${STAGEDIR}/root.part ${STAGEDIR}/work
+makefs -B little -o label=${VGALABEL} -o version=2 \
+    ${STAGEDIR}/root.part ${STAGEDIR}/work
 
 UEFIBOOT=
 GPTDUMMY=
 
-if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
+if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" -a \
+    -z "${PRODUCT_UEFI%%*vga*}" ]; then
 	UEFIBOOT="-p efi:=${STAGEDIR}/work/boot/boot1.efifat"
 	GPTDUMMY="-p freebsd-swap::512k"
 fi

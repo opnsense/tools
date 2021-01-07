@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -160,9 +160,7 @@ while getopts ${OPTS} OPT; do
 		esac
 		;;
 	u)
-		if [ "${OPTARG}" = "yes" ]; then
-			export PRODUCT_UEFI=${OPTARG}
-		fi
+		export PRODUCT_UEFI=${OPTARG}
 		;;
 	v)
 		export PRODUCT_VERSION=${OPTARG}

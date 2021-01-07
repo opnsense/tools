@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -39,24 +39,33 @@ SERIALLABEL="${PRODUCT_NAME}_Install"
 
 sh ./clean.sh ${SELF}
 
-setup_stage ${STAGEDIR}
-setup_base ${STAGEDIR}
-setup_kernel ${STAGEDIR}
-setup_packages ${STAGEDIR}
-setup_extras ${STAGEDIR} ${SELF}
-setup_mtree ${STAGEDIR}
-setup_entropy ${STAGEDIR}
+setup_stage ${STAGEDIR} work
+setup_base ${STAGEDIR}/work
+setup_kernel ${STAGEDIR}/work
+setup_packages ${STAGEDIR}/work
+setup_extras ${STAGEDIR}/work ${SELF}
+setup_mtree ${STAGEDIR}/work
+setup_entropy ${STAGEDIR}/work
 
-cat > ${STAGEDIR}/etc/fstab << EOF
+cat > ${STAGEDIR}/work/etc/fstab << EOF
 # Device		Mountpoint	FStype	Options		Dump	Pass#
 /dev/ufs/${SERIALLABEL}	/		ufs	ro,noatime	1	1
 tmpfs			/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
-makefs -t ffs -B little -o label=${SERIALLABEL} ${SERIALIMG} ${STAGEDIR}
+makefs -B little -o label=${SERIALLABEL} -o version=2 \
+    ${STAGEDIR}/root.part ${STAGEDIR}/work
 
-DEV=$(mdconfig -a -t vnode -f ${SERIALIMG})
-gpart create -s BSD ${DEV}
-gpart bootcode -b ${STAGEDIR}/boot/boot ${DEV}
-gpart add -t freebsd-ufs ${DEV}
-mdconfig -d -u ${DEV}
+UEFIBOOT=
+GPTDUMMY=
+
+if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" -a \
+    -z "${PRODUCT_UEFI%%*serial*}" ]; then
+	UEFIBOOT="-p efi:=${STAGEDIR}/work/boot/boot1.efifat"
+	GPTDUMMY="-p freebsd-swap::512k"
+    read YN
+fi
+
+mkimg -s gpt -o ${SERIALIMG} -b ${STAGEDIR}/work/boot/pmbr ${UEFIBOOT} \
+    -p freebsd-boot:=${STAGEDIR}/work/boot/gptboot ${GPTDUMMY} \
+    -p freebsd-ufs:=${STAGEDIR}/root.part

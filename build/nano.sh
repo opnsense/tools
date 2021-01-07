@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2018 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2021 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2004-2009 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -58,7 +58,7 @@ cat > ${STAGEDIR}/etc/fstab << EOF
 /dev/ufs/${NANOLABEL}	/		ufs	rw,noatime	1	1	# notrim
 EOF
 
-makefs -t ffs -s ${NANOSIZE} -B little -f 400000 \
+makefs -s ${NANOSIZE} -B little -f 400000 -o version=2 \
     -o label=${NANOLABEL} ${NANOIMG} ${STAGEDIR}
 
 DEV=$(mdconfig -a -t vnode -f ${NANOIMG})

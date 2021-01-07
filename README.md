@@ -64,7 +64,7 @@ Available build options are:
 * SPEED:	serial speed, e.g. "115200" (default)
 * TYPE:         the base name of the top package to be installed
 * SUFFIX:	the suffix of top package name (empty, "-devel")
-* UEFI:		"yes" for amd64 hybrid images with optional UEFI boot
+* UEFI:		Use amd64 hybrid images for said images, e.g. "vga vm"
 * VERSION:	a version tag (if applicable)
 
 How to specify build options via configuration file

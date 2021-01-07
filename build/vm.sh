@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -84,7 +84,8 @@ GPTDUMMY="-p freebsd-swap::512k"
 SWAPARGS=
 UEFIBOOT=
 
-if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" ]; then
+if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" -a \
+    -z "${PRODUCT_UEFI%%*vm*}" ]; then
 	UEFIBOOT="-p efi:=${STAGEDIR}/boot/boot1.efifat"
 fi
 
