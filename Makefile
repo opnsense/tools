@@ -72,7 +72,7 @@ KERNEL?=	SMP
 ADDITIONS?=	os-dyndns${SUFFIX}
 DEVICE?=	A10
 SPEED?=		115200
-UEFI?=		dvd vga vm # serial
+UEFI?=		dvd serial vga vm
 GITBASE?=	https://github.com/opnsense
 MIRRORS?=	https://opnsense.c0urier.net \
 		http://mirrors.nycbug.org/pub/opnsense \
