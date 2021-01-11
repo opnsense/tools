@@ -63,7 +63,6 @@ if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" -a \
     -z "${PRODUCT_UEFI%%*serial*}" ]; then
 	UEFIBOOT="-p efi:=${STAGEDIR}/work/boot/boot1.efifat"
 	GPTDUMMY="-p freebsd-swap::512k"
-    read YN
 fi
 
 mkimg -s gpt -o ${SERIALIMG} -b ${STAGEDIR}/work/boot/pmbr ${UEFIBOOT} \
