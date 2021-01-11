@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -102,8 +102,10 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	PORT=\${PORT_ORIGIN%%@*}
 	MAKE_ARGS="
 PACKAGES=${PACKAGESDIR}-cache
+PRODUCT_ABI=${PRODUCT_ABI}
 PRODUCT_ARCH=${PRODUCT_ARCH}
 PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
+PRODUCT_LUA=${PRODUCT_LUA}
 PRODUCT_PERL=${PRODUCT_PERL}
 PRODUCT_PHP=${PRODUCT_PHP}
 PRODUCT_PYTHON=${PRODUCT_PYTHON}
