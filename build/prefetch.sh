@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2020 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -35,25 +35,29 @@ git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 
 MIRRORSETDIR="${PRODUCT_MIRROR}/${SRCABI}/${PRODUCT_SETTINGS}/sets"
 
+if [ -z "${VERSION}" ]; then
+	VERSION=${PRODUCT_ABI}
+fi
+
 for ARG in ${@}; do
 	case ${ARG} in
 	base)
 		sh ./clean.sh ${ARG}
-		URL="${MIRRORSETDIR}/${ARG}-${PRODUCT_VERSION}-${PRODUCT_ARCH}"
+		URL="${MIRRORSETDIR}/${ARG}-${VERSION}-${PRODUCT_ARCH}"
 		for SUFFIX in txz.sig txz; do
 			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
 		done
 		;;
 	kernel)
 		sh ./clean.sh kernel
-		URL="${MIRRORSETDIR}/${ARG}-${PRODUCT_VERSION}-${PRODUCT_ARCH}"
+		URL="${MIRRORSETDIR}/${ARG}-${VERSION}-${PRODUCT_ARCH}"
 		for SUFFIX in txz.sig txz; do
 			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
 		done
 		;;
 	packages)
 		sh ./clean.sh ${ARG}
-		URL="${MIRRORSETDIR}/${ARG}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
+		URL="${MIRRORSETDIR}/${ARG}-${VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
 		for SUFFIX in tar.sig tar; do
 			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
 		done

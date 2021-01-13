@@ -231,13 +231,12 @@ Acquiring precompiled sets from the mirrors
 Compiled sets can be prefetched from a mirror if they exist,
 while removing any previously available set:
 
-    # make prefetch-<option>[,...] VERSION=version.to.prefetch
+    # make prefetch-<option>[,...] [VERSION=version.to.prefetch]
 
 Available prefetch options are:
 
 * base:		prefetch the base set
 * kernel:	prefetch the kernel set
-* kernel-dbg:	prefetch the debug kernel set (if available)
 * packages:	prefetch the packages set
 
 Using signatures to verify integrity
