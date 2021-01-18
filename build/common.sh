@@ -684,14 +684,15 @@ check_packages()
 	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar")
 
 	if [ -z "${SELF}" -o -z "${PACKAGESET}" -o -n "${SKIP}" ]; then
-		return
+		return 1
 	fi
 
 	DONE=$(tar tf ${PACKAGESET} | grep "^\./\.${SELF}_done\$" || true)
 	if [ -n "${DONE}" ]; then
-		echo ">>> Packages (${SELF}) are up to date"
-		exit 0
+		return 0
 	fi
+
+	return 1
 }
 
 extract_packages()

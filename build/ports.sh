@@ -31,9 +31,21 @@ SELF=ports
 
 . ./common.sh
 
+if check_packages ${SELF} ${@}; then
+	echo ">>> Step ${SELF} is up to date"
+	exit 0
+fi
+
+PORTCONFIGS="${CONFIGDIR}/ports.conf"
+
+# inject auxiliary ports only if not already removed
+if check_packages packages; then
+	PORTCONFIGS="${CONFIGDIR}/aux.conf ${PORTCONFIGS}"
+fi
+
 if [ -z "${PORTS_LIST}" ]; then
 	PORTS_LIST=$(
-cat ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
+cat ${PORTCONFIGS} | while read PORT_ORIGIN PORT_IGNORE; do
 	eval PORT_ORIGIN=${PORT_ORIGIN}
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
@@ -57,8 +69,6 @@ for PORT_ORIGIN in ${PORTS_LIST}; do
 done
 )
 fi
-
-check_packages ${SELF} ${@}
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH

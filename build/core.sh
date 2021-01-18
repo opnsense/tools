@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,7 +31,10 @@ SELF=core
 
 . ./common.sh
 
-check_packages ${SELF} ${@}
+if check_packages ${SELF} ${@}; then
+	echo ">>> Step ${SELF} is up to date"
+	exit 0
+fi
 
 git_branch ${COREDIR} ${COREBRANCH} COREBRANCH
 
