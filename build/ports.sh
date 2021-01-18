@@ -194,7 +194,7 @@ EOF
 # unblock SIGINT
 trap - 2
 
-bundle_packages ${STAGEDIR} ${SELF} ports plugins core
+bundle_packages ${STAGEDIR} ${SELF} plugins core
 
 if [ -f ${STAGEDIR}/.pkg-warn ]; then
 	echo ">>> WARNING: The build may have integrity issues!"
