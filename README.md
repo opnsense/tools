@@ -225,19 +225,25 @@ works:
 Please note that reissuing ports builds will clear plugins and
 core progress.
 
-Acquiring precompiled sets from the mirrors
--------------------------------------------
+Acquiring precompiled sets from the mirrors or another local direcory
+---------------------------------------------------------------------
 
 Compiled sets can be prefetched from a mirror if they exist,
 while removing any previously available set:
 
-    # make prefetch-<option>[,...] [VERSION=version.to.prefetch]
+    # make prefetch-<option>[,...] [VERSION=<full_version>]
 
-Available prefetch options are:
+If another build configuration is used locally that is compatible,
+the sets can be cloned from there as well:
 
-* base:		prefetch the base set
-* kernel:	prefetch the kernel set
-* packages:	prefetch the packages set
+    # make clone-<option>[,...] TO=<major_version>
+
+Available prefetch or clone options are:
+
+* base:		select matching base set
+* distfiles:	select matching distfiles set (clone only)
+* kernel:	select matching kernel set
+* packages:	select matching packages set
 
 Using signatures to verify integrity
 ------------------------------------

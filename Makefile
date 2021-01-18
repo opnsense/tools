@@ -23,10 +23,11 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-STEPS=		arm base boot chroot clean compress confirm core distfiles \
-		download dvd fingerprint info kernel nano packages plugins \
-		ports prefetch print rebase release rename rewind serial sign \
-		skim test update upload verify vga vm xtools
+STEPS=		arm base boot chroot clean clone compress confirm core \
+		distfiles download dvd fingerprint info kernel nano \
+		packages plugins ports prefetch print rebase release \
+		rename rewind serial sign skim test update upload verify \
+		vga vm xtools
 SCRIPTS=	batch hotfix nightly
 
 .PHONY:		${STEPS} ${SCRIPTS} make.conf

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,33 +27,52 @@
 
 set -e
 
-SELF=prefetch
+SELF=clone
 
 . ./common.sh
 
-git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
+if [ -z "${TO}" ]; then
+	echo ">>> Missing target, please set TO=xx.x"
+	exit 1
+fi
 
-MIRRORSETDIR="${PRODUCT_MIRROR}/${SRCABI}/${PRODUCT_SETTINGS}/sets"
-
-if [ -z "${VERSION}" ]; then
-	VERSION=${PRODUCT_ABI}
+if [ ${TO} = ${PRODUCT_ABI} ]; then
+	echo ">>> Wrong target, please correct TO=xx.x"
+	exit 1
 fi
 
 for ARG in ${@}; do
 	case ${ARG} in
 	base|kernel)
-		sh ./clean.sh ${ARG}
-		URL="${MIRRORSETDIR}/${ARG}-${VERSION}-${PRODUCT_ARCH}"
-		for SUFFIX in txz.sig txz; do
-			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
-		done
+		SRC=$(find ${SETSDIR} -name "${ARG}-*.txz")
+		if [ -f "${SRC}" ]; then
+			DST=$(echo ${SRC} | sed "s:/${PRODUCT_ABI}/:/${TO}/:")
+			echo -n ">>> Cloning ${DST}... "
+			rm -f $(dirname ${DST})/${ARG}-*.txz*
+			cp ${SRC} ${DST}
+			echo "done"
+		fi
+		;;
+	distfiles)
+		SRC=$(find ${SETSDIR} -name "${ARG}-*.tar")
+		DST=$(echo ${SRC} | sed "s:/${PRODUCT_ABI}/:/${TO}/:")
+		if [ -f "${SRC}" ]; then
+			echo -n ">>> Cloning ${DST}... "
+			rm -f $(dirname ${DST})/${ARG}-*.tar*
+			cp ${SRC} ${DST}
+			echo "done"
+		fi
 		;;
 	packages)
-		sh ./clean.sh ${ARG}
-		URL="${MIRRORSETDIR}/${ARG}-${VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
-		for SUFFIX in tar.sig tar; do
-			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
-		done
+		SRC=$(find ${SETSDIR} -name "${ARG}-*-${PRODUCT_FLAVOUR}-*.tar")
+		DST=$(echo ${SRC} | sed "s:/${PRODUCT_ABI}/:/${TO}/:")
+		if [ -f "${SRC}" ]; then
+			echo -n ">>> Cloning ${DST}... "
+			rm -f $(dirname ${DST})/${ARG}-*-${PRODUCT_FLVOUR}-*.tar*
+			cp ${SRC} ${DST}
+			echo "done"
+		fi
 		;;
 	esac
 done
+
