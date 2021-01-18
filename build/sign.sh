@@ -62,7 +62,7 @@ for ARG in ${@}; do
 		if [ -f "${PKGS_SET}" ]; then
 			setup_stage ${STAGEDIR}
 			extract_packages ${STAGEDIR}
-			bundle_packages ${STAGEDIR} ${SELF}
+			bundle_packages ${STAGEDIR}
 		fi
 		;;
 	esac
