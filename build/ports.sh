@@ -39,7 +39,7 @@ fi
 PORTCONFIGS="${CONFIGDIR}/ports.conf"
 
 # inject auxiliary ports only if not already removed
-if check_packages packages; then
+if ! check_packages packages; then
 	PORTCONFIGS="${CONFIGDIR}/aux.conf ${PORTCONFIGS}"
 fi
 
