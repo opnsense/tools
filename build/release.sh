@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -80,7 +80,7 @@ if [ -f "${PRODUCT_PRIVKEY}" ]; then
 	# checked for private key, but want the public key to
 	# be able to verify the images on the mirror later on
 	cp "${PRODUCT_PUBKEY}" \
-	    "${STAGEDIR}/work/${PRODUCT_NAME}-${PRODUCT_SETTINGS}.pub"
+	    "${STAGEDIR}/work/${PRODUCT_NAME}-${PRODUCT_ABI}.pub"
 fi
 
 echo -n ">>> Bundling images for ${PRODUCT_RELEASE}... "

@@ -69,6 +69,7 @@ SUFFIX?=	#-devel
 FLAVOUR?=	OpenSSL LibreSSL # first one is default
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
+ABI?=		${SETTINGS}
 KERNEL?=	SMP
 ADDITIONS?=	os-dyndns${SUFFIX}
 DEVICE?=	A10
@@ -132,10 +133,7 @@ VERBOSE_FLAGS=	-x
 VERBOSE_HIDDEN=	@
 .endif
 
-VERSIONS=	PRODUCT_ABI=${SETTINGS}
-VERSIONS_SED=	-e "s:%%ABI%%:${SETTINGS}:g"
-
-.for _VERSION in LUA PERL PHP PYTHON RUBY
+.for _VERSION in ABI LUA PERL PHP PYTHON RUBY
 VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 VERSIONS_SED+=	-e "s:%%${_VERSION}%%:${${_VERSION}}:g"
 .endfor

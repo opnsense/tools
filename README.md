@@ -52,6 +52,7 @@ Available early build options are:
 
 Available build options are:
 
+* ABI:		a custom ABI (defaults to SETTINGS)
 * ADDITIONS:	a list of packages/plugins to add to images
 * ARCH:		the target architecture if not native
 * DEVICE:	loads device-specific modifications, e.g. "A10" (default)
