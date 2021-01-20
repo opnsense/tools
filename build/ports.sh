@@ -89,7 +89,7 @@ setup_distfiles ${STAGEDIR}
 
 if extract_packages ${STAGEDIR}; then
 	remove_packages ${STAGEDIR} ${@} ${PRODUCT_CORES} ${PRODUCT_PLUGINS}
-	cleanup_packages ${STAGEDIR}
+	prune_packages ${STAGEDIR}
 fi
 
 MAKE_CONF="${CONFIGDIR}/make.conf"

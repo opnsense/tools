@@ -665,20 +665,20 @@ sign_image()
 
 check_image()
 {
-	SELF=${1}
+	local SELF=${1}
 	SKIP=${2}
 
-	IMAGE=$(find ${IMAGESDIR} -name "*-${SELF}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*")
+	CHECK=$(find ${IMAGESDIR} -name "*-${SELF}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*")
 
-	if [ -f "${IMAGE}" -a -z "${SKIP}" ]; then
-		echo ">>> Reusing ${SELF} image: ${IMAGE}"
+	if [ -f "${CHECK}" -a -z "${SKIP}" ]; then
+		echo ">>> Reusing ${SELF} image: ${CHECK}"
 		exit 0
 	fi
 }
 
 check_packages()
 {
-	SELF=${1}
+	local SELF=${1}
 	SKIP=${2}
 
 	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar")
@@ -749,7 +749,7 @@ remove_packages()
 	done
 }
 
-cleanup_packages()
+prune_packages()
 {
 	BASEDIR=${1}
 
