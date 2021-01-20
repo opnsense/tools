@@ -764,7 +764,7 @@ cleanup_packages()
 		    grep ^Origin | awk '{ print $3; }')
 		PKGGLOBS=
 		for CONFLICTS in CONFLICTS CONFLICTS_INSTALL; do
-			PKGGLOBS="${PKGGLOBS} $(make -C ${PORTSDIR}/${PKGORIGIN} -V ${CONFLICTS})"
+			PKGGLOBS="${PKGGLOBS} $(make -C ${PORTSDIR}/${PKGORIGIN} -V ${CONFLICTS} PHP_DEFAULT=${PRODUCT_PHP})"
 		done
 		for PKGGLOB in ${PKGGLOBS}; do
 			pkg -c ${1} remove -gy "${PKGGLOB}" || true
