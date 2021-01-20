@@ -36,6 +36,13 @@ if check_packages ${SELF} ${@}; then
 	exit 0
 fi
 
+REBUILD=
+
+# assume that arguments mean we are doing a rebuild
+if [ -n "${*}" ]; then
+	REBUILD=yes
+fi
+
 PORTCONFIGS="${CONFIGDIR}/ports.conf"
 
 # inject auxiliary ports only if not already removed
@@ -107,7 +114,8 @@ ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || true
 mkdir -p ${PACKAGESDIR}-cache
 cp -R ${PACKAGESDIR}/All ${PACKAGESDIR}-cache/All
 
-echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
+echo "${PORTS_LIST}
+clean.up.post.build" | while read PORT_ORIGIN; do
 	FLAVOR=\${PORT_ORIGIN##*@}
 	PORT=\${PORT_ORIGIN%%@*}
 	MAKE_ARGS="
@@ -122,6 +130,14 @@ PRODUCT_PYTHON=${PRODUCT_PYTHON}
 PRODUCT_RUBY=${PRODUCT_RUBY}
 UNAME_r=\$(freebsd-version)
 "
+	if pkg -N 2> /dev/null; then
+		pkg set -yaA1
+		pkg autoremove -y
+	fi
+
+	if [ \${PORT} = "clean.up.post.build" ]; then
+		continue
+	fi
 
 	if [ \${FLAVOR} != \${PORT} ]; then
 		MAKE_ARGS="\${MAKE_ARGS} FLAVOR=\${FLAVOR}"
@@ -147,16 +163,22 @@ UNAME_r=\$(freebsd-version)
 		fi
 	fi
 
+	PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -V PKGVERSION \${MAKE_ARGS})
+
 	if ! make -s -C ${PORTSDIR}/\${PORT} install \
 	    USE_PACKAGE_DEPENDS=yes \${MAKE_ARGS}; then
-		PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -V PKGVERSION \${MAKE_ARGS})
 		echo ">>> Aborted version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-err
-		# XXX Eventually continue now that
-		# we can log the progress in pkg-err.
-		# We know that the build is flawed,
-		# but with a bit of luck later build
-		# progress is not lost forever.  :)
-		exit 1
+
+		if [ -n "${REBUILD}" ]; then
+			exit 1
+		else
+			make -s -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
+			continue
+		fi
+	fi
+
+	if [ -n "${REBUILD}" ]; then
+		echo ">>> Rebuilt version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-warn
 	fi
 
 	for PKGNAME in \$(pkg query %n); do
@@ -185,9 +207,6 @@ UNAME_r=\$(freebsd-version)
 	done
 
 	make -s -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
-
-	pkg set -yaA1
-	pkg autoremove -y
 done
 EOF
 
