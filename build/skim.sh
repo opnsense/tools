@@ -144,6 +144,8 @@ done < ${STAGEDIR}/skim
 
 echo
 
+PREVENTRY=
+
 if [ -n "${UNUSED}" ]; then
 	(cd ${PORTSDIR}; mkdir -p $(make -C ${PORTSREFDIR} -V SUBDIR))
 	for ENTRY in ${PORTSDIR}/*; do
@@ -161,14 +163,17 @@ if [ -n "${UNUSED}" ]; then
 			continue;
 		fi
 
+		if [ "${ENTRY}" != "${PREVENTRY}" ]; then
+			echo ">>> Refreshing ${ENTRY}"
+			PREVENTRY=${ENTRY}
+		fi
+
 		for PORT in ${PORTSDIR}/${ENTRY}/*; do
 			PORT=${PORT##"${PORTSDIR}/"}
 
 			if [ -e ${PORTSREFDIR}/${PORT} ]; then
 				continue;
 			fi
-
-			echo ">>> Removing ${PORT}"
 
 			rm -fr ${PORTSDIR}/${PORT}
 		done
@@ -186,11 +191,8 @@ if [ -n "${UNUSED}" ]; then
 			done
 
 			if [ ${UNUSED} = 0 ]; then
-				echo ">>> Skipping ${PORT}"
 				continue;
 			fi
-
-			echo ">>> Refreshing ${PORT}"
 
 			rm -fr ${PORTSDIR}/${PORT}
 			cp -R ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
