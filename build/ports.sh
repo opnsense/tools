@@ -36,13 +36,6 @@ if check_packages ${SELF} ${@}; then
 	exit 0
 fi
 
-REBUILD=
-
-# assume that arguments mean we are doing a rebuild
-if [ -n "${*}" ]; then
-	REBUILD=yes
-fi
-
 PORTCONFIGS="${CONFIGDIR}/ports.conf"
 
 # inject auxiliary ports only if not already removed
@@ -169,7 +162,7 @@ UNAME_r=\$(freebsd-version)
 	    USE_PACKAGE_DEPENDS=yes \${MAKE_ARGS}; then
 		echo ">>> Aborted version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-err
 
-		if [ -n "${REBUILD}" ]; then
+		if [ -n "${PRODUCT_REBUILD}" ]; then
 			exit 1
 		else
 			make -s -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
@@ -177,7 +170,7 @@ UNAME_r=\$(freebsd-version)
 		fi
 	fi
 
-	if [ -n "${REBUILD}" ]; then
+	if [ -n "${PRODUCT_REBUILD}" ]; then
 		echo ">>> Rebuilt version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-warn
 	fi
 

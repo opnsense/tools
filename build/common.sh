@@ -261,6 +261,11 @@ export PRODUCT_CORE="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
 export PRODUCT_PLUGINS="os-*"
 export PRODUCT_PLUGIN="os-*${PRODUCT_SUFFIX}"
 
+# assume that arguments mean we are doing a rebuild
+if [ -n "${*}" ]; then
+	export PRODUCT_REBUILD=yes
+fi
+
 # get the current version for the selected source repository
 eval export SRC$(grep ^REVISION= ${SRCDIR}/sys/conf/newvers.sh)
 export SRCABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}"
