@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2020 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -26,6 +26,7 @@
 # SUCH DAMAGE.
 
 CLEAN=packages
+CONTINUE=
 FLAVOUR_TOP=${FLAVOUR}
 LINES=400
 STAGE1="update info base kernel xtools distfiles"
@@ -36,6 +37,7 @@ eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX
 
 if [ -n "${1}" ]; then
 	CLEAN=plugins,core
+	CONTINUE=-nightly
 fi
 
 for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | \
@@ -97,7 +99,7 @@ for STAGE in ${STAGE2}; do
 
 	for _FLAVOUR in ${FLAVOUR}; do
 		LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}-${_FLAVOUR}.log"
-		(time make ${STAGE}-nightly FLAVOUR=${_FLAVOUR} 2>&1 || touch ${LOG}.err) > ${LOG} &
+		(time make ${STAGE}${CONTINUE} FLAVOUR=${_FLAVOUR} 2>&1 || touch ${LOG}.err) > ${LOG} &
 	done
 
 	wait
