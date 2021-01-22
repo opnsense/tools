@@ -68,7 +68,7 @@ for ARG in ${@}; do
 		DST=$(echo ${SRC} | sed "s:/${PRODUCT_ABI}/:/${TO}/:")
 		if [ -f "${SRC}" ]; then
 			echo -n ">>> Cloning ${DST}... "
-			rm -f $(dirname ${DST})/${ARG}-*-${PRODUCT_FLVOUR}-*.tar*
+			rm -f $(dirname ${DST})/${ARG}-*-${PRODUCT_FLAVOUR}-*.tar*
 			cp ${SRC} ${DST}
 			echo "done"
 		fi
