@@ -418,7 +418,7 @@ A fully contained nightly build for the system is invoked using:
 To allow the nightly build to build both release and development packages
 use:
 
-    # make nightly DEVELBRANCH=master
+    # make nightly EXTRABRANCH=master
 
 Nightly builds are the only builds that write and archive logs under:
 

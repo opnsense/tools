@@ -31,8 +31,8 @@ SELF=rewind
 
 . ./common.sh
 
-if [ -n "${DEVELBRANCH}" ]; then
-	echo ">>> Cannot rewind, please unset DEVELBRANCH=${DEVELBRANCH}"
+if [ -n "${EXTRABRANCH}" ]; then
+	echo ">>> Cannot rewind, please unset EXTRABRANCH=${EXTRABRANCH}"
 	exit 1
 fi
 

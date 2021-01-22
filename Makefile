@@ -102,9 +102,7 @@ COREBRANCH?=	stable/${SETTINGS}
 COREENV?=	CORE_PHP=${PHP} CORE_ABI=${SETTINGS} CORE_PYTHON=${PYTHON}
 SRCDIR?=	/usr/src
 SRCBRANCH?=	stable/${SETTINGS}
-
-# for plugins and core
-DEVELBRANCH?=	#master
+EXTRABRANCH?=	# master
 
 # A couple of meta-targets for easy use and ordering:
 
@@ -155,7 +153,7 @@ ${STEP}: lint-steps
 	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
 	    -q "${VERSIONS}" -h "${PLUGINSENV}" -I "${UPLOADDIR}" \
-	    -D "${DEVELBRANCH}" -A "${PORTSREFURL}" ${${STEP}_ARGS}
+	    -D "${EXTRABRANCH}" -A "${PORTSREFURL}" ${${STEP}_ARGS}
 .endfor
 
 .for SCRIPT in ${SCRIPTS}

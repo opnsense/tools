@@ -57,7 +57,7 @@ while getopts ${OPTS} OPT; do
 		export PRODUCT_DEVICE=${OPTARG}
 		;;
 	D)
-		export DEVELBRANCH=${OPTARG}
+		export EXTRABRANCH=${OPTARG}
 		;;
 	E)
 		export COREBRANCH=${OPTARG}

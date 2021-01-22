@@ -47,7 +47,7 @@ remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR} pkg git
 lock_packages ${STAGEDIR}
 
-for BRANCH in ${DEVELBRANCH} ${COREBRANCH}; do
+for BRANCH in ${EXTRABRANCH} ${COREBRANCH}; do
 	setup_copy ${STAGEDIR} ${COREDIR}
 	git_reset ${STAGEDIR}${COREDIR} ${BRANCH}
 
