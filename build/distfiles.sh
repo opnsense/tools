@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -85,7 +85,9 @@ trap : 2
 if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTS_LIST=; fi
 echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	MAKE_ARGS="
+PRODUCT_ABI=${PRODUCT_ABI}
 PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
+PRODUCT_LUA=${PRODUCT_LUA}
 PRODUCT_PERL=${PRODUCT_PERL}
 PRODUCT_PHP=${PRODUCT_PHP}
 PRODUCT_PYTHON=${PRODUCT_PYTHON}
