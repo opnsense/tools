@@ -85,10 +85,7 @@ if extract_packages ${STAGEDIR}; then
 	prune_packages ${STAGEDIR}
 fi
 
-MAKE_CONF="${CONFIGDIR}/make.conf"
-if [ -f ${MAKE_CONF} ]; then
-	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
-fi
+sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 
 cat > ${STAGEDIR}/bin/echotime <<EOF
 #!/bin/sh
@@ -116,11 +113,6 @@ PACKAGES=${PACKAGESDIR}-cache
 PRODUCT_ABI=${PRODUCT_ABI}
 PRODUCT_ARCH=${PRODUCT_ARCH}
 PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
-PRODUCT_LUA=${PRODUCT_LUA}
-PRODUCT_PERL=${PRODUCT_PERL}
-PRODUCT_PHP=${PRODUCT_PHP}
-PRODUCT_PYTHON=${PRODUCT_PYTHON}
-PRODUCT_RUBY=${PRODUCT_RUBY}
 UNAME_r=\$(freebsd-version)
 "
 	if pkg -N 2> /dev/null; then

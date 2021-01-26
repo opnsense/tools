@@ -77,26 +77,22 @@ for ARG in ${@}; do
 	esac
 done
 
-echo -n ">>> Gathering dependencies:   0%"
-
 echo "${PORTS_LIST}" > ${STAGEDIR}/skim
+sh ./make.conf.sh > ${STAGEDIR}/make.conf
 
 PORTS_COUNT=$(wc -l ${STAGEDIR}/skim | awk '{ print $1 }')
 PORTS_NUM=0
+
+echo -n ">>> Gathering dependencies:   0%"
 
 while read PORT_ORIGIN PORT_BROKEN; do
 	FLAVOR=${PORT_ORIGIN##*@}
 	PORT=${PORT_ORIGIN%%@*}
 
 	MAKE_ARGS="
-__MAKE_CONF=${CONFIGDIR}/make.conf
+__MAKE_CONF=${STAGEDIR}/make.conf
 PRODUCT_ABI=${PRODUCT_ABI}
 PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
-PRODUCT_LUA=${PRODUCT_LUA}
-PRODUCT_PERL=${PRODUCT_PERL}
-PRODUCT_PHP=${PRODUCT_PHP}
-PRODUCT_PYTHON=${PRODUCT_PYTHON}
-PRODUCT_RUBY=${PRODUCT_RUBY}
 "
 
 	if [ ${FLAVOR} != ${PORT} ]; then

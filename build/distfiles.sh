@@ -70,14 +70,10 @@ setup_distfiles ${STAGEDIR}
 
 git_describe ${PORTSDIR}
 
-echo ">>> Fetching distfiles..."
-
-MAKE_CONF="${CONFIGDIR}/make.conf"
-if [ -f ${MAKE_CONF} ]; then
-	cp ${MAKE_CONF} ${STAGEDIR}/etc/make.conf
-fi
-
+sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 echo "CLEAN_FETCH_ENV=yes" >> ${STAGEDIR}/etc/make.conf
+
+echo ">>> Fetching distfiles..."
 
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
@@ -87,11 +83,6 @@ echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
 	MAKE_ARGS="
 PRODUCT_ABI=${PRODUCT_ABI}
 PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
-PRODUCT_LUA=${PRODUCT_LUA}
-PRODUCT_PERL=${PRODUCT_PERL}
-PRODUCT_PHP=${PRODUCT_PHP}
-PRODUCT_PYTHON=${PRODUCT_PYTHON}
-PRODUCT_RUBY=${PRODUCT_RUBY}
 UNAME_r=\$(freebsd-version)
 "
 	echo ">>> Fetching \${PORT_ORIGIN}..."
