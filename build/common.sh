@@ -878,8 +878,8 @@ bundle_packages()
 	BASEDIR=${1}
 	SELF=${2}
 
-	shift
-	shift
+	shift || true
+	shift || true
 
 	REDOS=${@}
 
