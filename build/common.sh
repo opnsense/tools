@@ -271,7 +271,7 @@ eval export SRC$(grep ^REVISION= ${SRCDIR}/sys/conf/newvers.sh)
 export SRCABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}"
 
 case "${SELF}" in
-confirm|fingerprint|info|print)
+confirm|fingerprint|info|make\.conf|print)
 	;;
 *)
 	if [ -z "${PRINT_ENV_SKIP}" ]; then
