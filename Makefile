@@ -102,7 +102,7 @@ COREBRANCH?=	stable/${SETTINGS}
 COREENV?=	CORE_PHP=${PHP} CORE_ABI=${SETTINGS} CORE_PYTHON=${PYTHON}
 SRCDIR?=	/usr/src
 SRCBRANCH?=	stable/${SETTINGS}
-EXTRABRANCH?=	# master
+EXTRABRANCH?=	#master
 
 # A couple of meta-targets for easy use and ordering:
 
@@ -110,9 +110,9 @@ ports distfiles: base
 plugins: ports
 core: plugins
 packages test: core
-dvd nano serial vga vm: packages kernel
-sets: distfiles packages kernel
-images: dvd nano serial vga vm # arm
+dvd nano serial vga vm: kernel core
+sets: kernel distfiles packages
+images: dvd nano serial vga vm #arm
 release: dvd nano serial vga
 
 # Expand target arguments for the script append:
