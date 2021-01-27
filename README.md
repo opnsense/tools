@@ -189,14 +189,19 @@ Updating all or individual repositories can be done as follows:
 
 Available update options are: core, plugins, ports, portsref, src, tools
 
-Regression tests
-----------------
+Regression tests and ports audit
+--------------------------------
 
 Before building images, you can run the regression tests
 to check the integrity of your core.git modifications plus
 generate output for the style checker:
 
     # make test
+
+To check the binary packages from ports against the upstream
+vulnerability database run the following:
+
+    # make audit
 
 Advanced package builds
 -----------------------

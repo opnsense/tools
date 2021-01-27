@@ -23,7 +23,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-STEPS=		arm base boot chroot clean clone compress confirm core \
+STEPS=		audit arm base boot chroot clean clone compress confirm core \
 		distfiles download dvd fingerprint info kernel make.conf nano \
 		packages plugins ports prefetch print rebase release \
 		rename rewind serial sign skim test update upload verify \
@@ -107,7 +107,7 @@ EXTRABRANCH?=	#master
 # A couple of meta-targets for easy use and ordering:
 
 ports distfiles: base
-plugins: ports
+audit plugins: ports
 core: plugins
 packages test: core
 dvd nano serial vga vm: kernel core

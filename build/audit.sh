@@ -1,0 +1,79 @@
+#!/bin/sh
+
+# Copyright (c) 2021 Franco Fichtner <franco@opnsense.org>
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+# OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+
+set -e
+
+SELF=audit
+
+. ./common.sh
+
+PORTS_LIST=$(
+cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
+	eval PORT_ORIGIN=${PORT_ORIGIN}
+	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
+		continue
+	fi
+	echo ${PORT_ORIGIN}
+done
+)
+
+setup_stage ${STAGEDIR}
+setup_base ${STAGEDIR}
+setup_chroot ${STAGEDIR}
+extract_packages ${STAGEDIR}
+install_packages ${STAGEDIR} pkg
+lock_packages ${STAGEDIR}
+
+echo -n ">>> Running security audit..."
+
+for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
+	PKGORIGIN=$(pkg -c ${STAGEDIR} info -F ${PKG} | \
+	    grep ^Origin | awk '{ print $3; }')
+
+	for PORT in ${PORTS_LIST}; do
+		if [ "${PORT}" = "${PKGORIGIN}" ]; then
+			${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF
+pkg add -f ${PKG} > /dev/null
+AUDIT=\$(pkg audit -F | grep is.vulnerable | tr -d :)
+if [ -n "\${AUDIT}" ]; then
+	echo ">>> \${AUDIT}" >> /report
+fi
+echo -n .
+pkg remove -qya > /dev/null
+EOF
+		fi
+	done
+done
+
+echo "done"
+
+if [ -f ${STAGEDIR}/report ]; then
+	echo ">>> The following vulnerable pacckages exist:"
+	sort -u ${STAGEDIR}/report
+else
+	echo ">>> No vulnerable packages have been found."
+fi
