@@ -269,7 +269,7 @@ fi
 
 # get the current version for the selected source repository
 SRCREVISION=unknown
-if [ -d ${SRCDIR} ]; then
+if [ -f ${SRCDIR}/sys/conf/newvers.sh ]; then
 	eval export SRC$(grep ^REVISION= ${SRCDIR}/sys/conf/newvers.sh)
 fi
 export SRCABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}"
