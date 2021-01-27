@@ -268,7 +268,10 @@ if [ -n "${*}" ]; then
 fi
 
 # get the current version for the selected source repository
-eval export SRC$(grep ^REVISION= ${SRCDIR}/sys/conf/newvers.sh)
+SRCREVISION=unknown
+if [ -d ${SRCDIR} ]; then
+	eval export SRC$(grep ^REVISION= ${SRCDIR}/sys/conf/newvers.sh)
+fi
 export SRCABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}"
 
 case "${SELF}" in
