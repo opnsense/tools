@@ -30,7 +30,7 @@ CONTINUE=
 FLAVOUR_TOP=${FLAVOUR}
 LINES=400
 STAGE1="update info base kernel xtools distfiles"
-STAGE2="ports plugins core test"
+STAGE2="ports plugins core audit test"
 STAGENUM=0
 
 eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX)"
