@@ -60,7 +60,7 @@ for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
 pkg add -f ${PKG} > /dev/null
 AUDIT=\$(pkg audit -F | grep is.vulnerable | tr -d :)
 if [ -n "\${AUDIT}" ]; then
-	echo ">>> \${AUDIT}" >> /report
+	echo "\${AUDIT}" >> /report
 fi
 echo -n .
 pkg remove -qya > /dev/null
