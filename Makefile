@@ -55,11 +55,10 @@ lint: lint-steps lint-composite
 
 TOOLSDIR?=	/usr/tools
 TOOLSBRANCH?=	master
+CONFIGDIR?=	${TOOLSDIR}/config
 SETTINGS?=	21.1
 
-CONFIG?=	${TOOLSDIR}/config/${SETTINGS}/build.conf
-
-.-include "${CONFIG}"
+.include "${CONFIGDIR}/${SETTINGS}/build.conf"
 
 # Bootstrap the build options if not set:
 
@@ -92,16 +91,16 @@ PORTSREFURL?=	https://git-01.md.hardenedbsd.org/HardenedBSD/hardenedbsd-ports.gi
 PORTSREFDIR?=	/usr/hardenedbsd-ports
 PORTSREFBRANCH?=master
 
-PLUGINSENV?=	PLUGIN_PHP=${PHP} PLUGIN_ABI=${SETTINGS} PLUGIN_PYTHON=${PYTHON}
+PLUGINSENV?=	PLUGIN_PHP=${PHP} PLUGIN_ABI=${ABI} PLUGIN_PYTHON=${PYTHON}
 PLUGINSDIR?=	/usr/plugins
-PLUGINSBRANCH?=	stable/${SETTINGS}
+PLUGINSBRANCH?=	stable/${ABI}
 PORTSDIR?=	/usr/ports
 PORTSBRANCH?=	master
 COREDIR?=	/usr/core
-COREBRANCH?=	stable/${SETTINGS}
-COREENV?=	CORE_PHP=${PHP} CORE_ABI=${SETTINGS} CORE_PYTHON=${PYTHON}
+COREBRANCH?=	stable/${ABI}
+COREENV?=	CORE_PHP=${PHP} CORE_ABI=${ABI} CORE_PYTHON=${PYTHON}
 SRCDIR?=	/usr/src
-SRCBRANCH?=	stable/${SETTINGS}
+SRCBRANCH?=	stable/${ABI}
 EXTRABRANCH?=	#master
 
 # A couple of meta-targets for easy use and ordering:
@@ -149,7 +148,7 @@ ${STEP}: lint-steps
 	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
-	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" \
+	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" -i ${CONFIGDIR} \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
 	    -q "${VERSIONS}" -h "${PLUGINSENV}" -I "${UPLOADDIR}" \
 	    -D "${EXTRABRANCH}" -A "${PORTSREFURL}" ${${STEP}_ARGS}

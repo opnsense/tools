@@ -47,7 +47,7 @@ All build steps are invoked via make(1):
 
 Available early build options are:
 
-* CONFIG: 	reads the below from the specified file
+* CONFIGDIR: 	reads settings from the specified directory
 * SETTINGS:	the name of the requested config directory
 
 Available build options are:
@@ -71,8 +71,9 @@ Available build options are:
 How to specify build options via configuration file
 ---------------------------------------------------
 
-The default CONFIG file is under "config/SETTINGS/build.conf".
-It can also be overrided by "/dev/null".
+The configuration file is required at "CONFIGDIR/SETTINGS/build.conf".
+Its contents can be modified to adapt a non-standard build environment
+and to avoid excessive Makefile arguments.  Use with care.
 
 How to run individual or composite build steps
 ----------------------------------------------
