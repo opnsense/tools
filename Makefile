@@ -79,7 +79,8 @@ ABI?=		${SETTINGS}
 KERNEL?=	SMP
 ADDITIONS?=	os-dyndns${SUFFIX}
 DEVICE?=	A10
-SPEED?=		115200
+COMSPEED?=	115200
+COMPORT?=	0x3f8
 UEFI?=		dvd serial vga vm
 GITBASE?=	https://github.com/opnsense
 MIRRORS?=	https://opnsense.c0urier.net \
@@ -152,10 +153,10 @@ ${STEP}: lint-steps
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
-	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
+	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${COMSPEED} \
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
-	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" \
+	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" -i ${COMPORT} \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
 	    -q "${VERSIONS}" -h "${PLUGINSENV}" -I "${UPLOADDIR}" \
 	    -D "${EXTRABRANCH}" -A "${PORTSREFURL}" ${${STEP}_ARGS}

@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:K:k:L:l:m:n:O:o:P:p:q:R:r:S:s:T:t:U:u:v:V:"
+OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:i:K:k:L:l:m:n:O:o:P:p:q:R:r:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -50,7 +50,7 @@ while getopts ${OPTS} OPT; do
 		export COREDIR=${OPTARG}
 		;;
 	c)
-		export PRODUCT_SPEED=${OPTARG}
+		export PRODUCT_COMSPEED=${OPTARG}
 		;;
 	d)
 		export PRODUCT_DEVICE_REAL=${OPTARG}
@@ -95,6 +95,9 @@ while getopts ${OPTS} OPT; do
 		;;
 	I)
 		export UPLOADDIR=${OPTARG}
+		;;
+	i)
+		export PRODUCT_COMPORT=${OPTARG}
 		;;
 	L)
 		if [ -n "${OPTARG}" ]; then
@@ -188,6 +191,8 @@ PORTSDIR
 PORTSREFDIR
 PRODUCT_ABI
 PRODUCT_ARCH
+PRODUCT_COMPORT
+PRODUCT_COMSPEED
 PRODUCT_DEVICE_REAL
 PRODUCT_FLAVOUR
 PRODUCT_GITBASE
@@ -200,7 +205,6 @@ PRODUCT_PHP
 PRODUCT_PYTHON
 PRODUCT_RUBY
 PRODUCT_SERVER
-PRODUCT_SPEED
 PRODUCT_TYPE
 PRODUCT_VERSION
 SRCBRANCH

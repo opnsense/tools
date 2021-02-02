@@ -48,13 +48,15 @@ All build steps are invoked via make(1):
 Available early build options are:
 
 * SETTINGS:	the name of the requested local configuration
-* CONFIGDIR: 	read configuration from other directory and override SETTINGS
+* CONFIGDIR:	read configuration from other directory and override SETTINGS
 
 Available build options are:
 
 * ABI:		a custom ABI (defaults to SETTINGS)
 * ADDITIONS:	a list of packages/plugins to add to images
 * ARCH:		the target architecture if not native
+* COMPORT:	serial port, e.g. "0x3f8" (default)
+* COMSPEED:	serial speed, e.g. "115200" (default)
 * DEVICE:	loads device-specific modifications, e.g. "A10" (default)
 * FLAVOUR:	"OpenSSL" (default), "LibreSSL", "Base"
 * KERNEL:	the kernel config to use, e.g. SMP (default)
@@ -62,9 +64,8 @@ Available build options are:
 * NAME:		"OPNsense" (default)
 * PRIVKEY:	the private key for signing sets
 * PUBKEY:	the public key for signing sets
-* SPEED:	serial speed, e.g. "115200" (default)
-* TYPE:         the base name of the top package to be installed
 * SUFFIX:	the suffix of top package name (empty, "-devel")
+* TYPE:		the base name of the top package to be installed
 * UEFI:		Use amd64 hybrid images for said images, e.g. "vga vm"
 * VERSION:	a version tag (if applicable)
 
