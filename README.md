@@ -66,7 +66,7 @@ Available build options are:
 * PUBKEY:	the public key for signing sets
 * SUFFIX:	the suffix of top package name (empty, "-devel")
 * TYPE:		the base name of the top package to be installed
-* UEFI:		Use amd64 hybrid images for said images, e.g. "vga vm"
+* UEFI:		use amd64 hybrid images for said images, e.g. "vga vm"
 * VERSION:	a version tag (if applicable)
 
 How to specify build options via configuration file
