@@ -31,9 +31,15 @@ SELF=plugins
 
 . ./common.sh
 
+PLUGINS_CONF=${CONFIGDIR}/plugins.conf
+
+if [ -f ${PLUGINS_CONF}.local ]; then
+	PLUGINS_CONF="${PLUGINS_CONF} ${PLUGINS_CONF}.local"
+fi
+
 if [ -z "${PLUGINS_LIST}" ]; then
 	PLUGINS_LIST=$(
-cat ${CONFIGDIR}/plugins.conf | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
+cat ${PLUGINS_CONF} | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
 	if [ "$(echo ${PLUGIN_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
 	fi
