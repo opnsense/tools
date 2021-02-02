@@ -55,10 +55,17 @@ lint: lint-steps lint-composite
 
 TOOLSDIR?=	/usr/tools
 TOOLSBRANCH?=	master
-CONFIGDIR?=	${TOOLSDIR}/config
-SETTINGS?=	21.1
 
-.include "${CONFIGDIR}/${SETTINGS}/build.conf"
+.if defined(CONFIGDIR)
+SETTINGS=	${CONFIGDIR:C/^.*\///}
+.else
+SETTINGS?=	21.1
+.endif
+
+CONFIGDIR?=	${TOOLSDIR}/config/${SETTINGS}
+
+.include "${CONFIGDIR}/build.conf"
+.-include "${CONFIGDIR}/build.conf.local"
 
 # Bootstrap the build options if not set:
 
@@ -141,14 +148,14 @@ VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 ${STEP}: lint-steps
 	${VERBOSE_HIDDEN} cd ${.CURDIR}/build && \
 	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} -F ${KERNEL} \
-	    -f "${FLAVOUR}" -n ${NAME} -v ${VERSION} -s ${SETTINGS} \
+	    -f "${FLAVOUR}" -n ${NAME} -v ${VERSION} -s ${CONFIGDIR} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
 	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${SPEED} \
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
-	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" -i ${CONFIGDIR} \
+	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
 	    -q "${VERSIONS}" -h "${PLUGINSENV}" -I "${UPLOADDIR}" \
 	    -D "${EXTRABRANCH}" -A "${PORTSREFURL}" ${${STEP}_ARGS}

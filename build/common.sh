@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:i:K:k:L:l:m:n:O:o:P:p:q:R:r:S:s:T:t:U:u:v:V:"
+OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:K:k:L:l:m:n:O:o:P:p:q:R:r:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -96,9 +96,6 @@ while getopts ${OPTS} OPT; do
 	I)
 		export UPLOADDIR=${OPTARG}
 		;;
-	i)
-		export CONFIGDIRPREFIX=${OPTARG}
-		;;
 	L)
 		if [ -n "${OPTARG}" ]; then
 			export PRODUCT_SIGNCMD=${OPTARG}
@@ -143,7 +140,7 @@ while getopts ${OPTS} OPT; do
 		export SRCDIR=${OPTARG}
 		;;
 	s)
-		export PRODUCT_SETTINGS=${OPTARG}
+		export CONFIGDIR=${OPTARG}
 		;;
 	T)
 		export TOOLSDIR=${OPTARG}
@@ -181,7 +178,7 @@ done
 shift $((${OPTIND} - 1))
 
 CHECK_MISSING="
-CONFIGDIRPREFIX
+CONFIGDIR
 COREBRANCH
 COREDIR
 PLUGINSBRANCH
@@ -203,7 +200,6 @@ PRODUCT_PHP
 PRODUCT_PYTHON
 PRODUCT_RUBY
 PRODUCT_SERVER
-PRODUCT_SETTINGS
 PRODUCT_SPEED
 PRODUCT_TYPE
 PRODUCT_VERSION
@@ -231,7 +227,7 @@ MACHTYPE=${MACHTYPE} PWD=${PWD} GROUP=${GROUP} HOST=${HOST} \
 EDITOR=${EDITOR} PAGER=${PAGER} ABI_FILE=${ABI_FILE}"
 
 # define build and config directories
-export CONFIGDIR="${CONFIGDIRPREFIX}/${PRODUCT_SETTINGS}"
+export PRODUCT_SETTINGS="${CONFIGDIR##*/}"
 export DEVICEDIR="${TOOLSDIR}/device"
 export PACKAGESDIR="/.pkg"
 

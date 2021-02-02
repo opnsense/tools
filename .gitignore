@@ -1,2 +1,3 @@
+/config/*/build.conf.local
 /config/*/repo.key
 /config/*/repo.pub

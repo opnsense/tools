@@ -47,8 +47,8 @@ All build steps are invoked via make(1):
 
 Available early build options are:
 
-* CONFIGDIR: 	reads settings from the specified directory
-* SETTINGS:	the name of the requested config directory
+* SETTINGS:	the name of the requested local configuration
+* CONFIGDIR: 	read configuration from other directory and override SETTINGS
 
 Available build options are:
 
