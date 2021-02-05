@@ -127,7 +127,11 @@ release: dvd nano serial vga
 .for TARGET in ${.TARGETS}
 _TARGET=	${TARGET:C/\-.*//}
 .if ${_TARGET} != ${TARGET}
+.if ${SCRIPTS:M${_TARGET}}
+${_TARGET}_ARGS+=	${TARGET:C/^[^\-]*(\-|\$)//}
+.else
 ${_TARGET}_ARGS+=	${TARGET:C/^[^\-]*(\-|\$)//:S/,/ /g}
+.endif
 ${TARGET}: ${_TARGET}
 .endif
 .endfor

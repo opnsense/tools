@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,8 +25,10 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-for _FLAVOUR in ${FLAVOUR}; do
-	make clean-obj ${*} FLAVOUR=${_FLAVOUR}
-done
+if [ -z "${1}" ]; then
+	exit 0
+fi
 
-make clean-obj
+for _FLAVOUR in ${FLAVOUR}; do
+	make clean-obj ${1} FLAVOUR=${_FLAVOUR}
+done
