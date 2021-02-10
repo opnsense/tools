@@ -64,7 +64,7 @@ Available build options are:
 * NAME:		"OPNsense" (default)
 * PRIVKEY:	the private key for signing sets
 * PUBKEY:	the public key for signing sets
-* SUFFIX:	the suffix of top package name (empty, "-devel")
+* SUFFIX:	the suffix of top package name (default is empty)
 * TYPE:		the base name of the top package to be installed
 * UEFI:		use amd64 hybrid images for said images, e.g. "vga vm"
 * VERSION:	a version tag (if applicable)

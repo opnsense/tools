@@ -41,7 +41,7 @@ setup_clone ${STAGEDIR} ${PLUGINSDIR}
 setup_chroot ${STAGEDIR}
 
 extract_packages ${STAGEDIR}
-install_packages ${STAGEDIR} ${PRODUCT_CORE} os-debug${PRODUCT_SUFFIX}
+install_packages ${STAGEDIR} ${PRODUCT_CORE} os-debug${PRODUCT_DEVEL}
 lock_packages ${STAGEDIR}
 
 # XXX plugins have conflicts, cannot install all for following check

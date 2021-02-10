@@ -47,11 +47,18 @@ remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR} pkg git
 lock_packages ${STAGEDIR}
 
+if [ -n "${VERSION}" ]; then
+	CORE_PKGVERSION="CORE_PKGVERSION=${VERSION}"
+fi
+
 for BRANCH in ${EXTRABRANCH} ${COREBRANCH}; do
 	setup_copy ${STAGEDIR} ${COREDIR}
 	git_reset ${STAGEDIR}${COREDIR} ${BRANCH}
 
 	CORE_ARGS="CORE_ARCH=${PRODUCT_ARCH} CORE_FLAVOUR=${PRODUCT_FLAVOUR} ${COREENV}"
+	if [ ${BRANCH} = ${COREBRANCH} ]; then
+		CORE_ARGS="${CORE_ARGS} ${CORE_PKGVERSION}"
+	fi
 
 	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} name)
 	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} depends)

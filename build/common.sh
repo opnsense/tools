@@ -153,11 +153,11 @@ while getopts ${OPTS} OPT; do
 		;;
 	U)
 		case "${OPTARG}" in
-		''|-devel)
+		''|-business|-devel)
 			export PRODUCT_SUFFIX=${OPTARG}
 			;;
 		*)
-			echo "SUFFIX wants empty string or '-devel'" >&2
+			echo "SUFFIX '${OPTARG}' is not supported" >&2
 			exit 1
 			;;
 		esac
@@ -261,10 +261,11 @@ export PRODUCT_PUBKEY=${PRODUCT_PUBKEY:-"${CONFIGDIR}/repo.pub"}
 export PRODUCT_SIGNCMD=${PRODUCT_SIGNCMD:-"${TOOLSDIR}/scripts/pkg_sign.sh ${PRODUCT_PUBKEY} ${PRODUCT_PRIVKEY}"}
 export PRODUCT_SIGNCHK=${PRODUCT_SIGNCHK:-"${TOOLSDIR}/scripts/pkg_fingerprint.sh ${PRODUCT_PUBKEY}"}
 export PRODUCT_RELEASE="${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}"
-export PRODUCT_CORES="${PRODUCT_TYPE} ${PRODUCT_TYPE}-devel"
+export PRODUCT_CORES="${PRODUCT_TYPE} ${PRODUCT_TYPE}-devel ${PRODUCT_TYPE}-business"
 export PRODUCT_CORE="${PRODUCT_TYPE}${PRODUCT_SUFFIX}"
+export PRODUCT_DEVEL="${PRODUCT_SUFFIX%-business}"
 export PRODUCT_PLUGINS="os-*"
-export PRODUCT_PLUGIN="os-*${PRODUCT_SUFFIX}"
+export PRODUCT_PLUGIN="os-*${PRODUCT_DEVEL}"
 
 # assume that arguments mean we are doing a rebuild
 if [ -n "${*}" ]; then
@@ -845,15 +846,14 @@ install_packages()
 	# Adds all selected packages and fails if one cannot
 	# be installed.  Used to build a runtime environment.
 	for PKG in pkg ${PKGLIST}; do
-		PKGGLOB=$(echo "${PKG}" | sed 's/[^*]*//')
-		PKGSEARCH="-name ${PKG}-[0-9]*.txz"
-		PKGFOUND=
-		if [ -n "${PKGGLOB}" -a -z "${PRODUCT_SUFFIX}" ]; then
-			PKGSEARCH="${PKGSEARCH} ! -name ${PKG}-devel-[0-9]*.txz"
+		if [ -n "$(echo "${PKG}" | sed 's/[^*]*//')" ]; then
+			echo "Cannot install globbed package: ${PKG}" >&2
+			exit 1
 		fi
+		PKGFOUND=
 		for PKGFILE in $({
 			cd ${BASEDIR}
-			find .${PACKAGESDIR}/All ${PKGSEARCH}
+			find .${PACKAGESDIR}/All -name ${PKG}-[0-9]*.txz
 		}); do
 			pkg -c ${BASEDIR} add ${PKGFILE}
 			PKGFOUND=1
