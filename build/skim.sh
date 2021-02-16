@@ -216,7 +216,7 @@ fi
 if [ -n "${USED}" ]; then
 	for PORT in ${PORTS_CHANGED}; do
 		clear
-		(diff -ru ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
+		(diff -Nru ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
 		    2>/dev/null || true) | ${DIFF} | ${LESS}
 
 		echo -n ">>> Replace ${PORT} [c/e/y/N]: "
@@ -268,7 +268,7 @@ Taken from: HardenedBSD")
 	if [ -n "${ENTRIES}" ]; then
 		clear
 		(for ENTRY in ${ENTRIES}; do
-			diff -ru ${PORTSDIR}/${ENTRY} ${PORTSREFDIR}/${ENTRY} \
+			diff -Nru ${PORTSDIR}/${ENTRY} ${PORTSREFDIR}/${ENTRY} \
 			    2>/dev/null || true
 		done) | ${DIFF} | ${LESS}
 
