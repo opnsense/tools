@@ -110,6 +110,11 @@ for STAGE in ${STAGE2}; do
 			echo ">>> Stage ${STAGE}-${_FLAVOUR} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
 		        tail -n ${LINES} ${LOG} >> ${LOG}.err
 
+			if [ ${STAGE} = audit -o ${STAGE} = test ]; then
+				# continue during these stages
+				continue
+			fi
+
 			___FLAVOUR=
 
 			for __FLAVOUR in ${FLAVOUR}; do

@@ -74,6 +74,7 @@ echo "done"
 if [ -f ${STAGEDIR}/report ]; then
 	echo ">>> The following vulnerable pacckages exist:"
 	sort -u ${STAGEDIR}/report
+	exit 1
 else
 	echo ">>> No vulnerable packages have been found."
 fi
