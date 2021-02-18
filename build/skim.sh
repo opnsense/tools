@@ -146,60 +146,23 @@ done < ${STAGEDIR}/skim
 
 echo
 
-PREVENTRY=
-
 if [ -n "${UNUSED}" ]; then
-	(cd ${PORTSDIR}; mkdir -p $(make -C ${PORTSREFDIR} -V SUBDIR))
-	for ENTRY in ${PORTSDIR}/*; do
-		ENTRY=${ENTRY##"${PORTSDIR}/"}
+	echo ">>> Refreshing unused ports"
 
-		case "$(echo ${ENTRY} | colrm 2)" in
-		[[:upper:]])
-			continue
-			;;
-		*)
-			;;
-		esac
+	mkdir ${STAGEDIR}/ref
+	cp -R ${PORTSREFDIR}/[a-z]* ${STAGEDIR}/ref
+	cp -R ${PORTSDIR}/opnsense ${STAGEDIR}/ref
 
-		if [ ! -d ${PORTSREFDIR}/${ENTRY} ]; then
-			continue;
-		fi
+	PORT_MODS=$(echo ${PORT_MODS} | tr ' ' '\n' | sort -u)
 
-		if [ "${ENTRY}" != "${PREVENTRY}" ]; then
-			echo ">>> Refreshing ${ENTRY}"
-			PREVENTRY=${ENTRY}
-		fi
-
-		for PORT in ${PORTSDIR}/${ENTRY}/*; do
-			PORT=${PORT##"${PORTSDIR}/"}
-
-			if [ -e ${PORTSREFDIR}/${PORT} ]; then
-				continue;
-			fi
-
-			rm -fr ${PORTSDIR}/${PORT}
-		done
-
-		PORT_MODS=$(echo ${PORT_MODS} | tr ' ' '\n' | sort -u)
-
-		for PORT in ${PORTSREFDIR}/${ENTRY}/*; do
-			PORT=${PORT##"${PORTSREFDIR}/"}
-
-			UNUSED=1
-			for PORT_MOD in ${PORT_MODS}; do
-				if [ ${PORT_MOD} = ${PORT} ]; then
-					UNUSED=0
-				fi
-			done
-
-			if [ ${UNUSED} = 0 ]; then
-				continue;
-			fi
-
-			rm -fr ${PORTSDIR}/${PORT}
-			cp -R ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
-		done
+	for PORT_MOD in ${PORT_MODS}; do
+		rm -fr ${STAGEDIR}/ref/${PORT_MOD}
+		cp -R ${PORTSDIR}/${PORT_MOD} \
+		    ${STAGEDIR}/ref/$(dirname ${PORT_MOD})
 	done
+
+	rm -rf ${PORTSDIR}/[a-z]*
+	cp -R ${STAGEDIR}/ref/* ${PORTSDIR}
 
 	(
 		cd ${PORTSDIR}
