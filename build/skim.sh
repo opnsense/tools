@@ -77,8 +77,9 @@ for ARG in ${@}; do
 	esac
 done
 
-echo "${PORTS_LIST}" > ${STAGEDIR}/skim
 sh ./make.conf.sh > ${STAGEDIR}/make.conf
+echo "${PORTS_LIST}" > ${STAGEDIR}/skim
+: > ${STAGEDIR}/used
 
 PORTS_COUNT=$(wc -l ${STAGEDIR}/skim | awk '{ print $1 }')
 PORTS_NUM=0
@@ -104,45 +105,45 @@ PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
 		SOURCE=${PORTSREFDIR}
 	fi
 
-	PORT_DEPS=$(echo ${PORT}; ${ENV_FILTER} make -C ${SOURCE}/${PORT} \
-	    PORTSDIR=${SOURCE} ${MAKE_ARGS} \
-	    all-depends-list | awk -F"${SOURCE}/" '{print $2}')
-
-	for PORT in ${PORT_DEPS}; do
-		PORT_MASTER=$(${ENV_FILTER} make -C ${SOURCE}/${PORT} \
-		    -V MASTER_PORT PORTSDIR=${SOURCE} ${MAKE_ARGS})
-		if [ -n "${PORT_MASTER}" ]; then
-			PORT_DEPS="${PORT_DEPS} ${PORT_MASTER}"
-		fi
-	done
-
-	PORT_DEPS=$(echo ${PORT_DEPS} | tr ' ' '\n' | sort -u)
-	PORT_MODS="${PORT_MODS} ${PORT_DEPS}"
-
-	for PORT in ${PORT_DEPS}; do
-		if [ ! -d ${PORTSREFDIR}/${PORT} ]; then
-			continue;
-		fi
-
-		diff -rq ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
-		    > /dev/null && continue
-
-		NEW=1
-		for ITEM in ${PORTS_CHANGED}; do
-			if [ ${ITEM} = ${PORT} ]; then
-				NEW=0
-				break;
-			fi
-		done
-		if [ ${NEW} = 1 ]; then
-			PORTS_CHANGED="${PORTS_CHANGED} ${PORT}"
-		fi
-	done
+	${ENV_FILTER} make -C ${SOURCE}/${PORT} \
+	    PORTSDIR=${SOURCE} ${MAKE_ARGS} all-depends-list \
+	    | awk -F"${SOURCE}/" '{print $2}' >> ${STAGEDIR}/used
+	echo ${PORT} >> ${STAGEDIR}/used
 
 	PORTS_NUM=$(expr ${PORTS_NUM} + 1)
 	printf "\b\b\b\b%3s%%" \
 	    $(expr \( 100 \* ${PORTS_NUM} \) / ${PORTS_COUNT})
 done < ${STAGEDIR}/skim
+
+sort -u ${STAGEDIR}/used > ${STAGEDIR}/used.unique
+cp ${STAGEDIR}/used.unique ${STAGEDIR}/used
+
+while read PORT; do
+	SOURCE=${PORTSDIR}
+	if [ ! -d ${PORTSDIR}/${PORT} ]; then
+		SOURCE=${PORTSREFDIR}
+	fi
+
+	PORT_MASTER=$(${ENV_FILTER} make -C ${SOURCE}/${PORT} \
+	    -V MASTER_PORT PORTSDIR=${SOURCE} ${MAKE_ARGS})
+	if [ -n "${PORT_MASTER}" ]; then
+		echo ${PORT_MASTER} >> ${STAGEDIR}/used
+	fi
+done < ${STAGEDIR}/used.unique
+
+sort -u ${STAGEDIR}/used > ${STAGEDIR}/used.unique
+: > ${STAGEDIR}/used
+
+while read PORT; do
+	if [ ! -d ${PORTSREFDIR}/${PORT} ]; then
+		continue;
+	fi
+
+	diff -rq ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
+	    > /dev/null && continue
+
+	echo ${PORT} >> ${STAGEDIR}/used
+done < ${STAGEDIR}/used.unique
 
 echo
 
@@ -153,16 +154,15 @@ if [ -n "${UNUSED}" ]; then
 	cp -R ${PORTSREFDIR}/[a-z]* ${STAGEDIR}/ref
 	cp -R ${PORTSDIR}/opnsense ${STAGEDIR}/ref
 
-	PORT_MODS=$(echo ${PORT_MODS} | tr ' ' '\n' | sort -u)
+	while read PORT; do
+		rm -fr ${STAGEDIR}/ref/${PORT}
+		cp -R ${PORTSDIR}/${PORT} \
+		    ${STAGEDIR}/ref/$(dirname ${PORT})
+	done < ${STAGEDIR}/used
 
-	for PORT_MOD in ${PORT_MODS}; do
-		rm -fr ${STAGEDIR}/ref/${PORT_MOD}
-		cp -R ${PORTSDIR}/${PORT_MOD} \
-		    ${STAGEDIR}/ref/$(dirname ${PORT_MOD})
-	done
-
+	cp -R ${PORTSDIR}/opnsense ${STAGEDIR}/ref
 	rm -rf ${PORTSDIR}/[a-z]*
-	cp -R ${STAGEDIR}/ref/* ${PORTSDIR}
+	mv ${STAGEDIR}/ref/* ${PORTSDIR}
 
 	(
 		cd ${PORTSDIR}
@@ -177,13 +177,13 @@ Taken from: HardenedBSD"
 fi
 
 if [ -n "${USED}" ]; then
-	for PORT in ${PORTS_CHANGED}; do
+	while read PORT; do
 		clear
 		(diff -Nru ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
 		    2>/dev/null || true) | ${DIFF} | ${LESS}
 
 		echo -n ">>> Replace ${PORT} [c/e/y/N]: "
-		read YN
+		read YN < /dev/tty
 		case ${YN} in
 		[yY])
 			rm -fr ${PORTSDIR}/${PORT}
@@ -211,7 +211,7 @@ Taken from: HardenedBSD"
 Taken from: HardenedBSD")
 			;;
 		esac
-	done
+	done < ${STAGEDIR}/used
 
 	for ENTRY in ${PORTSREFDIR}/*; do
 		ENTRY=${ENTRY##"${PORTSREFDIR}/"}
@@ -226,7 +226,7 @@ Taken from: HardenedBSD")
 
 		diff -rq ${PORTSDIR}/${ENTRY} ${PORTSREFDIR}/${ENTRY} \
 		    > /dev/null || ENTRIES="${ENTRIES} ${ENTRY}"
-	done
+	done < ${STAGEDIR}/used
 
 	if [ -n "${ENTRIES}" ]; then
 		clear
@@ -236,7 +236,7 @@ Taken from: HardenedBSD")
 		done) | ${DIFF} | ${LESS}
 
 		echo -n ">>> Replace Framework [c/e/y/N]: "
-		read YN
+		read YN < /dev/tty
 		case ${YN} in
 		[yY])
 			for ENTRY in ${ENTRIES}; do
