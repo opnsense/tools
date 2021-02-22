@@ -71,7 +71,11 @@ while getopts ${OPTS} OPT; do
 		export PLUGINSBRANCH=${OPTARG}
 		;;
 	F)
-		export PRODUCT_KERNEL=${OPTARG}
+		if [ ${PRODUCT_ARCH} == aarch64 ]; then
+				export PRODUCT_KERNEL=${OPTARG}-ARM
+		else
+				export PRODUCT_KERNEL=${OPTARG}
+		fi
 		;;
 	f)
 		export PRODUCT_FLAVOUR=${OPTARG%% *}
