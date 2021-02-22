@@ -213,16 +213,8 @@ Taken from: HardenedBSD")
 		esac
 	done < ${STAGEDIR}/used
 
-	for ENTRY in ${PORTSREFDIR}/*; do
+	for ENTRY in ${PORTSREFDIR}/[A-Z]*; do
 		ENTRY=${ENTRY##"${PORTSREFDIR}/"}
-
-		case "$(echo ${ENTRY} | colrm 2)" in
-		[[:upper:]])
-			;;
-		*)
-			continue
-			;;
-		esac
 
 		diff -rq ${PORTSDIR}/${ENTRY} ${PORTSREFDIR}/${ENTRY} \
 		    > /dev/null || ENTRIES="${ENTRIES} ${ENTRY}"
