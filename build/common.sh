@@ -36,7 +36,12 @@ while getopts ${OPTS} OPT; do
 		export PORTSREFURL=${OPTARG}
 		;;
 	a)
-		export PRODUCT_TARGET=${OPTARG%%:*}
+		TARGET=${OPTARG%%:*}
+		if [ ${TARGET} == aarch64 ]; then
+			export PRODUCT_TARGET=arm64
+		else
+			export PRODUCT_TARGET=${TARGET}
+		fi
 		export PRODUCT_ARCH=${OPTARG##*:}
 		export PRODUCT_HOST=$(uname -p)
 		;;
