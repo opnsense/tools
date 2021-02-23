@@ -99,9 +99,19 @@ arm_unmount()
 	umount ${STAGEDIR}
 }
 
+arm_install_efi()
+{
+	DEV_EFI=$(mdconfig -a -t vnode -f ${STAGEDIR}/boot/boot1.efifat)
+	mount_msdosfs /dev/${DEV_EFI} ${STAGEDIR}/mnt
+	cp -r ${STAGEDIR}/mnt/efi ${STAGEDIR}/boot/msdos/efi
+	umount ${STAGEDIR}/mnt
+	mdconfig -d -u ${DEV_EFI}
+}
+
 echo -n ">>> Building arm image... "
 
 arm_install_uboot
+arm_install_efi
 
 arm_unmount
 mdconfig -d -u ${DEV}
