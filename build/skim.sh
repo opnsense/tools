@@ -132,37 +132,38 @@ while read PORT; do
 done < ${STAGEDIR}/used.unique
 
 sort -u ${STAGEDIR}/used > ${STAGEDIR}/used.unique
-: > ${STAGEDIR}/used
-
-while read PORT; do
-	if [ ! -d ${PORTSREFDIR}/${PORT} ]; then
-		continue;
-	fi
-
-	diff -rq ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
-	    > /dev/null && continue
-
-	echo ${PORT} >> ${STAGEDIR}/used
-done < ${STAGEDIR}/used.unique
+rm ${STAGEDIR}/used
 
 echo
 
 if [ -n "${UNUSED}" ]; then
-	echo ">>> Refreshing unused ports"
-
+	(cd ${PORTSDIR}; mkdir -p $(make -C ${PORTSREFDIR} -V SUBDIR))
 	mkdir ${STAGEDIR}/ref
-	cp -R ${PORTSREFDIR}/[a-z]* ${STAGEDIR}/ref
-	cp -R ${PORTSDIR}/opnsense ${STAGEDIR}/ref
 
-	while read PORT; do
-		rm -fr ${STAGEDIR}/ref/${PORT}
-		cp -R ${PORTSDIR}/${PORT} \
-		    ${STAGEDIR}/ref/$(dirname ${PORT})
-	done < ${STAGEDIR}/used
+	for ENTRY in ${PORTSDIR}/[a-z]*; do
+		ENTRY=${ENTRY##"${PORTSDIR}/"}
 
-	cp -R ${PORTSDIR}/opnsense ${STAGEDIR}/ref
-	rm -rf ${PORTSDIR}/[a-z]*
-	mv ${STAGEDIR}/ref/* ${PORTSDIR}
+		echo ">>> Refreshing ${ENTRY}"
+
+		if [ ! -d ${PORTSREFDIR}/${ENTRY} ]; then
+			cp -R ${PORTSDIR}/${ENTRY} ${STAGEDIR}/ref
+			continue
+		fi
+
+		cp -R ${PORTSREFDIR}/${ENTRY} ${STAGEDIR}/ref
+
+		(grep "^${ENTRY}/" ${STAGEDIR}/used.unique || true) > \
+		    ${STAGEDIR}/used.entry
+
+		while read PORT; do
+			rm -fr ${STAGEDIR}/ref/${PORT}
+			cp -R ${PORTSDIR}/${PORT} \
+			    ${STAGEDIR}/ref/$(dirname ${PORT})
+		done < ${STAGEDIR}/used.entry
+
+		rm -rf ${PORTSDIR}/${ENTRY}
+		mv ${STAGEDIR}/ref/${ENTRY} ${PORTSDIR}
+	done
 
 	(
 		cd ${PORTSDIR}
@@ -175,6 +176,19 @@ Taken from: HardenedBSD"
 		fi
 	)
 fi
+
+: > ${STAGEDIR}/used.changed
+
+while read PORT; do
+	if [ ! -d ${PORTSREFDIR}/${PORT} ]; then
+		continue;
+	fi
+
+	diff -rq ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
+	    > /dev/null && continue
+
+	echo ${PORT} >> ${STAGEDIR}/used.changed
+done < ${STAGEDIR}/used.unique
 
 if [ -n "${USED}" ]; then
 	while read PORT; do
@@ -192,7 +206,7 @@ if [ -n "${USED}" ]; then
 		[eE])
 			rm -fr ${PORTSDIR}/${PORT}
 			cp -a ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
-			(cd ${PORTSDIR}; git checkout -p ${PORT})
+			(cd ${PORTSDIR}; git checkout -p ${PORT} < /dev/tty)
 			(cd ${PORTSDIR}; git add ${PORT})
 			(cd ${PORTSDIR}; if ! git diff --quiet HEAD; then
 				git commit -m \
@@ -211,14 +225,14 @@ Taken from: HardenedBSD"
 Taken from: HardenedBSD")
 			;;
 		esac
-	done < ${STAGEDIR}/used
+	done < ${STAGEDIR}/used.changed
 
 	for ENTRY in ${PORTSREFDIR}/[A-Z]*; do
 		ENTRY=${ENTRY##"${PORTSREFDIR}/"}
 
 		diff -rq ${PORTSDIR}/${ENTRY} ${PORTSREFDIR}/${ENTRY} \
 		    > /dev/null || ENTRIES="${ENTRIES} ${ENTRY}"
-	done < ${STAGEDIR}/used
+	done
 
 	if [ -n "${ENTRIES}" ]; then
 		clear
@@ -241,7 +255,7 @@ Taken from: HardenedBSD")
 				rm -r ${PORTSDIR}/${ENTRY}
 				cp -a ${PORTSREFDIR}/${ENTRY} ${PORTSDIR}/
 			done
-			(cd ${PORTSDIR}; git checkout -p ${ENTRIES})
+			(cd ${PORTSDIR}; git checkout -p ${ENTRIES} < /dev/tty)
 			(cd ${PORTSDIR}; git add ${ENTRIES})
 			(cd ${PORTSDIR}; if ! git diff --quiet HEAD; then
 				git commit -m \
