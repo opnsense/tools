@@ -48,7 +48,7 @@ setup_entropy ${STAGEDIR}/work
 
 UEFIBOOT=
 if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" -a \
-    -z "${PRODUCT_UEFI%%*dvd*}" ]; then
+    -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
 	dd if=/dev/zero of=${STAGEDIR}/efiboot.img bs=4k count=200
 	DEV=$(mdconfig -a -t vnode -f ${STAGEDIR}/efiboot.img)
 	newfs_msdos -F 12 -m 0xf8 /dev/${DEV}
