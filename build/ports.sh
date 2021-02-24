@@ -129,7 +129,7 @@ UNAME_r=\$(freebsd-version)
 	fi
 
 	# check whether the package has already been built
-	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT} -V PKGFILE \${MAKE_ARGS})
+	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT} -v PKGFILE \${MAKE_ARGS})
 	if [ -f \${PKGFILE} ]; then
 		continue
 	fi
@@ -142,13 +142,13 @@ UNAME_r=\$(freebsd-version)
 	if [ -L \${PKGLINK} ]; then
 		PKGFILE=\$(readlink -f \${PKGLINK} || true)
 		if [ -f \${PKGFILE} ]; then
-			PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -V PKGVERSION \${MAKE_ARGS})
+			PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -v PKGVERSION \${MAKE_ARGS})
 			echo ">>> Skipped version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-warn
 			continue
 		fi
 	fi
 
-	PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -V PKGVERSION \${MAKE_ARGS})
+	PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -v PKGVERSION \${MAKE_ARGS})
 
 	if ! make -s -C ${PORTSDIR}/\${PORT} install \
 	    USE_PACKAGE_DEPENDS=yes \${MAKE_ARGS}; then

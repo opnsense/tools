@@ -125,7 +125,7 @@ while read PORT; do
 	fi
 
 	PORT_MASTER=$(${ENV_FILTER} make -C ${SOURCE}/${PORT} \
-	    -V MASTER_PORT PORTSDIR=${SOURCE} ${MAKE_ARGS})
+	    -v MASTER_PORT PORTSDIR=${SOURCE} ${MAKE_ARGS})
 	if [ -n "${PORT_MASTER}" ]; then
 		echo ${PORT_MASTER} >> ${STAGEDIR}/used
 	fi
@@ -137,7 +137,7 @@ rm ${STAGEDIR}/used
 echo
 
 if [ -n "${UNUSED}" ]; then
-	(cd ${PORTSDIR}; mkdir -p $(make -C ${PORTSREFDIR} -V SUBDIR))
+	(cd ${PORTSDIR}; mkdir -p $(make -C ${PORTSREFDIR} -v SUBDIR))
 	mkdir ${STAGEDIR}/ref
 
 	for ENTRY in ${PORTSDIR}/[a-z]*; do
