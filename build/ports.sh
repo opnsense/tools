@@ -31,7 +31,49 @@ SELF=ports
 
 . ./common.sh
 
-if check_packages ${SELF} ${@}; then
+PRUNE=yes
+SILENT=yes
+ARGS=
+
+for ARG in ${@}; do
+	OPT=${ARG%%%*}
+	VAL=${ARG##*%}
+
+	if [ "${OPT}" = "${ARG}" ]; then
+		ARGS="${ARGS} ${ARG}"
+	else
+		case ${VAL} in
+		yes)
+			;;
+		no)
+			;;
+		*)
+			echo ">>> Unknown option value for ${ARG}"
+			exit 1
+			;;
+		esac
+
+		case ${OPT} in
+		prune)
+			PRUNE=${VAL}
+			;;
+		silent)
+			SILENT=${VAL}
+			;;
+		*)
+			echo ">>> Unknown option name: ${ARG}"
+			exit 1
+			;;
+		esac
+	fi
+done
+
+MAKECMD="make"
+if [ ${SILENT} = "yes" ]; then
+	MAKECMD="${MAKECMD} -s"
+fi
+
+if check_packages ${SELF} ${ARGS}; then
 	echo ">>> Step ${SELF} is up to date"
 	exit 0
 fi
@@ -81,8 +123,10 @@ setup_chroot ${STAGEDIR}
 setup_distfiles ${STAGEDIR}
 
 if extract_packages ${STAGEDIR}; then
-	remove_packages ${STAGEDIR} ${@} ${PRODUCT_CORES} ${PRODUCT_PLUGINS}
-	prune_packages ${STAGEDIR}
+	remove_packages ${STAGEDIR} ${ARGS} ${PRODUCT_CORES} ${PRODUCT_PLUGINS}
+	if [ ${PRUNE} = "yes" ]; then
+		prune_packages ${STAGEDIR}
+	fi
 fi
 
 sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
@@ -150,14 +194,14 @@ UNAME_r=\$(freebsd-version)
 
 	PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -v PKGVERSION \${MAKE_ARGS})
 
-	if ! make -s -C ${PORTSDIR}/\${PORT} install \
+	if ! ${MAKECMD} -C ${PORTSDIR}/\${PORT} install \
 	    USE_PACKAGE_DEPENDS=yes \${MAKE_ARGS}; then
 		echo ">>> Aborted version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-err
 
 		if [ -n "${PRODUCT_REBUILD}" ]; then
 			exit 1
 		else
-			make -s -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
+			${MAKECMD} -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
 			continue
 		fi
 	fi
@@ -191,7 +235,7 @@ UNAME_r=\$(freebsd-version)
 		cp \${NEW} ${PACKAGESDIR}/All
 	done
 
-	make -s -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
+	${MAKECMD} -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
 done
 EOF
 
