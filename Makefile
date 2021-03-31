@@ -146,7 +146,7 @@ VERBOSE_HIDDEN=	@
 VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 .endfor
 
-VERSIONS+=	PRODUCT_CRYPTO=${FLAVOUR:tl}
+VERSIONS+=	PRODUCT_CRYPTO=${FLAVOUR[0]:tl}
 
 # Expand build steps to launch into the selected
 # script with the proper build options set:
