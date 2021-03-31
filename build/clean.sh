@@ -73,10 +73,10 @@ for ARG in ${@}; do
 		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-nano-${PRODUCT_ARCH}.img*
 		;;
 	obj)
-		if [ -d ${STAGEDIRPREFIX}${TOOLSDIR} ]; then
-			for DIR in $(find ${STAGEDIRPREFIX}${TOOLSDIR} \
-			    -type d -depth 3); do
-				setup_stage ${DIR}
+		if [ -d ${STAGEDIRPREFIX} ]; then
+			for DIR in $(find ${STAGEDIRPREFIX} \
+			    -type d -name "dev"); do
+				setup_stage $(dirname ${DIR})
 			done
 		fi
 		for DIR in $(find /usr/obj -type d -depth 1); do
