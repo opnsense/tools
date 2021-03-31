@@ -86,6 +86,13 @@ for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 	PLUGIN_ARGS="PLUGIN_ARCH=${PRODUCT_ARCH} PLUGIN_FLAVOUR=${PRODUCT_FLAVOUR} ${PLUGINSENV}"
 
 	for PLUGIN in ${PLUGINS_LIST}; do
+		if [ ${BRANCH} != ${PLUGINSBRANCH} -a \
+		    ! -d ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ]; then
+			# require plugins in the main branch but
+			# not in extra branches to allow for drift
+			continue
+		fi
+
 		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} name)
 		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} depends)
 
