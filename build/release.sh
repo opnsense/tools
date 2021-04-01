@@ -80,7 +80,7 @@ if [ -f "${PRODUCT_PRIVKEY}" ]; then
 	# checked for private key, but want the public key to
 	# be able to verify the images on the mirror later on
 	cp "${PRODUCT_PUBKEY}" \
-	    "${STAGEDIR}/work/${PRODUCT_NAME}-${PRODUCT_ABI}.pub"
+	    "${STAGEDIR}/work/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_SETTINGS}.pub"
 fi
 
 echo -n ">>> Bundling images for ${PRODUCT_RELEASE}... "
