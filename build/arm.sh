@@ -80,7 +80,6 @@ cat > ${STAGEDIR}/etc/fstab << EOF
 # Device		Mountpoint	FStype	Options		Dump	Pass#
 /dev/ufs/${ARMLABEL}	/		ufs	rw		1	1
 /dev/msdosfs/MSDOSBOOT	/boot/msdos	msdosfs	rw,noatime	0	0
-tmpfs			/tmp		tmpfs	rw,mode=01777	0	0
 EOF
 
 mkdir -p ${STAGEDIR}/boot/msdos
