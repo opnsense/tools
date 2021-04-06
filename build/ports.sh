@@ -31,47 +31,24 @@ SELF=ports
 
 . ./common.sh
 
-DEPEND=yes
-PRUNE=yes
-SILENT=yes
+eval ${PORTSENV}
 
-ARGS=
+ARGS=${*}
 DEPS=
 
-for ARG in ${@}; do
-	OPT=${ARG%%%*}
-	VAL=${ARG##*%}
-
-	if [ "${OPT}" = "${ARG}" ]; then
-		ARGS="${ARGS} ${ARG}"
-	else
-		case ${VAL} in
-		yes)
-			;;
-		no)
-			;;
-		*)
-			echo ">>> Unknown option value for ${ARG}"
-			exit 1
-			;;
-		esac
-
-		case ${OPT} in
-		depend)
-			DEPEND=${VAL}
-			;;
-		prune)
-			PRUNE=${VAL}
-			;;
-		silent)
-			SILENT=${VAL}
-			;;
-		*)
-			echo ">>> Unknown option name: ${ARG}"
-			exit 1
-			;;
-		esac
-	fi
+for OPT in DEPEND PRUNE SILENT; do
+	VAL=$(eval echo \$${OPT});
+	case ${VAL} in
+	yes|no)
+		;;
+	'')
+		eval ${OPT}=yes
+		;;
+	*)
+		echo ">>> Syntax error ${OPT}=${VAL}: use 'yes' or 'no'"
+		exit 1
+		;;
+	esac
 done
 
 MAKECMD="make"

@@ -71,7 +71,7 @@ CONFIGDIR?=	${TOOLSDIR}/config/${SETTINGS}
 
 NAME?=		OPNsense
 TYPE?=		${NAME:tl}
-SUFFIX?=	#-devel
+SUFFIX?=	# empty
 FLAVOUR?=	OpenSSL LibreSSL # first one is default
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
@@ -95,21 +95,27 @@ _VERSION!=	date '+%Y%m%d%H%M'
 VERSION?=	${_VERSION}
 STAGEDIRPREFIX?=/usr/obj
 
-PORTSREFURL?=	https://git-01.md.hardenedbsd.org/HardenedBSD/hardenedbsd-ports.git
+EXTRABRANCH?=	# empty
+
+
+COREBRANCH?=	stable/${ABI}
+COREDIR?=	/usr/core
+COREENV?=	CORE_PHP=${PHP} CORE_ABI=${ABI} CORE_PYTHON=${PYTHON}
+
+PLUGINSBRANCH?=	stable/${ABI}
+PLUGINSDIR?=	/usr/plugins
+PLUGINSENV?=	PLUGIN_PHP=${PHP} PLUGIN_ABI=${ABI} PLUGIN_PYTHON=${PYTHON}
+
+PORTSBRANCH?=	master
+PORTSDIR?=	/usr/ports
+PORTSENV?=	# empty
+
+PORTSREFURL?=	https://git.hardenedbsd.org/hardenedbsd/hardenedbsd-ports.git
 PORTSREFDIR?=	/usr/hardenedbsd-ports
 PORTSREFBRANCH?=master
 
-PLUGINSENV?=	PLUGIN_PHP=${PHP} PLUGIN_ABI=${ABI} PLUGIN_PYTHON=${PYTHON}
-PLUGINSDIR?=	/usr/plugins
-PLUGINSBRANCH?=	stable/${ABI}
-PORTSDIR?=	/usr/ports
-PORTSBRANCH?=	master
-COREDIR?=	/usr/core
-COREBRANCH?=	stable/${ABI}
-COREENV?=	CORE_PHP=${PHP} CORE_ABI=${ABI} CORE_PYTHON=${PYTHON}
-SRCDIR?=	/usr/src
 SRCBRANCH?=	stable/${ABI}
-EXTRABRANCH?=	#master
+SRCDIR?=	/usr/src
 
 # A couple of meta-targets for easy use and ordering:
 
@@ -119,7 +125,7 @@ core: plugins
 packages test: core
 dvd nano serial vga vm: kernel core
 sets: kernel distfiles packages
-images: dvd nano serial vga vm #arm
+images: dvd nano serial vga vm
 release: dvd nano serial vga
 
 # Expand target arguments for the script append:
@@ -165,7 +171,8 @@ ${STEP}: lint-steps
 	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" -i ${COMPORT} \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
 	    -q "${VERSIONS}" -h "${PLUGINSENV}" -I "${UPLOADDIR}" \
-	    -D "${EXTRABRANCH}" -A "${PORTSREFURL}" ${${STEP}_ARGS}
+	    -D "${EXTRABRANCH}" -A "${PORTSREFURL}" -J "${PORTSENV}" \
+	    ${${STEP}_ARGS}
 .endfor
 
 .for SCRIPT in ${SCRIPTS}

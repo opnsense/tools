@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:i:K:k:L:l:m:n:O:o:P:p:q:R:r:S:s:T:t:U:u:v:V:"
+OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:i:J:K:k:L:l:m:n:O:o:P:p:q:R:r:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -83,6 +83,15 @@ while getopts ${OPTS} OPT; do
 	h)
 		export PLUGINSENV=${OPTARG}
 		;;
+	I)
+		export UPLOADDIR=${OPTARG}
+		;;
+	i)
+		export PRODUCT_COMPORT=${OPTARG}
+		;;
+	J)
+		export PORTSENV=${OPTARG}
+		;;
 	K)
 		if [ -n "${OPTARG}" ]; then
 			export PRODUCT_PUBKEY=${OPTARG}
@@ -92,12 +101,6 @@ while getopts ${OPTS} OPT; do
 		if [ -n "${OPTARG}" ]; then
 			export PRODUCT_PRIVKEY=${OPTARG}
 		fi
-		;;
-	I)
-		export UPLOADDIR=${OPTARG}
-		;;
-	i)
-		export PRODUCT_COMPORT=${OPTARG}
 		;;
 	L)
 		if [ -n "${OPTARG}" ]; then
