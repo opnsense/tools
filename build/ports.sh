@@ -31,9 +31,12 @@ SELF=ports
 
 . ./common.sh
 
+DEPEND=yes
 PRUNE=yes
 SILENT=yes
+
 ARGS=
+DEPS=
 
 for ARG in ${@}; do
 	OPT=${ARG%%%*}
@@ -54,6 +57,9 @@ for ARG in ${@}; do
 		esac
 
 		case ${OPT} in
+		depend)
+			DEPEND=${VAL}
+			;;
 		prune)
 			PRUNE=${VAL}
 			;;
@@ -123,7 +129,11 @@ setup_chroot ${STAGEDIR}
 setup_distfiles ${STAGEDIR}
 
 if extract_packages ${STAGEDIR}; then
-	remove_packages ${STAGEDIR} ${ARGS} ${PRODUCT_CORES} ${PRODUCT_PLUGINS}
+	if [ ${DEPEND} = "yes" ]; then
+		ARGS="${ARGS} ${PRODUCT_CORES} ${PRODUCT_PLUGINS}"
+		DEPS="plugins core"
+	fi
+	remove_packages ${STAGEDIR} ${ARGS}
 	if [ ${PRUNE} = "yes" ]; then
 		prune_packages ${STAGEDIR}
 	fi
@@ -242,7 +252,7 @@ EOF
 # unblock SIGINT
 trap - 2
 
-bundle_packages ${STAGEDIR} ${SELF} plugins core
+bundle_packages ${STAGEDIR} ${SELF} ${DEPS}
 
 if [ -f ${STAGEDIR}/.pkg-warn ]; then
 	echo ">>> WARNING: The build may have integrity issues!"
