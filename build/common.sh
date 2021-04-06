@@ -291,6 +291,7 @@ confirm|fingerprint|info|make\.conf|print)
 		env | sort
 	fi
 	echo ">>> Running build step: ${SELF}"
+	echo ">>> Passing arguments: ${*:-"(none)"}"
 	;;
 esac
 
