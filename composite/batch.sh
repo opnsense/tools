@@ -25,10 +25,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-if [ -z "${1}" ]; then
-	exit 0
-fi
-
 for _FLAVOUR in ${FLAVOUR}; do
-	make clean-obj ${1} FLAVOUR=${_FLAVOUR}
+	make clean-obj ${1:?} FLAVOUR=${_FLAVOUR}
 done
