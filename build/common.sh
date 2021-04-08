@@ -238,6 +238,13 @@ export PRODUCT_SETTINGS="${CONFIGDIR##*/}"
 export DEVICEDIR="${TOOLSDIR}/device"
 export PACKAGESDIR="/.pkg"
 
+# get the current version for the selected source repository
+SRCREVISION=unknown
+if [ -f ${SRCDIR}/sys/conf/newvers.sh ]; then
+	eval export SRC$(grep ^REVISION= ${SRCDIR}/sys/conf/newvers.sh)
+fi
+export SRCABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}"
+
 if [ ! -f ${DEVICEDIR}/${PRODUCT_DEVICE_REAL}.conf ]; then
 	echo ">>> No configuration found for device ${PRODUCT_DEVICE_REAL}." >&2
 	exit 1
@@ -274,13 +281,6 @@ export PRODUCT_PLUGIN="os-*${PRODUCT_DEVEL}"
 if [ -n "${*}" ]; then
 	export PRODUCT_REBUILD=yes
 fi
-
-# get the current version for the selected source repository
-SRCREVISION=unknown
-if [ -f ${SRCDIR}/sys/conf/newvers.sh ]; then
-	eval export SRC$(grep ^REVISION= ${SRCDIR}/sys/conf/newvers.sh)
-fi
-export SRCABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}"
 
 case "${SELF}" in
 confirm|fingerprint|info|make\.conf|print)
