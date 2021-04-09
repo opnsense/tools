@@ -40,28 +40,22 @@ fi
 
 RELEASE_SET="${SETSDIR}/release-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar"
 
-# make sure the all-encompassing package is a release, too
-setup_stage ${STAGEDIR}
-extract_packages ${STAGEDIR}
-if [ ! -f ${STAGEDIR}${PACKAGESDIR}/All/${PRODUCT_CORE}-${PRODUCT_VERSION}.txz ]; then
-	echo "Release package version mismatch:" \
-	    "$(basename ${STAGEDIR}${PACKAGESDIR}/All/${PRODUCT_CORE}-[0-9]*.txz)"
-	exit 1
-fi
-
 sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR}
 
 echo -n ">>> Compressing images for ${PRODUCT_RELEASE}... "
 
-mv ${IMAGESDIR}/${PRODUCT_NAME}-*-${PRODUCT_ARCH}.* ${STAGEDIR}
-for IMAGE in $(find ${STAGEDIR} -type f); do
-	bzip2 ${IMAGE} &
+for IMAGE in dvd nano serial vga; do
+	sh ./compress.sh ${IMAGE} > /dev/null &
 done
 wait
 
 echo "done"
+
+for IMAGE in $(find ${IMAGESDIR} -name "${PRODUCT_NAME}-*-${PRODUCT_ARCH}.*.bz2"); do
+	cp ${IMAGE} ${STAGEDIR}
+done
 
 echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
 
@@ -70,6 +64,10 @@ echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
 
 echo "done"
 
+for IMAGE in $(find ${IMAGESDIR} -name "${PRODUCT_NAME}-*-${PRODUCT_ARCH}.*.sig"); do
+	cp ${IMAGE} ${STAGEDIR}
+done
+
 if [ -f "${PRODUCT_PRIVKEY}" ]; then
 	# checked for private key, but want the public key to
 	# be able to verify the images on the mirror later on
@@ -77,7 +75,7 @@ if [ -f "${PRODUCT_PRIVKEY}" ]; then
 	    "${STAGEDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_SETTINGS}.pub"
 fi
 
-for IMAGE in $(find ${STAGEDIR} -name "${PRODUCT_RELEASE}-*"); do
+for IMAGE in $(find ${STAGEDIR} -type f \! -name "*.sig"); do
 	sign_image ${IMAGE}
 done
 

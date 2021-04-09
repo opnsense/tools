@@ -671,10 +671,15 @@ sign_image()
 		return
 	fi
 
-	echo -n ">>> Creating ${PRODUCT_SETTINGS} signature for ${1}: "
+	if [ ! -f "${1}".sig ]; then
+		echo -n ">>> Creating ${PRODUCT_SETTINGS} signature for ${1}: "
 
-	openssl dgst -sha256 -sign "${PRODUCT_PRIVKEY}" "${1}" | \
-	    openssl base64 > "${1}".sig
+		openssl dgst -sha256 -sign "${PRODUCT_PRIVKEY}" "${1}" | \
+		    openssl base64 > "${1}".sig
+	else
+		echo -n ">>> Retaining ${PRODUCT_SETTINGS} signature for ${1}: "
+	fi
+
 	openssl base64 -d -in "${1}".sig > "${1}.sig.tmp"
 	openssl dgst -sha256 -verify "${PRODUCT_PUBKEY}" \
 	    -signature "${1}.sig.tmp" "${1}"
@@ -686,7 +691,7 @@ check_image()
 	local SELF=${1}
 	SKIP=${2}
 
-	CHECK=$(find ${IMAGESDIR} -name "*-${SELF}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*")
+	CHECK=$(find ${IMAGESDIR} -name "*-${SELF}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*" \! -name "*.sig")
 
 	if [ -f "${CHECK}" -a -z "${SKIP}" ]; then
 		echo ">>> Reusing ${SELF} image: ${CHECK}"

@@ -127,9 +127,17 @@ A virtual machine full disk image is created using:
 
     # make vm
 
-Release sets can be built using:
+Release sets can be built as follows although the result is
+an unpredictable set of images depending on the previous
+build states:
 
-    # make release VERSION=product.version.number_revision
+    # make release
+
+However, the release target is necessary for the following
+target which includes sanity checks, proper clearing of the
+images directory and core package version alignment:
+
+    # make distribution
 
 Cross-building for other architecures
 -------------------------------------
