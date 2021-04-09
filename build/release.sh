@@ -51,12 +51,12 @@ fi
 
 sh ./clean.sh ${SELF}
 
-setup_stage ${STAGEDIR} tmp work
+setup_stage ${STAGEDIR}
 
 echo -n ">>> Compressing images for ${PRODUCT_RELEASE}... "
 
-mv ${IMAGESDIR}/${PRODUCT_NAME}-*-${PRODUCT_ARCH}.* ${STAGEDIR}/work
-for IMAGE in $(find ${STAGEDIR}/work -type f); do
+mv ${IMAGESDIR}/${PRODUCT_NAME}-*-${PRODUCT_ARCH}.* ${STAGEDIR}
+for IMAGE in $(find ${STAGEDIR} -type f); do
 	bzip2 ${IMAGE} &
 done
 wait
@@ -65,24 +65,22 @@ echo "done"
 
 echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
 
-(cd ${STAGEDIR}/work && sha256 ${PRODUCT_RELEASE}-*) \
-    > ${STAGEDIR}/tmp/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256
+(cd ${STAGEDIR} && sha256 ${PRODUCT_RELEASE}-*) \
+    > ${STAGEDIR}/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256
 
 echo "done"
-
-for IMAGE in $(find ${STAGEDIR}/work -name "${PRODUCT_RELEASE}-*"); do
-	sign_image ${IMAGE} ${STAGEDIR}/tmp/$(basename ${IMAGE}).sig
-done
-
-mv ${STAGEDIR}/tmp/* ${STAGEDIR}/work/
 
 if [ -f "${PRODUCT_PRIVKEY}" ]; then
 	# checked for private key, but want the public key to
 	# be able to verify the images on the mirror later on
 	cp "${PRODUCT_PUBKEY}" \
-	    "${STAGEDIR}/work/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_SETTINGS}.pub"
+	    "${STAGEDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_SETTINGS}.pub"
 fi
 
+for IMAGE in $(find ${STAGEDIR} -name "${PRODUCT_RELEASE}-*"); do
+	sign_image ${IMAGE}
+done
+
 echo -n ">>> Bundling images for ${PRODUCT_RELEASE}... "
-tar -C ${STAGEDIR}/work -cf ${RELEASE_SET} .
+tar -C ${STAGEDIR} -cf ${RELEASE_SET} .
 echo "done"

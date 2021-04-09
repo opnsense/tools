@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2018-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,22 +27,10 @@
 
 set -e
 
-SELF=compress
+SELF=list
 
 . ./common.sh
 
-for ARG in ${@}; do
-	case ${ARG} in
-	arm|dvd|nano|serial|vga|vm)
-		for IMAGE in $(find ${IMAGESDIR} -name \
-		    "*-${PRODUCT_FLAVOUR}-${ARG}-*" \! -name "*.bz2" \
-		    \! -name "*.sig"); do
-			echo -n ">>> Compressing ${ARG} image... "
-			bzip2 ${IMAGE}
-			echo "done"
-
-			sign_image ${IMAGE}.bz2
-		done
-		;;
-	esac
+for ARG in ${*}; do
+	ls -lah ${TARGETDIR}/"${ARG}"
 done

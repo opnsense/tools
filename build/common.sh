@@ -283,7 +283,7 @@ if [ -n "${*}" ]; then
 fi
 
 case "${SELF}" in
-confirm|fingerprint|info|make\.conf|print)
+confirm|fingerprint|info|list|make\.conf|print)
 	;;
 *)
 	if [ -z "${PRINT_ENV_SKIP}" ]; then
@@ -674,11 +674,11 @@ sign_image()
 	echo -n ">>> Creating ${PRODUCT_SETTINGS} signature for ${1}: "
 
 	openssl dgst -sha256 -sign "${PRODUCT_PRIVKEY}" "${1}" | \
-	    openssl base64 > "${2}"
-	openssl base64 -d -in "${2}" > "${2}.tmp"
+	    openssl base64 > "${1}".sig
+	openssl base64 -d -in "${1}".sig > "${1}.sig.tmp"
 	openssl dgst -sha256 -verify "${PRODUCT_PUBKEY}" \
-	    -signature "${2}.tmp" "${1}"
-	rm "${2}.tmp"
+	    -signature "${1}.sig.tmp" "${1}"
+	rm "${1}.sig.tmp"
 }
 
 check_image()
