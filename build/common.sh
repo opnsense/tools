@@ -592,6 +592,7 @@ setup_base()
 	echo ">>> Setting up base in ${1}"
 
 	tar -C ${1} -xpf ${SETSDIR}/base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
+	rm -f ${1}/.abi_hint
 
 	# /home is needed for LiveCD images, and since it
 	# belongs to the base system, we create it from here.
@@ -609,6 +610,7 @@ setup_kernel()
 	echo ">>> Setting up kernel in ${1}"
 
 	tar -C ${1} -xpf ${SETSDIR}/kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
+	rm -f ${1}/.abi_hint
 }
 
 setup_distfiles()
