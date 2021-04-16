@@ -27,6 +27,7 @@
 
 set -e
 
+MEM=2048
 SELF=boot
 
 . ./common.sh
@@ -43,6 +44,10 @@ if [ ! -f "${IMAGE}" ]; then
 	exit 1
 fi
 
+setup_stage ${STAGEDIR}
+
+# XXX create a temporary disk for testing
+
 echo ">>> Booting image ${IMAGE}..."
 
 TAPDEV=tap0
@@ -52,8 +57,8 @@ if ! ifconfig ${TAPDEV}; then
 fi
 
 kldstat -qm vmm || kldload vmm
-bhyveload -m 1024 -d ${IMAGE} vm0
-bhyve -c 1 -m 1024 -AHP \
+bhyveload -m ${MEM} -d ${IMAGE} vm0
+bhyve -c 1 -m ${MEM} -AHP \
     -s 0:0,hostbridge \
     -s 1:0,virtio-net,${TAPDEV} \
     -s 2:0,ahci-hd,${IMAGE} \
