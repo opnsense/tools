@@ -34,7 +34,7 @@ if [ ! -f "${PACKAGESET}" ]; then
 	exit 1
 fi
 
-COREFILE=$(tar -tf ${PACKAGESET} | grep "^./All/${PRODUCT_CORE}-[0-9].*\.txz$")
+COREFILE=$(tar -tf ${PACKAGESET} | grep -x "\./All/${PRODUCT_CORE}-[0-9].*\.txz")
 
 if [ -z "${COREFILE}" ]; then
 	echo ">>> Cannot continue without core package: ${PRODUCT_CORE}"

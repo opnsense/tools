@@ -712,7 +712,7 @@ check_packages()
 		return 1
 	fi
 
-	DONE=$(tar tf ${PACKAGESET} | grep "^\./\.${SELF}_done\$" || true)
+	DONE=$(tar tf ${PACKAGESET} | grep -x "\./\.${SELF}_done" || true)
 	if [ -n "${DONE}" ]; then
 		return 0
 	fi
