@@ -44,24 +44,34 @@ if [ ! -f "${IMAGE}" ]; then
 	exit 1
 fi
 
+AHCI=ahci-hd; if [ "${1}" = "dvd" ]; then AHCI=ahci-cd;fi
+
 setup_stage ${STAGEDIR}
 
-# XXX create a temporary disk for testing
+truncate -s 4G ${STAGEDIR}/disk.img
 
 echo ">>> Booting image ${IMAGE}..."
 
-TAPDEV=tap0
+BRGDEV=bridge0
+TAPLAN=tap0
+TAPWAN=tap1
+PHYDEV=em0
 
-if ! ifconfig ${TAPDEV}; then
-	TAPDEV=$(ifconfig tap create)
-fi
+if ! ifconfig ${BRGDEV}; then BRGDEV=$(ifconfig bridge create); fi
+if ! ifconfig ${TAPLAN}; then TAPLAN=$(ifconfig tap create); fi
+if ! ifconfig ${TAPWAN}; then TAPWAN=$(ifconfig tap create); fi
+
+ifconfig ${BRGDEV} addm ${TAPWAN} addm ${PHYDEV} up || true
+ifconfig ${TAPWAN} up
 
 kldstat -qm vmm || kldload vmm
 bhyveload -m ${MEM} -d ${IMAGE} vm0
 bhyve -c 1 -m ${MEM} -AHP \
-    -s 0:0,hostbridge \
-    -s 1:0,virtio-net,${TAPDEV} \
-    -s 2:0,ahci-hd,${IMAGE} \
+    -s 0,hostbridge \
+    -s 1:0,virtio-net,${TAPLAN} \
+    -s 1:1,virtio-net,${TAPWAN} \
+    -s 2:0,${AHCI},${IMAGE} \
+    -s 3:0,ahci-hd,${STAGEDIR}/disk.img \
     -s 31,lpc -l com1,stdio \
     vm0 || true
 bhyvectl --destroy --vm=vm0
