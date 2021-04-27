@@ -110,7 +110,10 @@ arm_install_efi()
 echo -n ">>> Building arm image... "
 
 arm_install_uboot
-arm_install_efi
+
+if [ -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
+	arm_install_efi
+fi
 
 arm_unmount
 mdconfig -d -u ${DEV}
