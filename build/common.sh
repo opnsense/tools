@@ -36,12 +36,7 @@ while getopts ${OPTS} OPT; do
 		export PORTSREFURL=${OPTARG}
 		;;
 	a)
-		TARGET=${OPTARG%%:*}
-		if [ ${TARGET} == aarch64 ]; then
-			export PRODUCT_TARGET=arm64
-		else
-			export PRODUCT_TARGET=${TARGET}
-		fi
+		export PRODUCT_TARGET=${OPTARG%%:*}
 		export PRODUCT_ARCH=${OPTARG##*:}
 		export PRODUCT_HOST=$(uname -p)
 		;;
@@ -71,11 +66,7 @@ while getopts ${OPTS} OPT; do
 		export PLUGINSBRANCH=${OPTARG}
 		;;
 	F)
-		if [ ${PRODUCT_ARCH} == aarch64 ]; then
-				export PRODUCT_KERNEL=${OPTARG}-ARM
-		else
-				export PRODUCT_KERNEL=${OPTARG}
-		fi
+		export PRODUCT_KERNEL=${OPTARG}
 		;;
 	f)
 		export PRODUCT_FLAVOUR=${OPTARG%% *}
