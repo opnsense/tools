@@ -83,9 +83,12 @@ for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 	setup_copy ${STAGEDIR} ${PLUGINSDIR}
 	git_reset ${STAGEDIR}${PLUGINSDIR} ${BRANCH}
 
-	PLUGIN_ARGS="PLUGIN_ARCH=${PRODUCT_ARCH} PLUGIN_FLAVOUR=${PRODUCT_FLAVOUR} ${PLUGINSENV}"
+	_PLUGIN_ARGS="PLUGIN_ARCH=${PRODUCT_ARCH} PLUGIN_FLAVOUR=${PRODUCT_FLAVOUR} ${PLUGINSENV}"
 
-	for PLUGIN in ${PLUGINS_LIST}; do
+	for PLUGIN_ORIGIN in ${PLUGINS_LIST}; do
+		VARIANT=${PLUGIN_ORIGIN##*@}
+		PLUGIN=${PLUGIN_ORIGIN%%@*}
+
 		if [ ${BRANCH} != ${PLUGINSBRANCH} -a \
 		    ! -d ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ]; then
 			# require plugins in the main branch but
@@ -93,15 +96,20 @@ for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 			continue
 		fi
 
-		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} name)
-		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} depends)
+		PLUGIN_ARGS=${_PLUGIN_ARGS}
+		if [ ${VARIANT} != ${PLUGIN} ]; then
+			PLUGIN_ARGS="${PLUGIN_ARGS} PLUGIN_VARIANT=${VARIANT}"
+		fi
 
+		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} name)
 		if search_packages ${STAGEDIR} ${PLUGIN_NAME}; then
 			# already built
 			continue
 		fi
 
+		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} depends)
 		install_packages ${STAGEDIR} ${PLUGIN_DEPS}
+
 		custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN} "${PLUGIN_ARGS}"
 	done
 done
