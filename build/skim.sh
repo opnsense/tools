@@ -81,8 +81,8 @@ sh ./make.conf.sh > ${STAGEDIR}/make.conf
 echo "${PORTS_LIST}" > ${STAGEDIR}/skim
 : > ${STAGEDIR}/used
 
-PORTS_COUNT=$(wc -l ${STAGEDIR}/skim | awk '{ print $1 }')
-PORTS_NUM=0
+PORTSCOUNT=$(wc -l ${STAGEDIR}/skim | awk '{ print $1 }')
+PORTSNUM=0
 
 echo -n ">>> Gathering dependencies:   0%"
 
@@ -110,9 +110,9 @@ PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
 	    | awk -F"${SOURCE}/" '{print $2}' >> ${STAGEDIR}/used
 	echo ${PORT} >> ${STAGEDIR}/used
 
-	PORTS_NUM=$(expr ${PORTS_NUM} + 1)
+	PORTSNUM=$(expr ${PORTSNUM} + 1)
 	printf "\b\b\b\b%3s%%" \
-	    $(expr \( 100 \* ${PORTS_NUM} \) / ${PORTS_COUNT})
+	    $(expr \( 100 \* ${PORTSNUM} \) / ${PORTSCOUNT})
 done < ${STAGEDIR}/skim
 
 sort -u ${STAGEDIR}/used > ${STAGEDIR}/used.unique
