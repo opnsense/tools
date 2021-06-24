@@ -33,8 +33,8 @@ SELF=skim
 
 setup_stage ${STAGEDIR}
 
-if [ -z "${PORTS_LIST}" ]; then
-	PORTS_LIST=$(
+if [ -z "${PORTSLIST}" ]; then
+	PORTSLIST=$(
 cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf | \
     while read PORT_ORIGIN PORT_IGNORE; do
 	eval PORT_ORIGIN=${PORT_ORIGIN}
@@ -45,8 +45,8 @@ cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf | \
 done
 )
 else
-	PORTS_LIST=$(
-for PORT_ORIGIN in ${PORTS_LIST}; do
+	PORTSLIST=$(
+for PORT_ORIGIN in ${PORTSLIST}; do
 	echo ${PORT_ORIGIN}
 done
 )
@@ -78,7 +78,7 @@ for ARG in ${@}; do
 done
 
 sh ./make.conf.sh > ${STAGEDIR}/make.conf
-echo "${PORTS_LIST}" > ${STAGEDIR}/skim
+echo "${PORTSLIST}" > ${STAGEDIR}/skim
 : > ${STAGEDIR}/used
 
 PORTSCOUNT=$(wc -l ${STAGEDIR}/skim | awk '{ print $1 }')

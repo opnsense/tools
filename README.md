@@ -248,7 +248,13 @@ core progress.  However, following option apply to PORTSENV:
 The defaults for these ports options are set to "yes".  A sample
 invoke is as follows:
 
-    # make ports-openssl PORTSENV="DEPEND=no PRUNE=no"
+    # make ports-curl PORTSENV="DEPEND=no PRUNE=no"
+
+Both ports and plugins builds allow to override the current list
+derived from their respective configuration files, i.e.:
+
+    # make ports PORTSLIST="security/openssl"
+    # make plugins PLUGINSLIST="devel/debug"
 
 Acquiring precompiled sets from the mirrors or another local direcory
 ---------------------------------------------------------------------

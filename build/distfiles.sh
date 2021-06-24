@@ -31,8 +31,8 @@ SELF=distfiles
 
 . ./common.sh
 
-if [ -z "${PORTS_LIST}" ]; then
-	PORTS_LIST=$(
+if [ -z "${PORTSLIST}" ]; then
+	PORTSLIST=$(
 cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf | \
     while read PORT_ORIGIN PORT_IGNORE; do
 	eval PORT_ORIGIN=${PORT_ORIGIN}
@@ -51,8 +51,8 @@ cat ${CONFIGDIR}/skim.conf ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf | \
 done
 )
 else
-	PORTS_LIST=$(
-for PORT_ORIGIN in ${PORTS_LIST}; do
+	PORTSLIST=$(
+for PORT_ORIGIN in ${PORTSLIST}; do
 	echo ${PORT_ORIGIN}
 done
 )
@@ -78,8 +78,8 @@ echo ">>> Fetching distfiles..."
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
-if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTS_LIST=; fi
-echo "${PORTS_LIST}" | while read PORT_ORIGIN; do
+if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTSLIST=; fi
+echo "${PORTSLIST}" | while read PORT_ORIGIN; do
 	MAKE_ARGS="
 PRODUCT_ABI=${PRODUCT_ABI}
 PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
@@ -107,7 +107,7 @@ tar -C ${STAGEDIR}${PORTSDIR} -cf \
     ${SETSDIR}/distfiles-${REPO_VERSION}.tar distfiles
 echo "done"
 
-if [ -z "${PORTS_LIST}" ]; then
+if [ -z "${PORTSLIST}" ]; then
 	echo ">>> The distfiles fetch did not finish properly :("
 	exit 1
 fi

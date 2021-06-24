@@ -68,8 +68,8 @@ if ! check_packages packages; then
 	PORTCONFIGS="${CONFIGDIR}/aux.conf ${PORTCONFIGS}"
 fi
 
-if [ -z "${PORTS_LIST}" ]; then
-	PORTS_LIST=$(
+if [ -z "${PORTSLIST}" ]; then
+	PORTSLIST=$(
 cat ${PORTCONFIGS} | while read PORT_ORIGIN PORT_IGNORE; do
 	eval PORT_ORIGIN=${PORT_ORIGIN}
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
@@ -88,8 +88,8 @@ cat ${PORTCONFIGS} | while read PORT_ORIGIN PORT_IGNORE; do
 done
 )
 else
-	PORTS_LIST=$(
-for PORT_ORIGIN in ${PORTS_LIST}; do
+	PORTSLIST=$(
+for PORT_ORIGIN in ${PORTSLIST}; do
 	echo ${PORT_ORIGIN}
 done
 )
@@ -135,7 +135,7 @@ ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || true
 mkdir -p ${PACKAGESDIR}-cache
 cp -R ${PACKAGESDIR}/All ${PACKAGESDIR}-cache/All
 
-echo "${PORTS_LIST}
+echo "${PORTSLIST}
 clean.up.post.build" | while read PORT_ORIGIN; do
 	FLAVOR=\${PORT_ORIGIN##*@}
 	PORT=\${PORT_ORIGIN%%@*}
@@ -201,7 +201,7 @@ UNAME_r=\$(freebsd-version)
 		pkg create -no ${PACKAGESDIR}-cache/All \${PKGNAME}
 	done
 
-	echo "${PORTS_LIST}" | while read PORT_DEPENDS; do
+	echo "${PORTSLIST}" | while read PORT_DEPENDS; do
 		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS%%@*}" %n)
 		if [ -n "\${PORT_DEPNAME}" ]; then
 			echo ">>> Locking package dependency: \${PORT_DEPNAME}"

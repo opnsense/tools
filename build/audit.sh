@@ -31,8 +31,8 @@ SELF=audit
 
 . ./common.sh
 
-if [ -z "${PORTS_LIST}" ]; then
-	PORTS_LIST=$(
+if [ -z "${PORTSLIST}" ]; then
+	PORTSLIST=$(
 cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 	eval PORT_ORIGIN=${PORT_ORIGIN}
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
@@ -42,8 +42,8 @@ cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 done
 )
 else
-	PORTS_LIST=$(
-for PORT_ORIGIN in ${PORTS_LIST}; do
+	PORTSLIST=$(
+for PORT_ORIGIN in ${PORTSLIST}; do
 	echo ${PORT_ORIGIN}
 done
 )
@@ -62,7 +62,7 @@ for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
 	PKGORIGIN=$(pkg -c ${STAGEDIR} info -F ${PKG} | \
 	    grep ^Origin | awk '{ print $3; }')
 
-	for PORT in ${PORTS_LIST}; do
+	for PORT in ${PORTSLIST}; do
 		if [ "${PORT}" = "${PKGORIGIN}" ]; then
 			${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF
 pkg add -f ${PKG} > /dev/null
