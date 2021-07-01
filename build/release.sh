@@ -59,8 +59,9 @@ done
 
 echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
 
-(cd ${STAGEDIR} && sha256 ${PRODUCT_RELEASE}-*) \
-    > ${STAGEDIR}/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256
+(cd ${STAGEDIR} && sha256 ${PRODUCT_RELEASE}-*) > ${STAGEDIR}/checksums
+mv ${STAGEDIR}/checksums \
+    ${STAGEDIR}/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256
 
 echo "done"
 
