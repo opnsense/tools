@@ -26,7 +26,7 @@
 STEPS=		audit arm base boot chroot clean clone compress confirm core \
 		distfiles download dvd fingerprint info kernel list make.conf \
 		nano packages plugins ports prefetch print rebase release \
-		rename rewind serial sign skim test update upload verify \
+		rename rewind serial sign skim src test update upload verify \
 		vga vm xtools
 SCRIPTS=	batch distribution hotfix nightly
 
@@ -124,7 +124,7 @@ audit plugins: ports
 core: plugins
 packages test: core
 dvd nano serial vga vm: kernel core
-sets: kernel distfiles packages
+sets: kernel distfiles packages src
 images: dvd nano serial vga vm
 release: dvd nano serial vga
 
