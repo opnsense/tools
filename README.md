@@ -386,8 +386,7 @@ There's also the posh way to boot a final image using bhyve(8):
 
     # make boot-<image>
 
-Please note that the system does not have working networking after
-bootup and login is only possible via the Nano and Serial images.
+Please note that login is only possible via the Nano and Serial images.
 
 Generating a make.conf for use in running OPNsense
 --------------------------------------------------
