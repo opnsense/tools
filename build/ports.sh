@@ -36,7 +36,7 @@ eval ${PORTSENV}
 ARGS=${*}
 DEPS=
 
-for OPT in DEPEND PRUNE SILENT; do
+for OPT in BATCH DEPEND PRUNE SILENT; do
 	VAL=$(eval echo \$${OPT});
 	case ${VAL} in
 	yes|no)
@@ -118,6 +118,10 @@ fi
 
 sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 
+if [ ${BATCH} = "no" ]; then
+	sed -i '' -e 's/^#DEVELOPER=/DEVELOPER=/' ${STAGEDIR}/etc/make.conf
+fi
+
 cat > ${STAGEDIR}/bin/echotime <<EOF
 #!/bin/sh
 echo "[\$(date '+%Y%m%d%H%M%S')]" \${*}
@@ -185,12 +189,20 @@ UNAME_r=\$(freebsd-version)
 	    USE_PACKAGE_DEPENDS=yes \${MAKE_ARGS}; then
 		echo ">>> Aborted version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-err
 
-		if [ -n "${PRODUCT_REBUILD}" ]; then
-			exit 1
-		else
-			${MAKECMD} -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
-			continue
+		CONTINUE=
+
+		if [ ${BATCH} = "no" ]; then
+			echo ">>> Interactive shell for \${PORT} (use \"exit 1\" to abort)"
+			(cd ${PORTSDIR}/\${PORT}; sh < /dev/tty) || exit 1
+			CONTINUE=1
 		fi
+
+		if [ -n "${PRODUCT_REBUILD}" -a -z "\${CONTINUE}" ]; then
+			exit 1
+		fi
+
+		${MAKECMD} -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
+		continue
 	fi
 
 	if [ -n "${PRODUCT_REBUILD}" ]; then

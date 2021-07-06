@@ -241,6 +241,7 @@ works:
 Please note that reissuing ports builds will clear plugins and
 core progress.  However, following option apply to PORTSENV:
 
+* BATCH=no	Developer mode with shell after each build failure
 * DEPEND=no	Do not tamper with plugins or core packages
 * PRUNE=no	Do not check ports integrity prior to rebuild
 * SILENT=no	Do not use make(1) -s command line option
