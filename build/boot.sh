@@ -33,14 +33,14 @@ SELF=boot
 . ./common.sh
 
 if [ -z "${1}" ]; then
-	echo ">> No image given."
+	echo ">>> No image given."
 	exit 1
 fi
 
-IMAGE=$(find ${IMAGESDIR} -name "*-${1}-${PRODUCT_ARCH}.*" \! -name "*.sig")
+IMAGE=$(find_image "${1}")
 
 if [ ! -f "${IMAGE}" ]; then
-	echo ">> No image found."
+	echo ">>> No image found."
 	exit 1
 fi
 

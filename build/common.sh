@@ -693,7 +693,7 @@ check_image()
 	local SELF=${1}
 	SKIP=${2}
 
-	CHECK=$(find ${IMAGESDIR} -name "*-${SELF}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*" \! -name "*.sig")
+	CHECK=$(find_image "${SELF}")
 
 	if [ -f "${CHECK}" -a -z "${SKIP}" ]; then
 		echo ">>> Reusing ${SELF} image: ${CHECK}"
@@ -718,6 +718,11 @@ check_packages()
 	fi
 
 	return 1
+}
+
+find_image()
+{
+	echo $(find ${IMAGESDIR} -name "*-${PRODUCT_FLAVOUR}-${1}-${PRODUCT_ARCH}.*" \! -name "*.sig")
 }
 
 find_set()
