@@ -56,8 +56,6 @@ extract_packages ${STAGEDIR}
 install_packages ${STAGEDIR} pkg
 lock_packages ${STAGEDIR}
 
-echo -n ">>> Running security audit..."
-
 for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
 	PKGORIGIN=$(pkg -c ${STAGEDIR} info -F ${PKG} | \
 	    grep ^Origin | awk '{ print $3; }')
@@ -65,19 +63,20 @@ for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
 	for PORT in ${PORTSLIST}; do
 		if [ "${PORT}" = "${PKGORIGIN}" ]; then
 			${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF
-pkg add -f ${PKG} > /dev/null
+echo -n "Auditing ${PORT}... "
+STATUS=ok
+pkg add -f ${PKG} 2> /dev/null > /dev/null
 AUDIT=\$(pkg audit -F | grep is.vulnerable | tr -d :)
 if [ -n "\${AUDIT}" ]; then
 	echo "\${AUDIT}" >> /report
+	STATUS=vulnerable
 fi
-echo -n .
 pkg remove -qya > /dev/null
+echo \${STATUS}
 EOF
 		fi
 	done
 done
-
-echo "done"
 
 if [ -f ${STAGEDIR}/report ]; then
 	echo ">>> The following vulnerable pacckages exist:"
