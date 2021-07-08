@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2020 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -36,30 +36,30 @@ VERSIONDIR="/usr/local/opnsense/version"
 for ARG in ${@}; do
 	case ${ARG} in
 	base)
-		BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
-		if [ -f "${BASE_SET}" ]; then
+		BASESET=$(find_set base)
+		if [ -f "${BASESET}" ]; then
 			setup_stage ${STAGEDIR}
-			setup_set ${STAGEDIR} ${BASE_SET}
+			setup_set ${STAGEDIR} ${BASESET}
 			generate_signature ${STAGEDIR}${VERSIONDIR}/base.mtree
-			rm ${BASE_SET}
-			generate_set ${STAGEDIR} ${BASE_SET}
-			generate_signature ${BASE_SET}
+			rm ${BASESET}
+			generate_set ${STAGEDIR} ${BASESET}
+			generate_signature ${BASESET}
 		fi
 		;;
 	kernel)
-		KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
-		if [ -f "${KERNEL_SET}" ]; then
+		KERNELSET=$(find_set kernel)
+		if [ -f "${KERNELSET}" ]; then
 			setup_stage ${STAGEDIR}
-			setup_set ${STAGEDIR} ${KERNEL_SET}
+			setup_set ${STAGEDIR} ${KERNELSET}
 			generate_signature ${STAGEDIR}${VERSIONDIR}/kernel.mtree
-			rm ${KERNEL_SET}
-			generate_set ${STAGEDIR} ${KERNEL_SET}
-			generate_signature ${KERNEL_SET}
+			rm ${KERNELSET}
+			generate_set ${STAGEDIR} ${KERNELSET}
+			generate_signature ${KERNELSET}
 		fi
 		;;
 	packages)
-		PKGS_SET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar")
-		if [ -f "${PKGS_SET}" ]; then
+		PACKAGESET=$(find_set packages)
+		if [ -f "${PACKAGESET}" ]; then
 			setup_stage ${STAGEDIR}
 			extract_packages ${STAGEDIR}
 			bundle_packages ${STAGEDIR}

@@ -31,10 +31,10 @@ SELF=base
 
 . ./common.sh
 
-BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
+BASESET=$(find_set base)
 
-if [ -f "${BASE_SET}" -a -z "${1}" ]; then
-	echo ">>> Reusing base set: ${BASE_SET}"
+if [ -f "${BASESET}" -a -z "${1}" ]; then
+	echo ">>> Reusing base set: ${BASESET}"
 	exit 0
 fi
 
@@ -77,7 +77,7 @@ sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR} work
 
-BASE_SET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
+BASESET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 
 setup_set ${STAGEDIR}/work ${BASE_OBJ}
 
@@ -113,5 +113,5 @@ fi
 echo "done"
 
 setup_version ${STAGEDIR} ${STAGEDIR}/work ${SELF} ${STAGEDIR}/obsolete
-generate_set ${STAGEDIR}/work ${BASE_SET}
-generate_signature ${BASE_SET}
+generate_set ${STAGEDIR}/work ${BASESET}
+generate_signature ${BASESET}

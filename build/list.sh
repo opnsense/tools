@@ -32,5 +32,15 @@ SELF=list
 . ./common.sh
 
 for ARG in ${*}; do
-	ls -lah ${TARGETDIR}/"${ARG}"
+	case ${ARG} in
+	base|kernel|packages)
+		SET=$(find_set "${ARG}")
+		if [ -n "${SET}" ]; then
+			tar -tf ${SET}
+		fi
+		;;
+	*)
+		ls -lah ${TARGETDIR}/"${ARG}"
+		;;
+	esac
 done
