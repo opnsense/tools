@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,10 +31,10 @@ SELF=kernel
 
 . ./common.sh
 
-KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
+KERNELSET=$(find_set kernel)
 
-if [ -f "${KERNEL_SET}" -a -z "${1}" ]; then
-	echo ">>> Reusing kernel set: ${KERNEL_SET}"
+if [ -f "${KERNELSET}" -a -z "${1}" ]; then
+	echo ">>> Reusing kernel set: ${KERNELSET}"
 	exit 0
 fi
 
@@ -88,13 +88,13 @@ setup_stage ${STAGEDIR} work
 
 setup_set ${STAGEDIR}/work ${KERNEL_OBJ}
 
-KERNEL_SET=${KERNEL_RELEASE_SET}
+KERNELSET=${KERNEL_RELEASE_SET}
 
 if [ -n "$(test -f ${DEBUG_OBJ} && tar -tf ${DEBUG_OBJ})" ]; then
 	setup_set ${STAGEDIR}/work ${DEBUG_OBJ}
-	KERNEL_SET=${KERNEL_DEBUG_SET}
+	KERNELSET=${KERNEL_DEBUG_SET}
 fi
 
 setup_version ${STAGEDIR} ${STAGEDIR}/work ${SELF}
-generate_set ${STAGEDIR}/work ${KERNEL_SET}
-generate_signature ${KERNEL_SET}
+generate_set ${STAGEDIR}/work ${KERNELSET}
+generate_signature ${KERNELSET}

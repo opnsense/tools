@@ -31,14 +31,14 @@ SELF=release
 
 . ./common.sh
 
-RELEASE_SET=$(find ${SETSDIR} -name "release-*-${PRODUCT_ARCH}.tar")
+RELEASESET=$(find_set release)
 
-if [ -f "${RELEASE_SET}" -a -z "${1}" ]; then
-	echo ">>> Reusing release set: ${RELEASE_SET}"
+if [ -f "${RELEASESET}" -a -z "${1}" ]; then
+	echo ">>> Reusing release set: ${RELEASESET}"
 	exit 0
 fi
 
-RELEASE_SET="${SETSDIR}/release-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar"
+RELEASESET="${SETSDIR}/release-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar"
 
 sh ./clean.sh ${SELF}
 
@@ -59,8 +59,9 @@ done
 
 echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
 
-(cd ${STAGEDIR} && sha256 ${PRODUCT_RELEASE}-*) \
-    > ${STAGEDIR}/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256
+(cd ${STAGEDIR} && sha256 ${PRODUCT_RELEASE}-*) > ${STAGEDIR}/checksums
+mv ${STAGEDIR}/checksums \
+    ${STAGEDIR}/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256
 
 echo "done"
 
@@ -80,5 +81,5 @@ for IMAGE in $(find ${STAGEDIR} -type f \! -name "*.sig"); do
 done
 
 echo -n ">>> Bundling images for ${PRODUCT_RELEASE}... "
-tar -C ${STAGEDIR} -cf ${RELEASE_SET} .
+tar -C ${STAGEDIR} -cf ${RELEASESET} .
 echo "done"

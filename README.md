@@ -241,6 +241,7 @@ works:
 Please note that reissuing ports builds will clear plugins and
 core progress.  However, following option apply to PORTSENV:
 
+* BATCH=no	Developer mode with shell after each build failure
 * DEPEND=no	Do not tamper with plugins or core packages
 * PRUNE=no	Do not check ports integrity prior to rebuild
 * SILENT=no	Do not use make(1) -s command line option
@@ -248,7 +249,13 @@ core progress.  However, following option apply to PORTSENV:
 The defaults for these ports options are set to "yes".  A sample
 invoke is as follows:
 
-    # make ports-openssl PORTSENV="DEPEND=no PRUNE=no"
+    # make ports-curl PORTSENV="DEPEND=no PRUNE=no"
+
+Both ports and plugins builds allow to override the current list
+derived from their respective configuration files, i.e.:
+
+    # make ports PORTSLIST="security/openssl"
+    # make plugins PLUGINSLIST="devel/debug"
 
 Acquiring precompiled sets from the mirrors or another local direcory
 ---------------------------------------------------------------------
@@ -380,8 +387,7 @@ There's also the posh way to boot a final image using bhyve(8):
 
     # make boot-<image>
 
-Please note that the system does not have working networking after
-bootup and login is only possible via the Nano and Serial images.
+Please note that login is only possible via the Nano and Serial images.
 
 Generating a make.conf for use in running OPNsense
 --------------------------------------------------

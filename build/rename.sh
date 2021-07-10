@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -43,15 +43,15 @@ for ARG in ${@}; do
 	base)
 		setup_stage ${STAGEDIR} work
 		echo ">>> Repacking base set..."
-		BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
-		setup_set ${STAGEDIR}/work ${BASE_SET}
+		BASESET=$(find_base base)
+		setup_set ${STAGEDIR}/work ${BASESET}
 		cp ${STAGEDIR}/work/usr/local/opnsense/version/base.obsolete \
 		    ${STAGEDIR}/obsolete
 		REPO_VERSION=${PRODUCT_VERSION}
 		setup_version ${STAGEDIR} ${STAGEDIR}/work ${ARG} ${STAGEDIR}/obsolete
-		rm ${BASE_SET}
-		generate_set ${STAGEDIR}/work ${BASE_SET}
-		generate_signature ${BASE_SET}
+		rm ${BASESET}
+		generate_set ${STAGEDIR}/work ${BASESET}
+		generate_signature ${BASESET}
 		echo ">>> Renaming base set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*"); do
@@ -74,18 +74,18 @@ for ARG in ${@}; do
 	kernel)
 		setup_stage ${STAGEDIR} work
 		echo ">>> Repacking kernel set..."
-		KERNEL_SET=$(find ${SETSDIR} -name "kernel-dbg-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
+		KERNELSET=$(find_set kernel-dbg)
 		KERNEL_NAME="kernel-dbg"
-		if [ -z "${KERNEL_SET}" ]; then
-			KERNEL_SET=$(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
+		if [ -z "${KERNELSET}" ]; then
+			KERNELSET=$(find_set kernel)
 			KERNEL_NAME="kernel"
 		fi
-		setup_set ${STAGEDIR}/work ${KERNEL_SET}
+		setup_set ${STAGEDIR}/work ${KERNELSET}
 		REPO_VERSION=${PRODUCT_VERSION}
 		setup_version ${STAGEDIR} ${STAGEDIR}/work ${ARG}
-		rm ${KERNEL_SET}
-		generate_set ${STAGEDIR}/work ${KERNEL_SET}
-		generate_signature ${KERNEL_SET}
+		rm ${KERNELSET}
+		generate_set ${STAGEDIR}/work ${KERNELSET}
+		generate_signature ${KERNELSET}
 		echo ">>> Renaming kernel set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*"); do

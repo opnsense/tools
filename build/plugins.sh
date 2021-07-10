@@ -31,15 +31,15 @@ SELF=plugins
 
 . ./common.sh
 
-PLUGINS_CONF=${CONFIGDIR}/plugins.conf
+PLUGINSCONF=${CONFIGDIR}/plugins.conf
 
-if [ -f ${PLUGINS_CONF}.local ]; then
-	PLUGINS_CONF="${PLUGINS_CONF} ${PLUGINS_CONF}.local"
+if [ -f ${PLUGINSCONF}.local ]; then
+	PLUGINSCONF="${PLUGINSCONF} ${PLUGINSCONF}.local"
 fi
 
-if [ -z "${PLUGINS_LIST}" ]; then
-	PLUGINS_LIST=$(
-cat ${PLUGINS_CONF} | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
+if [ -z "${PLUGINSLIST}" ]; then
+	PLUGINSLIST=$(
+cat ${PLUGINSCONF} | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
 	if [ "$(echo ${PLUGIN_ORIGIN} | colrm 2)" = "#" ]; then
 		continue
 	fi
@@ -56,8 +56,8 @@ cat ${PLUGINS_CONF} | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
 done
 )
 else
-	PLUGINS_LIST=$(
-for PLUGIN_ORIGIN in ${PLUGINS_LIST}; do
+	PLUGINSLIST=$(
+for PLUGIN_ORIGIN in ${PLUGINSLIST}; do
 	echo ${PLUGIN_ORIGIN}
 done
 )
@@ -85,7 +85,7 @@ for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 
 	_PLUGIN_ARGS="PLUGIN_ARCH=${PRODUCT_ARCH} PLUGIN_FLAVOUR=${PRODUCT_FLAVOUR} ${PLUGINSENV}"
 
-	for PLUGIN_ORIGIN in ${PLUGINS_LIST}; do
+	for PLUGIN_ORIGIN in ${PLUGINSLIST}; do
 		VARIANT=${PLUGIN_ORIGIN##*@}
 		PLUGIN=${PLUGIN_ORIGIN%%@*}
 

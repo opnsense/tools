@@ -31,7 +31,7 @@ SELF=packages
 
 . ./common.sh
 
-AUX_LIST=$(
+AUXLIST=$(
 cat ${CONFIGDIR}/aux.conf | while read PORT_ORIGIN PORT_IGNORE; do
 	eval PORT_ORIGIN=${PORT_ORIGIN}
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
@@ -59,7 +59,7 @@ extract_packages ${STAGEDIR}
 # "packages" target in which case the only thing that needs to be
 # done is stripping the auxiliary packages that are only needed for
 # the build and further testing.  Small lookup and delete code...
-for AUX in ${AUX_LIST}; do
+for AUX in ${AUXLIST}; do
 	for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
 		PKGORIGIN=$(pkg -c ${STAGEDIR} info -F ${PKG} | \
 		    grep ^Origin | awk '{ print $3; }')

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2020 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -33,12 +33,12 @@ SELF=rebase
 
 setup_stage ${STAGEDIR}
 
-BASE_SET=$(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
-BASE_OBSOLETE=/usr/local/opnsense/version/base.obsolete
+BASESET=$(find_set base)
+OBSOLETE=/usr/local/opnsense/version/base.obsolete
 
-tar -tf ${BASE_SET} | sed -e 's/^\.//g' -e '/\/$/d' | \
+tar -tf ${BASESET} | sed -e 's/^\.//g' -e '/\/$/d' | \
     grep -v -e '\.mtree\.sig$' -e '\.abi_hint$' | \
     sort > ${CONFIGDIR}/plist.base.${PRODUCT_ARCH}
 
-tar -C ${STAGEDIR} -xf ${BASE_SET} .${BASE_OBSOLETE}
-cp ${STAGEDIR}${BASE_OBSOLETE} ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH}
+tar -C ${STAGEDIR} -xf ${BASESET} .${OBSOLETE}
+cp ${STAGEDIR}${OBSOLETE} ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH}

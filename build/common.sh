@@ -480,13 +480,13 @@ setup_xbase()
 
 	rm -f ${1}/usr/bin/qemu-*-static ${1}/etc/rc.conf.local
 
-	XTOOLS_SET=$(find ${SETSDIR} -name "xtools-*-${PRODUCT_ARCH}.txz")
-	if [ -z "${XTOOLS_SET}" ]; then
+	XTOOLSET=$(find_set xtools)
+	if [ -z "${XTOOLSET}" ]; then
 		return
 	fi
 
 	XTOOLS=
-	for XTOOL in $(tar tf ${XTOOLS_SET}); do
+	for XTOOL in $(tar tf ${XTOOLSET}); do
 		if [ -d ${1}/${XTOOL} ]; then
 			continue
 		fi
@@ -518,9 +518,9 @@ setup_xtools()
 	/usr/local/etc/rc.d/qemu_user_static onerestart
 
 	# copy the native toolchain for extra speed
-	XTOOLS_SET=$(find ${SETSDIR} -name "xtools-*-${PRODUCT_ARCH}.txz")
-	if [ -n "${XTOOLS_SET}" ]; then
-		tar -C ${1} -xpf ${XTOOLS_SET}
+	XTOOLSET=$(find_set xtools)
+	if [ -n "${XTOOLSET}" ]; then
+		tar -C ${1} -xpf ${XTOOLSET}
 	fi
 
 	# prevent the start of configd in build environments
@@ -617,8 +617,8 @@ setup_distfiles()
 {
 	echo ">>> Setting up distfiles in ${1}"
 
-	DISTFILES_SET=$(find ${SETSDIR} -name "distfiles-*.tar")
-	if [ -n "${DISTFILES_SET}" ]; then
+	DISTFILESET=$(find_set distfiles)
+	if [ -n "${DISTFILESET}" ]; then
 		mkdir -p ${1}${PORTSDIR}
 		tar -C ${1}${PORTSDIR} -xpf ${DISTFILES_SET}
 	fi
@@ -693,7 +693,7 @@ check_image()
 	local SELF=${1}
 	SKIP=${2}
 
-	CHECK=$(find ${IMAGESDIR} -name "*-${SELF}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*" \! -name "*.sig")
+	CHECK=$(find_image "${SELF}")
 
 	if [ -f "${CHECK}" -a -z "${SKIP}" ]; then
 		echo ">>> Reusing ${SELF} image: ${CHECK}"
@@ -706,7 +706,7 @@ check_packages()
 	local SELF=${1}
 	SKIP=${2}
 
-	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar")
+	PACKAGESET=$(find_set packages)
 
 	if [ -z "${SELF}" -o -z "${PACKAGESET}" -o -n "${SKIP}" ]; then
 		return 1
@@ -720,6 +720,41 @@ check_packages()
 	return 1
 }
 
+find_image()
+{
+	echo $(find ${IMAGESDIR} -name "*-${PRODUCT_FLAVOUR}-${1}-${PRODUCT_ARCH}.*" \! -name "*.sig")
+}
+
+find_set()
+{
+	case ${1} in
+	base)
+		echo $(find ${SETSDIR} -name "base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
+		;;
+	distfiles)
+		echo $(find ${SETSDIR} -name "distfiles-*.tar")
+		;;
+	kernel-dbg)
+		echo $(find ${SETSDIR} -name "kernel-dbg-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
+		;;
+	kernel)
+		echo $(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
+		;;
+	packages)
+		echo $(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar")
+		;;
+	release)
+		echo $(find ${SETSDIR} -name "release-*-${PRODUCT_ARCH}.tar")
+		;;
+	xtools)
+		echo $(find ${SETSDIR} -name "xtools-*-${PRODUCT_ARCH}.txz")
+		;;
+	*)
+		echo "Cannot find unknown set: ${1}" >&2
+		;;
+	esac
+}
+
 extract_packages()
 {
 	echo ">>> Extracting packages in ${1}"
@@ -729,7 +764,8 @@ extract_packages()
 	rm -rf ${BASEDIR}${PACKAGESDIR}/All
 	mkdir -p ${BASEDIR}${PACKAGESDIR}/All
 
-	PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar")
+	PACKAGESET=$(find_set packages)
+
 	if [ -f "${PACKAGESET}" ]; then
 		tar -C ${BASEDIR}${PACKAGESDIR} -xpf ${PACKAGESET}
 		return 0

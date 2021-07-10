@@ -31,8 +31,8 @@ SELF=audit
 
 . ./common.sh
 
-if [ -z "${PORTS_LIST}" ]; then
-	PORTS_LIST=$(
+if [ -z "${PORTSLIST}" ]; then
+	PORTSLIST=$(
 cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 	eval PORT_ORIGIN=${PORT_ORIGIN}
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
@@ -42,8 +42,8 @@ cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
 done
 )
 else
-	PORTS_LIST=$(
-for PORT_ORIGIN in ${PORTS_LIST}; do
+	PORTSLIST=$(
+for PORT_ORIGIN in ${PORTSLIST}; do
 	echo ${PORT_ORIGIN}
 done
 )
@@ -56,28 +56,27 @@ extract_packages ${STAGEDIR}
 install_packages ${STAGEDIR} pkg
 lock_packages ${STAGEDIR}
 
-echo -n ">>> Running security audit..."
-
 for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
 	PKGORIGIN=$(pkg -c ${STAGEDIR} info -F ${PKG} | \
 	    grep ^Origin | awk '{ print $3; }')
 
-	for PORT in ${PORTS_LIST}; do
+	for PORT in ${PORTSLIST}; do
 		if [ "${PORT}" = "${PKGORIGIN}" ]; then
 			${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF
-pkg add -f ${PKG} > /dev/null
+echo -n "Auditing ${PORT}... "
+STATUS=ok
+pkg add -f ${PKG} 2> /dev/null > /dev/null
 AUDIT=\$(pkg audit -F | grep is.vulnerable | tr -d :)
 if [ -n "\${AUDIT}" ]; then
 	echo "\${AUDIT}" >> /report
+	STATUS=vulnerable
 fi
-echo -n .
 pkg remove -qya > /dev/null
+echo \${STATUS}
 EOF
 		fi
 	done
 done
-
-echo "done"
 
 if [ -f ${STAGEDIR}/report ]; then
 	echo ">>> The following vulnerable pacckages exist:"

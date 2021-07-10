@@ -36,7 +36,7 @@ eval ${PORTSENV}
 ARGS=${*}
 DEPS=
 
-for OPT in DEPEND PRUNE SILENT; do
+for OPT in BATCH DEPEND PRUNE SILENT; do
 	VAL=$(eval echo \$${OPT});
 	case ${VAL} in
 	yes|no)
@@ -68,8 +68,8 @@ if ! check_packages packages; then
 	PORTCONFIGS="${CONFIGDIR}/aux.conf ${PORTCONFIGS}"
 fi
 
-if [ -z "${PORTS_LIST}" ]; then
-	PORTS_LIST=$(
+if [ -z "${PORTSLIST}" ]; then
+	PORTSLIST=$(
 cat ${PORTCONFIGS} | while read PORT_ORIGIN PORT_IGNORE; do
 	eval PORT_ORIGIN=${PORT_ORIGIN}
 	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
@@ -88,8 +88,8 @@ cat ${PORTCONFIGS} | while read PORT_ORIGIN PORT_IGNORE; do
 done
 )
 else
-	PORTS_LIST=$(
-for PORT_ORIGIN in ${PORTS_LIST}; do
+	PORTSLIST=$(
+for PORT_ORIGIN in ${PORTSLIST}; do
 	echo ${PORT_ORIGIN}
 done
 )
@@ -118,6 +118,10 @@ fi
 
 sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 
+if [ ${BATCH} = "no" ]; then
+	sed -i '' -e 's/^#DEVELOPER=/DEVELOPER=/' ${STAGEDIR}/etc/make.conf
+fi
+
 cat > ${STAGEDIR}/bin/echotime <<EOF
 #!/bin/sh
 echo "[\$(date '+%Y%m%d%H%M%S')]" \${*}
@@ -135,7 +139,7 @@ ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || true
 mkdir -p ${PACKAGESDIR}-cache
 cp -R ${PACKAGESDIR}/All ${PACKAGESDIR}-cache/All
 
-echo "${PORTS_LIST}
+echo "${PORTSLIST}
 clean.up.post.build" | while read PORT_ORIGIN; do
 	FLAVOR=\${PORT_ORIGIN##*@}
 	PORT=\${PORT_ORIGIN%%@*}
@@ -185,12 +189,20 @@ UNAME_r=\$(freebsd-version)
 	    USE_PACKAGE_DEPENDS=yes \${MAKE_ARGS}; then
 		echo ">>> Aborted version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-err
 
-		if [ -n "${PRODUCT_REBUILD}" ]; then
-			exit 1
-		else
-			${MAKECMD} -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
-			continue
+		CONTINUE=
+
+		if [ ${BATCH} = "no" ]; then
+			echo ">>> Interactive shell for \${PORT} (use \"exit 1\" to abort)"
+			(cd ${PORTSDIR}/\${PORT}; sh < /dev/tty) || exit 1
+			CONTINUE=1
 		fi
+
+		if [ -n "${PRODUCT_REBUILD}" -a -z "\${CONTINUE}" ]; then
+			exit 1
+		fi
+
+		${MAKECMD} -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
+		continue
 	fi
 
 	if [ -n "${PRODUCT_REBUILD}" ]; then
@@ -201,7 +213,7 @@ UNAME_r=\$(freebsd-version)
 		pkg create -no ${PACKAGESDIR}-cache/All \${PKGNAME}
 	done
 
-	echo "${PORTS_LIST}" | while read PORT_DEPENDS; do
+	echo "${PORTSLIST}" | while read PORT_DEPENDS; do
 		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS%%@*}" %n)
 		if [ -n "\${PORT_DEPNAME}" ]; then
 			echo ">>> Locking package dependency: \${PORT_DEPNAME}"

@@ -44,7 +44,7 @@ fi
 for ARG in ${@}; do
 	case ${ARG} in
 	base|kernel)
-		SRC=$(find ${SETSDIR} -name "${ARG}-*.txz")
+		SRC=$(find_set ${ARG})
 		if [ -f "${SRC}" ]; then
 			DST=$(echo ${SRC} | sed "s:/${PRODUCT_ABI}/:/${TO}/:")
 			echo -n ">>> Cloning ${DST}... "
@@ -54,7 +54,7 @@ for ARG in ${@}; do
 		fi
 		;;
 	distfiles)
-		SRC=$(find ${SETSDIR} -name "${ARG}-*.tar")
+		SRC=$(find_set ${ARG})
 		DST=$(echo ${SRC} | sed "s:/${PRODUCT_ABI}/:/${TO}/:")
 		if [ -f "${SRC}" ]; then
 			echo -n ">>> Cloning ${DST}... "
@@ -64,7 +64,7 @@ for ARG in ${@}; do
 		fi
 		;;
 	packages)
-		SRC=$(find ${SETSDIR} -name "${ARG}-*-${PRODUCT_FLAVOUR}-*.tar")
+		SRC=$(find_set ${ARG})
 		DST=$(echo ${SRC} | sed "s:/${PRODUCT_ABI}/:/${TO}/:")
 		if [ -f "${SRC}" ]; then
 			echo -n ">>> Cloning ${DST}... "
