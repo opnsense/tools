@@ -620,7 +620,7 @@ setup_distfiles()
 	DISTFILESET=$(find_set distfiles)
 	if [ -n "${DISTFILESET}" ]; then
 		mkdir -p ${1}${PORTSDIR}
-		tar -C ${1}${PORTSDIR} -xpf ${DISTFILES_SET}
+		tar -C ${1}${PORTSDIR} -xpf ${DISTFILESET}
 	fi
 }
 
