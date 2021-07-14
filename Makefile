@@ -81,7 +81,7 @@ ADDITIONS?=	os-dyndns
 DEVICE?=	A10
 COMSPEED?=	115200
 COMPORT?=	0x3f8
-UEFI?=		dvd serial vga vm
+UEFI?=		dvd serial vga vm arm
 GITBASE?=	https://github.com/opnsense
 MIRRORS?=	https://opnsense.c0urier.net \
 		http://mirrors.nycbug.org/pub/opnsense \
