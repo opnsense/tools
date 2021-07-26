@@ -62,7 +62,7 @@ _CONFIGDIR=	${TOOLSDIR}/config/${SETTINGS}
 _CONFIGDIR!=	find -s ${TOOLSDIR}/config -type d -depth 1
 .endif
 
-CONFIGDIR=	${_CONFIGDIR:[1]}
+CONFIGDIR?=	${_CONFIGDIR:[1]}
 SETTINGS?=	${CONFIGDIR:C/^.*\///}
 
 .include "${CONFIGDIR}/build.conf"
