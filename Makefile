@@ -56,13 +56,14 @@ lint: lint-steps lint-composite
 TOOLSDIR?=	/usr/tools
 TOOLSBRANCH?=	master
 
-.if defined(CONFIGDIR)
-SETTINGS=	${CONFIGDIR:C/^.*\///}
-.else
-SETTINGS?=	21.1
+.if defined(SETTINGS)
+_CONFIGDIR=	${TOOLSDIR}/config/${SETTINGS}
+.elif !defined(CONFIGDIR)
+_CONFIGDIR!=	find -s ${TOOLSDIR}/config -type d -depth 1
 .endif
 
-CONFIGDIR?=	${TOOLSDIR}/config/${SETTINGS}
+CONFIGDIR=	${_CONFIGDIR:[1]}
+SETTINGS?=	${CONFIGDIR:C/^.*\///}
 
 .include "${CONFIGDIR}/build.conf"
 .-include "${CONFIGDIR}/build.conf.local"
