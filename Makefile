@@ -56,17 +56,17 @@ lint: lint-steps lint-composite
 TOOLSDIR?=	/usr/tools
 TOOLSBRANCH?=	master
 
-.if defined(SETTINGS)
+.if defined(CONFIGDIR)
+_CONFIGDIR=	${CONFIGDIR}
+.elif defined(SETTINGS)
 _CONFIGDIR=	${TOOLSDIR}/config/${SETTINGS}
 .elif !defined(CONFIGDIR)
 _CONFIGDIR!=	find -s ${TOOLSDIR}/config -type d -depth 1
 .endif
+_SETTINGS=	${_CONFIGDIR:[1]:C/^.*\///}
 
-CONFIGDIR?=	${_CONFIGDIR:[1]}
-SETTINGS?=	${CONFIGDIR:C/^.*\///}
-
-.include "${CONFIGDIR}/build.conf"
-.-include "${CONFIGDIR}/build.conf.local"
+.-include "${_CONFIGDIR:[1]}/build.conf.local"
+.include "${_CONFIGDIR:[1]}/build.conf"
 
 # Bootstrap the build options if not set:
 
@@ -76,7 +76,7 @@ SUFFIX?=	# empty
 FLAVOUR?=	OpenSSL LibreSSL # first one is default
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
-ABI?=		${SETTINGS}
+ABI?=		${_SETTINGS}
 KERNEL?=	SMP
 ADDITIONS?=	os-dyndns
 DEVICE?=	A10
@@ -162,7 +162,7 @@ VERSIONS+=	PRODUCT_CRYPTO=${FLAVOUR:[1]:tl}
 ${STEP}: lint-steps
 	${VERBOSE_HIDDEN} cd ${.CURDIR}/build && \
 	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} -F ${KERNEL} \
-	    -f "${FLAVOUR}" -n ${NAME} -v ${VERSION} -s ${CONFIGDIR} \
+	    -f "${FLAVOUR}" -n ${NAME} -v ${VERSION} -s ${_CONFIGDIR:[1]} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \

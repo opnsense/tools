@@ -72,9 +72,12 @@ Available build options are:
 How to specify build options via configuration file
 ---------------------------------------------------
 
-The configuration file is required at "CONFIGDIR/SETTINGS/build.conf".
+The configuration file is required at "CONFIGDIR/build.conf".
 Its contents can be modified to adapt a non-standard build environment
-and to avoid excessive Makefile arguments.  Use with care.
+and to avoid excessive Makefile arguments.
+
+A local override exists as "CONFIGDIR/build.conf.local" and is
+parsed first to allow more flexible overrides.  Use with care.
 
 How to run individual or composite build steps
 ----------------------------------------------
