@@ -84,7 +84,7 @@ GPTDUMMY="-p freebsd-swap::512k"
 SWAPARGS=
 UEFIBOOT=
 
-if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" -a \
+if [ ${PRODUCT_ARCH} = "amd64" -o ${PRODUCT_ARCH} = "aarch64" -a -n "${PRODUCT_UEFI}" -a \
     -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
 	UEFIBOOT="-p efi:=${STAGEDIR}/boot/boot1.efifat"
 fi
@@ -107,8 +107,14 @@ mdconfig -d -u ${DEV}
 
 echo -n ">>> Building vm image... "
 
-mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} -b ${STAGEDIR}/boot/pmbr \
-    ${UEFIBOOT} -p freebsd-boot/bootfs:=${STAGEDIR}/boot/gptboot \
-    ${GPTDUMMY} -p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS}
+if [ ${PRODUCT_ARCH} = "aarch64" ]; then
+	mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} \
+		${UEFIBOOT} \
+		-p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS}
+else
+	mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} -b ${STAGEDIR}/boot/pmbr \
+		${UEFIBOOT} -p freebsd-boot/bootfs:=${STAGEDIR}/boot/gptboot \
+		${GPTDUMMY} -p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS}
+fi
 
 echo "done"

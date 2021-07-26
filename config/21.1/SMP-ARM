@@ -1,6 +1,10 @@
-include		ALLWINNER
+include		GENERIC
 
-ident		SMP-BANANAPI
+ident		SMP-ARM
+
+# Remove cloudabi device config
+nodevice cloudabi32
+nodevice cloudabi64
 
 # Remove to build a debug kernel:
 nomakeoptions	DEBUG
@@ -16,6 +20,9 @@ options		IPSTEALTH
 options		MROUTING
 options		PPS_SYNC
 options		TCP_SIGNATURE
+
+# XXX required for GEOM
+device		xz
 
 # Wireless features
 device		wlan_acl
@@ -34,3 +41,24 @@ options		PAX_CONTROL_ACL
 options		PAX_CONTROL_ACL_OVERRIDE_SUPPORT
 options		PAX_CONTROL_EXTATTR
 options		PAX_JAIL_SUPPORT
+
+# Additional built-in devices
+#device		bwi
+device		bwn
+#device		rum
+#device		run
+device		u3g
+device		uark
+#device		uath
+device		ucom
+device		uftdi
+device		umct
+device		umodem
+#device		upgt
+device		uplcom
+#device		ural
+#device		urtw
+device		usb
+device		uvisor
+device		uvscom
+#device		zyd
