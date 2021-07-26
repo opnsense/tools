@@ -80,13 +80,16 @@ cat > ${STAGEDIR}/mnt/etc/fstab << EOF
 /dev/gpt/rootfs	/		ufs	rw	1	1
 EOF
 
+GPTBOOT="-p freebsd-boot/bootfs:=${STAGEDIR}/boot/gptboot"
 GPTDUMMY="-p freebsd-swap::512k"
+MBRBOOT="-b ${STAGEDIR}/boot/pmbr"
 SWAPARGS=
 UEFIBOOT=
 
-if [ ${PRODUCT_ARCH} = "amd64" -o ${PRODUCT_ARCH} = "aarch64" -a -n "${PRODUCT_UEFI}" -a \
-    -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
-	UEFIBOOT="-p efi:=${STAGEDIR}/boot/boot1.efifat"
+if [ ${PRODUCT_ARCH} = "amd64" -o ${PRODUCT_ARCH} = "aarch64" ]; then
+	if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
+		UEFIBOOT="-p efi:=${STAGEDIR}/boot/boot1.efifat"
+	fi
 fi
 
 if [ -n "${VMSWAP}" ]; then
@@ -96,25 +99,31 @@ if [ -n "${VMSWAP}" ]; then
 EOF
 fi
 
-if [ -z "${VMSWAP}" -a -z "${UEFIBOOT}" ]; then
-	GPTDUMMY=
-elif [ -n "${VMSWAP}" -a -n "${UEFIBOOT}" ]; then
-	GPTDUMMY=
-fi
-
 umount ${STAGEDIR}/mnt
 mdconfig -d -u ${DEV}
 
 echo -n ">>> Building vm image... "
 
 if [ ${PRODUCT_ARCH} = "aarch64" ]; then
-	mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} \
-		${UEFIBOOT} \
-		-p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS}
+	GPTBOOT=
+	MBRBOOT=
+
+	# produce even number of partitions
+	if [ -n "${VMSWAP}" -a -z "${UEFIBOOT}" ]; then
+		GPTDUMMY=
+	elif [ -z "${VMSWAP}" -a -n "${UEFIBOOT}" ]; then
+		GPTDUMMY=
+	fi
 else
-	mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} -b ${STAGEDIR}/boot/pmbr \
-		${UEFIBOOT} -p freebsd-boot/bootfs:=${STAGEDIR}/boot/gptboot \
-		${GPTDUMMY} -p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS}
+	# produce even number of partitions
+	if [ -z "${VMSWAP}" -a -z "${UEFIBOOT}" ]; then
+		GPTDUMMY=
+	elif [ -n "${VMSWAP}" -a -n "${UEFIBOOT}" ]; then
+		GPTDUMMY=
+	fi
 fi
+
+mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} ${MBRBOOT} ${UEFIBOOT} ${GPTBOOT} \
+    ${GPTDUMMY} -p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS}
 
 echo "done"

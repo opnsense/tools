@@ -389,6 +389,8 @@ There's also the posh way to boot a final image using bhyve(8):
 
 Please note that login is only possible via the Nano and Serial images.
 
+Booting VM images will not work for types other than "raw".
+
 Generating a make.conf for use in running OPNsense
 --------------------------------------------------
 
