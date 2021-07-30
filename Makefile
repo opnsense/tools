@@ -61,12 +61,16 @@ _CONFIGDIR=	${CONFIGDIR}
 .elif defined(SETTINGS)
 _CONFIGDIR=	${TOOLSDIR}/config/${SETTINGS}
 .elif !defined(CONFIGDIR)
-_CONFIGDIR!=	find -s ${TOOLSDIR}/config -type d -depth 1
+__CONFIGDIR!=	find -s ${TOOLSDIR}/config -name "build.conf" -type f
+.for DIR in ${__CONFIGDIR}
+. if exists(${DIR}) && empty(_CONFIGDIR)
+_CONFIGDIR=	${DIR:C/\/build\.conf$//}
+. endif
+.endfor
 .endif
-_SETTINGS=	${_CONFIGDIR:[1]:C/^.*\///}
 
-.-include "${_CONFIGDIR:[1]}/build.conf.local"
-.include "${_CONFIGDIR:[1]}/build.conf"
+.-include "${_CONFIGDIR}/build.conf.local"
+.include "${_CONFIGDIR}/build.conf"
 
 # Bootstrap the build options if not set:
 
@@ -76,7 +80,7 @@ SUFFIX?=	# empty
 FLAVOUR?=	OpenSSL LibreSSL # first one is default
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
-ABI?=		${_SETTINGS}
+ABI?=		${_CONFIGDIR:C/^.*\///}
 KERNEL?=	SMP
 ADDITIONS?=	os-dyndns
 DEVICE?=	A10
@@ -162,7 +166,7 @@ VERSIONS+=	PRODUCT_CRYPTO=${FLAVOUR:[1]:tl}
 ${STEP}: lint-steps
 	${VERBOSE_HIDDEN} cd ${.CURDIR}/build && \
 	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} -F ${KERNEL} \
-	    -f "${FLAVOUR}" -n ${NAME} -v ${VERSION} -s ${_CONFIGDIR:[1]} \
+	    -f "${FLAVOUR}" -n ${NAME} -v ${VERSION} -s ${_CONFIGDIR} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
