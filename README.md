@@ -356,7 +356,7 @@ How the port tree is synced with its upstream repository
 --------------------------------------------------------
 
 The ports tree has a few of our modifications and is sometimes a
-bit ahead of HardenedBSD.  In order to keep the local changes, a
+bit ahead of FreeBSD.  In order to keep the local changes, a
 skimming script is used to review and copy upstream changes:
 
     # make skim[-<option>]

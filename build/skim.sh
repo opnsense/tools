@@ -28,6 +28,7 @@
 set -e
 
 SELF=skim
+FROM=FreeBSD
 
 . ./common.sh
 
@@ -172,7 +173,7 @@ if [ -n "${UNUSED}" ]; then
 			git commit -m \
 "*/*: sync with upstream
 
-Taken from: HardenedBSD"
+Taken from: ${FROM}"
 		fi
 	)
 fi
@@ -212,7 +213,7 @@ if [ -n "${USED}" ]; then
 				git commit -m \
 "${PORT}: partially sync with upstream
 
-Taken from: HardenedBSD"
+Taken from: ${FROM}"
 			fi)
 			;;
 		[cC])
@@ -222,7 +223,7 @@ Taken from: HardenedBSD"
 			(cd ${PORTSDIR}; git commit -m \
 "${PORT}: sync with upstream
 
-Taken from: HardenedBSD")
+Taken from: ${FROM}")
 			;;
 		esac
 	done < ${STAGEDIR}/used.changed
@@ -261,7 +262,7 @@ Taken from: HardenedBSD")
 				git commit -m \
 "Framework: partially sync with upstream
 
-Taken from: HardenedBSD"
+Taken from: ${FROM}"
 			fi)
 			;;
 		[cC])
@@ -273,7 +274,7 @@ Taken from: HardenedBSD"
 			(cd ${PORTSDIR}; git commit -m \
 "Framework: sync with upstream
 
-Taken from: HardenedBSD")
+Taken from: ${FROM}")
 			;;
 		esac
 	fi

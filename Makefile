@@ -115,9 +115,9 @@ PORTSBRANCH?=	master
 PORTSDIR?=	/usr/ports
 PORTSENV?=	# empty
 
-PORTSREFURL?=	https://git.hardenedbsd.org/hardenedbsd/ports.git
-PORTSREFDIR?=	/usr/hardenedbsd-ports
-PORTSREFBRANCH?=hardenedbsd/main
+PORTSREFURL?=	https://git.FreeBSD.org/ports.git
+PORTSREFDIR?=	/usr/freebsd-ports
+PORTSREFBRANCH?=main
 
 SRCBRANCH?=	stable/${ABI}
 SRCDIR?=	/usr/src
