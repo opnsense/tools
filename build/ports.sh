@@ -150,7 +150,9 @@ PRODUCT_ARCH=${PRODUCT_ARCH}
 PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
 UNAME_r=\$(freebsd-version)
 "
-	if pkg -N 2> /dev/null; then
+
+	# if pkg is bootstrapped then unstrap it
+	if [ -f /usr/local/sbin/pkg ]; then
 		pkg set -yaA1
 		pkg autoremove -y
 	fi
