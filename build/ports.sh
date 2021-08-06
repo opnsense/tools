@@ -134,7 +134,7 @@ echo "ECHO_MSG=echotime" >> ${STAGEDIR}/etc/make.conf
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
-${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || true
+${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -sx << EOF || true
 # create a caching mirror for all temporary package dependencies
 mkdir -p ${PACKAGESDIR}-cache
 cp -R ${PACKAGESDIR}/All ${PACKAGESDIR}-cache/All
