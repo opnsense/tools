@@ -134,7 +134,7 @@ echo "ECHO_MSG=echotime" >> ${STAGEDIR}/etc/make.conf
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
-${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -sx << EOF || true
+${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || true
 # create a caching mirror for all temporary package dependencies
 mkdir -p ${PACKAGESDIR}-cache
 cp -R ${PACKAGESDIR}/All ${PACKAGESDIR}-cache/All
@@ -167,7 +167,7 @@ UNAME_r=\$(freebsd-version)
 
 	# check whether the package has already been built
 	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT} -v PKGFILE \${MAKE_ARGS})
-	if [ -f \${PKGFILE} ]; then
+	if [ -f \${PKGFILE%%.pkg}.txz ]; then
 		continue
 	fi
 
@@ -185,9 +185,11 @@ UNAME_r=\$(freebsd-version)
 		fi
 	fi
 
+	set -x
+
 	PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -v PKGVERSION \${MAKE_ARGS})
 
-	if ! ${MAKECMD} -C ${PORTSDIR}/\${PORT} install \
+	if ! ${MAKECMD} -dl -C ${PORTSDIR}/\${PORT} install \
 	    USE_PACKAGE_DEPENDS=yes \${MAKE_ARGS}; then
 		echo ">>> Aborted version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-err
 
@@ -214,6 +216,8 @@ UNAME_r=\$(freebsd-version)
 	for PKGNAME in \$(pkg query %n); do
 		pkg create -no ${PACKAGESDIR}-cache/All \${PKGNAME}
 	done
+
+	set +x
 
 	echo "${PORTSLIST}" | while read PORT_DEPENDS; do
 		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS%%@*}" %n)
