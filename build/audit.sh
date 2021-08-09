@@ -79,7 +79,7 @@ EOF
 done
 
 if [ -f ${STAGEDIR}/report ]; then
-	echo ">>> The following vulnerable pacckages exist:"
+	echo ">>> The following vulnerable packages exist:"
 	sort -u ${STAGEDIR}/report
 	exit 1
 else
