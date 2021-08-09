@@ -189,7 +189,8 @@ UNAME_r=\$(freebsd-version)
 
 	PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -v PKGVERSION \${MAKE_ARGS})
 
-	if ! ${MAKECMD:N-s} -C ${PORTSDIR}/\${PORT} install \
+	# XXX ${MAKECMD}
+	if ! make -C ${PORTSDIR}/\${PORT} install \
 	    USE_PACKAGE_DEPENDS=yes \${MAKE_ARGS}; then
 		echo ">>> Aborted version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-err
 
