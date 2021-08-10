@@ -60,16 +60,18 @@ for BRANCH in ${EXTRABRANCH} ${COREBRANCH}; do
 		CORE_ARGS="${CORE_ARGS} ${CORE_PKGVERSION}"
 	fi
 
-	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} name)
-	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} depends)
+	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} -v CORE_NAME)
+	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} -v CORE_DEPENDS)
+	CORE_VERS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} -v CORE_PKGVERSION)
 
-	if search_packages ${STAGEDIR} ${CORE_NAME}; then
+	if search_packages ${STAGEDIR} ${CORE_NAME} ${CORE_VERS}; then
 		# already built
 		continue
 	fi
 
 	install_packages ${STAGEDIR} ${CORE_DEPS}
-	custom_packages ${STAGEDIR} ${COREDIR} "${CORE_ARGS}"
+	custom_packages ${STAGEDIR} ${COREDIR} \
+	    "${CORE_ARGS}" ${CORE_NAME} ${CORE_VERS}
 done
 
 bundle_packages ${STAGEDIR} ${SELF}

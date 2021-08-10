@@ -101,16 +101,18 @@ for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 			PLUGIN_ARGS="${PLUGIN_ARGS} PLUGIN_VARIANT=${VARIANT}"
 		fi
 
-		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} name)
-		if search_packages ${STAGEDIR} ${PLUGIN_NAME}; then
+		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} -v PLUGIN_PKGNAME)
+		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} -v PLUGIN_DEPENDS)
+		PLUGIN_VERS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} -v PLUGIN_PKGVERSION)
+
+		if search_packages ${STAGEDIR} ${PLUGIN_NAME} ${PLUGIN_VERS}; then
 			# already built
 			continue
 		fi
 
-		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} depends)
 		install_packages ${STAGEDIR} ${PLUGIN_DEPS}
-
-		custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN} "${PLUGIN_ARGS}"
+		custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN} \
+		    "${PLUGIN_ARGS}" ${PLUGIN_NAME} ${PLUGIN_VERS}
 	done
 done
 

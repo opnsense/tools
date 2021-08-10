@@ -779,17 +779,25 @@ extract_packages()
 search_packages()
 {
 	BASEDIR=${1}
-	shift
-	PKGLIST=${@}
+	PKGNAME=${2}
+	PKGVERS=${3}
 
-	echo ">>> Searching packages in ${BASEDIR}: ${PKGLIST}"
+	# check whether the package has already been built
+	PKGFILE=${BASEDIR}${PACKAGESDIR}/All/${PKGNAME}-${PKGVERS}.pkg
+	if [ -f ${PKGFILE%%.pkg}.txz ]; then
+		return 0
+	fi
 
-	for PKG in ${PKGLIST}; do
-		if [ -n "$(find ${BASEDIR}${PACKAGESDIR}/All \
-		    -name "${PKG}-[0-9]*.txz" -type f)" ]; then
+	# check whether the package is available
+	# under a different version number
+	PKGLINK=${BASEDIR}${PACKAGESDIR}/Latest/${PKGNAME}.txz
+	if [ -L ${PKGLINK} ]; then
+		PKGFILE=$(readlink -f ${PKGLINK} || true)
+		if [ -f ${PKGFILE} ]; then
+			echo ">>> Skipped version ${PKGVERS} for ${PKGNAME}" >> ${BASEDIR}/.pkg-warn
 			return 0
 		fi
-	done
+	fi
 
 	return 1
 }
@@ -926,6 +934,10 @@ custom_packages()
 	chroot ${1} /bin/sh -es << EOF
 make -C ${2} ${3} FLAVOUR=${PRODUCT_FLAVOUR} PKGDIR=${PACKAGESDIR}/All package
 EOF
+
+	if [ -n "${PRODUCT_REBUILD}" ]; then
+		echo ">>> Rebuilt version ${5} for ${4}" >> ${1}/.pkg-warn
+	fi
 }
 
 bundle_packages()
