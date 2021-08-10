@@ -180,8 +180,6 @@ UNAME_r=\$(freebsd-version)
 		fi
 	fi
 
-	set -x
-
 	PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -v PKGVERSION \${MAKE_ARGS})
 
 	if ! make -C ${PORTSDIR}/\${PORT} install \
@@ -211,8 +209,6 @@ UNAME_r=\$(freebsd-version)
 	for PKGNAME in \$(pkg query %n); do
 		pkg create -no ${PACKAGESDIR}-cache/All \${PKGNAME}
 	done
-
-	set +x
 
 	echo "${PORTSLIST}" | while read PORT_DEPENDS; do
 		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS%%@*}" %n)
