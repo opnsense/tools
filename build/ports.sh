@@ -36,7 +36,7 @@ eval ${PORTSENV}
 ARGS=${*}
 DEPS=
 
-for OPT in BATCH DEPEND PRUNE SILENT; do
+for OPT in BATCH DEPEND PRUNE; do
 	VAL=$(eval echo \$${OPT});
 	case ${VAL} in
 	yes|no)
@@ -50,11 +50,6 @@ for OPT in BATCH DEPEND PRUNE SILENT; do
 		;;
 	esac
 done
-
-MAKECMD="make"
-if [ ${SILENT} = "yes" ]; then
-	MAKECMD="${MAKECMD} -s"
-fi
 
 if check_packages ${SELF} ${ARGS}; then
 	echo ">>> Step ${SELF} is up to date"
@@ -189,7 +184,6 @@ UNAME_r=\$(freebsd-version)
 
 	PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -v PKGVERSION \${MAKE_ARGS})
 
-	# XXX ${MAKECMD}
 	if ! make -C ${PORTSDIR}/\${PORT} install \
 	    USE_PACKAGE_DEPENDS=yes \${MAKE_ARGS}; then
 		echo ">>> Aborted version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-err
@@ -206,7 +200,7 @@ UNAME_r=\$(freebsd-version)
 			exit 1
 		fi
 
-		${MAKECMD} -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
+		make -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
 		continue
 	fi
 
@@ -241,7 +235,7 @@ UNAME_r=\$(freebsd-version)
 		cp \${NEW} ${PACKAGESDIR}/All
 	done
 
-	${MAKECMD} -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
+	make -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
 done
 EOF
 
