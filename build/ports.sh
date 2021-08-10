@@ -243,14 +243,3 @@ EOF
 trap - 2
 
 bundle_packages ${STAGEDIR} ${SELF} ${DEPS}
-
-if [ -f ${STAGEDIR}/.pkg-warn ]; then
-	echo ">>> WARNING: The build may have integrity issues!"
-	cat ${STAGEDIR}/.pkg-warn
-fi
-
-if [ -f ${STAGEDIR}/.pkg-err ]; then
-	echo ">>> ERROR: The build encountered fatal issues!"
-	cat ${STAGEDIR}/.pkg-err
-	exit 1
-fi

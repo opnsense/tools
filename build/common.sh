@@ -938,6 +938,12 @@ bundle_packages()
 
 	REDOS=${@}
 
+	if [ -f ${BASEDIR}/.pkg-err ]; then
+		echo ">>> ERROR: The build encountered fatal issues!"
+		cat ${BASEDIR}/.pkg-err
+		exit 1
+	fi
+
 	git_describe ${PORTSDIR}
 
 	# clean up in case of partial run
@@ -961,11 +967,7 @@ bundle_packages()
 
 	if [ -n "${SELF}" ]; then
 		# add build marker to set
-		if [ ! -f ${BASEDIR}/.pkg-err ]; then
-			# append build info if new
-			sh ./info.sh > \
-			    ${BASEDIR}${PACKAGESDIR}-new/.${SELF}_done
-		fi
+		sh ./info.sh > ${BASEDIR}${PACKAGESDIR}-new/.${SELF}_done
 	fi
 
 	# push packages to home location
@@ -999,13 +1001,18 @@ bundle_packages()
 
 	REPO_RELEASE="${REPO_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
 	echo -n ">>> Creating package mirror set for ${REPO_RELEASE}... "
-	tar -C ${STAGEDIR}${PACKAGESDIR}-new -cf \
+	tar -C ${BASEDIR}${PACKAGESDIR}-new -cf \
 	    ${SETSDIR}/packages-${REPO_RELEASE}.tar .
 	echo "done"
 
 	generate_signature ${SETSDIR}/packages-${REPO_RELEASE}.tar
 
 	(cd ${SETSDIR}; ls -lah packages-${REPO_RELEASE}.*)
+
+	if [ -f ${BASEDIR}/.pkg-warn ]; then
+		echo ">>> WARNING: The build may have integrity issues!"
+		cat ${BASEDIR}/.pkg-warn
+	fi
 }
 
 setup_packages()
