@@ -43,7 +43,7 @@ for ARG in ${@}; do
 	base)
 		setup_stage ${STAGEDIR} work
 		echo ">>> Repacking base set..."
-		BASESET=$(find_base base)
+		BASESET=$(find_set base)
 		setup_set ${STAGEDIR}/work ${BASESET}
 		cp ${STAGEDIR}/work/usr/local/opnsense/version/base.obsolete \
 		    ${STAGEDIR}/obsolete
