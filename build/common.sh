@@ -368,6 +368,11 @@ git_describe()
 	COMMENT=$(git -C ${1} rev-list --max-count=1 ${HEAD} | cut -c1-9)
 	BRANCH=$(git -C ${1} rev-parse --abbrev-ref ${HEAD})
 
+	if [ -z "${VERSION%%*/*}" ]; then
+		echo ">>> Tag '${VERSION}' of ${1} must not contain slashes"
+		exit 1
+	fi
+
 	if [ "${REVISION}" != "0" ]; then
 		# must construct full version string manually
 		VERSION=${VERSION}_${REVISION}
