@@ -19,9 +19,6 @@ options		PPS_SYNC
 options		RSS
 options		TCP_SIGNATURE
 
-# XXX required for GEOM
-device		xz
-
 # Additional built-in devices
 device		bwi
 device		bwn

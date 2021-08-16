@@ -21,9 +21,6 @@ options		MROUTING
 options		PPS_SYNC
 options		TCP_SIGNATURE
 
-# XXX required for GEOM
-device		xz
-
 # Wireless features
 device		wlan_acl
 device		wlan_xauth
