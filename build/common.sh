@@ -333,8 +333,10 @@ git_clone()
 	fi
 
 	if [ -d "${1}" ]; then
-		echo -n ">>> Removing ${1}... "
-		rm -r "${1}"
+		echo -n ">>> Resetting ${1}... "
+		if ! rm -r "${1}" 2> /dev/null; then
+			rm -rf "${1}"/* "${1}"/.??*
+		fi
 		echo "done"
 	else
 		mkdir -p $(dirname ${1})
