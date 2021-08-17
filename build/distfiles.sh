@@ -83,6 +83,7 @@ echo "${PORTSLIST}" | while read PORT_ORIGIN; do
 	MAKE_ARGS="
 PRODUCT_ABI=${PRODUCT_ABI}
 PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
+TRYBROKEN=yes
 UNAME_r=\$(freebsd-version)
 "
 	echo ">>> Fetching \${PORT_ORIGIN}..."
