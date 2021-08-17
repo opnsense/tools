@@ -353,10 +353,15 @@ git_clone()
 
 git_pull()
 {
-	echo ">>> Pulling branch ${2} of ${1}:"
+	echo ">>> Updating branch ${2} of ${1}:"
 
 	git -C ${1} checkout ${2}
-	git -C ${1} pull
+
+	if [ -z "${2%%volatile/*}" ]; then
+		git_reset ${1} origin/${2}
+	else
+		git -C ${1} pull
+	fi
 }
 
 git_describe()
