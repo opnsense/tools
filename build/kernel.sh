@@ -58,9 +58,7 @@ __MAKE_CONF=
 ${MAKE_ARGS_DEV}
 "
 
-if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
-	${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} kernel-toolchain ${MAKE_ARGS}
-fi
+${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} kernel-toolchain ${MAKE_ARGS}
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildkernel ${MAKE_ARGS} NO_KERNELCLEAN=yes
 if [ "${1}" = "build" ]; then
 	exit 0
