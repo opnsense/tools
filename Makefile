@@ -53,7 +53,9 @@ lint: lint-steps lint-composite
 
 # Special vars to load early build.conf settings:
 
-TOOLSDIR?=	/usr/tools
+ROOTDIR?=	/usr
+
+TOOLSDIR?=	${ROOTDIR}/tools
 TOOLSBRANCH?=	master
 
 .if defined(CONFIGDIR)
@@ -104,23 +106,23 @@ EXTRABRANCH?=	# empty
 
 
 COREBRANCH?=	stable/${ABI}
-COREDIR?=	/usr/core
+COREDIR?=	${ROOTDIR}/core
 COREENV?=	CORE_PHP=${PHP} CORE_ABI=${ABI} CORE_PYTHON=${PYTHON}
 
 PLUGINSBRANCH?=	stable/${ABI}
-PLUGINSDIR?=	/usr/plugins
+PLUGINSDIR?=	${ROOTDIR}/plugins
 PLUGINSENV?=	PLUGIN_PHP=${PHP} PLUGIN_ABI=${ABI} PLUGIN_PYTHON=${PYTHON}
 
 PORTSBRANCH?=	master
-PORTSDIR?=	/usr/ports
+PORTSDIR?=	${ROOTDIR}/ports
 PORTSENV?=	# empty
 
 PORTSREFURL?=	https://git.FreeBSD.org/ports.git
-PORTSREFDIR?=	/usr/freebsd-ports
+PORTSREFDIR?=	${ROOTDIR}/freebsd-ports
 PORTSREFBRANCH?=main
 
 SRCBRANCH?=	stable/${ABI}
-SRCDIR?=	/usr/src
+SRCDIR?=	${ROOTDIR}/src
 
 # A couple of meta-targets for easy use and ordering:
 

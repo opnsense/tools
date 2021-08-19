@@ -19,6 +19,15 @@ All tasks require a root user.  Do the following to grab the repositories
     # cd tools
     # make update
 
+Note that the OPNsense repositories can also be setup in a non-/usr directory
+by setting ROOTDIR.  For example:
+
+    # mkdir -p /tmp/opnsense
+	# cd /tmp/opnsense
+	# git clone https://github.com/opnsense/tools
+	# cd tools
+	# env ROOTDIR=/tmp/opnsense make update
+
 TL;DR
 =====
 
