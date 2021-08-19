@@ -58,7 +58,7 @@ else
 	ln -s ${IMAGE} ${TARGET}
 fi
 
-truncate -s 4G ${STAGEDIR}/disk.img
+truncate -s 10G ${STAGEDIR}/disk.img
 
 echo ">>> Booting image ${IMAGE}:"
 
