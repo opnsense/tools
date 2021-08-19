@@ -47,29 +47,22 @@ setup_mtree ${STAGEDIR}/work
 setup_entropy ${STAGEDIR}/work
 
 UEFIBOOT=
-if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" -a \
-    -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
-	dd if=/dev/zero of=${STAGEDIR}/efiboot.img bs=4k count=200
-	DEV=$(mdconfig -a -t vnode -f ${STAGEDIR}/efiboot.img)
-	newfs_msdos -F 12 -m 0xf8 /dev/${DEV}
-	mount -t msdosfs /dev/${DEV} ${STAGEDIR}/mnt
-	mkdir -p ${STAGEDIR}/mnt/efi/boot
-	cp ${STAGEDIR}/work/boot/loader.efi \
-	    ${STAGEDIR}/mnt/efi/boot/bootx64.efi
-	umount ${STAGEDIR}/mnt
-	mdconfig -d -u ${DEV}
 
+if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
 	UEFIBOOT="-o bootimage=i386;${STAGEDIR}/efiboot.img"
 	UEFIBOOT="${UEFIBOOT} -o no-emul-boot -o platformid=efi"
-fi
 
-echo -n ">>> Building dvd image... "
+	setup_efiboot ${STAGEDIR}/efiboot.img \
+	    ${STAGEDIR}/work/boot/loader.efi
+fi
 
 cat > ${STAGEDIR}/work/etc/fstab << EOF
 # Device	Mountpoint	FStype	Options	Dump	Pass #
 /dev/iso9660/${DVDLABEL}	/	cd9660	ro	0	0
 tmpfs		/tmp		tmpfs	rw,mode=01777	0	0
 EOF
+
+echo -n ">>> Building dvd image... "
 
 makefs -t cd9660 \
     -o 'bootimage=i386;'"${STAGEDIR}"'/work/boot/cdboot' -o no-emul-boot \

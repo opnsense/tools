@@ -1111,6 +1111,26 @@ EOF
 EOF
 }
 
+setup_efiboot()
+{
+	local EFIFILE
+
+	if [ ${PRODUCT_ARCH} = "amd64" ]; then
+		EFIFILE=bootx64
+	elif [ ${PRODUCT_ARCH} = "aarch64" ]; then
+		EFIFILE=bootaa64
+	else
+		echo ">>> Unsupported UEFI architecture: ${PRODUCT_ARCH}" >&2
+		exit 1
+	fi
+
+	mkdir -p ${1}.d/EFI/LOADER
+	cp ${2} ${1}.d/EFI/LOADER/${EFIFILE}.efi
+
+	makefs -t msdos -o fat_type=32 -o sectors_per_cluster=1 \
+	    -o volume_label=EFISYS -s 33292k ${1} ${1}.d
+}
+
 setup_stage()
 {
 	echo ">>> Setting up stage in ${1}"
