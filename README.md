@@ -23,10 +23,10 @@ Note that the OPNsense repositories can also be setup in a non-/usr directory
 by setting ROOTDIR.  For example:
 
     # mkdir -p /tmp/opnsense
-	# cd /tmp/opnsense
-	# git clone https://github.com/opnsense/tools
-	# cd tools
-	# env ROOTDIR=/tmp/opnsense make update
+    # cd /tmp/opnsense
+    # git clone https://github.com/opnsense/tools
+    # cd tools
+    # env ROOTDIR=/tmp/opnsense make update
 
 TL;DR
 =====
