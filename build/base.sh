@@ -60,6 +60,9 @@ ${MAKE_ARGS_DEV}
 "
 
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS} NO_CLEAN=yes
+if [ "${1}" = "build" ]; then
+	exit 0
+fi
 ${ENV_FILTER} make -s -C${SRCDIR}/release obj ${MAKE_ARGS}
 
 # reset the distribution directory
