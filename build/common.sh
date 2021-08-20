@@ -1114,11 +1114,14 @@ EOF
 setup_efiboot()
 {
 	local EFIFILE
+	local EFIDIR
 	local FATBITS
 	local FATSIZE
 
 	FATSIZE=${3:-"33292"}
 	FATBITS=${4:-"32"}
+
+	EFIDIR="EFI/BOOT"
 
 	if [ ${PRODUCT_ARCH} = "amd64" ]; then
 		EFIFILE=bootx64
@@ -1129,8 +1132,8 @@ setup_efiboot()
 		exit 1
 	fi
 
-	mkdir -p ${1}.d/EFI/LOADER
-	cp ${2} ${1}.d/EFI/LOADER/${EFIFILE}.efi
+	mkdir -p ${1}.d/${EFIDIR}
+	cp ${2} ${1}.d/${EFIDIR}/${EFIFILE}.efi
 
 	makefs -t msdos -o fat_type=${FATBITS} -o sectors_per_cluster=1 \
 	    -o volume_label=EFISYS -s ${FATSIZE}k ${1} ${1}.d
