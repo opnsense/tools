@@ -111,7 +111,7 @@ echo -n ">>> Building arm image... "
 
 arm_install_uboot
 
-if [ -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
+if [ -n "${PRODUCT_UEFI}" -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
 	arm_install_efi
 fi
 

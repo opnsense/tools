@@ -54,14 +54,14 @@ if [ -n "${3}" ]; then
 fi
 
 VMIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vm-${PRODUCT_ARCH}.${VMFORMAT}"
-VMBASE="${STAGEDIR}/vmbase"
+VMBASE="vmbase"
 
 sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR} mnt
 
-truncate -s ${VMSIZE} ${VMBASE}
-DEV=$(mdconfig -t vnode -f ${VMBASE})
+truncate -s ${VMSIZE} ${STAGEDIR}/${VMBASE}
+DEV=$(mdconfig -t vnode -f ${STAGEDIR}/${VMBASE})
 newfs /dev/${DEV}
 mount /dev/${DEV} ${STAGEDIR}/mnt
 
@@ -80,17 +80,11 @@ cat > ${STAGEDIR}/mnt/etc/fstab << EOF
 /dev/gpt/rootfs	/		ufs	rw	1	1
 EOF
 
-GPTBOOT="-p freebsd-boot/bootfs:=${STAGEDIR}/boot/gptboot"
+GPTBOOT="-p freebsd-boot/bootfs:=boot/gptboot"
 GPTDUMMY="-p freebsd-swap::512k"
-MBRBOOT="-b ${STAGEDIR}/boot/pmbr"
+MBRBOOT="-b boot/pmbr"
 SWAPARGS=
 UEFIBOOT=
-
-if [ ${PRODUCT_ARCH} = "amd64" -o ${PRODUCT_ARCH} = "aarch64" ]; then
-	if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
-		UEFIBOOT="-p efi:=${STAGEDIR}/boot/boot1.efifat"
-	fi
-fi
 
 if [ -n "${VMSWAP}" ]; then
 	SWAPARGS="-p freebsd-swap/swapfs::${VMSWAP}"
@@ -102,7 +96,12 @@ fi
 umount ${STAGEDIR}/mnt
 mdconfig -d -u ${DEV}
 
-echo -n ">>> Building vm image... "
+if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
+	UEFIBOOT="-p efi:=efiboot.img"
+
+	setup_efiboot ${STAGEDIR}/efiboot.img \
+	    ${STAGEDIR}/boot/loader.efi
+fi
 
 if [ ${PRODUCT_ARCH} = "aarch64" ]; then
 	GPTBOOT=
@@ -123,7 +122,10 @@ else
 	fi
 fi
 
-mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} ${MBRBOOT} ${UEFIBOOT} ${GPTBOOT} \
-    ${GPTDUMMY} -p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS}
+echo -n ">>> Building vm image... "
+
+(cd ${STAGEDIR}; mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} \
+    ${MBRBOOT} ${UEFIBOOT} ${GPTBOOT} ${GPTDUMMY} \
+    -p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS})
 
 echo "done"

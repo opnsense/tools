@@ -59,7 +59,7 @@ makefs -B little -o label=${SERIALLABEL} -o version=2 \
 GPTDUMMY=
 UEFIBOOT=
 
-if [ "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
+if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
 	GPTDUMMY="-p freebsd-swap::512k"
 	UEFIBOOT="-p efi:=efiboot.img"
 

@@ -55,15 +55,20 @@ EOF
 makefs -B little -o label=${VGALABEL} -o version=2 \
     ${STAGEDIR}/root.part ${STAGEDIR}/work
 
-UEFIBOOT=
 GPTDUMMY=
+UEFIBOOT=
 
-if [ ${PRODUCT_ARCH} = "amd64" -a -n "${PRODUCT_UEFI}" -a \
-    -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
-	UEFIBOOT="-p efi:=${STAGEDIR}/work/boot/boot1.efifat"
+if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
 	GPTDUMMY="-p freebsd-swap::512k"
+	UEFIBOOT="-p efi:=efiboot.img"
+
+	setup_efiboot ${STAGEDIR}/efiboot.img \
+	    ${STAGEDIR}/work/boot/loader.efi
 fi
 
-mkimg -s gpt -o ${VGAIMG} -b ${STAGEDIR}/work/boot/pmbr ${UEFIBOOT} \
-    -p freebsd-boot:=${STAGEDIR}/work/boot/gptboot ${GPTDUMMY} \
-    -p freebsd-ufs:=${STAGEDIR}/root.part
+echo -n ">>> Building vga image... "
+
+(cd ${STAGEDIR}; mkimg -s gpt -o ${VGAIMG} -b work/boot/pmbr ${UEFIBOOT} \
+    -p freebsd-boot:=work/boot/gptboot ${GPTDUMMY} -p freebsd-ufs:=root.part)
+
+echo "done"
