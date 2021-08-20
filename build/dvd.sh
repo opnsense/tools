@@ -53,7 +53,7 @@ if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
 	UEFIBOOT="${UEFIBOOT} -o no-emul-boot -o platformid=efi"
 
 	setup_efiboot ${STAGEDIR}/efiboot.img \
-	    ${STAGEDIR}/work/boot/loader.efi
+	    ${STAGEDIR}/work/boot/loader.efi 2048 12
 fi
 
 cat > ${STAGEDIR}/work/etc/fstab << EOF
