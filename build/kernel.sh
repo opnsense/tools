@@ -39,10 +39,13 @@ if [ -f "${KERNELSET}" -a -z "${1}" ]; then
 fi
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
-git_describe ${SRCDIR}
+if [ -z "${VERSION}" ]; then
+	git_describe ${SRCDIR}
+	VERSION=${REPO_VERSION}
+fi
 
-KERNEL_DEBUG_SET=${SETSDIR}/kernel-dbg-${REPO_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
-KERNEL_RELEASE_SET=${SETSDIR}/kernel-${REPO_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
+KERNEL_DEBUG_SET=${SETSDIR}/kernel-dbg-${VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
+KERNEL_RELEASE_SET=${SETSDIR}/kernel-${VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 
 if [ -f ${CONFIGDIR}/${PRODUCT_KERNEL} ]; then
 	cp "${CONFIGDIR}/${PRODUCT_KERNEL}" \
@@ -86,7 +89,6 @@ ${ENV_FILTER} make -s -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
 sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR} work
-
 setup_set ${STAGEDIR}/work ${KERNEL_OBJ}
 
 KERNELSET=${KERNEL_RELEASE_SET}

@@ -39,7 +39,12 @@ if [ -f "${BASESET}" -a -z "${1}" ]; then
 fi
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
-git_describe ${SRCDIR}
+if [ -z "${VERSION}" ]; then
+	git_describe ${SRCDIR}
+	VERSION=${REPO_VERSION}
+fi
+
+BASESET=${SETSDIR}/base-${VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 
 CLANGFIXUPFILE=${SRCDIR}/contrib/compiler-rt/lib/cfi/cfi_blacklist.txt
 CLANGFIXUPDIR=/usr/lib/clang/8.0.1/share
@@ -79,9 +84,6 @@ ${ENV_FILTER} make -s -C${SRCDIR}/release base.txz ${MAKE_ARGS}
 sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR} work
-
-BASESET=${SETSDIR}/base-${REPO_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
-
 setup_set ${STAGEDIR}/work ${BASE_OBJ}
 
 # needs to be in obsolete file list for control purposes
