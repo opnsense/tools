@@ -1768,6 +1768,7 @@
 /usr/include/libipt/pt_cpu.h
 /usr/include/libipt/pt_last_ip.h
 /usr/include/libipt/pt_time.h
+/usr/include/libnetmap.h
 /usr/include/libnvpair.h
 /usr/include/libpmcstat.h
 /usr/include/libproc.h
@@ -3377,6 +3378,9 @@
 /usr/lib/libnetgraph.a
 /usr/lib/libnetgraph.so
 /usr/lib/libnetgraph.so.4
+/usr/lib/libnetmap.a
+/usr/lib/libnetmap.so
+/usr/lib/libnetmap.so.5
 /usr/lib/libnv.a
 /usr/lib/libnv.so
 /usr/lib/libnvpair.a
