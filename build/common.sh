@@ -376,7 +376,7 @@ git_describe()
 	BRANCH=$(git -C ${1} rev-parse --abbrev-ref ${HEAD})
 
 	if [ -z "${VERSION%%*/*}" ]; then
-		echo ">>> Tag '${VERSION}' of ${1} must not contain slashes"
+		echo ">>> Tag '${VERSION}' of ${1} must not contain slashes" >&2
 		exit 1
 	fi
 
