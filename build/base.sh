@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -39,12 +39,12 @@ if [ -f "${BASESET}" -a -z "${1}" ]; then
 fi
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
-if [ -z "${VERSION}" ]; then
+if [ -z "${VERSION}" ]; then # XXX
 	git_describe ${SRCDIR}
-	VERSION=${REPO_VERSION}
+	PRODUCT_VERSION=${REPO_VERSION}
 fi
 
-BASESET=${SETSDIR}/base-${VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
+BASESET=${SETSDIR}/base-${PRODUCT_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 
 CLANGFIXUPFILE=${SRCDIR}/contrib/compiler-rt/lib/cfi/cfi_blacklist.txt
 CLANGFIXUPDIR=/usr/lib/clang/8.0.1/share

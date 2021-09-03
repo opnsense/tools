@@ -47,7 +47,6 @@ for ARG in ${@}; do
 		setup_set ${STAGEDIR}/work ${BASESET}
 		cp ${STAGEDIR}/work/usr/local/opnsense/version/base.obsolete \
 		    ${STAGEDIR}/obsolete
-		REPO_VERSION=${PRODUCT_VERSION}
 		setup_version ${STAGEDIR} ${STAGEDIR}/work ${ARG} ${STAGEDIR}/obsolete
 		rm ${BASESET}
 		generate_set ${STAGEDIR}/work ${BASESET}
@@ -81,7 +80,6 @@ for ARG in ${@}; do
 			KERNEL_NAME="kernel"
 		fi
 		setup_set ${STAGEDIR}/work ${KERNELSET}
-		REPO_VERSION=${PRODUCT_VERSION}
 		setup_version ${STAGEDIR} ${STAGEDIR}/work ${ARG}
 		rm ${KERNELSET}
 		generate_set ${STAGEDIR}/work ${KERNELSET}

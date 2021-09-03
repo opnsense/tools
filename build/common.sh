@@ -584,7 +584,7 @@ setup_version()
 	echo "${PRODUCT_ARCH}" > ${VERSIONDIR}/${3}.arch
 
 	# embed version for update checks
-	echo "${REPO_VERSION}" > ${VERSIONDIR}/${3}
+	echo "${PRODUCT_VERSION}" > ${VERSIONDIR}/${3}
 
 	# mtree generation must come LAST
 	echo "./var" > ${1}/mtree.exclude
