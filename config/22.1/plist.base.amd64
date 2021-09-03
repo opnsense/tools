@@ -4263,7 +4263,6 @@
 /usr/sbin/mptutil
 /usr/sbin/mtest
 /usr/sbin/mtree
-/usr/sbin/ndis_events
 /usr/sbin/ndiscvt
 /usr/sbin/ndisgen
 /usr/sbin/ndp
@@ -11002,9 +11001,6 @@
 /usr/share/man/man3/pmc.k8.3.gz
 /usr/share/man/man3/pmc.mips24k.3.gz
 /usr/share/man/man3/pmc.octeon.3.gz
-/usr/share/man/man3/pmc.p4.3.gz
-/usr/share/man/man3/pmc.p5.3.gz
-/usr/share/man/man3/pmc.p6.3.gz
 /usr/share/man/man3/pmc.sandybridge.3.gz
 /usr/share/man/man3/pmc.sandybridgeuc.3.gz
 /usr/share/man/man3/pmc.sandybridgexeon.3.gz
@@ -13973,7 +13969,6 @@
 /usr/share/man/man8/nanobsd.8.gz
 /usr/share/man/man8/nanobsd.sh.8.gz
 /usr/share/man/man8/natd.8.gz
-/usr/share/man/man8/ndis_events.8.gz
 /usr/share/man/man8/ndiscvt.8.gz
 /usr/share/man/man8/ndisgen.8.gz
 /usr/share/man/man8/ndp.8.gz
@@ -15231,6 +15226,7 @@
 /usr/share/man/man9/et_register.9.gz
 /usr/share/man/man9/et_start.9.gz
 /usr/share/man/man9/et_stop.9.gz
+/usr/share/man/man9/ether_gen_addr.9.gz
 /usr/share/man/man9/eventhandler_deregister.9.gz
 /usr/share/man/man9/eventhandler_find_list.9.gz
 /usr/share/man/man9/eventhandler_prune_list.9.gz

@@ -946,6 +946,7 @@
 /usr/sbin/ktutil
 /usr/sbin/local-unbound-setup
 /usr/sbin/mk-amd-map
+/usr/sbin/ndis_events
 /usr/sbin/sshd
 /usr/sbin/timed
 /usr/sbin/timedc
@@ -1863,6 +1864,9 @@
 /usr/share/man/man3/nvlist_xfer.3.gz
 /usr/share/man/man3/pcap_set_immediate_mode.3.gz
 /usr/share/man/man3/pcap_set_protocol.3.gz
+/usr/share/man/man3/pmc.p4.3.gz
+/usr/share/man/man3/pmc.p5.3.gz
+/usr/share/man/man3/pmc.p6.3.gz
 /usr/share/man/man3/pmc.xscale.3.gz
 /usr/share/man/man3/rallocm.3.gz
 /usr/share/man/man3/readline.3.gz
@@ -2003,6 +2007,7 @@
 /usr/share/man/man8/mkulzma.8.gz
 /usr/share/man/man8/mount_fusefs.8
 /usr/share/man/man8/mount_oldnfs.8.gz
+/usr/share/man/man8/ndis_events.8.gz
 /usr/share/man/man8/nis.8.gz
 /usr/share/man/man8/pam_krb5.8.gz
 /usr/share/man/man8/pam_ksu.8.gz
