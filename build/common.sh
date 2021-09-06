@@ -968,7 +968,10 @@ bundle_packages()
 		exit 1
 	fi
 
-	git_describe ${PORTSDIR}
+	if [ -z "${VERSION}" ]; then # XXX
+		git_describe ${PORTSDIR}
+		PRODUCT_VERSION=${REPO_VERSION}
+	fi
 
 	# clean up in case of partial run
 	rm -rf ${BASEDIR}${PACKAGESDIR}-new
@@ -1023,15 +1026,15 @@ bundle_packages()
 
 	sh ./clean.sh packages
 
-	REPO_RELEASE="${REPO_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
-	echo -n ">>> Creating package mirror set for ${REPO_RELEASE}... "
-	tar -C ${BASEDIR}${PACKAGESDIR}-new -cf \
-	    ${SETSDIR}/packages-${REPO_RELEASE}.tar .
+	PACKAGEVER="${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
+	PACKAGESET="${SETSDIR}/packages-${PACKAGEVER}.tar"
+	echo -n ">>> Creating package mirror set for ${PACKAGEVER}... "
+	tar -C ${BASEDIR}${PACKAGESDIR}-new -cf ${PACKAGESET} .
 	echo "done"
 
-	generate_signature ${SETSDIR}/packages-${REPO_RELEASE}.tar
+	generate_signature ${PACKAGESET}.tar
 
-	(cd ${SETSDIR}; ls -lah packages-${REPO_RELEASE}.*)
+	(cd ${SETSDIR}; ls -lah packages-${PACKAGEVER}.*)
 
 	if [ -f ${BASEDIR}/.pkg-warn ]; then
 		echo ">>> WARNING: The build may have integrity issues!"

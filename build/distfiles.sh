@@ -68,7 +68,10 @@ setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
 setup_distfiles ${STAGEDIR}
 
-git_describe ${PORTSDIR}
+if [ -z "${VERSION}" ]; then # XXX
+	git_describe ${PORTSDIR}
+	PRODUCT_VERSION=${REPO_VERSION}
+fi
 
 sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 echo "CLEAN_FETCH_ENV=yes" >> ${STAGEDIR}/etc/make.conf
@@ -105,7 +108,7 @@ sh ./clean.sh ${SELF}
 
 echo -n ">>> Creating distfiles set... "
 tar -C ${STAGEDIR}${PORTSDIR} -cf \
-    ${SETSDIR}/distfiles-${REPO_VERSION}.tar distfiles
+    ${SETSDIR}/distfiles-${PRODUCT_VERSION}.tar distfiles
 echo "done"
 
 if [ -z "${PORTSLIST}" ]; then

@@ -44,9 +44,12 @@ if [ -f "${XTOOLSET}" -a -z "${1}" ]; then
 fi
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
-git_describe ${SRCDIR}
+if [ -z "${VERSION}" ]; then # XXX
+	git_describe ${SRCDIR}
+	PRODUCT_VERSION=${REPO_VERSION}
+fi
 
-XTOOLSET=${SETSDIR}/xtools-${REPO_VERSION}-${PRODUCT_ARCH}.txz
+XTOOLSET=${SETSDIR}/xtools-${PRODUCT_VERSION}-${PRODUCT_ARCH}.txz
 
 sh ./clean.sh ${SELF}
 
