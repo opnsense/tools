@@ -1032,7 +1032,7 @@ bundle_packages()
 	tar -C ${BASEDIR}${PACKAGESDIR}-new -cf ${PACKAGESET} .
 	echo "done"
 
-	generate_signature ${PACKAGESET}.tar
+	generate_signature ${PACKAGESET}
 
 	(cd ${SETSDIR}; ls -lah packages-${PACKAGEVER}.*)
 
