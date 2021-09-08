@@ -68,6 +68,8 @@ setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
 setup_distfiles ${STAGEDIR}
 
+extract_packages ${STAGEDIR} || true
+
 if [ -z "${VERSION}" ]; then # XXX
 	git_describe ${PORTSDIR}
 	PRODUCT_VERSION=${REPO_VERSION}
@@ -84,10 +86,12 @@ trap : 2
 if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTSLIST=; fi
 echo "${PORTSLIST}" | while read PORT_ORIGIN; do
 	MAKE_ARGS="
+PACKAGES=${PACKAGESDIR}
 PRODUCT_ABI=${PRODUCT_ABI}
 PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
 TRYBROKEN=yes
 UNAME_r=\$(freebsd-version)
+USE_PACKAGE_DEPENDS=yes
 "
 	echo ">>> Fetching \${PORT_ORIGIN}..."
 	PORT=\${PORT_ORIGIN%%@*}
