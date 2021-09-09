@@ -39,10 +39,7 @@ if [ -f "${KERNELSET}" -a -z "${1}" ]; then
 fi
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
-if [ -z "${VERSION}" ]; then # XXX
-	git_describe ${SRCDIR}
-	PRODUCT_VERSION=${REPO_VERSION}
-fi
+git_version ${SRCDIR}
 
 KERNEL_DEBUG_SET=${SETSDIR}/kernel-dbg-${PRODUCT_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 KERNEL_RELEASE_SET=${SETSDIR}/kernel-${PRODUCT_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz

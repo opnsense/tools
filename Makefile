@@ -155,7 +155,7 @@ VERBOSE_FLAGS=	-x
 VERBOSE_HIDDEN=	@
 .endif
 
-.for _VERSION in ABI LUA PERL PHP PYTHON RUBY
+.for _VERSION in ABI LUA PERL PHP PYTHON RUBY VERSION
 VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 .endfor
 
@@ -168,7 +168,7 @@ VERSIONS+=	PRODUCT_CRYPTO=${FLAVOUR:[1]:tl}
 ${STEP}: lint-steps
 	${VERBOSE_HIDDEN} cd ${.CURDIR}/build && \
 	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} -F ${KERNEL} \
-	    -f "${FLAVOUR}" -n ${NAME} -v ${VERSION} -s ${_CONFIGDIR} \
+	    -f "${FLAVOUR}" -n ${NAME} -v "${VERSIONS}" -s ${_CONFIGDIR} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
@@ -177,9 +177,8 @@ ${STEP}: lint-steps
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
 	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" -i ${COMPORT} \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
-	    -q "${VERSIONS}" -h "${PLUGINSENV}" -I "${UPLOADDIR}" \
-	    -D "${EXTRABRANCH}" -A "${PORTSREFURL}" -J "${PORTSENV}" \
-	    ${${STEP}_ARGS}
+	    -h "${PLUGINSENV}" -I "${UPLOADDIR}" -D "${EXTRABRANCH}" \
+	    -A "${PORTSREFURL}" -J "${PORTSENV}" ${${STEP}_ARGS}
 .endfor
 
 .for SCRIPT in ${SCRIPTS}

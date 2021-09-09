@@ -39,10 +39,7 @@ if [ -f "${BASESET}" -a -z "${1}" ]; then
 fi
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
-if [ -z "${VERSION}" ]; then # XXX
-	git_describe ${SRCDIR}
-	PRODUCT_VERSION=${REPO_VERSION}
-fi
+git_version ${SRCDIR}
 
 BASESET=${SETSDIR}/base-${PRODUCT_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 

@@ -44,10 +44,7 @@ if [ -f "${XTOOLSET}" -a -z "${1}" ]; then
 fi
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
-if [ -z "${VERSION}" ]; then # XXX
-	git_describe ${SRCDIR}
-	PRODUCT_VERSION=${REPO_VERSION}
-fi
+git_version ${SRCDIR}
 
 XTOOLSET=${SETSDIR}/xtools-${PRODUCT_VERSION}-${PRODUCT_ARCH}.txz
 

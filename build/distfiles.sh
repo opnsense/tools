@@ -60,6 +60,7 @@ fi
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
+git_version ${PORTSDIR}
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
@@ -69,11 +70,6 @@ setup_chroot ${STAGEDIR}
 setup_distfiles ${STAGEDIR}
 
 extract_packages ${STAGEDIR} || true
-
-if [ -z "${VERSION}" ]; then # XXX
-	git_describe ${PORTSDIR}
-	PRODUCT_VERSION=${REPO_VERSION}
-fi
 
 sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 echo "CLEAN_FETCH_ENV=yes" >> ${STAGEDIR}/etc/make.conf

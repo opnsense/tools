@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:i:J:K:k:L:l:m:n:O:o:P:p:q:R:r:S:s:T:t:U:u:v:V:"
+OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:i:J:K:k:L:l:m:n:O:o:P:p:R:r:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -131,11 +131,6 @@ while getopts ${OPTS} OPT; do
 	p)
 		export PLUGINSDIR=${OPTARG}
 		;;
-	q)
-		for _VERSION in ${OPTARG}; do
-			eval "export ${_VERSION}"
-		done
-		;;
 	R)
 		export PORTSREFDIR=${OPTARG}
 		;;
@@ -169,7 +164,9 @@ while getopts ${OPTS} OPT; do
 		export PRODUCT_UEFI=${OPTARG}
 		;;
 	v)
-		export PRODUCT_VERSION=${OPTARG}
+		for _VERSION in ${OPTARG}; do
+			eval "export ${_VERSION}"
+		done
 		;;
 	V)
 		export PRODUCT_ADDITIONS=${OPTARG}
@@ -366,28 +363,34 @@ git_pull()
 	fi
 }
 
-git_describe()
+git_version()
 {
-	HEAD=${2:-"HEAD"}
+	if [ -z "$(echo ${PRODUCT_VERSION} | tr -d 0-9)" ]; then
+		git_describe ${1}
+		export PRODUCT_VERSION=${REPO_VERSION}
+	fi
 
-	VERSION=$(git -C ${1} describe --abbrev=0 --always ${HEAD})
-	REVISION=$(git -C ${1} rev-list --count ${VERSION}..${HEAD})
-	COMMENT=$(git -C ${1} rev-list --max-count=1 ${HEAD} | cut -c1-9)
-	BRANCH=$(git -C ${1} rev-parse --abbrev-ref ${HEAD})
-
-	if [ -z "${VERSION%%*/*}" ]; then
-		echo ">>> Tag '${VERSION}' of ${1} must not contain slashes" >&2
+	if [ -z "${PRODUCT_VERSION%%*/*}" ]; then
+		echo ">>> Invalid product version: ${PRODUCT_VERSION}" >&2
 		exit 1
 	fi
+}
+
+git_describe()
+{
+	local VERSION=$(git -C ${1} describe --abbrev=0 --always HEAD)
+	local REVISION=$(git -C ${1} rev-list --count ${VERSION}..HEAD)
+	local COMMENT=$(git -C ${1} rev-list --max-count=1 HEAD | cut -c1-9)
+	local BRANCH=$(git -C ${1} rev-parse --abbrev-ref HEAD)
 
 	if [ "${REVISION}" != "0" ]; then
 		# must construct full version string manually
 		VERSION=${VERSION}_${REVISION}
 	fi
 
-	export REPO_VERSION=${VERSION}
-	export REPO_COMMENT=${COMMENT}
 	export REPO_BRANCH=${BRANCH}
+	export REPO_COMMENT=${COMMENT}
+	export REPO_VERSION=${VERSION}
 }
 
 git_branch()
@@ -962,10 +965,7 @@ bundle_packages()
 
 	REDOS=${@}
 
-	if [ -z "${VERSION}" ]; then # XXX
-		git_describe ${PORTSDIR}
-		PRODUCT_VERSION=${REPO_VERSION}
-	fi
+	git_version ${PORTSDIR}
 
 	# clean up in case of partial run
 	rm -rf ${BASEDIR}${PACKAGESDIR}-new
