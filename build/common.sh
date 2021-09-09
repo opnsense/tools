@@ -962,12 +962,6 @@ bundle_packages()
 
 	REDOS=${@}
 
-	if [ -f ${BASEDIR}/.pkg-err ]; then
-		echo ">>> ERROR: The build encountered fatal issues!"
-		cat ${BASEDIR}/.pkg-err
-		exit 1
-	fi
-
 	if [ -z "${VERSION}" ]; then # XXX
 		git_describe ${PORTSDIR}
 		PRODUCT_VERSION=${REPO_VERSION}
@@ -1040,6 +1034,13 @@ bundle_packages()
 		echo ">>> WARNING: The build may have integrity issues!"
 		cat ${BASEDIR}/.pkg-warn
 	fi
+
+	if [ -f ${BASEDIR}/.pkg-err ]; then
+		echo ">>> ERROR: The build encountered fatal issues!"
+		cat ${BASEDIR}/.pkg-err
+		exit 1
+	fi
+
 }
 
 setup_packages()
