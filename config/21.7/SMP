@@ -14,7 +14,9 @@ options		IPFIREWALL_DEFAULT_TO_ACCEPT
 options		IPFIREWALL_VERBOSE
 options		IPSTEALTH
 options		MROUTING
+options		PCBGROUP
 options		PPS_SYNC
+options		RSS
 options		TCP_SIGNATURE
 
 # XXX required for GEOM
