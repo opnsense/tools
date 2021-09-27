@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -76,7 +76,7 @@ for ARG in ${@}; do
 		if [ -d ${STAGEDIRPREFIX} ]; then
 			for DIR in $(find ${STAGEDIRPREFIX} \
 			    -type d -name "dev"); do
-				setup_stage $(dirname ${DIR})
+				umount -f ${STAGE}${DIR} 2> /dev/null || true
 			done
 		fi
 		for DIR in $(find /usr/obj -type d -depth 1); do
