@@ -76,7 +76,7 @@ for ARG in ${@}; do
 		if [ -d ${STAGEDIRPREFIX} ]; then
 			for DIR in $(find ${STAGEDIRPREFIX} \
 			    -type d -name "dev"); do
-				umount -f ${STAGE}${DIR} 2> /dev/null || true
+				setup_stage $(dirname ${DIR}) || true
 			done
 		fi
 		for DIR in $(find /usr/obj -type d -depth 1); do
