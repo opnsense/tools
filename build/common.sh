@@ -1183,7 +1183,7 @@ ${PLUGINSDIR}
 	    (chflags -R noschg ${STAGE}; rm -rf ${STAGE} 2> /dev/null)
 
 	# revive directory for next run
-	mkdir -p ${STAGE}
+	mkdir -p ${STAGE}/dev
 
 	# additional directories if requested
 	for DIR in ${@}; do
