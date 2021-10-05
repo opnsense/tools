@@ -14798,7 +14798,6 @@
 /usr/share/man/man9/binuptime.9.gz
 /usr/share/man/man9/bios.9.gz
 /usr/share/man/man9/bitset.9.gz
-/usr/share/man/man9/boot.9.gz
 /usr/share/man/man9/boottime.9.gz
 /usr/share/man/man9/bp.9.gz
 /usr/share/man/man9/bpf.9.gz
@@ -15561,6 +15560,7 @@
 /usr/share/man/man9/jenkins_hash.9.gz
 /usr/share/man/man9/jenkins_hash32.9.gz
 /usr/share/man/man9/kern_getenv.9.gz
+/usr/share/man/man9/kern_reboot.9.gz
 /usr/share/man/man9/kern_setenv.9.gz
 /usr/share/man/man9/kern_testfrwk.9.gz
 /usr/share/man/man9/kern_unsetenv.9.gz
