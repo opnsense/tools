@@ -1,6 +1,6 @@
 include		GENERIC
 
-ident		SMP-ARM
+ident		SMP
 
 # Remove cloudabi device config
 nodevice cloudabi32

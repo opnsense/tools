@@ -1,6 +1,6 @@
 include		GENERIC
 
-ident		SMP-RSS
+ident		SMP
 
 # Remove to build a debug kernel:
 nomakeoptions	DEBUG
