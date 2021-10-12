@@ -61,6 +61,7 @@ for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
 	    grep ^Origin | awk '{ print $3; }')
 
 	for PORT in ${PORTSLIST}; do
+		PORT=${PORT%%@*}
 		if [ "${PORT}" = "${PKGORIGIN}" ]; then
 			${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF
 echo -n "Auditing ${PORT}... "
