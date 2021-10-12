@@ -29,7 +29,7 @@ CLEAN=packages
 CONTINUE=
 FLAVOUR_TOP=${FLAVOUR}
 LINES=400
-STAGE1="update info base kernel xtools distfiles"
+STAGE1="update info base kernel xtools options distfiles"
 STAGE2="ports plugins core audit test"
 STAGENUM=0
 
