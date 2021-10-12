@@ -46,7 +46,7 @@ setup_stage ${STAGEDIR}
 
 echo -n ">>> Compressing images for ${PRODUCT_RELEASE}... "
 
-for IMAGE in dvd nano serial vga; do
+for IMAGE in dvd nano serial vga vm; do
 	sh ./compress.sh ${IMAGE} > /dev/null &
 done
 wait
