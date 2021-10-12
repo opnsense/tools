@@ -52,8 +52,18 @@ if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
 	UEFIBOOT="-o bootimage=i386;${STAGEDIR}/efiboot.img"
 	UEFIBOOT="${UEFIBOOT} -o no-emul-boot -o platformid=efi"
 
-	setup_efiboot ${STAGEDIR}/efiboot.img \
-	    ${STAGEDIR}/work/boot/loader.efi 2048 12
+	#setup_efiboot ${STAGEDIR}/efiboot.img \
+	#    ${STAGEDIR}/work/boot/loader.efi 2048 12
+
+	dd if=/dev/zero of=${STAGEDIR}/efiboot.img bs=4k count=200
+	DEV=$(mdconfig -a -t vnode -f ${STAGEDIR}/efiboot.img)
+	newfs_msdos -F 12 -m 0xf8 /dev/${DEV}
+	mount -t msdosfs /dev/${DEV} ${STAGEDIR}/mnt
+	mkdir -p ${STAGEDIR}/mnt/efi/boot
+	cp ${STAGEDIR}/work/boot/loader.efi \
+	    ${STAGEDIR}/mnt/efi/boot/bootx64.efi
+	umount ${STAGEDIR}/mnt
+	mdconfig -d -u ${DEV}
 fi
 
 cat > ${STAGEDIR}/work/etc/fstab << EOF
