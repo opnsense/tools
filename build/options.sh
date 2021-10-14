@@ -49,19 +49,25 @@ done
 )
 fi
 
+git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 
 setup_stage ${STAGEDIR}
-sh ./make.conf.sh > ${STAGEDIR}/make.conf
+setup_base ${STAGEDIR}
+setup_clone ${STAGEDIR} ${PORTSDIR}
+setup_clone ${STAGEDIR} ${SRCDIR}
+setup_chroot ${STAGEDIR}
+
+sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 
 for PORT in ${PORTSLIST}; do
 	PORT=${PORT%%@*}
-	MAKE="${ENV_FILTER} make -C ${PORTSDIR}/${PORT}"
+	MAKE="${ENV_FILTER} chroot ${STAGEDIR} make -C ${PORTSDIR}/${PORT}"
 	NAME=$(${MAKE} -v OPTIONS_NAME __MAKE_CONF=)
 	DEFAULTS=$(${MAKE} -v PORT_OPTIONS __MAKE_CONF=)
 	DEFINES=$(${MAKE} -v _REALLY_ALL_POSSIBLE_OPTIONS __MAKE_CONF=)
 
-	SET=$(${MAKE} -v ${NAME}_SET __MAKE_CONF=${STAGEDIR}/make.conf)
+	SET=$(${MAKE} -v ${NAME}_SET)
 
 	if [ -n "${SET}" ]; then
 		for OPT in ${SET}; do
@@ -78,7 +84,7 @@ for PORT in ${PORTSLIST}; do
 		done
 	fi
 
-	UNSET=$(${MAKE} -v ${NAME}_UNSET __MAKE_CONF=${STAGEDIR}/make.conf)
+	UNSET=$(${MAKE} -v ${NAME}_UNSET)
 
 	if [ -n "${UNSET}" ]; then
 		for OPT in ${UNSET}; do
@@ -112,5 +118,5 @@ for PORT in ${PORTSLIST}; do
 		done
 	fi
 
-	${MAKE} check-config __MAKE_CONF=${STAGEDIR}/make.conf
+	${MAKE} check-config
 done
