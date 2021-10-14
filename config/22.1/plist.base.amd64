@@ -399,6 +399,8 @@
 /etc/rc.d/sysctl_lastload
 /etc/rc.d/syslogd
 /etc/rc.d/sysvipc
+/etc/rc.d/tlsclntd
+/etc/rc.d/tlsservd
 /etc/rc.d/tmp
 /etc/rc.d/ubthidhci
 /etc/rc.d/ugidfw
@@ -3152,6 +3154,7 @@
 /usr/include/x86/init.h
 /usr/include/x86/intr_machdep.h
 /usr/include/x86/iommu.h
+/usr/include/x86/kvm.h
 /usr/include/x86/legacyvar.h
 /usr/include/x86/mca.h
 /usr/include/x86/metadata.h
@@ -4315,6 +4318,8 @@
 /usr/sbin/route6d
 /usr/sbin/rpc.lockd
 /usr/sbin/rpc.statd
+/usr/sbin/rpc.tlsclntd
+/usr/sbin/rpc.tlsservd
 /usr/sbin/rpc.umntall
 /usr/sbin/rpcbind
 /usr/sbin/rrenumd
@@ -11222,12 +11227,14 @@
 /usr/share/man/man3/pthread_mutexattr_getkind_np.3.gz
 /usr/share/man/man3/pthread_mutexattr_getprioceiling.3.gz
 /usr/share/man/man3/pthread_mutexattr_getprotocol.3.gz
+/usr/share/man/man3/pthread_mutexattr_getpshared.3.gz
 /usr/share/man/man3/pthread_mutexattr_getrobust.3.gz
 /usr/share/man/man3/pthread_mutexattr_gettype.3.gz
 /usr/share/man/man3/pthread_mutexattr_init.3.gz
 /usr/share/man/man3/pthread_mutexattr_setkind_np.3.gz
 /usr/share/man/man3/pthread_mutexattr_setprioceiling.3.gz
 /usr/share/man/man3/pthread_mutexattr_setprotocol.3.gz
+/usr/share/man/man3/pthread_mutexattr_setpshared.3.gz
 /usr/share/man/man3/pthread_mutexattr_setrobust.3.gz
 /usr/share/man/man3/pthread_mutexattr_settype.3.gz
 /usr/share/man/man3/pthread_once.3.gz
@@ -14091,6 +14098,8 @@
 /usr/share/man/man8/rpc.rwalld.8.gz
 /usr/share/man/man8/rpc.sprayd.8.gz
 /usr/share/man/man8/rpc.statd.8.gz
+/usr/share/man/man8/rpc.tlsclntd.8.gz
+/usr/share/man/man8/rpc.tlsservd.8.gz
 /usr/share/man/man8/rpc.umntall.8.gz
 /usr/share/man/man8/rpcbind.8.gz
 /usr/share/man/man8/rpcinfo.8.gz
@@ -22013,6 +22022,8 @@
 /var/db/etcupdate/current/etc/rc.d/sysctl_lastload
 /var/db/etcupdate/current/etc/rc.d/syslogd
 /var/db/etcupdate/current/etc/rc.d/sysvipc
+/var/db/etcupdate/current/etc/rc.d/tlsclntd
+/var/db/etcupdate/current/etc/rc.d/tlsservd
 /var/db/etcupdate/current/etc/rc.d/tmp
 /var/db/etcupdate/current/etc/rc.d/ubthidhci
 /var/db/etcupdate/current/etc/rc.d/ugidfw
