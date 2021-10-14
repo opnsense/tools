@@ -133,7 +133,7 @@ packages test: core
 dvd nano serial vga vm: kernel core
 sets: kernel distfiles packages
 images: dvd nano serial vga vm
-release: dvd nano serial vga ${${SUFFIX}=="-business":?vm:}
+release: dvd nano serial vga
 
 # Expand target arguments for the script append:
 
