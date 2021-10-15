@@ -63,32 +63,7 @@ if ! check_packages packages; then
 	PORTCONFIGS="${CONFIGDIR}/aux.conf ${PORTCONFIGS}"
 fi
 
-if [ -z "${PORTSLIST}" ]; then
-	PORTSLIST=$(
-cat ${PORTCONFIGS} | while read PORT_ORIGIN PORT_IGNORE; do
-	eval PORT_ORIGIN=${PORT_ORIGIN}
-	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
-		continue
-	fi
-	if [ -n "${PORT_IGNORE}" ]; then
-		for PORT_QUIRK in $(echo ${PORT_IGNORE} | tr ',' ' '); do
-			if [ ${PORT_QUIRK} = ${PRODUCT_TARGET} -o \
-			     ${PORT_QUIRK} = ${PRODUCT_ARCH} -o \
-			     ${PORT_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
-				continue 2
-			fi
-		done
-	fi
-	echo ${PORT_ORIGIN}
-done
-)
-else
-	PORTSLIST=$(
-for PORT_ORIGIN in ${PORTSLIST}; do
-	echo ${PORT_ORIGIN}
-done
-)
-fi
+PORTSLIST=$(list_ports ${PORTCONFIGS})
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH

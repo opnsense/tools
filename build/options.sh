@@ -31,23 +31,7 @@ SELF=options
 
 . ./common.sh
 
-if [ -z "${PORTSLIST}" ]; then
-	PORTSLIST=$(
-cat ${CONFIGDIR}/ports.conf | while read PORT_ORIGIN PORT_IGNORE; do
-	eval PORT_ORIGIN=${PORT_ORIGIN}
-	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
-		continue
-	fi
-	echo ${PORT_ORIGIN}
-done
-)
-else
-	PORTSLIST=$(
-for PORT_ORIGIN in ${PORTSLIST}; do
-	echo ${PORT_ORIGIN}
-done
-)
-fi
+PORTSLIST=$(list_ports ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf)
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
