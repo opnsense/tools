@@ -29,8 +29,8 @@ CLEAN=packages
 CONTINUE=
 FLAVOUR_TOP=${FLAVOUR}
 LINES=400
-STAGE1="update info base kernel xtools options distfiles"
-STAGE2="ports plugins core audit test"
+STAGE1="update info base kernel xtools distfiles"
+STAGE2="options ports plugins core audit test"
 STAGENUM=0
 
 eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX)"
@@ -110,7 +110,8 @@ for STAGE in ${STAGE2}; do
 			echo ">>> Stage ${STAGE}-${_FLAVOUR} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
 		        tail -n ${LINES} ${LOG} >> ${LOG}.err
 
-			if [ ${STAGE} = audit -o ${STAGE} = test ]; then
+			if [ ${STAGE} = audit -o ${STAGE} = test -o \
+			    ${STAGE} = options ]; then
 				# continue during these stages
 				continue
 			fi
