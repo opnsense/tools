@@ -4275,6 +4275,7 @@
 /usr/sbin/mptutil
 /usr/sbin/mtest
 /usr/sbin/mtree
+/usr/sbin/ndis_events
 /usr/sbin/ndiscvt
 /usr/sbin/ndisgen
 /usr/sbin/ndp
@@ -11237,6 +11238,7 @@
 /usr/share/man/man3/pthread_mutexattr_setpshared.3.gz
 /usr/share/man/man3/pthread_mutexattr_setrobust.3.gz
 /usr/share/man/man3/pthread_mutexattr_settype.3.gz
+/usr/share/man/man3/pthread_np.3.gz
 /usr/share/man/man3/pthread_once.3.gz
 /usr/share/man/man3/pthread_peekjoin_np.3.gz
 /usr/share/man/man3/pthread_resume_all_np.3.gz
@@ -13993,6 +13995,7 @@
 /usr/share/man/man8/nanobsd.8.gz
 /usr/share/man/man8/nanobsd.sh.8.gz
 /usr/share/man/man8/natd.8.gz
+/usr/share/man/man8/ndis_events.8.gz
 /usr/share/man/man8/ndiscvt.8.gz
 /usr/share/man/man8/ndisgen.8.gz
 /usr/share/man/man8/ndp.8.gz
@@ -15085,6 +15088,7 @@
 /usr/share/man/man9/crypto_cursor_init.9.gz
 /usr/share/man/man9/crypto_cursor_segbase.9.gz
 /usr/share/man/man9/crypto_cursor_seglen.9.gz
+/usr/share/man/man9/crypto_cursor_segment.9.gz
 /usr/share/man/man9/crypto_destroyreq.9.gz
 /usr/share/man/man9/crypto_dispatch.9.gz
 /usr/share/man/man9/crypto_done.9.gz
@@ -16230,6 +16234,7 @@
 /usr/share/man/man9/sglist_append_mbuf_epg.9.gz
 /usr/share/man/man9/sglist_append_phys.9.gz
 /usr/share/man/man9/sglist_append_sglist.9.gz
+/usr/share/man/man9/sglist_append_single_mbuf.9.gz
 /usr/share/man/man9/sglist_append_uio.9.gz
 /usr/share/man/man9/sglist_append_user.9.gz
 /usr/share/man/man9/sglist_append_vmpages.9.gz
