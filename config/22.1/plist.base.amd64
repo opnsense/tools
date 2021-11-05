@@ -1972,6 +1972,7 @@
 /usr/include/machine/_types.h
 /usr/include/machine/acpica_machdep.h
 /usr/include/machine/apm_bios.h
+/usr/include/machine/asan.h
 /usr/include/machine/asm.h
 /usr/include/machine/asmacros.h
 /usr/include/machine/atomic.h
@@ -2756,6 +2757,7 @@
 /usr/include/sys/alq.h
 /usr/include/sys/apm.h
 /usr/include/sys/arb.h
+/usr/include/sys/asan.h
 /usr/include/sys/assym.h
 /usr/include/sys/ata.h
 /usr/include/sys/atomic_common.h
@@ -8754,6 +8756,9 @@
 /usr/share/man/man3/coshf.3.gz
 /usr/share/man/man3/coshl.3.gz
 /usr/share/man/man3/cosl.3.gz
+/usr/share/man/man3/cospi.3.gz
+/usr/share/man/man3/cospif.3.gz
+/usr/share/man/man3/cospil.3.gz
 /usr/share/man/man3/cpow.3.gz
 /usr/share/man/man3/cpowf.3.gz
 /usr/share/man/man3/cpowl.3.gz
@@ -11689,6 +11694,9 @@
 /usr/share/man/man3/sinhf.3.gz
 /usr/share/man/man3/sinhl.3.gz
 /usr/share/man/man3/sinl.3.gz
+/usr/share/man/man3/sinpi.3.gz
+/usr/share/man/man3/sinpif.3.gz
+/usr/share/man/man3/sinpil.3.gz
 /usr/share/man/man3/skein.3.gz
 /usr/share/man/man3/skein1024.3.gz
 /usr/share/man/man3/skein256.3.gz
@@ -12086,6 +12094,9 @@
 /usr/share/man/man3/tanhf.3.gz
 /usr/share/man/man3/tanhl.3.gz
 /usr/share/man/man3/tanl.3.gz
+/usr/share/man/man3/tanpi.3.gz
+/usr/share/man/man3/tanpif.3.gz
+/usr/share/man/man3/tanpil.3.gz
 /usr/share/man/man3/target_activate_address.3.gz
 /usr/share/man/man3/target_address.3.gz
 /usr/share/man/man3/target_delete_address.3.gz
@@ -14289,6 +14300,8 @@
 /usr/share/man/man9/BIT_FFS_AT.9.gz
 /usr/share/man/man9/BIT_FILL.9.gz
 /usr/share/man/man9/BIT_FLS.9.gz
+/usr/share/man/man9/BIT_FOREACH_ISCLR.9.gz
+/usr/share/man/man9/BIT_FOREACH_ISSET.9.gz
 /usr/share/man/man9/BIT_ISFULLSET.9.gz
 /usr/share/man/man9/BIT_ISSET.9.gz
 /usr/share/man/man9/BIT_OR.9.gz
@@ -14398,6 +14411,7 @@
 /usr/share/man/man9/HHOOKS_RUN_IF.9.gz
 /usr/share/man/man9/HHOOKS_RUN_LOOKUP_IF.9.gz
 /usr/share/man/man9/IF_DEQUEUE.9.gz
+/usr/share/man/man9/KASAN.9.gz
 /usr/share/man/man9/KASSERT.9.gz
 /usr/share/man/man9/KFAIL_POINT_CODE.9.gz
 /usr/share/man/man9/KFAIL_POINT_ERROR.9.gz
@@ -15572,6 +15586,8 @@
 /usr/share/man/man9/ithread_schedule.9.gz
 /usr/share/man/man9/jenkins_hash.9.gz
 /usr/share/man/man9/jenkins_hash32.9.gz
+/usr/share/man/man9/kasan.9.gz
+/usr/share/man/man9/kasan_mark.9.gz
 /usr/share/man/man9/kern_getenv.9.gz
 /usr/share/man/man9/kern_reboot.9.gz
 /usr/share/man/man9/kern_setenv.9.gz
