@@ -857,6 +857,7 @@
 /usr/bin/basename
 /usr/bin/batch
 /usr/bin/bc
+/usr/bin/beep
 /usr/bin/bg
 /usr/bin/brandelf
 /usr/bin/bsdcat
@@ -6477,6 +6478,7 @@
 /usr/share/man/man1/basename.1.gz
 /usr/share/man/man1/batch.1.gz
 /usr/share/man/man1/bc.1.gz
+/usr/share/man/man1/beep.1.gz
 /usr/share/man/man1/bg.1.gz
 /usr/share/man/man1/bind.1.gz
 /usr/share/man/man1/bindkey.1.gz
@@ -8659,6 +8661,7 @@
 /usr/share/man/man3/ceill.3.gz
 /usr/share/man/man3/cexp.3.gz
 /usr/share/man/man3/cexpf.3.gz
+/usr/share/man/man3/cexpl.3.gz
 /usr/share/man/man3/cfgetispeed.3.gz
 /usr/share/man/man3/cfgetospeed.3.gz
 /usr/share/man/man3/cfmakeraw.3.gz
@@ -13132,6 +13135,7 @@
 /usr/share/man/man4/mac_stub.4.gz
 /usr/share/man/man4/mac_test.4.gz
 /usr/share/man/man4/malo.4.gz
+/usr/share/man/man4/max44009.4.gz
 /usr/share/man/man4/mce.4.gz
 /usr/share/man/man4/md.4.gz
 /usr/share/man/man4/mdio.4.gz
@@ -13274,6 +13278,7 @@
 /usr/share/man/man4/pccard.4.gz
 /usr/share/man/man4/pccbb.4.gz
 /usr/share/man/man4/pcf.4.gz
+/usr/share/man/man4/pcf8591.4.gz
 /usr/share/man/man4/pchtherm.4.gz
 /usr/share/man/man4/pci.4.gz
 /usr/share/man/man4/pcib.4.gz
