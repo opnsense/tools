@@ -778,6 +778,7 @@ extract_packages()
 
 	rm -rf ${BASEDIR}${PACKAGESDIR}/All
 	mkdir -p ${BASEDIR}${PACKAGESDIR}/All
+	mkdir -p ${BASEDIR}${PACKAGESDIR}/Latest
 
 	PACKAGESET=$(find_set packages)
 
@@ -949,6 +950,11 @@ custom_packages()
 	chroot ${1} /bin/sh -es << EOF
 make -C ${2} ${3} FLAVOUR=${PRODUCT_FLAVOUR} PKGDIR=${PACKAGESDIR}/All package
 EOF
+
+	(
+		cd ${1}${PACKAGESDIR}/Latest
+		ln -sfn ../All/${4}-${5}.txz ${4}.txz
+	)
 
 	if [ -n "${PRODUCT_REBUILD}" ]; then
 		echo ">>> Rebuilt version ${5} for ${4}" >> ${1}/.pkg-warn
