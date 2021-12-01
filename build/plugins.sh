@@ -105,6 +105,16 @@ for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} -v PLUGIN_DEPENDS)
 		PLUGIN_VERS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} -v PLUGIN_PKGVERSION)
 
+		for REMOVED in ${@}; do
+			if [ ${REMOVED} = ${PLUGIN_NAME} ]; then
+				# make sure a subsequent built of the
+				# same package goes through by removing
+				# it while it may have been rebuilt on
+				# another branch
+				remove_packages ${STAGEDIR} ${REMOVED}
+			fi
+		done
+
 		if search_packages ${STAGEDIR} ${PLUGIN_NAME} ${PLUGIN_VERS}; then
 			# already built
 			continue
