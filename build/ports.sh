@@ -175,6 +175,8 @@ UNAME_r=\$(freebsd-version)
 
 		make -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
 		continue
+	elif ! make -C ${PORTSDIR}/\${PORT} check-plist \${MAKE_ARGS}; then
+		echo ">>> Package list inconsistency for \${PORT_ORIGIN}" >> /.pkg-warn
 	fi
 
 	if [ -n "${PRODUCT_REBUILD}" ]; then
