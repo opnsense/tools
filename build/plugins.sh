@@ -107,7 +107,7 @@ for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 
 		for REMOVED in ${@}; do
 			if [ ${REMOVED} = ${PLUGIN_NAME} ]; then
-				# make sure a subsequent built of the
+				# make sure a subsequent build of the
 				# same package goes through by removing
 				# it while it may have been rebuilt on
 				# another branch
