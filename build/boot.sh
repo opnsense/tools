@@ -76,12 +76,15 @@ ifconfig ${TAPWAN} up
 
 kldstat -qm vmm || kldload vmm
 bhyveload -m ${MEM} -d ${TARGET} vm0
-bhyve -c 1 -m ${MEM} -AHP \
+while bhyve -c 1 -m ${MEM} -AHP \
     -s 0,hostbridge \
     -s 1:0,virtio-net,${TAPLAN} \
     -s 1:1,virtio-net,${TAPWAN} \
     -s 2:0,${AHCI},${TARGET} \
     -s 3:0,ahci-hd,${STAGEDIR}/disk.img \
     -s 31,lpc -l com1,stdio \
-    vm0 || true
+    vm0; do
+	bhyvectl --destroy --vm=vm0
+	bhyveload -m ${MEM} -d ${TARGET} vm0
+done
 bhyvectl --destroy --vm=vm0
