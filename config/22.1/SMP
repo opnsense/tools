@@ -2,7 +2,7 @@ include		GENERIC
 
 ident		SMP
 
-# Remove to build a debug kernel:
+#makeoptions	DEBUG=-g
 nomakeoptions	DEBUG
 
 options		DDB
