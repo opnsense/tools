@@ -296,6 +296,10 @@ for WANT in git pkg; do
 	fi
 done
 
+if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
+	export PRODUCT_WANTS="${PRODUCT_WANTS} ${PRODUCT_WANTS_CROSS}"
+fi
+
 for WANT in ${PRODUCT_WANTS}; do
 	if ! pkg info ${WANT} > /dev/null; then
 		echo ">>> Required package '${WANT}' is not installed." >&2
