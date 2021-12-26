@@ -2,10 +2,6 @@ include		GENERIC
 
 ident		SMP
 
-# Remove cloudabi device config
-nodevice cloudabi32
-nodevice cloudabi64
-
 # Remove to build a debug kernel:
 nomakeoptions	DEBUG
 
