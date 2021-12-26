@@ -2,31 +2,22 @@ include		GENERIC
 
 ident		SMP
 
-# Remove cloudabi device config
-nodevice cloudabi32
-nodevice cloudabi64
-
-# Remove to build a debug kernel:
+#makeoptions	DEBUG=-g
 nomakeoptions	DEBUG
 
 options		DDB
 options		GEOM_BDE
 options		GEOM_ELI
 options		GEOM_MIRROR
-options		GEOM_UZIP
+#options		GEOM_UZIP
 options		IPFIREWALL_DEFAULT_TO_ACCEPT
 options		IPFIREWALL_VERBOSE
 options		IPSTEALTH
 options		MROUTING
+options		PCBGROUP
 options		PPS_SYNC
+options		RSS
 options		TCP_SIGNATURE
-
-# Wireless features
-device		wlan_acl
-device		wlan_xauth
-
-# Not all architectures have a consistent GENERIC
-device		netmap
 
 # Additional built-in devices
 #device		bwi
@@ -36,7 +27,6 @@ device		bwn
 device		u3g
 device		uark
 #device		uath
-device		ucom
 device		uftdi
 device		umct
 device		umodem
@@ -44,7 +34,20 @@ device		umodem
 device		uplcom
 #device		ural
 #device		urtw
-device		usb
 device		uvisor
 device		uvscom
 #device		zyd
+
+# Wireless features
+device		wlan_acl
+device		wlan_xauth
+
+# Not all architectures have a consistent GENERIC
+device		netmap
+
+# Crashes when added to loader.conf
+#device		speaker
+
+# ARM specific
+device		ucom
+device		usb
