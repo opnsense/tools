@@ -31,7 +31,7 @@ SELF=xtools
 
 . ./common.sh
 
-if [ ${PRODUCT_HOST} = ${PRODUCT_ARCH} ]; then
+if [ -z "${PRODUCT_CROSS}" ]; then
 	echo ">>> No need to build xtools on native build"
 	exit 0
 fi

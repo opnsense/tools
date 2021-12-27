@@ -298,6 +298,7 @@ done
 
 if [ ${PRODUCT_HOST} != ${PRODUCT_ARCH} ]; then
 	export PRODUCT_WANTS="${PRODUCT_WANTS} ${PRODUCT_WANTS_CROSS}"
+	export PRODUCT_CROSS="yes"
 fi
 
 for WANT in ${PRODUCT_WANTS}; do
@@ -488,7 +489,7 @@ setup_copy()
 
 setup_xbase()
 {
-	if [ ${PRODUCT_HOST} = ${PRODUCT_ARCH} ]; then
+	if [ -z "${PRODUCT_CROSS}" ]; then
 		return
 	fi
 
@@ -514,7 +515,7 @@ setup_xbase()
 
 setup_xtools()
 {
-	if [ ${PRODUCT_HOST} = ${PRODUCT_ARCH} ]; then
+	if [ -z "${PRODUCT_CROSS}" ]; then
 		return
 	fi
 
