@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -98,13 +98,13 @@ echo -n ">>> Generating obsolete file list... "
     sort > ${STAGEDIR}/setdiff.new
 
 : > ${STAGEDIR}/setdiff.old
-if [ -f ${CONFIGDIR}/plist.base.${PRODUCT_ARCH} ]; then
-	cp ${CONFIGDIR}/plist.base.${PRODUCT_ARCH} ${STAGEDIR}/setdiff.old
+if [ -f ${CONFIGDIR}/base.plist.${PRODUCT_ARCH} ]; then
+	cp ${CONFIGDIR}/base.plist.${PRODUCT_ARCH} ${STAGEDIR}/setdiff.old
 fi
 
 : > ${STAGEDIR}/setdiff.tmp
-if [ -f ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH} ]; then
-	diff -u ${CONFIGDIR}/plist.obsolete.${PRODUCT_ARCH} \
+if [ -f ${CONFIGDIR}/base.obsolete.${PRODUCT_ARCH} ]; then
+	diff -u ${CONFIGDIR}/base.obsolete.${PRODUCT_ARCH} \
 	    ${STAGEDIR}/setdiff.new | grep '^-/' | \
 	    cut -b 2- > ${STAGEDIR}/setdiff.tmp
 fi
