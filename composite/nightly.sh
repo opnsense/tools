@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -29,6 +29,7 @@ CLEAN=packages
 CONTINUE=
 FLAVOUR_TOP=${FLAVOUR}
 LINES=400
+NOERROR="distfiles options audit test"
 STAGE1="update info base kernel xtools distfiles"
 STAGE2="options ports plugins core audit test"
 STAGENUM=0
@@ -68,6 +69,12 @@ for STAGE in ${STAGE1}; do
 	if [ -f ${LOG}.err ]; then
 		echo ">>> Stage ${STAGE} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
 		tail -n ${LINES} ${LOG} >> ${LOG}.err
+
+		if [ -z "${NOERROR%%*"${STAGE}"*}" ]; then
+			# continue during opportunistic stages
+			continue
+		fi
+
 		FLAVOUR=
 		break
 	fi
@@ -110,9 +117,8 @@ for STAGE in ${STAGE2}; do
 			echo ">>> Stage ${STAGE}-${_FLAVOUR} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
 		        tail -n ${LINES} ${LOG} >> ${LOG}.err
 
-			if [ ${STAGE} = audit -o ${STAGE} = test -o \
-			    ${STAGE} = options ]; then
-				# continue during these stages
+			if [ -z "${NOERROR%%*"${STAGE}"*}" ]; then
+				# continue during opportunistic stages
 				continue
 			fi
 
