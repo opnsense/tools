@@ -1133,7 +1133,7 @@ setup_efiboot()
 	FATSIZE=${3:-"33292"}
 	FATBITS=${4:-"32"}
 
-	EFIDIR="EFI/BOOT"
+	EFIDIR="efi/boot"
 
 	EFIFAT="$(dirname ${2})/boot1.efifat"
 

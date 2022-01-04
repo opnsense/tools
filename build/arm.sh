@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2022 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2015-2017 The FreeBSD Foundation
 #
 # Redistribution and use in source and binary forms, with or without
@@ -98,21 +98,13 @@ arm_unmount()
 	umount ${STAGEDIR}
 }
 
-arm_install_efi()
-{
-	DEV_EFI=$(mdconfig -a -t vnode -f ${STAGEDIR}/boot/boot1.efifat)
-	mount_msdosfs /dev/${DEV_EFI} ${STAGEDIR}/mnt
-	cp -r ${STAGEDIR}/mnt/efi ${STAGEDIR}/boot/msdos/efi
-	umount ${STAGEDIR}/mnt
-	mdconfig -d -u ${DEV_EFI}
-}
-
 echo -n ">>> Building arm image... "
 
 arm_install_uboot
 
 if [ -n "${PRODUCT_UEFI}" -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
-	arm_install_efi
+	setup_efiboot ${STAGEDIR}/efiboot.img ${STAGEDIR}/boot/loader.efi
+	cp -r ${STAGEDIR}/efiboot.img.d/efi ${STAGEDIR}/boot/msdos/efi
 fi
 
 arm_unmount
