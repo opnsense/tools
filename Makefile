@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -84,7 +84,8 @@ _ARCH!=		uname -p
 ARCH?=		${_ARCH}
 ABI?=		${_CONFIGDIR:C/^.*\///}
 KERNEL?=	SMP
-ADDITIONS?=	#os-dyndns
+ADDITIONS?=	# empty
+DEBUG?=		# empty
 DEVICE?=	A10
 COMSPEED?=	115200
 COMPORT?=	0x3f8
@@ -155,7 +156,7 @@ VERBOSE_FLAGS=	-x
 VERBOSE_HIDDEN=	@
 .endif
 
-.for _VERSION in ABI LUA PERL PHP PYTHON RUBY VERSION
+.for _VERSION in ABI DEBUG LUA PERL PHP PYTHON RUBY VERSION
 VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 .endfor
 

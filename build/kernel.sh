@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -44,9 +44,19 @@ git_version ${SRCDIR}
 KERNEL_DEBUG_SET=${SETSDIR}/kernel-dbg-${PRODUCT_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 KERNEL_RELEASE_SET=${SETSDIR}/kernel-${PRODUCT_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 
-if [ -f ${CONFIGDIR}/${PRODUCT_KERNEL} ]; then
-	cp "${CONFIGDIR}/${PRODUCT_KERNEL}" \
+KERNDEBUG="nomakeoptions	DEBUG"
+SRCDEBUG="WITHOUT_DEBUG_FILES=yes"
+
+if [ -n "${PRODUCT_DEBUG}" ]; then
+	KERNDEBUG="makeoptions	DEBUG=-g"
+	SRCDEBUG=
+fi
+
+if [ -f "${CONFIGDIR}/${PRODUCT_KERNEL}" ]; then
+	sed -e "s/%%DEBUG%%/${KERNDEBUG}/" "${CONFIGDIR}/${PRODUCT_KERNEL}" > \
 	    "${SRCDIR}/sys/${PRODUCT_TARGET}/conf/${PRODUCT_KERNEL}"
+else
+	echo ">>> Attempting to use external kernel: ${PRODUCT_KERNEL}"
 fi
 
 MAKE_ARGS="
@@ -54,7 +64,7 @@ TARGET_ARCH=${PRODUCT_ARCH}
 TARGET=${PRODUCT_TARGET}
 KERNCONF=${PRODUCT_KERNEL}
 SRCCONF=${CONFIGDIR}/src.conf
-WITHOUT_DEBUG_FILES=yes
+${SRCDEBUG}
 __MAKE_CONF=
 ${MAKE_ARGS_DEV}
 "
