@@ -53,7 +53,8 @@ LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-clean.log"
 (time make clean-obj 2>&1 || touch ${LOG}.err) > ${LOG}
 
 if [ -f ${LOG}.err ]; then
-	echo ">>> Stage clean was aborted due to an error" > ${LOG}.err
+	echo ">>> Stage clean was aborted due to an error:" > ${LOG}.err
+	cat ${LOG} >> ${LOG}.err
 	FLAVOUR=
 	STAGE1=
 fi
@@ -77,6 +78,8 @@ for STAGE in ${STAGE1}; do
 
 		FLAVOUR=
 		break
+	else
+		tail -n ${LINES} ${LOG} >> ${LOG}.ok
 	fi
 done
 
@@ -87,7 +90,8 @@ for _FLAVOUR in ${FLAVOUR}; do
 	(time make clean-${CLEAN} FLAVOUR=${_FLAVOUR} 2>&1 || touch ${LOG}.err) > ${LOG}
 
 	if [ -f ${LOG}.err ]; then
-		echo ">>> Stage clean-${_FLAVOUR} was aborted due to an error" > ${LOG}.err
+		echo ">>> Stage clean-${_FLAVOUR} was aborted due to an error:" > ${LOG}.err
+		cat ${LOG} >> ${LOG}.err
 
 		___FLAVOUR=
 
@@ -131,6 +135,8 @@ for STAGE in ${STAGE2}; do
 			done
 
 			FLAVOUR=${___FLAVOUR}
+		else
+			tail -n ${LINES} ${LOG} >> ${LOG}.ok
 		fi
 	done
 done
