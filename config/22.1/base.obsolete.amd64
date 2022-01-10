@@ -24,6 +24,7 @@
 /etc/rc.d/atm2
 /etc/rc.d/atm3
 /etc/rc.d/faith
+/etc/rc.d/gssd
 /etc/rc.d/initrandom
 /etc/rc.d/ipropd_master
 /etc/rc.d/ipropd_slave
@@ -1429,6 +1430,7 @@
 /usr/share/man/man3/cap_random_buf.3.gz
 /usr/share/man/man3/com_err.3.gz
 /usr/share/man/man3/dallocm.3.gz
+/usr/share/man/man3/efi_set_variables_supported.3.gz
 /usr/share/man/man3/getauclassnam_3.3.gz
 /usr/share/man/man3/getauusernam_R.3.gz
 /usr/share/man/man3/gss_accept_sec_context.3.gz
@@ -2493,6 +2495,7 @@
 /var/db/etcupdate/current/etc/rc.d/atm2
 /var/db/etcupdate/current/etc/rc.d/atm3
 /var/db/etcupdate/current/etc/rc.d/faith
+/var/db/etcupdate/current/etc/rc.d/gssd
 /var/db/etcupdate/current/etc/rc.d/initrandom
 /var/db/etcupdate/current/etc/rc.d/ipropd_master
 /var/db/etcupdate/current/etc/rc.d/ipropd_slave

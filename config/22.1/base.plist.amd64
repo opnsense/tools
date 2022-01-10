@@ -314,7 +314,6 @@
 /etc/rc.d/geli2
 /etc/rc.d/gptboot
 /etc/rc.d/growfs
-/etc/rc.d/gssd
 /etc/rc.d/hastd
 /etc/rc.d/hcsecd
 /etc/rc.d/hostapd
@@ -860,6 +859,7 @@
 /usr/bin/bc
 /usr/bin/beep
 /usr/bin/bg
+/usr/bin/bmake
 /usr/bin/brandelf
 /usr/bin/bsdcat
 /usr/bin/bsdcpio
@@ -3211,6 +3211,7 @@
 /usr/include/x86/bus.h
 /usr/include/x86/bus_dma.h
 /usr/include/x86/busdma_impl.h
+/usr/include/x86/clock.h
 /usr/include/x86/cputypes.h
 /usr/include/x86/dump.h
 /usr/include/x86/elf.h
@@ -6554,6 +6555,7 @@
 /usr/share/man/man1/bg.1.gz
 /usr/share/man/man1/bind.1.gz
 /usr/share/man/man1/bindkey.1.gz
+/usr/share/man/man1/bmake.1.gz
 /usr/share/man/man1/brandelf.1.gz
 /usr/share/man/man1/break.1.gz
 /usr/share/man/man1/breaksw.1.gz
@@ -9314,8 +9316,8 @@
 /usr/share/man/man3/efi_guid_to_symbol.3.gz
 /usr/share/man/man3/efi_name_to_guid.3.gz
 /usr/share/man/man3/efi_set_variable.3.gz
-/usr/share/man/man3/efi_set_variables_supported.3.gz
 /usr/share/man/man3/efi_str_to_guid.3.gz
+/usr/share/man/man3/efi_variables_supported.3.gz
 /usr/share/man/man3/efivar.3.gz
 /usr/share/man/man3/el_deletestr.3.gz
 /usr/share/man/man3/el_end.3.gz
@@ -12963,6 +12965,7 @@
 /usr/share/man/man4/gbde.4.gz
 /usr/share/man/man4/gdb.4.gz
 /usr/share/man/man4/gem.4.gz
+/usr/share/man/man4/genet.4.gz
 /usr/share/man/man4/geom.4.gz
 /usr/share/man/man4/geom_linux_lvm.4.gz
 /usr/share/man/man4/geom_map.4.gz
@@ -13049,6 +13052,7 @@
 /usr/share/man/man4/if_fwip.4.gz
 /usr/share/man/man4/if_fxp.4.gz
 /usr/share/man/man4/if_gem.4.gz
+/usr/share/man/man4/if_genet.4.gz
 /usr/share/man/man4/if_gif.4.gz
 /usr/share/man/man4/if_gre.4.gz
 /usr/share/man/man4/if_iavf.4.gz
@@ -13171,6 +13175,8 @@
 /usr/share/man/man4/itwd.4.gz
 /usr/share/man/man4/iwi.4.gz
 /usr/share/man/man4/iwifw.4.gz
+/usr/share/man/man4/iwlwifi.4.gz
+/usr/share/man/man4/iwlwififw.4.gz
 /usr/share/man/man4/iwm.4.gz
 /usr/share/man/man4/iwmfw.4.gz
 /usr/share/man/man4/iwn.4.gz
@@ -13213,6 +13219,7 @@
 /usr/share/man/man4/mac_ntpd.4.gz
 /usr/share/man/man4/mac_partition.4.gz
 /usr/share/man/man4/mac_portacl.4.gz
+/usr/share/man/man4/mac_priority.4.gz
 /usr/share/man/man4/mac_seeotheruids.4.gz
 /usr/share/man/man4/mac_stub.4.gz
 /usr/share/man/man4/mac_test.4.gz
@@ -20555,6 +20562,8 @@
 /usr/share/openssl/man/man3/d2i_X509_REVOKED.3.gz
 /usr/share/openssl/man/man3/d2i_X509_SIG.3.gz
 /usr/share/openssl/man/man3/d2i_X509_VAL.3.gz
+/usr/share/openssl/man/man3/d2i_X509_bio.3.gz
+/usr/share/openssl/man/man3/d2i_X509_fp.3.gz
 /usr/share/openssl/man/man3/i2d_ACCESS_DESCRIPTION.3.gz
 /usr/share/openssl/man/man3/i2d_ADMISSIONS.3.gz
 /usr/share/openssl/man/man3/i2d_ADMISSION_SYNTAX.3.gz
@@ -20749,6 +20758,8 @@
 /usr/share/openssl/man/man3/i2d_X509_REVOKED.3.gz
 /usr/share/openssl/man/man3/i2d_X509_SIG.3.gz
 /usr/share/openssl/man/man3/i2d_X509_VAL.3.gz
+/usr/share/openssl/man/man3/i2d_X509_bio.3.gz
+/usr/share/openssl/man/man3/i2d_X509_fp.3.gz
 /usr/share/openssl/man/man3/i2d_re_X509_CRL_tbs.3.gz
 /usr/share/openssl/man/man3/i2d_re_X509_REQ_tbs.3.gz
 /usr/share/openssl/man/man3/i2d_re_X509_tbs.3.gz
@@ -22046,7 +22057,6 @@
 /var/db/etcupdate/current/etc/rc.d/geli2
 /var/db/etcupdate/current/etc/rc.d/gptboot
 /var/db/etcupdate/current/etc/rc.d/growfs
-/var/db/etcupdate/current/etc/rc.d/gssd
 /var/db/etcupdate/current/etc/rc.d/hastd
 /var/db/etcupdate/current/etc/rc.d/hcsecd
 /var/db/etcupdate/current/etc/rc.d/hostapd
