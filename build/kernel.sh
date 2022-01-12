@@ -107,5 +107,11 @@ if [ -n "$(test -f ${DEBUG_OBJ} && tar -tf ${DEBUG_OBJ})" ]; then
 fi
 
 setup_version ${STAGEDIR} ${STAGEDIR}/work ${SELF}
+# XXX There is an issue with kldxref being used from the host system
+# instead of the one bundled with the build: it creates a different
+# linker.hints file so building stable/13 on releng/13.0 really bundles
+# the wrong linker.hints file which gets added to integrity check and
+# and then fails integrity after being installed in the actual stable/13
+# system due to kldxref use.
 generate_set ${STAGEDIR}/work ${KERNELSET}
 generate_signature ${KERNELSET}
