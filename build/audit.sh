@@ -31,7 +31,7 @@ SELF=audit
 
 . ./common.sh
 
-PORTSLIST=$(list_ports any ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf)
+PORTSLIST=$(list_config PORT ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf)
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

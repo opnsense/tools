@@ -32,13 +32,13 @@ FROM=FreeBSD
 
 . ./common.sh
 
-setup_stage ${STAGEDIR}
-
-PORTSLIST=$(list_ports any ${CONFIGDIR}/skim.conf ${CONFIGDIR}/aux.conf \
+PORTSLIST=$(list_config PORTS ${CONFIGDIR}/skim.conf ${CONFIGDIR}/aux.conf \
     ${CONFIGDIR}/ports.conf)
 
 DIFF="$(which colordiff 2> /dev/null || echo cat)"
 LESS="less -R"
+
+setup_stage ${STAGEDIR}
 
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 git_fetch ${PORTSREFDIR}

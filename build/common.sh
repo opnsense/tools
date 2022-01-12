@@ -1213,62 +1213,46 @@ ${PLUGINSDIR}
 	done
 }
 
-list_ports()
+list_config()
 {
-	local PORT_ANY=
+	eval LIST_ENV="\${${1}LIST}"
+	shift
 
-	if [ "${1}" = "any" ]; then
-		PORT_ANY=1
-		shift
-	fi
-
-	if [ -n "${PORTSLIST}" ]; then
-		for PORT_ORIGIN in ${PORTSLIST}; do
-			echo ${PORT_ORIGIN}
+	if [ -n "${LIST_ENV}" ]; then
+		for LIST_ORIGIN in ${LIST_ENV}; do
+			echo ${LIST_ORIGIN}
 		done
 		return
 	fi
 
-	cat ${@} | while read PORT_ORIGIN PORT_IGNORE; do
-		eval PORT_ORIGIN=${PORT_ORIGIN}
-		if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
+	cat ${@} | while read LIST_ORIGIN LIST_IGNORE; do
+		eval LIST_ORIGIN=${LIST_ORIGIN}
+		if [ "$(echo ${LIST_ORIGIN} | colrm 2)" = "#" ]; then
 			continue
 		fi
-		if [ -n "${PORT_IGNORE}" -a -z "${PORT_ANY}" ]; then
-			for PORT_QUIRK in $(echo ${PORT_IGNORE} | tr ',' ' '); do
-				if [ ${PORT_QUIRK} = ${PRODUCT_TARGET} -o \
-				     ${PORT_QUIRK} = ${PRODUCT_ARCH} -o \
-				     ${PORT_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
+		if [ -n "${LIST_IGNORE}" -a -n "${LIST_MATCH}" ]; then
+			for LIST_QUIRK in $(echo ${LIST_IGNORE} | tr ',' ' '); do
+				if [ ${LIST_QUIRK} = ${PRODUCT_TARGET} -o \
+				     ${LIST_QUIRK} = ${PRODUCT_ARCH} -o \
+				     ${LIST_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
 					continue 2
 				fi
 			done
 		fi
-		echo ${PORT_ORIGIN}
+		echo ${LIST_ORIGIN}
 	done
+}
+
+list_ports()
+{
+	local LIST_MATCH=1
+
+	list_config PORTS ${@}
 }
 
 list_plugins()
 {
-	if [ -n "${PLUGINSLIST}" ]; then
-		for PLUGIN_ORIGIN in ${PLUGINSLIST}; do
-			echo ${PLUGIN_ORIGIN}
-		done
-		return
-	fi
+	local LIST_MATCH=1
 
-	cat ${@} | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
-		if [ "$(echo ${PLUGIN_ORIGIN} | colrm 2)" = "#" ]; then
-			continue
-		fi
-		if [ -n "${PLUGIN_IGNORE}" ]; then
-			for PLUGIN_QUIRK in $(echo ${PLUGIN_IGNORE} | tr ',' ' '); do
-				if [ ${PLUGIN_QUIRK} = ${PRODUCT_TARGET} -o \
-				     ${PLUGIN_QUIRK} = ${PRODUCT_ARCH} -o \
-				     ${PLUGIN_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
-					continue 2
-				fi
-			done
-		fi
-		echo ${PLUGIN_ORIGIN}
-	done
+	list_config PLUGINS ${@}
 }

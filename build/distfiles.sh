@@ -31,7 +31,7 @@ SELF=distfiles
 
 . ./common.sh
 
-PORTSLIST=$(list_ports any ${CONFIGDIR}/skim.conf ${CONFIGDIR}/aux.conf \
+PORTSLIST=$(list_config PORT ${CONFIGDIR}/skim.conf ${CONFIGDIR}/aux.conf \
     ${CONFIGDIR}/ports.conf)
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
