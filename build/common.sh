@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2022 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -1222,8 +1222,6 @@ list_ports()
 		shift
 	fi
 
-	local PORT_CONFIGS=${@}
-
 	if [ -n "${PORTSLIST}" ]; then
 		for PORT_ORIGIN in ${PORTSLIST}; do
 			echo ${PORT_ORIGIN}
@@ -1231,7 +1229,7 @@ list_ports()
 		return
 	fi
 
-	cat ${PORT_CONFIGS} | while read PORT_ORIGIN PORT_IGNORE; do
+	cat ${@} | while read PORT_ORIGIN PORT_IGNORE; do
 		eval PORT_ORIGIN=${PORT_ORIGIN}
 		if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
 			continue
@@ -1246,5 +1244,31 @@ list_ports()
 			done
 		fi
 		echo ${PORT_ORIGIN}
+	done
+}
+
+list_plugins()
+{
+	if [ -n "${PLUGINSLIST}" ]; then
+		for PLUGIN_ORIGIN in ${PLUGINSLIST}; do
+			echo ${PLUGIN_ORIGIN}
+		done
+		return
+	fi
+
+	cat ${@} | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
+		if [ "$(echo ${PLUGIN_ORIGIN} | colrm 2)" = "#" ]; then
+			continue
+		fi
+		if [ -n "${PLUGIN_IGNORE}" ]; then
+			for PLUGIN_QUIRK in $(echo ${PLUGIN_IGNORE} | tr ',' ' '); do
+				if [ ${PLUGIN_QUIRK} = ${PRODUCT_TARGET} -o \
+				     ${PLUGIN_QUIRK} = ${PRODUCT_ARCH} -o \
+				     ${PLUGIN_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
+					continue 2
+				fi
+			done
+		fi
+		echo ${PLUGIN_ORIGIN}
 	done
 }

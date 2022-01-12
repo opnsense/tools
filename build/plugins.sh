@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,42 +31,18 @@ SELF=plugins
 
 . ./common.sh
 
+if check_packages ${SELF} ${@}; then
+	echo ">>> Step ${SELF} is up to date"
+	exit 0
+fi
+
 PLUGINSCONF=${CONFIGDIR}/plugins.conf
 
 if [ -f ${PLUGINSCONF}.local ]; then
 	PLUGINSCONF="${PLUGINSCONF} ${PLUGINSCONF}.local"
 fi
 
-if [ -z "${PLUGINSLIST}" ]; then
-	PLUGINSLIST=$(
-cat ${PLUGINSCONF} | while read PLUGIN_ORIGIN PLUGIN_IGNORE; do
-	if [ "$(echo ${PLUGIN_ORIGIN} | colrm 2)" = "#" ]; then
-		continue
-	fi
-	if [ -n "${PLUGIN_IGNORE}" ]; then
-		for PLUGIN_QUIRK in $(echo ${PLUGIN_IGNORE} | tr ',' ' '); do
-			if [ ${PLUGIN_QUIRK} = ${PRODUCT_TARGET} -o \
-			     ${PLUGIN_QUIRK} = ${PRODUCT_ARCH} -o \
-			     ${PLUGIN_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
-				continue 2
-			fi
-		done
-	fi
-	echo ${PLUGIN_ORIGIN}
-done
-)
-else
-	PLUGINSLIST=$(
-for PLUGIN_ORIGIN in ${PLUGINSLIST}; do
-	echo ${PLUGIN_ORIGIN}
-done
-)
-fi
-
-if check_packages ${SELF} ${@}; then
-	echo ">>> Step ${SELF} is up to date"
-	exit 0
-fi
+PLUGINSLIST=$(list_plugins ${PLUGINSCONF})
 
 git_branch ${PLUGINSDIR} ${PLUGINSBRANCH} PLUGINSBRANCH
 
