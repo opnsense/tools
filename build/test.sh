@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2020 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -44,20 +44,11 @@ extract_packages ${STAGEDIR}
 install_packages ${STAGEDIR} ${PRODUCT_CORE} os-debug${PRODUCT_DEVEL}
 lock_packages ${STAGEDIR}
 
-# XXX plugins have conflicts, cannot install all for following check
-
 echo ">>> Running packages test suite..."
 chroot ${STAGEDIR} /bin/sh -es <<EOF
+/usr/local/etc/rc.subr.d/recover
 pkg check -da
 pkg check -sa
-EOF
-
-# XXX make test also exists for plugins, but requires installation
-
-echo ">>> Running ${PLUGINSDIR} test suite..."
-chroot ${STAGEDIR} /bin/sh -es <<EOF
-make -C${PLUGINSDIR} ${PLUGINSENV} lint
-make -C${PLUGINSDIR} ${PLUGINSENV} style
 EOF
 
 echo ">>> Running ${COREDIR} test suite..."
@@ -66,3 +57,31 @@ make -C${COREDIR} ${COREENV} lint
 make -C${COREDIR} ${COREENV} style
 make -C${COREDIR} ${COREENV} test
 EOF
+
+PLUGINSCONF=${CONFIGDIR}/plugins.conf
+
+if [ -f ${PLUGINSCONF}.local ]; then
+	PLUGINSCONF="${PLUGINSCONF} ${PLUGINSCONF}.local"
+fi
+
+PLUGINSLIST=$(list_plugins ${PLUGINSCONF})
+
+for PLUGIN_ORIGIN in ${PLUGINSLIST}; do
+	VARIANT=${PLUGIN_ORIGIN##*@}
+	PLUGIN=${PLUGIN_ORIGIN%%@*}
+
+	PLUGIN_ARGS=${PLUGINSENV}
+	if [ ${VARIANT} != ${PLUGIN} ]; then
+		PLUGIN_ARGS="${PLUGIN_ARGS} PLUGIN_VARIANT=${VARIANT}"
+	fi
+
+	PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} -v PLUGIN_NAME)
+	install_packages ${STAGEDIR} os-${PLUGIN_NAME}${PRODUCT_DEVEL}
+
+	echo ">>> Running ${PLUGIN_ORIGIN} test suite..."
+	chroot ${STAGEDIR} /bin/sh -es <<EOF
+make -C${PLUGINSDIR}/${PLUGIN} ${PLUGINSENV} lint
+make -C${PLUGINSDIR}/${PLUGIN} ${PLUGINSENV} style
+make -C${PLUGINSDIR}/${PLUGIN} ${PLUGINSENV} test
+EOF
+done
