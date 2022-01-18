@@ -187,3 +187,9 @@ ${SCRIPT}: lint-composite
 	${VERBOSE_HIDDEN} cd ${.CURDIR} && FLAVOUR="${FLAVOUR}" \
 	    sh ${VERBOSE_FLAGS} ./composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
 .endfor
+
+_OS!=	uname -r
+_OS:=	${_OS:C/-.*//}
+.if "${_OS}" != "${OS}"
+.error Expected OS version ${OS}; to continue anyway set OS=${_OS}
+.endif
