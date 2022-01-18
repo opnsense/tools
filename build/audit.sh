@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,7 +31,7 @@ SELF=audit
 
 . ./common.sh
 
-PORTSLIST=$(list_config PORT ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf)
+PORTSLIST=$(list_config PORTS ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf)
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

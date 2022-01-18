@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,7 +31,7 @@ SELF=distfiles
 
 . ./common.sh
 
-PORTSLIST=$(list_config PORT ${CONFIGDIR}/skim.conf ${CONFIGDIR}/aux.conf \
+PORTSLIST=$(list_config PORTS ${CONFIGDIR}/skim.conf ${CONFIGDIR}/aux.conf \
     ${CONFIGDIR}/ports.conf)
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
