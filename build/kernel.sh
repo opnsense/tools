@@ -97,8 +97,10 @@ ${ENV_FILTER} make -s -C${SRCDIR}/release kernel.txz ${MAKE_ARGS}
 sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR} work
-setup_set ${STAGEDIR}/work ${KERNEL_OBJ}
+setup_base ${STAGEDIR}
+setup_chroot ${STAGEDIR}
 
+setup_set ${STAGEDIR}/work ${KERNEL_OBJ}
 KERNELSET=${KERNEL_RELEASE_SET}
 
 if [ -n "$(test -f ${DEBUG_OBJ} && tar -tf ${DEBUG_OBJ})" ]; then
@@ -106,12 +108,8 @@ if [ -n "$(test -f ${DEBUG_OBJ} && tar -tf ${DEBUG_OBJ})" ]; then
 	KERNELSET=${KERNEL_DEBUG_SET}
 fi
 
-# attempt to build the proper kldxref to avoid
-# checksum data mismatch on bundled linker.hints
-make -sC ${SRCDIR}/usr.sbin/kldxref clean all
-BASE_OBJDIR="$(make -C${SRCDIR}/usr.sbin -v .OBJDIR ${MAKE_ARGS})"
-${BASE_OBJDIR}/kldxref/kldxref -R ${STAGEDIR}/work/boot/kernel
-make -sC ${SRCDIR}/usr.sbin/kldxref clean
+# avoid wrong linker.hints checksum with correct base utility
+chroot ${STAGEDIR} /usr/sbin/kldxref -R /work/boot/kernel
 
 setup_version ${STAGEDIR} ${STAGEDIR}/work ${SELF}
 generate_set ${STAGEDIR}/work ${KERNELSET}
