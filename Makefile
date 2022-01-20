@@ -191,5 +191,5 @@ ${SCRIPT}: lint-composite
 _OS!=	uname -r
 _OS:=	${_OS:C/-.*//}
 .if "${_OS}" != "${OS}"
-.error Expected OS version ${OS}; to continue anyway set OS=${_OS}
+.error Expected OS version ${OS} for ${_CONFIGDIR}; to continue anyway set OS=${_OS}
 .endif
