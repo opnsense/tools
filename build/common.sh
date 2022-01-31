@@ -1137,13 +1137,6 @@ setup_efiboot()
 
 	EFIFAT="$(dirname ${2})/boot1.efifat"
 
-	if [ -f ${EFIFAT} ]; then
-		# XXX FreeBSD 12.1 has a predefined file
-		# and we should use it for compatibility
-		cp ${EFIFAT} ${1}
-		return
-	fi
-
 	if [ ${PRODUCT_ARCH} = "amd64" ]; then
 		EFIFILE=bootx64
 	elif [ ${PRODUCT_ARCH} = "aarch64" ]; then

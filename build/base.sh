@@ -43,16 +43,6 @@ git_version ${SRCDIR}
 
 BASESET=${SETSDIR}/base-${PRODUCT_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 
-CLANGFIXUPFILE=${SRCDIR}/contrib/compiler-rt/lib/cfi/cfi_blacklist.txt
-CLANGFIXUPDIR=/usr/lib/clang/8.0.1/share
-
-if [ -f ${CLANGFIXUPFILE} ]; then
-	# FreeBSD 12.1 requires this file to be installed in
-	# the host, but it is not in the default install.
-	mkdir -p ${CLANGFIXUPDIR}
-	cp ${CLANGFIXUPFILE} ${CLANGFIXUPDIR}
-fi
-
 MAKE_ARGS="
 TARGET_ARCH=${PRODUCT_ARCH}
 TARGET=${PRODUCT_TARGET}
