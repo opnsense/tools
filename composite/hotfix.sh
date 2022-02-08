@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,10 +30,8 @@ TARGET=${1}
 set -e
 
 if [ -z "${TARGET}" -o "${TARGET}" = "plugins" -o "${TARGET}" = "core" ]; then
-	make clean-${TARGET:-"plugins,core"}
+	make clean-${TARGET:-"plugins,core"} packages
 else
 	# assume quick target port(s) to rebuild from ports.conf
 	make ports-${TARGET} PORTSENV="DEPEND=no PRUNE=no"
 fi
-
-make packages
