@@ -30,7 +30,8 @@ TARGET=${1}
 set -e
 
 if [ -z "${TARGET}" -o "${TARGET}" = "plugins" -o "${TARGET}" = "core" ]; then
-	make clean-${TARGET:-"plugins,core"} packages
+	# force a full rebuild of selected stage(s)
+	make clean-${TARGET:-"plugins,core"} core
 else
 	# assume quick target port(s) to rebuild from ports.conf
 	make ports-${TARGET} PORTSENV="DEPEND=no PRUNE=no"
