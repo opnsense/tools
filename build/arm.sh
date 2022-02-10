@@ -102,7 +102,7 @@ echo -n ">>> Building arm image... "
 
 arm_install_uboot
 
-if [ -n "${PRODUCT_UEFI}" -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
+if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
 	setup_efiboot ${STAGEDIR}/efiboot.img ${STAGEDIR}/boot/loader.efi
 	cp -r ${STAGEDIR}/efiboot.img.d/efi ${STAGEDIR}/boot/msdos/efi
 fi
