@@ -39,7 +39,7 @@ fi
 
 check_image ${SELF} ${@}
 
-ARMSIZE="3G"
+ARMSIZE="2G"
 
 if [ -n "${1}" ]; then
 	ARMSIZE=${1}
