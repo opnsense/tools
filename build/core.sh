@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -63,6 +63,16 @@ for BRANCH in ${EXTRABRANCH} ${COREBRANCH}; do
 	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} -v CORE_NAME)
 	CORE_DEPS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} -v CORE_DEPENDS)
 	CORE_VERS=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} -v CORE_PKGVERSION)
+
+	for REMOVED in ${@}; do
+		if [ ${REMOVED} = ${CORE_NAME} ]; then
+			# make sure a subsequent build of the
+			# same package goes through by removing
+			# it while it may have been rebuilt on
+			# another branch
+			remove_packages ${STAGEDIR} ${REMOVED}
+		fi
+	done
 
 	if search_packages ${STAGEDIR} ${CORE_NAME} ${CORE_VERS}; then
 		# already built
