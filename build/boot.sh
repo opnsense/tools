@@ -49,16 +49,18 @@ AHCI=ahci-hd; if [ "${1}" = "dvd" ]; then AHCI=ahci-cd;fi
 setup_stage ${STAGEDIR}
 
 TARGET=${STAGEDIR}/image.img
+SPARE=${STAGEDIR}/disk.img
 
 if [ -z "${IMAGE%%*.bz2}" ]; then
 	echo -n ">>> Uncompressing image ${IMAGE}... "
 	bunzip2 -c ${IMAGE} > ${TARGET}
 	echo "done"
 else
-	ln -s ${IMAGE} ${TARGET}
+	cp ${IMAGE} ${TARGET}
 fi
 
-truncate -s 10G ${STAGEDIR}/disk.img
+truncate -s +5G ${TARGET}
+truncate -s 10G ${SPARE}
 
 echo ">>> Booting image ${IMAGE}:"
 
@@ -81,7 +83,7 @@ while bhyve -c 1 -m ${MEM} -AHP \
     -s 1:0,virtio-net,${TAPLAN} \
     -s 1:1,virtio-net,${TAPWAN} \
     -s 2:0,${AHCI},${TARGET} \
-    -s 3:0,ahci-hd,${STAGEDIR}/disk.img \
+    -s 3:0,ahci-hd,${SPARE} \
     -s 31,lpc -l com1,stdio \
     vm0; do
 	bhyvectl --destroy --vm=vm0
