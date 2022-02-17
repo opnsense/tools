@@ -36,6 +36,7 @@ check_image ${SELF} ${@}
 VMFORMAT="vmdk"
 VMSIZE="20G"
 VMSWAP="1G"
+VMEXTRAS=${SELF}
 
 if [ -n "${1}" ]; then
 	VMFORMAT=${1}
@@ -51,6 +52,10 @@ if [ -n "${3}" ]; then
 	else
 		VMSWAP=
 	fi
+fi
+
+if [ -n "${4}" ]; then
+	VMEXTRAS=${4}
 fi
 
 VMIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-vm-${PRODUCT_ARCH}.${VMFORMAT}"
@@ -111,7 +116,7 @@ cp -R ${STAGEDIR}/mnt/boot ${STAGEDIR}
 
 setup_kernel ${STAGEDIR}/mnt
 setup_packages ${STAGEDIR}/mnt
-setup_extras ${STAGEDIR}/mnt ${SELF}
+setup_extras ${STAGEDIR}/mnt ${VMEXTRAS}
 setup_entropy ${STAGEDIR}/mnt
 
 cat > ${STAGEDIR}/mnt/etc/fstab << EOF

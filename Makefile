@@ -28,7 +28,7 @@ STEPS=		audit arm base boot chroot clean clone compress confirm core \
 		nano options packages plugins ports prefetch print rebase \
 		release rename rewind serial sign skim test update upload \
 		verify vga vm xtools
-SCRIPTS=	batch distribution hotfix nightly
+SCRIPTS=	batch distribution factory hotfix nightly
 
 .PHONY:		${STEPS} ${SCRIPTS}
 

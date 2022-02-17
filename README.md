@@ -141,6 +141,10 @@ A virtual machine full disk image is created using:
 
     # make vm
 
+A special embedded device image based on vm variety:
+
+    # make factory
+
 Release sets can be built as follows although the result is
 an unpredictable set of images depending on the previous
 build states:

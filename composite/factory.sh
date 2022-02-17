@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,14 +25,28 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-TARGET=${1}
+eval "$(make print-PRODUCT_ARCH,PRODUCT_CORE,PRODUCT_FLAVOUR,PRODUCT_ZFS,SETSDIR)"
 
-set -e
+PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar")
 
-if [ -z "${TARGET}" -o "${TARGET}" = "plugins" -o "${TARGET}" = "core" ]; then
-	# force a full rebuild of selected stage(s)
-	make clean-${TARGET:-"plugins,core"} core
-else
-	# assume quick target port(s) to rebuild from ports.conf
-	make ports-${TARGET} PORTSENV="DEPEND=no PRUNE=no"
+if [ ! -f "${PACKAGESET}" ]; then
+	echo ">>> Cannot continue without packages set"
+	exit 1
 fi
+
+COREFILE=$(tar -tf ${PACKAGESET} | grep -x "\./All/${PRODUCT_CORE}-[0-9].*\.txz")
+
+if [ -z "${COREFILE}" ]; then
+	echo ">>> Cannot continue without core package: ${PRODUCT_CORE}"
+	exit 1
+fi
+
+COREFILE=$(basename ${COREFILE%%.txz})
+
+FS=ufs
+if [ -n "${PRODUCT_ZFS}" ]; then
+	FS=zfs
+fi
+
+make info
+make vm-raw,3G,off,serial VERSION=${COREFILE##*-}-${FS}
