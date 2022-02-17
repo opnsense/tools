@@ -90,6 +90,7 @@ DEVICE?=	A10
 COMSPEED?=	115200
 COMPORT?=	0x3f8
 UEFI?=		arm dvd serial vga vm
+ZFS?=		# empty
 GITBASE?=	https://github.com/opnsense
 MIRRORS?=	https://opnsense.c0urier.net \
 		http://mirrors.nycbug.org/pub/opnsense \
@@ -156,7 +157,7 @@ VERBOSE_FLAGS=	-x
 VERBOSE_HIDDEN=	@
 .endif
 
-.for _VERSION in ABI DEBUG LUA PERL PHP PYTHON RUBY VERSION
+.for _VERSION in ABI DEBUG LUA PERL PHP PYTHON RUBY VERSION ZFS
 VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 .endfor
 

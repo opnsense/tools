@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -62,8 +62,47 @@ setup_stage ${STAGEDIR} mnt
 
 truncate -s ${VMSIZE} ${STAGEDIR}/${VMBASE}
 DEV=$(mdconfig -t vnode -f ${STAGEDIR}/${VMBASE})
-newfs /dev/${DEV}
-mount /dev/${DEV} ${STAGEDIR}/mnt
+
+if [ -n "${PRODUCT_ZFS}" ]; then
+	ZPOOL=${PRODUCT_ZFS}
+
+	# avoid clobbering existing pools
+	for IMPORT in $(zpool import 2> /dev/null | awk '$1 == "pool:" { print $2}'); do
+		if [ ${IMPORT} = ${ZPOOL} ]; then
+			echo ">>> ZFS pool '${ZPOOL}' already exists"
+			exit 1
+		fi
+	done
+
+	# 4k sector alignment
+	gnop create -S 4096 ${DEV}
+
+	# create ZFS pool like installer would
+	zpool create -R ${STAGEDIR}/mnt ${ZPOOL} ${DEV}.nop
+	zfs create -o mountpoint=none ${ZPOOL}/ROOT
+	zfs create -o mountpoint=/ ${ZPOOL}/ROOT/default
+	zfs create -o mountpoint=/tmp -o exec=on -o setuid=off ${ZPOOL}/tmp
+	zfs create -o mountpoint=/usr -o canmount=off ${ZPOOL}/usr
+	zfs create ${ZPOOL}/usr/home
+	zfs create -o setuid=off ${ZPOOL}/usr/ports
+	zfs create ${ZPOOL}/usr/src
+	zfs create -o mountpoint=/var -o canmount=off ${ZPOOL}/var
+	zfs create -o exec=off -o setuid=off ${ZPOOL}/var/audit
+	zfs create -o exec=off -o setuid=off ${ZPOOL}/var/crash
+	zfs create -o exec=off -o setuid=off ${ZPOOL}/var/log
+	zfs create -o atime=on ${ZPOOL}/var/mail
+	zfs create -o setuid=off ${ZPOOL}/var/tmp
+	zpool set bootfs=${ZPOOL}/ROOT/default ${ZPOOL}
+
+	GPTNAME=zfsboot
+	ROOTFS=zfs
+else
+	newfs /dev/${DEV}
+	mount /dev/${DEV} ${STAGEDIR}/mnt
+
+	GPTNAME=gptboot
+	ROOTFS=ufs/rootfs
+fi
 
 setup_base ${STAGEDIR}/mnt
 
@@ -77,10 +116,15 @@ setup_entropy ${STAGEDIR}/mnt
 
 cat > ${STAGEDIR}/mnt/etc/fstab << EOF
 # Device	Mountpoint	FStype	Options	Dump	Pass#
-/dev/gpt/rootfs	/		ufs	rw	1	1
 EOF
 
-GPTBOOT="-p freebsd-boot/bootfs:=boot/gptboot"
+if [ -z "${PRODUCT_ZFS}" ]; then
+	cat >> ${STAGEDIR}/mnt/etc/fstab << EOF
+/dev/gpt/rootfs	/		ufs	rw	1	1
+EOF
+	fi
+
+GPTBOOT="-p freebsd-boot/bootfs:=boot/${GPTNAME}"
 GPTDUMMY="-p freebsd-swap::512k"
 MBRBOOT="-b boot/pmbr"
 SWAPARGS=
@@ -93,7 +137,11 @@ if [ -n "${VMSWAP}" ]; then
 EOF
 fi
 
-umount ${STAGEDIR}/mnt
+if [ -n "${PRODUCT_ZFS}" ]; then
+	zpool export ${ZPOOL}
+else
+	umount ${STAGEDIR}/mnt
+fi
 mdconfig -d -u ${DEV}
 
 if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
@@ -125,7 +173,7 @@ fi
 echo -n ">>> Building vm image... "
 
 (cd ${STAGEDIR}; mkimg -s gpt -f ${VMFORMAT} -o ${VMIMG} \
-    ${MBRBOOT} ${UEFIBOOT} ${GPTBOOT} ${GPTDUMMY} \
-    -p freebsd-ufs/rootfs:=${VMBASE} ${SWAPARGS})
+    ${MBRBOOT} ${UEFIBOOT} ${GPTBOOT} ${GPTDUMMY} ${SWAPARGS} \
+    -p freebsd-${ROOTFS}:=${VMBASE})
 
 echo "done"

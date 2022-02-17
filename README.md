@@ -78,6 +78,7 @@ Available build options are:
 * TYPE:		the base name of the top package to be installed
 * UEFI:		use amd64 hybrid images for said images, e.g. "vga vm"
 * VERSION:	a version tag (if applicable)
+* ZFS:		ZFS pool name to use for VM images
 
 How to specify build options via configuration file
 ---------------------------------------------------
