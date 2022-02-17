@@ -48,5 +48,4 @@ if [ -n "${PRODUCT_ZFS}" ]; then
 	FS=zfs
 fi
 
-make info
 make vm-raw,3G,off,serial VERSION=${COREFILE##*-}-${FS}
