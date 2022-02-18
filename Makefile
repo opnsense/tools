@@ -88,7 +88,6 @@ ADDITIONS?=	# empty
 DEBUG?=		# empty
 DEVICE?=	A10
 COMSPEED?=	115200
-COMPORT?=	0x3f8
 UEFI?=		arm dvd serial vga vm
 ZFS?=		# empty
 GITBASE?=	https://github.com/opnsense
@@ -177,7 +176,7 @@ ${STEP}: lint-steps
 	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${COMSPEED} \
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
-	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" -i ${COMPORT} \
+	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
 	    -h "${PLUGINSENV}" -I "${UPLOADDIR}" -D "${EXTRABRANCH}" \
 	    -A "${PORTSREFURL}" -J "${PORTSENV}" ${${STEP}_ARGS}

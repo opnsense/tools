@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:i:J:K:k:L:l:m:n:O:o:P:p:R:r:S:s:T:t:U:u:v:V:"
+OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:J:K:k:L:l:m:n:O:o:P:p:R:r:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -85,9 +85,6 @@ while getopts ${OPTS} OPT; do
 		;;
 	I)
 		export UPLOADDIR=${OPTARG}
-		;;
-	i)
-		export PRODUCT_COMPORT=${OPTARG}
 		;;
 	J)
 		export PORTSENV=${OPTARG}
@@ -191,7 +188,6 @@ PORTSDIR
 PORTSREFDIR
 PRODUCT_ABI
 PRODUCT_ARCH
-PRODUCT_COMPORT
 PRODUCT_COMSPEED
 PRODUCT_DEVICE_REAL
 PRODUCT_FLAVOUR

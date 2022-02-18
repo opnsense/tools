@@ -64,7 +64,6 @@ Available build options are:
 * ABI:		a custom ABI (defaults to SETTINGS)
 * ADDITIONS:	a list of packages/plugins to add to images
 * ARCH:		the target architecture if not native
-* COMPORT:	serial port, e.g. "0x3f8" (default)
 * COMSPEED:	serial speed, e.g. "115200" (default)
 * DEBUG:	build a debug kernel with additional object information
 * DEVICE:	loads device-specific modifications, e.g. "A10" (default)
