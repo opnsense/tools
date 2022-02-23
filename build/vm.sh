@@ -142,18 +142,15 @@ if [ -n "${VMSWAP}" ]; then
 EOF
 fi
 
-if [ -n "${PRODUCT_ZFS}" ]; then
-	zpool export ${ZPOOL}
-else
-	umount ${STAGEDIR}/mnt
-fi
-mdconfig -d -u ${DEV}
-
 if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
-	UEFIBOOT="-p efi:=efiboot.img"
+	UEFIBOOT="-p efi/efifs:=efiboot.img"
 
 	setup_efiboot ${STAGEDIR}/efiboot.img \
-	    ${STAGEDIR}/boot/loader.efi
+	    ${STAGEDIR}/boot/loader.efi $((260 * 1024))
+
+	cat >> ${STAGEDIR}/mnt/etc/fstab << EOF
+/dev/gpt/efifs	/boot/efi	msdosfs	rw	2	2
+EOF
 fi
 
 if [ ${PRODUCT_ARCH} = "aarch64" ]; then
@@ -178,6 +175,13 @@ fi
 if [ "${3}" == "never" ]; then
 	GPTDUMMY=
 fi
+
+if [ -n "${PRODUCT_ZFS}" ]; then
+	zpool export ${ZPOOL}
+else
+	umount ${STAGEDIR}/mnt
+fi
+mdconfig -d -u ${DEV}
 
 echo -n ">>> Building vm image... "
 
