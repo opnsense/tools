@@ -47,7 +47,7 @@ if [ -n "${2}" ]; then
 fi
 
 if [ -n "${3}" ]; then
-	if [ "${3}" != "off" ]; then
+	if [ "${3}" != "off" -a "${3}" != "never" ]; then
 		VMSWAP=${3}
 	else
 		VMSWAP=
@@ -173,6 +173,10 @@ else
 	elif [ -n "${VMSWAP}" -a -n "${UEFIBOOT}" ]; then
 		GPTDUMMY=
 	fi
+fi
+
+if [ "${3}" == "never" ]; then
+	GPTDUMMY=
 fi
 
 echo -n ">>> Building vm image... "
