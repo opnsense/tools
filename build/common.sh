@@ -175,7 +175,7 @@ while getopts ${OPTS} OPT; do
 	esac
 done
 
-shift $((${OPTIND} - 1))
+shift $((OPTIND - 1))
 
 CHECK_MISSING="
 CONFIGDIR
