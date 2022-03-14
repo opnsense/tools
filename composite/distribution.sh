@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2021-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -42,5 +42,6 @@ if [ -z "${COREFILE}" ]; then
 fi
 
 COREFILE=$(basename ${COREFILE%%.txz})
+COREFILE=$(basename ${COREFILE%%_*})
 
 make clean-obj,release,images release VERSION=${COREFILE##*-}
