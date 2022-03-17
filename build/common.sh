@@ -1132,8 +1132,6 @@ setup_efiboot()
 
 	EFIDIR="efi/boot"
 
-	EFIFAT="$(dirname ${2})/boot1.efifat"
-
 	if [ ${PRODUCT_ARCH} = "amd64" ]; then
 		EFIFILE=bootx64
 	elif [ ${PRODUCT_ARCH} = "aarch64" ]; then
