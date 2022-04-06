@@ -77,6 +77,13 @@ for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 			PLUGIN_ARGS="${PLUGIN_ARGS} PLUGIN_VARIANT=${VARIANT}"
 		fi
 
+		PLUGIN_GONE=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} -v PLUGIN_OBSOLETE)
+		if [ -n "${PLUGIN_GONE}" ]; then
+			# if the plugin has the obsolete flag
+			# set we no longer include its package
+			continue
+		fi
+
 		PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} -v PLUGIN_PKGNAME)
 		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} -v PLUGIN_DEPENDS)
 		PLUGIN_VERS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} -v PLUGIN_PKGVERSION)
