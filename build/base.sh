@@ -52,7 +52,7 @@ __MAKE_CONF=
 ${MAKE_ARGS_DEV}
 "
 
-${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS} NO_CLEAN=yes
+${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildworld ${MAKE_ARGS}
 if [ "${1}" = "build" ]; then
 	exit 0
 fi
