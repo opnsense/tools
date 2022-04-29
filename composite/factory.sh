@@ -34,14 +34,14 @@ if [ ! -f "${PACKAGESET}" ]; then
 	exit 1
 fi
 
-COREFILE=$(tar -tf ${PACKAGESET} | grep -x "\./All/${PRODUCT_CORE}-[0-9].*\.txz")
+COREFILE=$(tar -tf ${PACKAGESET} | grep -x "\./All/${PRODUCT_CORE}-[0-9].*\.pkg")
 
 if [ -z "${COREFILE}" ]; then
 	echo ">>> Cannot continue without core package: ${PRODUCT_CORE}"
 	exit 1
 fi
 
-COREFILE=$(basename ${COREFILE%%.txz})
+COREFILE=$(basename ${COREFILE%%.pkg})
 
 FS=ufs
 if [ -n "${PRODUCT_ZFS}" ]; then

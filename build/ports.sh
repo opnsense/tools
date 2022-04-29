@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -137,14 +137,14 @@ UNAME_r=\$(freebsd-version)
 
 	# check whether the package has already been built
 	PKGFILE=\$(make -C ${PORTSDIR}/\${PORT} -v PKGFILE \${MAKE_ARGS})
-	if [ -f \${PKGFILE%%.pkg}.txz ]; then
+	if [ -f \${PKGFILE} ]; then
 		continue
 	fi
 
 	# check whether the package is available
 	# under a different version number
 	PKGNAME=\$(basename \${PKGFILE})
-	PKGNAME=\${PKGNAME%%-[0-9]*}.txz
+	PKGNAME=\${PKGNAME%%-[0-9]*}.pkg
 	PKGLINK=${PACKAGESDIR}/Latest/\${PKGNAME}
 	if [ -L \${PKGLINK} ]; then
 		PKGFILE=\$(readlink -f \${PKGLINK} || true)
@@ -198,12 +198,12 @@ UNAME_r=\$(freebsd-version)
 	pkg autoremove -y
 
 	for PKGNAME in \$(pkg query %n); do
-		OLD=\$(find ${PACKAGESDIR}/All -name "\${PKGNAME}-[0-9]*.txz")
+		OLD=\$(find ${PACKAGESDIR}/All -name "\${PKGNAME}-[0-9]*.pkg")
 		if [ -n "\${OLD}" ]; then
 			# already found
 			continue
 		fi
-		NEW=\$(find ${PACKAGESDIR}-cache/All -name "\${PKGNAME}-[0-9]*.txz")
+		NEW=\$(find ${PACKAGESDIR}-cache/All -name "\${PKGNAME}-[0-9]*.pkg")
 		echo ">>> Saving runtime package: \${PKGNAME}"
 		cp \${NEW} ${PACKAGESDIR}/All
 	done

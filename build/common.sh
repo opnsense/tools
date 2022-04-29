@@ -799,13 +799,13 @@ search_packages()
 
 	# check whether the package has already been built
 	PKGFILE=${BASEDIR}${PACKAGESDIR}/All/${PKGNAME}-${PKGVERS}.pkg
-	if [ -f ${PKGFILE%%.pkg}.txz ]; then
+	if [ -f ${PKGFILE} ]; then
 		return 0
 	fi
 
 	# check whether the package is available
 	# under a different version number
-	PKGLINK=${BASEDIR}${PACKAGESDIR}/Latest/${PKGNAME}.txz
+	PKGLINK=${BASEDIR}${PACKAGESDIR}/Latest/${PKGNAME}.pkg
 	if [ -L ${PKGLINK} ]; then
 		PKGFILE=$(readlink -f ${PKGLINK} || true)
 		if [ -f ${PKGFILE} ]; then
@@ -827,7 +827,7 @@ remove_packages()
 
 	for PKG in ${PKGLIST}; do
 		for PKGFILE in $(cd ${BASEDIR}${PACKAGESDIR}; \
-		    find All -name "${PKG}-[0-9]*.txz" -type f); do
+		    find All -name "${PKG}-[0-9]*.pkg" -type f); do
 			rm ${BASEDIR}${PACKAGESDIR}/${PKGFILE}
 		done
 	done
@@ -923,7 +923,7 @@ install_packages()
 		PKGFOUND=
 		for PKGFILE in $({
 			cd ${BASEDIR}
-			find .${PACKAGESDIR}/All -name ${PKG}-[0-9]*.txz
+			find .${PACKAGESDIR}/All -name ${PKG}-[0-9]*.pkg
 		}); do
 			pkg -c ${BASEDIR} add ${PKGFILE}
 			PKGFOUND=1
@@ -952,7 +952,7 @@ EOF
 
 	(
 		cd ${1}${PACKAGESDIR}/Latest
-		ln -sfn ../All/${4}-${5}.txz ${4}.txz
+		ln -sfn ../All/${4}-${5}.pkg ${4}.pkg
 	)
 
 	if [ -n "${PRODUCT_REBUILD}" ]; then
@@ -1012,13 +1012,13 @@ bundle_packages()
 		    | grep ^Name | awk '{ print $3; }')
 		(
 			cd ${BASEDIR}${PACKAGESDIR}-new/Latest
-			ln -sfn ../${PKGFILE} ${PKGINFO}.txz
+			ln -sfn ../${PKGFILE} ${PKGINFO}.pkg
 		)
 		generate_signature \
-		    ${BASEDIR}${PACKAGESDIR}-new/Latest/${PKGINFO}.txz
+		    ${BASEDIR}${PACKAGESDIR}-new/Latest/${PKGINFO}.pkg
 	done
 
-	# generate index files
+	# generate index files (XXX ideally from a chroot)
 	pkg repo ${BASEDIR}${PACKAGESDIR}-new/ ${SIGNARGS}
 
 	echo ${SRCABI} > ${BASEDIR}${PACKAGESDIR}-new/.abi_hint
