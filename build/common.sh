@@ -1010,12 +1010,13 @@ bundle_packages()
 	    find All -type f); do
 		PKGINFO=$(pkg info -F ${BASEDIR}${PACKAGESDIR}-new/${PKGFILE} \
 		    | grep ^Name | awk '{ print $3; }')
-		(
-			cd ${BASEDIR}${PACKAGESDIR}-new/Latest
-			ln -sfn ../${PKGFILE} ${PKGINFO}.pkg
-		)
+		LATESTDIR=${BASEDIR}${PACKAGESDIR}-new/Latest
+		ln -sfn ../${PKGFILE} ${LATESTDIR}/${PKGINFO}.pkg
 		generate_signature \
 		    ${BASEDIR}${PACKAGESDIR}-new/Latest/${PKGINFO}.pkg
+		# add backwards links for pkg-bootstrap et al
+		ln -sfn ../${PKGFILE} ${LATESTDIR}/${PKGINFO}.txz
+		ln -sfn ${PKGINFO}.pkg.sig ${LATESTDIR}/${PKGINFO}.txz.sig
 	done
 
 	# generate index files (XXX ideally from a chroot)
