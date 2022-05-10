@@ -47,7 +47,6 @@ setup_distfiles ${STAGEDIR}
 extract_packages ${STAGEDIR} || true
 
 sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
-echo "CLEAN_FETCH_ENV=yes" >> ${STAGEDIR}/etc/make.conf
 
 echo ">>> Fetching distfiles..."
 
