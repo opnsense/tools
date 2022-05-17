@@ -131,7 +131,7 @@ kernel ports distfiles: base
 audit plugins: ports
 core: plugins
 packages test: core
-dvd nano serial vga vm: kernel core
+arm dvd nano serial vga vm: kernel core
 sets: kernel distfiles packages
 images: dvd nano serial vga vm
 release: dvd nano serial vga
