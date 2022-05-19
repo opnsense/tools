@@ -99,7 +99,7 @@ if [ -n "${PRODUCT_ZFS}" ]; then
 	zfs create -o setuid=off ${ZPOOL}/var/tmp
 	zpool set bootfs=${ZPOOL}/ROOT/default ${ZPOOL}
 
-	GPTNAME=zfsboot
+	GPTNAME=gptzfsboot
 	ROOTFS=zfs
 else
 	newfs /dev/${DEV}
