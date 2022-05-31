@@ -65,12 +65,12 @@ USE_PACKAGE_DEPENDS=yes
 "
 	echo ">>> Fetching \${PORT_ORIGIN}..."
 	PORT=\${PORT_ORIGIN%%@*}
-	make -C ${PORTSDIR}/\${PORT} fetch \${MAKE_ARGS}
-	PORT_DEPENDS=\$(make -C ${PORTSDIR}/\${PORT} all-depends-list \
+	make SRC_BASE=${SRCDIR} -C ${PORTSDIR}/\${PORT} fetch \${MAKE_ARGS}
+	PORT_DEPENDS=\$(make SRC_BASE=${SRCDIR} -C ${PORTSDIR}/\${PORT} all-depends-list \
 	    \${MAKE_ARGS})
 	for PORT_DEPEND in \${PORT_DEPENDS}; do
 		PORT_DEPEND=\${PORT_DEPEND%%@*}
-		make -C \${PORT_DEPEND} fetch \${MAKE_ARGS}
+		make SRC_BASE=${SRCDIR} -C \${PORT_DEPEND} fetch \${MAKE_ARGS}
 	done
 done
 EOF
