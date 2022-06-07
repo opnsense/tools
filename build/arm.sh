@@ -98,14 +98,14 @@ arm_unmount()
 	umount ${STAGEDIR}
 }
 
-echo -n ">>> Building arm image... "
-
 arm_install_uboot
 
 if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
 	setup_efiboot ${STAGEDIR}/efiboot.img ${STAGEDIR}/boot/loader.efi
 	cp -r ${STAGEDIR}/efiboot.img.d/efi ${STAGEDIR}/boot/msdos/efi
 fi
+
+echo -n ">>> Building arm image... "
 
 arm_unmount
 mdconfig -d -u ${DEV}
