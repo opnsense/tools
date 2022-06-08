@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2019-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -65,6 +65,8 @@ for AUX in ${AUXLIST}; do
 		    grep ^Origin | awk '{ print $3; }')
 
 		if [ "${AUX}" = "${PKGORIGIN}" ]; then
+			echo ">>> Removing auxiliary package ${AUX}" \
+			    >> ${STAGEDIR}/.pkg-warn
 			rm -f ${STAGEDIR}/${PKG}
 			break;
 		fi
