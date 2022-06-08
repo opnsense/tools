@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2021-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -44,6 +44,8 @@ setup_chroot ${STAGEDIR}
 
 sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 
+RET=0
+
 for PORT in ${PORTSLIST}; do
 	PORT=${PORT%%@*}
 	MAKE="${ENV_FILTER} chroot ${STAGEDIR} make -C ${PORTSDIR}/${PORT}"
@@ -63,6 +65,7 @@ for PORT in ${PORTSLIST}; do
 				fi
 				if [ ${OPT} == ${DEFAULT} ]; then
 					echo "${PORT}: ${OPT} is set by default"
+					RET=1
 				fi
 			done
 		done
@@ -82,6 +85,7 @@ for PORT in ${PORTSLIST}; do
 
 			if [ -z "${FOUND}" ]; then
 				echo "${PORT}: ${OPT} is unset by default"
+				RET=1
 			fi
 		done
 	fi
@@ -98,9 +102,12 @@ for PORT in ${PORTSLIST}; do
 
 			if [ -z "${FOUND}" ]; then
 				echo "${PORT}: ${OPT} does not exist"
+				RET=1
 			fi
 		done
 	fi
 
 	${MAKE} check-config
 done
+
+exit ${RET}
