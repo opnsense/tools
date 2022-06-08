@@ -66,7 +66,7 @@ for AUX in ${AUXLIST}; do
 
 		if [ "${AUX}" = "${PKGORIGIN}" ]; then
 			echo ">>> Removing auxiliary package ${AUX}" \
-			    >> ${STAGEDIR}/.pkg-warn
+			    >> ${STAGEDIR}/.pkg-msg
 			rm -f ${STAGEDIR}/${PKG}
 			break;
 		fi

@@ -150,7 +150,7 @@ UNAME_r=\$(freebsd-version)
 		PKGFILE=\$(readlink -f \${PKGLINK} || true)
 		if [ -f \${PKGFILE} ]; then
 			PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -v PKGVERSION \${MAKE_ARGS})
-			echo ">>> Skipped version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-warn
+			echo ">>> Skipped version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-msg
 			continue
 		fi
 	fi
@@ -176,11 +176,11 @@ UNAME_r=\$(freebsd-version)
 		make -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
 		continue
 	elif ! make -C ${PORTSDIR}/\${PORT} check-plist \${MAKE_ARGS}; then
-		echo ">>> Package list inconsistency for \${PORT_ORIGIN}" >> /.pkg-warn
+		echo ">>> Package list inconsistency for \${PORT_ORIGIN}" >> /.pkg-msg
 	fi
 
 	if [ -n "${PRODUCT_REBUILD}" ]; then
-		echo ">>> Rebuilt version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-warn
+		echo ">>> Rebuilt version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-msg
 	fi
 
 	for PKGNAME in \$(pkg query %n); do

@@ -809,7 +809,7 @@ search_packages()
 	if [ -L ${PKGLINK} ]; then
 		PKGFILE=$(readlink -f ${PKGLINK} || true)
 		if [ -f ${PKGFILE} ]; then
-			echo ">>> Skipped version ${PKGVERS} for ${PKGNAME}" >> ${BASEDIR}/.pkg-warn
+			echo ">>> Skipped version ${PKGVERS} for ${PKGNAME}" >> ${BASEDIR}/.pkg-msg
 			return 0
 		fi
 	fi
@@ -956,7 +956,7 @@ EOF
 	)
 
 	if [ -n "${PRODUCT_REBUILD}" ]; then
-		echo ">>> Rebuilt version ${5} for ${4}" >> ${1}/.pkg-warn
+		echo ">>> Rebuilt version ${5} for ${4}" >> ${1}/.pkg-msg
 	fi
 }
 
@@ -1036,9 +1036,9 @@ bundle_packages()
 
 	(cd ${SETSDIR}; ls -lah packages-${PACKAGEVER}.*)
 
-	if [ -f ${BASEDIR}/.pkg-warn ]; then
-		echo ">>> WARNING: The build may have integrity issues!"
-		cat ${BASEDIR}/.pkg-warn
+	if [ -f ${BASEDIR}/.pkg-msg ]; then
+		echo ">>> WARNING: The build provided additional info."
+		cat ${BASEDIR}/.pkg-msg
 	fi
 
 	if [ -f ${BASEDIR}/.pkg-err ]; then
