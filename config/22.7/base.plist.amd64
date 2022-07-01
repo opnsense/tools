@@ -1249,6 +1249,7 @@
 /usr/include/Block.h
 /usr/include/Block_private.h
 /usr/include/FlexLexer.h
+/usr/include/__libunwind_config.h
 /usr/include/_ctype.h
 /usr/include/_semaphore.h
 /usr/include/a.out.h
@@ -1649,9 +1650,6 @@
 /usr/include/c++/v1/typeinfo
 /usr/include/c++/v1/unordered_map
 /usr/include/c++/v1/unordered_set
-/usr/include/c++/v1/unwind-arm.h
-/usr/include/c++/v1/unwind-itanium.h
-/usr/include/c++/v1/unwind.h
 /usr/include/c++/v1/utility
 /usr/include/c++/v1/valarray
 /usr/include/c++/v1/variant
@@ -2002,6 +2000,7 @@
 /usr/include/libprocstat.h
 /usr/include/librss.h
 /usr/include/libufs.h
+/usr/include/libunwind.h
 /usr/include/libusb.h
 /usr/include/libusb20.h
 /usr/include/libusb20_desc.h
@@ -2216,6 +2215,7 @@
 /usr/include/net/route/nhop_utils.h
 /usr/include/net/route/nhop_var.h
 /usr/include/net/route/route_ctl.h
+/usr/include/net/route/route_debug.h
 /usr/include/net/route/route_var.h
 /usr/include/net/rss_config.h
 /usr/include/net/sff8436.h
@@ -2941,6 +2941,7 @@
 /usr/include/sys/ipmi.h
 /usr/include/sys/jail.h
 /usr/include/sys/joystick.h
+/usr/include/sys/kassert.h
 /usr/include/sys/kbio.h
 /usr/include/sys/kcov.h
 /usr/include/sys/kdb.h
@@ -3161,6 +3162,7 @@
 /usr/include/ulog.h
 /usr/include/unctrl.h
 /usr/include/unistd.h
+/usr/include/unwind.h
 /usr/include/usb.h
 /usr/include/usbhid.h
 /usr/include/utempter.h
@@ -13234,6 +13236,7 @@
 /usr/share/man/man4/mfi.4.gz
 /usr/share/man/man4/mfi_linux.4.gz
 /usr/share/man/man4/mfip.4.gz
+/usr/share/man/man4/mgb.4.gz
 /usr/share/man/man4/miibus.4.gz
 /usr/share/man/man4/mld.4.gz
 /usr/share/man/man4/mlx.4.gz
@@ -17376,6 +17379,7 @@
 /usr/share/openssl/man/man3/BN_mod_mul_montgomery.3.gz
 /usr/share/openssl/man/man3/BN_mod_mul_reciprocal.3.gz
 /usr/share/openssl/man/man3/BN_mod_sqr.3.gz
+/usr/share/openssl/man/man3/BN_mod_sqrt.3.gz
 /usr/share/openssl/man/man3/BN_mod_sub.3.gz
 /usr/share/openssl/man/man3/BN_mod_word.3.gz
 /usr/share/openssl/man/man3/BN_mpi2bn.3.gz
@@ -20197,6 +20201,7 @@
 /usr/share/openssl/man/man3/X509_STORE_CTX_lookup_certs_fn.3.gz
 /usr/share/openssl/man/man3/X509_STORE_CTX_lookup_crls_fn.3.gz
 /usr/share/openssl/man/man3/X509_STORE_CTX_new.3.gz
+/usr/share/openssl/man/man3/X509_STORE_CTX_purpose_inherit.3.gz
 /usr/share/openssl/man/man3/X509_STORE_CTX_set0_crls.3.gz
 /usr/share/openssl/man/man3/X509_STORE_CTX_set0_param.3.gz
 /usr/share/openssl/man/man3/X509_STORE_CTX_set0_trusted_stack.3.gz
@@ -20208,6 +20213,8 @@
 /usr/share/openssl/man/man3/X509_STORE_CTX_set_error.3.gz
 /usr/share/openssl/man/man3/X509_STORE_CTX_set_error_depth.3.gz
 /usr/share/openssl/man/man3/X509_STORE_CTX_set_ex_data.3.gz
+/usr/share/openssl/man/man3/X509_STORE_CTX_set_purpose.3.gz
+/usr/share/openssl/man/man3/X509_STORE_CTX_set_trust.3.gz
 /usr/share/openssl/man/man3/X509_STORE_CTX_set_verify.3.gz
 /usr/share/openssl/man/man3/X509_STORE_CTX_set_verify_cb.3.gz
 /usr/share/openssl/man/man3/X509_STORE_CTX_verify_cb.3.gz
@@ -21816,6 +21823,7 @@
 /usr/share/zoneinfo/Pacific/Guam
 /usr/share/zoneinfo/Pacific/Honolulu
 /usr/share/zoneinfo/Pacific/Johnston
+/usr/share/zoneinfo/Pacific/Kanton
 /usr/share/zoneinfo/Pacific/Kiritimati
 /usr/share/zoneinfo/Pacific/Kosrae
 /usr/share/zoneinfo/Pacific/Kwajalein

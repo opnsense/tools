@@ -345,6 +345,9 @@
 /usr/include/c++/v1/tr1/version
 /usr/include/c++/v1/tr1/wchar.h
 /usr/include/c++/v1/tr1/wctype.h
+/usr/include/c++/v1/unwind-arm.h
+/usr/include/c++/v1/unwind-itanium.h
+/usr/include/c++/v1/unwind.h
 /usr/include/cam/scsi/scsi_dvcfg.h
 /usr/include/cam/scsi/scsi_low.h
 /usr/include/casper/cap_random.h
