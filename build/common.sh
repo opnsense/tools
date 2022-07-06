@@ -273,7 +273,7 @@ if [ -n "${*}" ]; then
 fi
 
 case "${SELF}" in
-confirm|fingerprint|info|list|make\.conf|print)
+clean|confirm|fingerprint|info|list|make\.conf|print)
 	;;
 *)
 	if [ -z "${PRINT_ENV_SKIP}" ]; then
