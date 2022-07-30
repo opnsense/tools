@@ -991,7 +991,7 @@ bundle_packages()
 		rm -f ${BASEDIR}${PACKAGESDIR}-new/.${REDO}_done
 	done
 
-	if [ -n "${SELF}" ]; then
+	if [ -n "${SELF}" -a ! -f ${BASEDIR}/.pkg-err ]; then
 		# add build marker to set
 		sh ./info.sh > ${BASEDIR}${PACKAGESDIR}-new/.${SELF}_done
 	fi
