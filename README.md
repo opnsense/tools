@@ -21,13 +21,13 @@ build failures.  In order to work around this problem you must use
 the OPNsense version of pkg, not the FreeBSD version of pkg.  This
 will require some non-standard setup to accomplish.
 
-This happens becuase OPNsense builds within a jail with it's pkg
+This happens because OPNsense builds within a jail with it's pkg
 version and the build OS uses it's own version of pkg.  However
 there are some aspects of the build process that expect
 interoperability between the OS pkg and the jail pkg.
 
 To work around this you will need to use OPNsense as your package
-repositiory instead of FreeBSD.
+repository instead of FreeBSD.
 
 Create directory structure:
 
@@ -39,7 +39,7 @@ two files.  First is `FreeBSD.conf`:
 
     FreeBSD: {enabled: no}
 
-The second file is OPNsense.conf.  The `url` line is version specific
+The second file is `OPNsense.conf`.  The `url` line is version specific
 so make sure it reflects your build platform:
 
     OPNsense: {
@@ -50,12 +50,10 @@ so make sure it reflects your build platform:
         signature_type: "fingerprints"
     }
 
-You will need to populate the fingerprints direcotry for package
-verification.  From the [core]
-(https://github.com/opnsense/core/tree/master/src/etc/pkg/fingerprints/OPNsense/trusted)
-repository download all of the files listed for the branch you want to
-build from and put them into
-`/usr/local/etc/pkg/fingerprints/OPNSense/trusted`.
+You will need to populate the fingerprints directory for package verification.
+From the [core git repo](https://github.com/opnsense/core/tree/master/src/etc/pkg/fingerprints/OPNsense/trusted)
+repository download all of the files listed for the branch you want to build
+from and put them into `/usr/local/etc/pkg/fingerprints/OPNSense/trusted`.
 
 
 Continuing Setup
