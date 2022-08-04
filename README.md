@@ -13,8 +13,8 @@ and at least 4GB of RAM to successfully build all standard images.
 All tasks require a root user.
 
 
-PKG Shenanigans
----------------
+*pkg* Shenanigans
+-----------------
 
 Upstream keeps making incompatible changes to ``pkg`` which causes build
 failures.  In order to work around this problem you must use the OPNsense
@@ -29,18 +29,37 @@ jail pkg.
 To work around this you will need to use OPNsense as your package repository
 instead of FreeBSD.
 
-Create directory structure:
+First install git and acquire the `core` repository.  Please note that this
+portion is using the upstream FreeBSD packages:
 
-    # mkdir -p /usr/local/etc/pkg/repos/
-    # mkdir -p /usr/local/etc/pkg/fingerprints/OPNSense/trusted/
+    # pkg install git
+    # cd /usr
+    # git clone https://github.com/opnsense/core.git
+    # git checkout origin/stable/22.7
 
-In the `/usr/local/etc/pkg/repos/` directory you'll need to create two files.
-The first file is `FreeBSD.conf`:
+Make a backup copy of the FreeBSD pkg-static to use later:
 
-    FreeBSD: {enabled: no}
+    # cp /usr/local/sbin/pkg-static /root/pkg-static
 
-The second file is `OPNsense.conf`.  The `url` line is version specific
-so make sure it reflects your build platform:
+Remove all existing packages.  *The `-f` flag is required to delete `pkg`
+itself*:
+
+    # /root/pkg-static info | awk '{print $1}' | \
+        xargs /root/pkg-static delete -fy
+
+Create necessary directory structure using the `core` git repo we checked
+out earlier:
+
+    # cp -a /usr/core/src/etc/pkg /usr/local/etc/
+
+Change into the `/usr/local/etc/pkg/repos/` directory for these next steps.
+First you will need to disable the FreeBSD package repository:
+
+    # cd /usr/local/etc/pkg/repos
+    # mv FreeBSD.conf.shadow FreeBSD.conf
+
+Second you will need to create the `OPNsense.conf` file.  Use the following
+contents for 22.7 on amd64.
 
     OPNsense: {
         fingerprints: "/usr/local/etc/pkg/fingerprints/OPNsense",
@@ -50,11 +69,12 @@ so make sure it reflects your build platform:
         signature_type: "fingerprints"
     }
 
-You will need to populate the fingerprints directory for package verification.
-From the [core git repo](https://github.com/opnsense/core/tree/master/src/etc/pkg/fingerprints/OPNsense/trusted)
-repository download all of the files listed for the branch you want to build
-from and put them into `/usr/local/etc/pkg/fingerprints/OPNSense/trusted/`.
+Now install the OPNsense version of pkg, clean up our old pkg-static
+file, and reset the package database:
 
+    # pkg install pkg
+    # rm /root/pkg-static
+    # rm -rf /var/db/pkg/
 
 Resuming Setup
 --------------
