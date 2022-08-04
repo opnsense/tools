@@ -13,8 +13,8 @@ and at least 4GB of RAM to successfully build all standard images.
 All tasks require a root user.
 
 
-Interruption for PKG Shenanigans
---------------------------------
+PKG Shenanigans
+---------------
 
 Upstream keeps making incompatible changes to ``pkg`` which causes build
 failures.  In order to work around this problem you must use the OPNsense
