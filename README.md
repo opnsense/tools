@@ -31,10 +31,10 @@ instead of FreeBSD.
 
 Create directory structure:
 
-    # mkdir -p /usr/local/etc/pkg/repos
-    # mkdir -p /usr/local/etc/pkg/fingerprints/OPNSense/trusted
+    # mkdir -p /usr/local/etc/pkg/repos/
+    # mkdir -p /usr/local/etc/pkg/fingerprints/OPNSense/trusted/
 
-In the `/usr/local/etc/pkg/repos` directory you'll need to create two files.
+In the `/usr/local/etc/pkg/repos/` directory you'll need to create two files.
 The first file is `FreeBSD.conf`:
 
     FreeBSD: {enabled: no}
@@ -53,7 +53,7 @@ so make sure it reflects your build platform:
 You will need to populate the fingerprints directory for package verification.
 From the [core git repo](https://github.com/opnsense/core/tree/master/src/etc/pkg/fingerprints/OPNsense/trusted)
 repository download all of the files listed for the branch you want to build
-from and put them into `/usr/local/etc/pkg/fingerprints/OPNSense/trusted`.
+from and put them into `/usr/local/etc/pkg/fingerprints/OPNSense/trusted/`.
 
 
 Resuming Setup
