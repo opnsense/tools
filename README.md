@@ -7,11 +7,56 @@ create sets, packages and images for the OPNsense project.
 Setting up a build system
 =========================
 
-Install [FreeBSD](https://www.freebsd.org/) 13.0-RELEASE for amd64
+Install [FreeBSD](https://www.freebsd.org/) 13.1-RELEASE for amd64
 on a machine with at least 25GB of hard disk (UFS works better than ZFS)
 and at least 4GB of RAM to successfully build all standard images.
-All tasks require a root user.  Do the following to grab the repositories
-(overwriting standard ports and src):
+All tasks require a root user.
+
+.. danger:: **PKG Shenanigans**
+
+    Upstream keeps making incompatible changes to ``pkg`` which causes
+    build failures.  In order to work around this problem you must use
+    the OPNsense version of pkg, not the FreeBSD version of pkg.  This
+    will require some non-standard setup to accomplish.
+
+    This happens becuase OPNsense builds within a jail with it's pkg
+    version and the build OS uses it's own version of pkg.  However
+    there are some aspects of the build process that expect
+    interoperability between the OS pkg and the jail pkg.
+
+    To work around this you will need to use OPNsense as your package
+    repositiory instead of FreeBSD.
+
+    Create directory structure:
+
+        # mkdir -p /usr/local/etc/pkg/repos
+        # mkdir -p /usr/local/etc/pkg/fingerprints/OPNSense/trusted
+
+    In the ``/usr/local/etc/pkg/repos`` directory you'll need to create
+    two files.  First is ``FreeBSD.conf``:
+
+        FreeBSD: {enabled: no}
+
+    The second file is OPNsense.conf.  The ``url`` line is version specific
+    so make sure it reflects your build platform:
+
+        OPNsense: {
+            fingerprints: "/usr/local/etc/pkg/fingerprints/OPNsense",
+            url: "https://pkg.opnsense.org/FreeBSD:13:amd64/22.7/latest",
+            enabled: yes,
+            mirror_type: "srv",
+            signature_type: "fingerprints"
+        }
+
+    You will need to populate the fingerprints direcotry for package
+    verification.  From the [core]
+    (https://github.com/opnsense/core/tree/master/src/etc/pkg/fingerprints/OPNsense/trusted)
+    repository download all of the files listed for the branch you want to
+    build from and put them into
+    ``/usr/local/etc/pkg/fingerprints/OPNSense/trusted``.
+
+
+Do the following to grab the repositories (overwriting standard ports and src):
 
     # pkg install git
     # cd /usr
@@ -194,7 +239,7 @@ Device-specific settings can be found and added in the
 device/ directory.  Of special interest are hooks into
 the build process for required non-default settings for
 image builds.  The .conf files are shell scrips that can
-define hooks in the form of e.g.:
+define hooks in the form of e.g.::
 
     serial_hook()
     {
