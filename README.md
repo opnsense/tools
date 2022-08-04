@@ -48,8 +48,8 @@ itself*:
     # /root/pkg-static info | awk '{print $1}' | \
         xargs /root/pkg-static delete -fy
 
-Create necessary directory structure using the `core` git repo we checked
-out earlier:
+Create the requisite repository directory structure using the `core` git repo
+we checked out earlier:
 
     # cp -a /usr/core/src/etc/pkg /usr/local/etc/
 
