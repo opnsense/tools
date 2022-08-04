@@ -21,13 +21,13 @@ failures.  In order to work around this problem you must use the OPNsense
 version of pkg, not the FreeBSD version of pkg.  This will require some
 non-standard setup to accomplish.
 
-This happens because OPNsense builds within a jail with it's pkg version and
-the build system uses it's own version of pkg.  However there are some aspects
-of the build process that expect interoperability between the OS pkg and the
-jail pkg.
+This is necessary because OPNsense builds within a jail and most but not
+all operations happen with the jails version of `pkg`. There are some aspects
+of the build process that operate outside the jail and those steps require
+interoperability between the base pkg and the jail pkg.
 
-To work around this you will need to use OPNsense as your package repository
-instead of FreeBSD.
+To enable this compatibility you will need to use the OPNsense package
+repositories instead of the FreeBSD ones.
 
 First install git and acquire the `core` repository.  Please note that this
 portion is using the upstream FreeBSD packages:
@@ -35,6 +35,7 @@ portion is using the upstream FreeBSD packages:
     # pkg install git
     # cd /usr
     # git clone https://github.com/opnsense/core.git
+    # cd core
     # git checkout origin/stable/22.7
 
 Make a backup copy of the FreeBSD pkg-static to use later:
@@ -70,7 +71,8 @@ contents for 22.7 on amd64.
     }
 
 Now install the OPNsense version of pkg, clean up our old pkg-static
-file, and reset the package database:
+file, and reset the package database so when we continue the install
+process it'll be rebuilt for the *new* version of pkg:
 
     # pkg install pkg
     # rm /root/pkg-static
