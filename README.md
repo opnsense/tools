@@ -12,49 +12,54 @@ on a machine with at least 25GB of hard disk (UFS works better than ZFS)
 and at least 4GB of RAM to successfully build all standard images.
 All tasks require a root user.
 
-.. danger:: **PKG Shenanigans**
 
-    Upstream keeps making incompatible changes to ``pkg`` which causes
-    build failures.  In order to work around this problem you must use
-    the OPNsense version of pkg, not the FreeBSD version of pkg.  This
-    will require some non-standard setup to accomplish.
+PKG Shenanigans
+---------------
 
-    This happens becuase OPNsense builds within a jail with it's pkg
-    version and the build OS uses it's own version of pkg.  However
-    there are some aspects of the build process that expect
-    interoperability between the OS pkg and the jail pkg.
+Upstream keeps making incompatible changes to ``pkg`` which causes
+build failures.  In order to work around this problem you must use
+the OPNsense version of pkg, not the FreeBSD version of pkg.  This
+will require some non-standard setup to accomplish.
 
-    To work around this you will need to use OPNsense as your package
-    repositiory instead of FreeBSD.
+This happens becuase OPNsense builds within a jail with it's pkg
+version and the build OS uses it's own version of pkg.  However
+there are some aspects of the build process that expect
+interoperability between the OS pkg and the jail pkg.
 
-    Create directory structure:
+To work around this you will need to use OPNsense as your package
+repositiory instead of FreeBSD.
 
-        # mkdir -p /usr/local/etc/pkg/repos
-        # mkdir -p /usr/local/etc/pkg/fingerprints/OPNSense/trusted
+Create directory structure:
 
-    In the ``/usr/local/etc/pkg/repos`` directory you'll need to create
-    two files.  First is ``FreeBSD.conf``:
+    # mkdir -p /usr/local/etc/pkg/repos
+    # mkdir -p /usr/local/etc/pkg/fingerprints/OPNSense/trusted
 
-        FreeBSD: {enabled: no}
+In the `/usr/local/etc/pkg/repos` directory you'll need to create
+two files.  First is `FreeBSD.conf`:
 
-    The second file is OPNsense.conf.  The ``url`` line is version specific
-    so make sure it reflects your build platform:
+    FreeBSD: {enabled: no}
 
-        OPNsense: {
-            fingerprints: "/usr/local/etc/pkg/fingerprints/OPNsense",
-            url: "https://pkg.opnsense.org/FreeBSD:13:amd64/22.7/latest",
-            enabled: yes,
-            mirror_type: "srv",
-            signature_type: "fingerprints"
-        }
+The second file is OPNsense.conf.  The `url` line is version specific
+so make sure it reflects your build platform:
 
-    You will need to populate the fingerprints direcotry for package
-    verification.  From the [core]
-    (https://github.com/opnsense/core/tree/master/src/etc/pkg/fingerprints/OPNsense/trusted)
-    repository download all of the files listed for the branch you want to
-    build from and put them into
-    ``/usr/local/etc/pkg/fingerprints/OPNSense/trusted``.
+    OPNsense: {
+        fingerprints: "/usr/local/etc/pkg/fingerprints/OPNsense",
+        url: "https://pkg.opnsense.org/FreeBSD:13:amd64/22.7/latest",
+        enabled: yes,
+        mirror_type: "srv",
+        signature_type: "fingerprints"
+    }
 
+You will need to populate the fingerprints direcotry for package
+verification.  From the [core]
+(https://github.com/opnsense/core/tree/master/src/etc/pkg/fingerprints/OPNsense/trusted)
+repository download all of the files listed for the branch you want to
+build from and put them into
+`/usr/local/etc/pkg/fingerprints/OPNSense/trusted`.
+
+
+Continuing Setup
+----------------
 
 Do the following to grab the repositories (overwriting standard ports and src):
 
