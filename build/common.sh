@@ -720,6 +720,13 @@ check_packages()
 	local SELF=${1}
 	SKIP=${2}
 
+	PKG_WANT=$(make -C ${PORTSDIR}/ports-mgmt/pkg -v PORTVERSION | cut -d. -f 1-2)
+	PKG_HAVE=$(pkg -v | cut -d. -f 1-2)
+	if [ "${PKG_WANT}" != "${PKG_HAVE}" ]; then
+		echo "Installed pkg version '${PKG_HAVE}' does not match required version '${PKG_WANT}'" >&2
+		exit 1
+	fi
+
 	PACKAGESET=$(find_set packages)
 
 	if [ -z "${SELF}" -o -z "${PACKAGESET}" -o -n "${SKIP}" ]; then
