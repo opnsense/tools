@@ -10,7 +10,6 @@ Setting up a build system
 Install [FreeBSD](https://www.freebsd.org/) 13.1-RELEASE for amd64
 on a machine with at least 25GB of hard disk (UFS works better than ZFS)
 and at least 4GB of RAM to successfully build all standard images.
-All tasks require a root user.
 
 
 *pkg* Shenanigans
@@ -24,10 +23,9 @@ non-standard setup to accomplish.
 This is necessary because OPNsense builds within a jail and most but not
 all operations happen with the jails version of `pkg`. There are some aspects
 of the build process that operate outside the jail and those steps require
-interoperability between the base pkg and the jail pkg.
-
-To enable this compatibility you will need to use the OPNsense package
-repositories instead of the FreeBSD ones.
+interoperability between the base pkg and the jail pkg.  To enable this
+compatibility you will need to use the OPNsense package repositories instead
+of the FreeBSD ones.
 
 First install git and acquire the `core` repository.  Please note that this
 portion is using the upstream FreeBSD packages:
@@ -81,7 +79,8 @@ process it'll be rebuilt for the *new* version of pkg:
 Resuming Setup
 --------------
 
-Do the following to grab the repositories (overwriting standard ports and src):
+All tasks require a root user.  Do the following to grab the repositories
+(overwriting standard ports and src):
 
     # pkg install git
     # cd /usr
