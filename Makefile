@@ -207,7 +207,7 @@ _OS:=	${_OS:C/-.*//}
 
 fix: /usr/local/bin/git update /root/pkg-static
 	/root/pkg-static info | \
-		awk '{print $1}' | \
+		awk '{print $$1}' | \
 		xargs /root/pkg-static delete -fy
 	cp -a ${COREDIR}/src/etc/pkg /usr/local/etc/
 	mv /usr/local/etc/pkg/repos/FreeBSD.conf.shadow \
