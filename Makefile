@@ -203,7 +203,7 @@ _OS:=	${_OS:C/-.*//}
 	pkg install -y git
 
 /root/pkg-static:
-	cp /usr/local/bin/pkg-static /root/pkg-static
+	cp /usr/local/sbin/pkg-static /root/pkg-static
 
 fix: /usr/local/bin/git update /root/pkg-static
 	/root/pkg-static info | \
