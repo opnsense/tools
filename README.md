@@ -10,8 +10,6 @@ Setting up a build system
 Install [FreeBSD](https://www.freebsd.org/) 13.1-RELEASE for amd64
 on a machine with at least 25GB of hard disk (UFS works better than ZFS)
 and at least 4GB of RAM to successfully build all standard images.
-
-
 All tasks require a root user.  Do the following to grab the repositories
 (overwriting standard ports and src):
 
