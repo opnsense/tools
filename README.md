@@ -32,10 +32,10 @@ of the build process that operate outside the jail and those steps require
 interoperability between the base pkg and the jail pkg.  To enable this
 compatibility you will need to use the OPNsense package repositories instead
 of the FreeBSD ones.  The fix for this is a make target, so you can simply
-issue the following to fix the pkg version.  *WARNING:  This step will
+issue the following to fix the pkg version.  **WARNING:  This step will
 uninstall all existing packages and destroy the package database directory.
 If this machine is used for any other purposes other than building OPNsense
-this will likely break your machine.*
+this will likely break your machine.**
 
     # make fix
 
