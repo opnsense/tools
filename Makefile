@@ -30,7 +30,7 @@ STEPS=		audit arm base boot chroot clean clone compress confirm \
 		skim test update upload verify vga vm xtools
 SCRIPTS=	batch distribution factory hotfix nightly
 
-.PHONY:		${STEPS} ${SCRIPTS}
+.PHONY:		fix ${STEPS} ${SCRIPTS}
 
 PAGER?=		less
 
@@ -193,3 +193,34 @@ _OS:=	${_OS:C/-.*//}
 .if "${_OS}" != "${OS}"
 .error Expected OS version ${OS} for ${_CONFIGDIR}; to continue anyway set OS=${_OS}
 .endif
+
+
+# Rules for establishing OPNsense repos as the package source.   This is
+# to fix the pkg versioning issues with upstream.  This fixes the build
+# machine itself.
+
+/usr/local/bin/git:
+	pkg install -y git
+
+/root/pkg-static:
+	cp /usr/local/bin/pkg-static /root/pkg-static
+
+fix: /usr/local/bin/git update /root/pkg-static
+	/root/pkg-static info | \
+		awk '{print $1}' | \
+		xargs /root/pkg-static delete -fy
+	cp -a ${COREDIR}/src/etc/pkg /usr/local/etc/
+	mv /usr/local/etc/pkg/repos/FreeBSD.conf.shadow \
+		/usr/local/etc/pkg/repos/FreeBSD.conf
+	opnsensecfg=/usr/local/etc/pkg/repos/OPNsense.conf ; \
+	echo "OPNsense: {" > "$${opnsensecfg}" ; \
+	echo "    fingerprints: \"/usr/local/etc/pkg/fingerprints/OPNsense\"," >> "$${opnsensecfg}" ; \
+	echo "    url: \"https://pkg.opnsense.org/FreeBSD:13:${ARCH}/${ABI}/latest\"," >> "$${opnsensecfg}" ; \
+	echo "    enabled: yes," >> "$${opnsensecfg}" ; \
+	echo "    mirror_type: \"srv\"," >> "$${opnsensecfg}" ; \
+	echo "    signature_type: \"fingerprints\"" >> "$${opnsensecfg}" ; \
+	echo "}" >> "$${opnsensecfg}"
+	/root/pkg-static install -y pkg
+	rm -f /root/pkg-static
+	rm -rf /var/db/pkg/
+	pkg install -y pkg
