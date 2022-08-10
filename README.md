@@ -12,6 +12,14 @@ on a machine with at least 25GB of hard disk (UFS works better than ZFS)
 and at least 4GB of RAM to successfully build all standard images.
 
 
+All tasks require a root user.  Do the following to grab the repositories
+(overwriting standard ports and src):
+
+    # pkg install git
+    # cd /usr
+    # git clone https://github.com/opnsense/tools
+    # cd tools
+
 *pkg* Shenanigans
 -----------------
 
@@ -25,67 +33,19 @@ all operations happen with the jails version of `pkg`. There are some aspects
 of the build process that operate outside the jail and those steps require
 interoperability between the base pkg and the jail pkg.  To enable this
 compatibility you will need to use the OPNsense package repositories instead
-of the FreeBSD ones.
+of the FreeBSD ones.  The fix for this is a make target, so you can simply
+issue the following to fix the pkg version.  *WARNING:  This step will
+uninstall all existing packages and destroy the package database directory.
+If this machine is used for any other purposes other than building OPNsense
+this will likely break your machine.*
 
-First install git and acquire the `core` repository.  Please note that this
-portion is using the upstream FreeBSD packages:
-
-    # pkg install git
-    # cd /usr
-    # git clone https://github.com/opnsense/core.git
-    # cd core
-    # git checkout origin/stable/22.7
-
-Make a backup copy of the FreeBSD pkg-static to use later:
-
-    # cp /usr/local/sbin/pkg-static /root/pkg-static
-
-Remove all existing packages.  *The `-f` flag is required to delete `pkg`
-itself*:
-
-    # /root/pkg-static info | awk '{print $1}' | \
-        xargs /root/pkg-static delete -fy
-
-Create the requisite repository directory structure using the `core` git repo
-we checked out earlier:
-
-    # cp -a /usr/core/src/etc/pkg /usr/local/etc/
-
-Change into the `/usr/local/etc/pkg/repos/` directory for these next steps.
-First you will need to disable the FreeBSD package repository:
-
-    # cd /usr/local/etc/pkg/repos
-    # mv FreeBSD.conf.shadow FreeBSD.conf
-
-Second you will need to create the `OPNsense.conf` file.  Use the following
-contents for 22.7 on amd64.
-
-    OPNsense: {
-        fingerprints: "/usr/local/etc/pkg/fingerprints/OPNsense",
-        url: "https://pkg.opnsense.org/FreeBSD:13:amd64/22.7/latest",
-        enabled: yes,
-        mirror_type: "srv",
-        signature_type: "fingerprints"
-    }
-
-Now install the OPNsense version of pkg, clean up our old pkg-static
-file, and reset the package database so when we continue the install
-process it'll be rebuilt for the *new* version of pkg:
-
-    # pkg install pkg
-    # rm /root/pkg-static
-    # rm -rf /var/db/pkg/
+    # make fix
 
 Resuming Setup
 --------------
 
-All tasks require a root user.  Do the following to grab the repositories
-(overwriting standard ports and src):
+Now we can resume the build with the proper `pkg` having been installed:
 
-    # pkg install git
-    # cd /usr
-    # git clone https://github.com/opnsense/tools
-    # cd tools
     # make update
 
 Note that the OPNsense repositories can also be setup in a non-/usr directory
