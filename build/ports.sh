@@ -56,14 +56,8 @@ if check_packages ${SELF} ${ARGS}; then
 	exit 0
 fi
 
-PORTCONFIGS="${CONFIGDIR}/ports.conf"
-
-# inject auxiliary ports only if not already removed
-if ! check_packages packages; then
-	PORTCONFIGS="${CONFIGDIR}/aux.conf ${PORTCONFIGS}"
-fi
-
-PORTSLIST=$(list_ports ${PORTCONFIGS})
+PORTSLIST=$(list_ports ${CONFIGDIR}/ports.conf)
+AUXLIST=$(list_ports ${CONFIGDIR}/aux.conf)
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
@@ -187,7 +181,7 @@ UNAME_r=\$(freebsd-version)
 		pkg create -no ${PACKAGESDIR}-cache/All \${PKGNAME}
 	done
 
-	echo "${PORTSLIST}" | while read PORT_DEPENDS; do
+	(echo "${PORTSLIST}"; echo "${AUXLIST}") | while read PORT_DEPENDS; do
 		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS%%@*}" %n)
 		if [ -n "\${PORT_DEPNAME}" ]; then
 			echo ">>> Locking package dependency: \${PORT_DEPNAME}"
