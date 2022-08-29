@@ -1211,16 +1211,6 @@ ${PLUGINSDIR}
 
 list_config()
 {
-	eval LIST_ENV="\${${1}LIST}"
-	shift
-
-	if [ -n "${LIST_ENV}" ]; then
-		for LIST_ORIGIN in ${LIST_ENV}; do
-			echo ${LIST_ORIGIN}
-		done
-		return
-	fi
-
 	cat ${@} | while read LIST_ORIGIN LIST_IGNORE; do
 		eval LIST_ORIGIN=${LIST_ORIGIN}
 		if [ "$(echo ${LIST_ORIGIN} | colrm 2)" = "#" ]; then
@@ -1243,12 +1233,12 @@ list_ports()
 {
 	local LIST_MATCH=1
 
-	list_config PORTS ${@}
+	list_config ${@}
 }
 
 list_plugins()
 {
 	local LIST_MATCH=1
 
-	list_config PLUGINS ${@}
+	list_config ${@}
 }
