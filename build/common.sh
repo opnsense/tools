@@ -1229,14 +1229,7 @@ list_config()
 	done
 }
 
-list_ports()
-{
-	local LIST_MATCH=1
-
-	list_config ${@}
-}
-
-list_plugins()
+list_packages()
 {
 	local LIST_MATCH=1
 

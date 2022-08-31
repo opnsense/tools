@@ -42,7 +42,7 @@ if [ -f ${PLUGINSCONF}.local ]; then
 	PLUGINSCONF="${PLUGINSCONF} ${PLUGINSCONF}.local"
 fi
 
-PLUGINSLIST=$(list_plugins ${PLUGINSCONF})
+PLUGINSLIST=$(list_packages ${PLUGINSCONF})
 
 git_branch ${PLUGINSDIR} ${PLUGINSBRANCH} PLUGINSBRANCH
 

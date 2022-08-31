@@ -56,8 +56,8 @@ if check_packages ${SELF} ${ARGS}; then
 	exit 0
 fi
 
-PORTSLIST=$(list_ports ${CONFIGDIR}/ports.conf)
-AUXLIST=$(list_ports ${CONFIGDIR}/aux.conf)
+PORTSLIST=$(list_packages ${CONFIGDIR}/ports.conf)
+AUXLIST=$(list_packages ${CONFIGDIR}/aux.conf)
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
