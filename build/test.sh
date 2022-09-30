@@ -58,13 +58,15 @@ make -C${COREDIR} ${COREENV} style
 make -C${COREDIR} ${COREENV} test
 EOF
 
-PLUGINSCONF=${CONFIGDIR}/plugins.conf
+if [ -z "${PLUGINSLIST}" ]; then
+	PLUGINSCONF=${CONFIGDIR}/plugins.conf
 
-if [ -f ${PLUGINSCONF}.local ]; then
-	PLUGINSCONF="${PLUGINSCONF} ${PLUGINSCONF}.local"
+	if [ -f ${PLUGINSCONF}.local ]; then
+		PLUGINSCONF="${PLUGINSCONF} ${PLUGINSCONF}.local"
+	fi
+
+	PLUGINSLIST=$(list_packages ${PLUGINSCONF})
 fi
-
-PLUGINSLIST=$(list_packages ${PLUGINSCONF})
 
 for PLUGIN_ORIGIN in ${PLUGINSLIST}; do
 	VARIANT=${PLUGIN_ORIGIN##*@}

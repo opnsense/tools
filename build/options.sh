@@ -31,7 +31,9 @@ SELF=options
 
 . ./common.sh
 
-PORTSLIST=$(list_packages ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf)
+if [ -z "${PORTSLIST}" ]; then
+	PORTSLIST=$(list_packages ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf)
+fi
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
