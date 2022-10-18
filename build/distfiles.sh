@@ -31,9 +31,7 @@ SELF=distfiles
 
 . ./common.sh
 
-if [ -z "${PORTSLIST}" ]; then
-	PORTSLIST=$(list_packages ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf)
-fi
+PORTSLIST=$(list_packages "${PORTSLIST}" ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf)
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH

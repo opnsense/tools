@@ -31,9 +31,7 @@ SELF=audit
 
 . ./common.sh
 
-if [ -z "${PORTSLIST}" ]; then
-	PORTSLIST=$(list_packages ${CONFIGDIR}/ports.conf)
-fi
+PORTSLIST=$(list_packages "${PORTSLIST}" ${CONFIGDIR}/ports.conf)
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}

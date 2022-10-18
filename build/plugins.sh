@@ -36,15 +36,13 @@ if check_packages ${SELF} ${@}; then
 	exit 0
 fi
 
-if [ -z "${PLUGINSLIST}" ]; then
-	PLUGINSCONF=${CONFIGDIR}/plugins.conf
+PLUGINSCONF=${CONFIGDIR}/plugins.conf
 
-	if [ -f ${PLUGINSCONF}.local ]; then
-		PLUGINSCONF="${PLUGINSCONF} ${PLUGINSCONF}.local"
-	fi
-
-	PLUGINSLIST=$(list_packages ${PLUGINSCONF})
+if [ -f ${PLUGINSCONF}.local ]; then
+	PLUGINSCONF="${PLUGINSCONF} ${PLUGINSCONF}.local"
 fi
+
+PLUGINSLIST=$(list_packages "${PLUGINSLIST}" ${PLUGINSCONF})
 
 git_branch ${PLUGINSDIR} ${PLUGINSBRANCH} PLUGINSBRANCH
 
