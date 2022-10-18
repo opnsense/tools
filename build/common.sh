@@ -1232,11 +1232,15 @@ list_config()
 list_packages()
 {
 	local LIST_MATCH=1
+	local LIST_ENV=${1}
+	shift
 
-	if [ -n "${1}" ]; then
-		echo "${1}" | tr ',[:blank:]' '\n'
-	else
-		shift
-		list_config ${@}
+	if [ -n "${LIST_ENV}" ]; then
+		for LIST_ORIGIN in ${LIST_ENV}; do
+			echo ${LIST_ORIGIN}
+		done
+		return
 	fi
+
+	list_config ${@}
 }
