@@ -1233,5 +1233,10 @@ list_packages()
 {
 	local LIST_MATCH=1
 
-	list_config ${@}
+	if [ -n "${1}" ]; then
+		echo "${1}" | tr ',[:blank:]' '\n'
+	else
+		shift
+		list_config ${@}
+	fi
 }
