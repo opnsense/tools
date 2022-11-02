@@ -27,14 +27,12 @@
 
 eval "$(make print-LOGSDIR,PRODUCT_FLAVOUR)"
 
-CURRENTDIR=$(find -s ${LOGSDIR} -type d -depth 1 \! -name latest| tail -n1)
-LOGPREFIX="${CURRENTDIR}/[0-9][0-9]"
-STEP=${1:-ports}
+CURRENTDIR=$(find -s ${LOGSDIR} -type d -depth 1 \! -name latest | tail -n1)
 
 if [ -n "${CURRENTDIR}" ]; then
-	if [ -f "${LOGPREFIX}-${STEP}.log" ]; then
-		tail -f "${LOGPREFIX}-${STEP}.log"
-	elif [ -f "${LOGPREFIX}-${STEP}-${PRODUCT_FLAVOUR}.log" ]; then
-		tail -f "${LOGPREFIX}-${1}-${PRODUCT_FLAVOUR}.log"
-	fi
+	for CURRENTLOG in $(find ${CURRENTDIR} -name "??-${1:-ports}.log" -or \
+	    -name "??-${1:-ports}-${PRODUCT_FLAVOUR}.log"); do
+		tail -f ${CURRENTLOG}
+		break
+	done
 fi
