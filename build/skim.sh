@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2021 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -79,7 +79,6 @@ while read PORT_ORIGIN PORT_BROKEN; do
 __MAKE_CONF=${STAGEDIR}/make.conf
 PRODUCT_ABI=${PRODUCT_ABI}
 PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
-SRC_BASE=${SRCDIR}
 "
 
 	if [ ${FLAVOR} != ${PORT} ]; then
