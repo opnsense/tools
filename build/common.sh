@@ -1211,16 +1211,6 @@ ${PLUGINSDIR}
 
 list_config()
 {
-	local LIST_ENV=${1}
-	shift
-
-	if [ -n "${LIST_ENV}" ]; then
-		for LIST_ORIGIN in ${LIST_ENV}; do
-			echo ${LIST_ORIGIN}
-		done
-		return
-	fi
-
 	cat ${@} | while read LIST_ORIGIN LIST_IGNORE; do
 		eval LIST_ORIGIN=${LIST_ORIGIN}
 		if [ "$(echo ${LIST_ORIGIN} | colrm 2)" = "#" ]; then
@@ -1242,6 +1232,15 @@ list_config()
 list_packages()
 {
 	local LIST_MATCH=1
+	local LIST_ENV=${1}
+	shift
+
+	if [ -n "${LIST_ENV}" ]; then
+		for LIST_ORIGIN in ${LIST_ENV}; do
+			echo ${LIST_ORIGIN}
+		done
+		return
+	fi
 
 	list_config ${@}
 }

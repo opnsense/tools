@@ -32,8 +32,8 @@ FROM=FreeBSD
 
 . ./common.sh
 
-PORTSLIST=$(list_config "${PORTSLIST}" ${CONFIGDIR}/skim.conf \
-    ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf)
+PORTSLIST=$(list_config ${CONFIGDIR}/skim.conf ${CONFIGDIR}/aux.conf \
+    ${CONFIGDIR}/ports.conf)
 
 DIFF="$(which colordiff 2> /dev/null || echo cat)"
 LESS="less -R"
