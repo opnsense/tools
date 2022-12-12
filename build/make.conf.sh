@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2021-2022 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -35,6 +35,11 @@ SED=sed
 
 for KEY in LUA PERL PHP PYTHON RUBY; do
 	eval VALUE="\${PRODUCT_${KEY}}"
+	SED="${SED} -e s:%%${KEY}%%:${VALUE}:g"
+done
+
+for KEY in SRCDIR; do
+	eval VALUE="\${${KEY}}"
 	SED="${SED} -e s:%%${KEY}%%:${VALUE}:g"
 done
 
