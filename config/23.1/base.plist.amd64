@@ -14478,9 +14478,16 @@
 /usr/share/man/man9/CTR4.9.gz
 /usr/share/man/man9/CTR5.9.gz
 /usr/share/man/man9/CTR6.9.gz
+/usr/share/man/man9/DB_ALIAS.9.gz
+/usr/share/man/man9/DB_ALIAS_FLAGS.9.gz
 /usr/share/man/man9/DB_COMMAND.9.gz
+/usr/share/man/man9/DB_COMMAND_FLAGS.9.gz
+/usr/share/man/man9/DB_SHOW_ALIAS.9.gz
+/usr/share/man/man9/DB_SHOW_ALIAS_FLAGS.9.gz
+/usr/share/man/man9/DB_SHOW_ALL_ALIAS.9.gz
 /usr/share/man/man9/DB_SHOW_ALL_COMMAND.9.gz
 /usr/share/man/man9/DB_SHOW_COMMAND.9.gz
+/usr/share/man/man9/DB_SHOW_COMMAND_FLAGS.9.gz
 /usr/share/man/man9/DECLARE_CC_MODULE.9.gz
 /usr/share/man/man9/DECLARE_GEOM_CLASS.9.gz
 /usr/share/man/man9/DECLARE_MODULE.9.gz
