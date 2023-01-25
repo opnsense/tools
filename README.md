@@ -67,7 +67,6 @@ Available build options are:
 * COMSPEED:	serial speed, e.g. "115200" (default)
 * DEBUG:	build a debug kernel with additional object information
 * DEVICE:	loads device-specific modifications, e.g. "A10" (default)
-* FLAVOUR:	"OpenSSL" (default), "LibreSSL", "Base"
 * KERNEL:	the kernel config to use, e.g. SMP (default)
 * MIRRORS:	a list of mirrors to prefetch sets from
 * NAME:		"OPNsense" (default)
@@ -453,11 +452,6 @@ be invoked manually using:
 
 Composite build steps
 ---------------------
-
-Build steps are pinned to a particular crypto flavour, but if OpenSSL
-and LibreSSL packages are both required they can be batch-built using:
-
-    # make batch-<step>[,<option>[,...]]
 
 A fully contained nightly build for the system is invoked using:
 

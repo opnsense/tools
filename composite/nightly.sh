@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2023 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,7 +27,6 @@
 
 CLEAN=packages
 CONTINUE=
-FLAVOUR_TOP=${FLAVOUR}
 LINES=400
 NOERROR="distfiles options audit test"
 STAGE1="update info base kernel xtools distfiles"
@@ -55,8 +54,8 @@ LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-clean.log"
 if [ -f ${LOG}.err ]; then
 	echo ">>> Stage clean was aborted due to an error:" > ${LOG}.err
 	cat ${LOG} >> ${LOG}.err
-	FLAVOUR=
 	STAGE1=
+	STAGE2=
 fi
 
 for STAGE in ${STAGE1}; do
@@ -76,72 +75,33 @@ for STAGE in ${STAGE1}; do
 			continue
 		fi
 
-		FLAVOUR=
+		STAGE2=
 		break
 	else
 		tail -n ${LINES} ${LOG} >> ${LOG}.ok
 	fi
 done
 
-STAGENUM=$(expr ${STAGENUM} + 1)
-
-for _FLAVOUR in ${FLAVOUR}; do
-	LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-clean-${_FLAVOUR}.log"
-	(time make clean-${CLEAN} FLAVOUR=${_FLAVOUR} 2>&1 || touch ${LOG}.err) > ${LOG}
-
-	if [ -f ${LOG}.err ]; then
-		echo ">>> Stage clean-${_FLAVOUR} was aborted due to an error:" > ${LOG}.err
-		cat ${LOG} >> ${LOG}.err
-
-		___FLAVOUR=
-
-		for __FLAVOUR in ${FLAVOUR}; do
-			if [ ${__FLAVOUR} != ${_FLAVOUR} ]; then
-				___FLAVOUR="${___FLAVOUR} ${__FLAVOUR}"
-			fi
-		done
-
-		FLAVOUR=${___FLAVOUR}
-	fi
-done
-
 for STAGE in ${STAGE2}; do
 	STAGENUM=$(expr ${STAGENUM} + 1)
 
-	for _FLAVOUR in ${FLAVOUR}; do
-		LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}-${_FLAVOUR}.log"
-		(time make ${STAGE}${CONTINUE} FLAVOUR=${_FLAVOUR} 2>&1 || touch ${LOG}.err) > ${LOG} &
-	done
+	LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}.log"
+	(time make ${STAGE}${CONTINUE} 2>&1 || touch ${LOG}.err) > ${LOG}
 
-	wait
+	if [ -f ${LOG}.err ]; then
+		echo ">>> Stage ${STAGE} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
+	        tail -n ${LINES} ${LOG} >> ${LOG}.err
 
-	for _FLAVOUR in ${FLAVOUR}; do
-		LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}-${_FLAVOUR}.log"
-		if [ -f ${LOG}.err ]; then
-			echo ">>> Stage ${STAGE}-${_FLAVOUR} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
-		        tail -n ${LINES} ${LOG} >> ${LOG}.err
-
-			if [ -z "${NOERROR%%*"${STAGE}"*}" ]; then
-				# continue during opportunistic stages
-				continue
-			fi
-
-			___FLAVOUR=
-
-			for __FLAVOUR in ${FLAVOUR}; do
-				if [ ${__FLAVOUR} != ${_FLAVOUR} ]; then
-					___FLAVOUR="${___FLAVOUR} ${__FLAVOUR}"
-				fi
-			done
-
-			FLAVOUR=${___FLAVOUR}
-		else
-			tail -n ${LINES} ${LOG} >> ${LOG}.ok
+		if [ -z "${NOERROR%%*"${STAGE}"*}" ]; then
+			# continue during opportunistic stages
+			continue
 		fi
-	done
-done
 
-FLAVOUR=${FLAVOUR_TOP}
+		break
+	else
+		tail -n ${LINES} ${LOG} >> ${LOG}.ok
+	fi
+done
 
 tar -C ${TARGETDIRPREFIX} -cJf \
     ${LOGSDIR}/${PRODUCT_VERSION}-${PRODUCT_ARCH}.txz \

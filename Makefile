@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2023 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,7 +28,7 @@ STEPS=		audit arm base boot chroot clean clone compress confirm \
 		kernel list make.conf nano options packages plugins ports \
 		prefetch print rebase release rename rewind serial sign \
 		skim test update upload verify vga vm xtools
-SCRIPTS=	batch distribution factory hotfix nightly watch
+SCRIPTS=	distribution factory hotfix nightly watch
 
 .PHONY:		${STEPS} ${SCRIPTS}
 
@@ -79,7 +79,7 @@ _CONFIGDIR=	${DIR:C/\/build\.conf$//}
 NAME?=		OPNsense
 TYPE?=		${NAME:tl}
 SUFFIX?=	# empty
-FLAVOUR?=	OpenSSL LibreSSL # first one is default
+FLAVOUR=	OpenSSL # XXX only flavour now, perhaps refactor
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
 ABI?=		${_CONFIGDIR:C/^.*\///}
