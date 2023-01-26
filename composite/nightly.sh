@@ -27,18 +27,26 @@
 
 CLEAN=packages
 CONTINUE=
-LINES=400
-NOERROR="distfiles options audit test"
-STAGE1="update info base kernel xtools distfiles"
-STAGE2="options ports plugins core audit test"
 STAGENUM=0
-
-eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX)"
 
 if [ -n "${1}" ]; then
 	CLEAN=plugins,core
 	CONTINUE=-nightly
 fi
+
+# Stage 1 involves basic builds and preparation, reset progress for stage 2
+STAGE1=${STAGE1:-"clean-obj update info base kernel xtools distfiles clean-${CLEAN}"}
+
+# Stage 2 centers around ports, packages and QA for partial or full rebuild
+STAGE2=${STAGE2:-"options ports plugins core audit test"}
+
+# Do not error out on these optional targets
+NOERROR=${NOERROR:-"distfiles options audit test"}
+
+# Number of error lines to log separately
+LINES=${LINES:-400}
+
+eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX)"
 
 for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | \
     sort -r | tail -n +7); do
@@ -47,25 +55,12 @@ done
 
 mkdir -p ${LOGSDIR}/${PRODUCT_VERSION}
 
-LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-clean.log"
-
-(time make clean-obj 2>&1 || touch ${LOG}.err) > ${LOG}
-
-if [ -f ${LOG}.err ]; then
-	echo ">>> Stage clean was aborted due to an error:" > ${LOG}.err
-	cat ${LOG} >> ${LOG}.err
-	STAGE1=
-	STAGE2=
-fi
-
 for STAGE in ${STAGE1}; do
 	STAGENUM=$(expr ${STAGENUM} + 1)
-
 	LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}.log"
 
-	# we don't normally clean these stages
+	# do not force rebuilds by design
 	(time make ${STAGE} 2>&1 || touch ${LOG}.err) > ${LOG}
-
 	if [ -f ${LOG}.err ]; then
 		echo ">>> Stage ${STAGE} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
 		tail -n ${LINES} ${LOG} >> ${LOG}.err
@@ -84,10 +79,10 @@ done
 
 for STAGE in ${STAGE2}; do
 	STAGENUM=$(expr ${STAGENUM} + 1)
-
 	LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}.log"
-	(time make ${STAGE}${CONTINUE} 2>&1 || touch ${LOG}.err) > ${LOG}
 
+	# do not force rebuilds only if requested by user
+	(time make ${STAGE}${CONTINUE} 2>&1 || touch ${LOG}.err) > ${LOG}
 	if [ -f ${LOG}.err ]; then
 		echo ">>> Stage ${STAGE} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
 	        tail -n ${LINES} ${LOG} >> ${LOG}.err
