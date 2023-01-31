@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2023 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -32,6 +32,10 @@ set -e
 if [ -z "${TARGET}" -o "${TARGET}" = "plugins" -o "${TARGET}" = "core" ]; then
 	# force a full rebuild of selected stage(s)
 	make clean-${TARGET:-"plugins,core"} ${TARGET:-"core"}-hotfix
+	if [ -z "${TARGET}" ]; then
+		# strip aux packages in standard mode
+		make packages
+	fi
 else
 	# assume quick target port(s) to rebuild from ports.conf
 	make ports-${TARGET} PORTSENV="DEPEND=no PRUNE=no ${PORTSENV}"
