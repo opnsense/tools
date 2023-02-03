@@ -156,11 +156,9 @@ VERBOSE_FLAGS=	-x
 VERBOSE_HIDDEN=	@
 .endif
 
-.for _VERSION in ABI DEBUG LUA PERL PHP PYTHON RUBY VERSION ZFS
+.for _VERSION in ABI DEBUG LUA PERL PHP PYTHON RUBY SSL VERSION ZFS
 VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 .endfor
-
-VERSIONS+=	PRODUCT_CRYPTO=${FLAVOUR:[1]:tl}
 
 # Expand build steps to launch into the selected
 # script with the proper build options set:
