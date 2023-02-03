@@ -25,9 +25,9 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-eval "$(make print-PRODUCT_ARCH,PRODUCT_CORE,PRODUCT_FLAVOUR,PRODUCT_ZFS,SETSDIR)"
+eval "$(make print-PRODUCT_ARCH,PRODUCT_CORE,PRODUCT_ZFS,SETSDIR)"
 
-PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar")
+PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_ARCH}.tar")
 
 if [ ! -f "${PACKAGESET}" ]; then
 	echo ">>> Cannot continue without packages set"

@@ -25,13 +25,12 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-eval "$(make print-LOGSDIR,PRODUCT_FLAVOUR)"
+eval "$(make print-LOGSDIR)"
 
 CURRENTDIR=$(find -s ${LOGSDIR} -type d -depth 1 \! -name latest | tail -n1)
 
 if [ -n "${CURRENTDIR}" ]; then
-	for CURRENTLOG in $(find ${CURRENTDIR} -name "??-${1:-ports}.log" -or \
-	    -name "??-${1:-ports}-${PRODUCT_FLAVOUR}.log"); do
+	for CURRENTLOG in $(find ${CURRENTDIR} -name "??-${1:-ports}.log"); do
 		tail -f ${CURRENTLOG}
 		break
 	done

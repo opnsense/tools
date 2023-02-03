@@ -111,7 +111,6 @@ clean.up.post.build" | while read PORT_ORIGIN; do
 PACKAGES=${PACKAGESDIR}-cache
 PRODUCT_ABI=${PRODUCT_ABI}
 PRODUCT_ARCH=${PRODUCT_ARCH}
-PRODUCT_FLAVOUR=${PRODUCT_FLAVOUR}
 UNAME_r=\$(freebsd-version)
 "
 
