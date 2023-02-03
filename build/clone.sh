@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2021-2023 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -43,32 +43,12 @@ fi
 
 for ARG in ${@}; do
 	case ${ARG} in
-	base|kernel)
+	base|distfiles|kernel|packages)
 		SRC=$(find_set ${ARG})
 		if [ -f "${SRC}" ]; then
 			DST=$(echo ${SRC} | sed "s:/${PRODUCT_ABI}/:/${TO}/:")
 			echo -n ">>> Cloning ${DST}... "
-			rm -f $(dirname ${DST})/${ARG}-*.txz*
-			cp ${SRC} ${DST}
-			echo "done"
-		fi
-		;;
-	distfiles)
-		SRC=$(find_set ${ARG})
-		DST=$(echo ${SRC} | sed "s:/${PRODUCT_ABI}/:/${TO}/:")
-		if [ -f "${SRC}" ]; then
-			echo -n ">>> Cloning ${DST}... "
-			rm -f $(dirname ${DST})/${ARG}-*.tar*
-			cp ${SRC} ${DST}
-			echo "done"
-		fi
-		;;
-	packages)
-		SRC=$(find_set ${ARG})
-		DST=$(echo ${SRC} | sed "s:/${PRODUCT_ABI}/:/${TO}/:")
-		if [ -f "${SRC}" ]; then
-			echo -n ">>> Cloning ${DST}... "
-			rm -f $(dirname ${DST})/${ARG}-*-${PRODUCT_FLAVOUR}-*.tar*
+			rm -f $(dirname ${DST})/${ARG}-*
 			cp ${SRC} ${DST}
 			echo "done"
 		fi
