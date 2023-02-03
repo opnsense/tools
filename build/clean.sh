@@ -35,7 +35,7 @@ for ARG in ${@}; do
 	case ${ARG} in
 	arm)
 		echo ">>> Removing arm image"
-		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-arm-${PRODUCT_ARCH}-${PRODUCT_DEVICE}.img*
+		rm -f ${IMAGESDIR}/*-arm-${PRODUCT_ARCH}-${PRODUCT_DEVICE}.img*
 		;;
 	base)
 		echo ">>> Removing base set"
@@ -56,7 +56,7 @@ for ARG in ${@}; do
 		;;
 	dvd)
 		echo ">>> Removing dvd image"
-		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-dvd-${PRODUCT_ARCH}.iso*
+		rm -f ${IMAGESDIR}/*-dvd-${PRODUCT_ARCH}.iso*
 		;;
 	images)
 		setup_stage ${IMAGESDIR}
@@ -70,7 +70,7 @@ for ARG in ${@}; do
 		;;
 	nano)
 		echo ">>> Removing nano image"
-		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-nano-${PRODUCT_ARCH}.img*
+		rm -f ${IMAGESDIR}/*-nano-${PRODUCT_ARCH}.img*
 		;;
 	obj)
 		if [ -d ${STAGEDIRPREFIX} ]; then
@@ -86,7 +86,7 @@ for ARG in ${@}; do
 		;;
 	packages|ports)
 		echo ">>> Removing packages set"
-		rm -f ${SETSDIR}/packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.*
+		rm -f ${SETSDIR}/packages-*-${PRODUCT_ARCH}.*
 		;;
 	plugins)
 		echo ">>> Removing plugins from packages set"
@@ -99,11 +99,11 @@ for ARG in ${@}; do
 		;;
 	release)
 		echo ">>> Removing release set"
-		rm -f ${SETSDIR}/release-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar
+		rm -f ${SETSDIR}/release-*-${PRODUCT_ARCH}.tar
 		;;
 	serial)
 		echo ">>> Removing serial image"
-		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-serial-${PRODUCT_ARCH}.img*
+		rm -f ${IMAGESDIR}/*-serial-${PRODUCT_ARCH}.img*
 		;;
 	sets)
 		setup_stage ${SETSDIR}
@@ -116,11 +116,11 @@ for ARG in ${@}; do
 		;;
 	vga)
 		echo ">>> Removing vga image"
-		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-vga-${PRODUCT_ARCH}.img*
+		rm -f ${IMAGESDIR}/*-vga-${PRODUCT_ARCH}.img*
 		;;
 	vm)
 		echo ">>> Removing vm image"
-		rm -f ${IMAGESDIR}/*-${PRODUCT_FLAVOUR}-vm-${PRODUCT_ARCH}.*
+		rm -f ${IMAGESDIR}/*-vm-${PRODUCT_ARCH}.*
 		;;
 	xtools)
 		echo ">>> Removing xtools set"
