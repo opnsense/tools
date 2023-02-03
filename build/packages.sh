@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2019-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2019-2023 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -31,24 +31,7 @@ SELF=packages
 
 . ./common.sh
 
-AUXLIST=$(
-cat ${CONFIGDIR}/aux.conf | while read PORT_ORIGIN PORT_IGNORE; do
-	eval PORT_ORIGIN=${PORT_ORIGIN}
-	if [ "$(echo ${PORT_ORIGIN} | colrm 2)" = "#" ]; then
-		continue
-	fi
-	if [ -n "${PORT_IGNORE}" ]; then
-		for PORT_QUIRK in $(echo ${PORT_IGNORE} | tr ',' ' '); do
-			if [ ${PORT_QUIRK} = ${PRODUCT_TARGET} -o \
-			     ${PORT_QUIRK} = ${PRODUCT_ARCH} -o \
-			     ${PORT_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
-				continue 2
-			fi
-		done
-	fi
-	echo ${PORT_ORIGIN}
-done
-)
+AUXLIST=$(list_packages "${AUXLIST}" ${CONFIGDIR}/aux.conf)
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
