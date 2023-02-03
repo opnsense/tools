@@ -35,8 +35,7 @@ for ARG in ${@}; do
 	case ${ARG} in
 	arm|dvd|nano|serial|vga|vm)
 		for IMAGE in $(find ${IMAGESDIR} -name \
-		    "*-${PRODUCT_FLAVOUR}-${ARG}-*" \! -name "*.bz2" \
-		    \! -name "*.sig"); do
+		    "*-${ARG}-*" \! -name "*.bz2" \! -name "*.sig"); do
 			echo -n ">>> Compressing ${ARG} image... "
 			bzip2 ${IMAGE}
 			echo "done"
