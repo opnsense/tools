@@ -743,7 +743,7 @@ check_packages()
 
 find_image()
 {
-	echo $(find ${IMAGESDIR} -name "*-${PRODUCT_FLAVOUR}-${1}-${PRODUCT_ARCH}.*" \! -name "*.sig")
+	echo $(find ${IMAGESDIR} -name "*-${1}-${PRODUCT_ARCH}.*" \! -name "*.sig")
 }
 
 find_set()
@@ -762,7 +762,7 @@ find_set()
 		echo $(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
 		;;
 	packages)
-		echo $(find ${SETSDIR} -name "packages-*-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar")
+		echo $(find ${SETSDIR} -name "packages-*-${PRODUCT_ARCH}.tar")
 		;;
 	release)
 		echo $(find ${SETSDIR} -name "release-*-${PRODUCT_ARCH}.tar")
@@ -1219,8 +1219,7 @@ list_config()
 		if [ -n "${LIST_IGNORE}" -a -n "${LIST_MATCH}" ]; then
 			for LIST_QUIRK in $(echo ${LIST_IGNORE} | tr ',' ' '); do
 				if [ ${LIST_QUIRK} = ${PRODUCT_TARGET} -o \
-				     ${LIST_QUIRK} = ${PRODUCT_ARCH} -o \
-				     ${LIST_QUIRK} = ${PRODUCT_FLAVOUR} ]; then
+				     ${LIST_QUIRK} = ${PRODUCT_ARCH} ]; then
 					continue 2
 				fi
 			done
