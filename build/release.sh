@@ -38,7 +38,7 @@ if [ -f "${RELEASESET}" -a -z "${1}" ]; then
 	exit 0
 fi
 
-RELEASESET="${SETSDIR}/release-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}.tar"
+RELEASESET="${SETSDIR}/release-${PRODUCT_VERSION}-${PRODUCT_ARCH}.tar"
 
 sh ./clean.sh ${SELF}
 
