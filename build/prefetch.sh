@@ -41,16 +41,9 @@ fi
 
 for ARG in ${@}; do
 	case ${ARG} in
-	base|kernel)
+	base|kernel|packages)
 		sh ./clean.sh ${ARG}
 		URL="${MIRRORSETDIR}/${ARG}-${VERSION}-${PRODUCT_ARCH}"
-		for SUFFIX in txz.sig txz; do
-			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
-		done
-		;;
-	packages)
-		sh ./clean.sh ${ARG}
-		URL="${MIRRORSETDIR}/${ARG}-${VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
 		for SUFFIX in tar.sig tar; do
 			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
 		done
