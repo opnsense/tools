@@ -182,7 +182,7 @@ ${STEP}: lint-steps
 
 .for SCRIPT in ${SCRIPTS}
 ${SCRIPT}: lint-composite
-	${VERBOSE_HIDDEN} cd ${.CURDIR} && FLAVOUR="${FLAVOUR}" \
+	${VERBOSE_HIDDEN} cd ${.CURDIR} && \
 	    sh ${VERBOSE_FLAGS} ./composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
 .endfor
 
