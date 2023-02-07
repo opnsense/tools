@@ -1017,9 +1017,6 @@ bundle_packages()
 		ln -sfn ../${PKGFILE} ${LATESTDIR}/${PKGINFO}.pkg
 		generate_signature \
 		    ${BASEDIR}${PACKAGESDIR}-new/Latest/${PKGINFO}.pkg
-		# add backwards links for pkg-bootstrap et al
-		ln -sfn ../${PKGFILE} ${LATESTDIR}/${PKGINFO}.txz
-		ln -sfn ${PKGINFO}.pkg.sig ${LATESTDIR}/${PKGINFO}.txz.sig
 	done
 
 	# generate index files (XXX ideally from a chroot)
