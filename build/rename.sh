@@ -37,7 +37,7 @@ for ARG in ${@}; do
 		echo ">>> Renaming arm image: ${PRODUCT_VERSION}"
 		for FILE in $(find ${IMAGESDIR} -name \
 		    "*-arm-${PRODUCT_ARCH}-${PRODUCT_DEVICE}.*"); do
-		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-arm-${FILE##*-arm-}
+		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-arm-${FILE##*-arm-}
 		done
 		;;
 	base)
@@ -67,7 +67,7 @@ for ARG in ${@}; do
 		echo ">>> Renaming dvd image: ${PRODUCT_VERSION}"
 		for FILE in $(find ${IMAGESDIR} -name \
 		    "*-dvd-${PRODUCT_ARCH}.*"); do
-		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-dvd-${FILE##*-}
+		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-dvd-${FILE##*-}
 		done
 		;;
 	kernel)
@@ -95,7 +95,7 @@ for ARG in ${@}; do
 		echo ">>> Renaming nano image: ${PRODUCT_VERSION}"
 		for FILE in $(find ${IMAGESDIR} -name \
 		    "*-nano-${PRODUCT_ARCH}.*"); do
-		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-nano-${FILE##*-}
+		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-nano-${FILE##*-}
 		done
 		;;
 	packages)
@@ -109,21 +109,21 @@ for ARG in ${@}; do
 		echo ">>> Renaming serial image: ${PRODUCT_VERSION}"
 		for FILE in $(find ${IMAGESDIR} -name \
 		    "*-serial-${PRODUCT_ARCH}.*"); do
-		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-serial-${FILE##*-}
+		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-serial-${FILE##*-}
 		done
 		;;
 	vga)
 		echo ">>> Renaming vga image: ${PRODUCT_VERSION}"
 		for FILE in $(find ${IMAGESDIR} -name \
 		    "*-vga-${PRODUCT_ARCH}.*"); do
-		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-vga-${FILE##*-}
+		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-vga-${FILE##*-}
 		done
 		;;
 	vm)
 		echo ">>> Renaming vm set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${IMAGESDIR} -name \
 		    "*-vm-${PRODUCT_ARCH}.*"); do
-			mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-vm-${FILE##*-}
+			mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-vm-${FILE##*-}
 		done
 		;;
 	esac

@@ -79,7 +79,6 @@ _CONFIGDIR=	${DIR:C/\/build\.conf$//}
 NAME?=		OPNsense
 TYPE?=		${NAME:tl}
 SUFFIX?=	# empty
-FLAVOUR=	OpenSSL # XXX only flavour now, perhaps refactor
 _ARCH!=		uname -p
 ARCH?=		${_ARCH}
 ABI?=		${_CONFIGDIR:C/^.*\///}
@@ -167,7 +166,7 @@ VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 ${STEP}: lint-steps
 	${VERBOSE_HIDDEN} cd ${.CURDIR}/build && \
 	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} -F ${KERNEL} \
-	    -f "${FLAVOUR}" -n ${NAME} -v "${VERSIONS}" -s ${_CONFIGDIR} \
+	    -n ${NAME} -v "${VERSIONS}" -s ${_CONFIGDIR} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
