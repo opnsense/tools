@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2023 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -137,13 +137,14 @@ UNAME_r=\$(freebsd-version)
 	# check whether the package is available
 	# under a different version number
 	PKGNAME=\$(basename \${PKGFILE})
-	PKGNAME=\${PKGNAME%%-[0-9]*}.pkg
-	PKGLINK=${PACKAGESDIR}/Latest/\${PKGNAME}
+	PKGNAME=\${PKGNAME%%-[0-9]*}
+	PORT_DESCR="\${PORT_ORIGIN} (\${PKGNAME})"
+	PKGLINK=${PACKAGESDIR}/Latest/\${PKGNAME}.pkg
 	if [ -L \${PKGLINK} ]; then
 		PKGFILE=\$(readlink -f \${PKGLINK} || true)
 		if [ -f \${PKGFILE} ]; then
 			PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -v PKGVERSION \${MAKE_ARGS})
-			echo ">>> Skipped version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-msg
+			echo ">>> Skipped version \${PKGVERS} for \${PORT_DESCR}" >> /.pkg-msg
 			continue
 		fi
 	fi
@@ -152,12 +153,12 @@ UNAME_r=\$(freebsd-version)
 
 	if ! make -C ${PORTSDIR}/\${PORT} install \
 	    USE_PACKAGE_DEPENDS=yes \${MAKE_ARGS}; then
-		echo ">>> Aborted version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-err
+		echo ">>> Aborted version \${PKGVERS} for \${PORT_DESCR}" >> /.pkg-err
 
 		CONTINUE=
 
 		if [ ${BATCH} = "no" ]; then
-			echo ">>> Interactive shell for \${PORT} (use \"exit 1\" to abort)"
+			echo ">>> Interactive shell for \${PORT_DESCR} (use \"exit 1\" to abort)"
 			(cd ${PORTSDIR}/\${PORT}; sh < /dev/tty) || exit 1
 			CONTINUE=1
 		fi
@@ -169,11 +170,11 @@ UNAME_r=\$(freebsd-version)
 		make -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
 		continue
 	elif ! make -C ${PORTSDIR}/\${PORT} check-plist \${MAKE_ARGS}; then
-		echo ">>> Package list inconsistency for \${PORT_ORIGIN}" >> /.pkg-msg
+		echo ">>> Package list inconsistency for \${PORT_DESCR}" >> /.pkg-msg
 	fi
 
 	if [ -n "${PRODUCT_REBUILD}" ]; then
-		echo ">>> Rebuilt version \${PKGVERS} for \${PORT_ORIGIN}" >> /.pkg-msg
+		echo ">>> Rebuilt version \${PKGVERS} for \${PORT_DESCR}" >> /.pkg-msg
 	fi
 
 	for PKGNAME in \$(pkg query %n); do
