@@ -40,12 +40,12 @@ upload()
 for ARG in ${@}; do
 	case ${ARG} in
 	arm|dvd|nano|serial|vga|vm)
-		upload ${ARG} ${IMAGESDIR} "*-${PRODUCT_FLAVOUR}-*${ARG}-*${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}*"
+		upload ${ARG} ${IMAGESDIR} "*-${ARG}-*${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}*"
 		;;
 	base|kernel)
 		upload ${ARG} ${SETSDIR} "${ARG}-*${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}*"
 		;;
-	distfiles)
+	distfiles|packages|release)
 		upload ${ARG} ${SETSDIR} "${ARG}-*"
 		;;
 	log)
@@ -53,9 +53,6 @@ for ARG in ${@}; do
 		;;
 	logs)
 		upload ${ARG} ${LOGSDIR} "[0-9]*"
-		;;
-	packages|release)
-		upload ${ARG} ${SETSDIR} "${ARG}-*-${PRODUCT_FLAVOUR}-*"
 		;;
 	esac
 done
