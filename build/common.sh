@@ -69,7 +69,7 @@ while getopts ${OPTS} OPT; do
 		export PRODUCT_KERNEL=${OPTARG}
 		;;
 	f)
-		export PRODUCT_FLAVOUR=${OPTARG%% *}
+		export PRODUCT_FLAVOUR=${OPTARG}
 		;;
 	G)
 		export PORTSREFBRANCH=${OPTARG}
@@ -954,7 +954,7 @@ install_packages()
 custom_packages()
 {
 	chroot ${1} /bin/sh -es << EOF
-make -C ${2} ${3} FLAVOUR=${PRODUCT_FLAVOUR} PKGDIR=${PACKAGESDIR}/All package
+make -C ${2} ${3} PKGDIR=${PACKAGESDIR}/All package
 EOF
 
 	(
@@ -1033,7 +1033,7 @@ bundle_packages()
 
 	sh ./clean.sh packages
 
-	PACKAGEVER="${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${PRODUCT_ARCH}"
+	PACKAGEVER="${PRODUCT_VERSION}-${PRODUCT_ARCH}"
 	PACKAGESET="${SETSDIR}/packages-${PACKAGEVER}.tar"
 	echo -n ">>> Creating package mirror set for ${PACKAGEVER}... "
 	tar -C ${BASEDIR}${PACKAGESDIR}-new -cf ${PACKAGESET} .

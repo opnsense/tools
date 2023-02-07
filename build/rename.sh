@@ -102,7 +102,7 @@ for ARG in ${@}; do
 		echo ">>> Renaming packages set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "packages-*-${PRODUCT_ARCH}.*"); do
-			mv ${FILE} ${SETSDIR}/packages-${PRODUCT_VERSION}-${PRODUCT_FLAVOUR}-${FILE##*-}
+			mv ${FILE} ${SETSDIR}/packages-${PRODUCT_VERSION}-${FILE##*-}
 		done
 		;;
 	serial)
