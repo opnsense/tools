@@ -41,13 +41,9 @@ for ARG in ${@}; do
 	case ${ARG} in
 	arm|dvd|nano|serial|vga|vm)
 		sh ./clean.sh ${ARG}
-		download ${ARG} ${IMAGESDIR} "*-${PRODUCT_FLAVOUR}-${ARG}-*"
+		download ${ARG} ${IMAGESDIR} "*-${ARG}-*"
 		;;
-	base|kernel)
-		sh ./clean.sh ${ARG}
-		download ${ARG} ${SETSDIR} "${ARG}-*"
-		;;
-	distfiles)
+	base|distfiles|kernel|packages|release)
 		sh ./clean.sh ${ARG}
 		download ${ARG} ${SETSDIR} "${ARG}-*"
 		;;
@@ -58,10 +54,6 @@ for ARG in ${@}; do
 	logs)
 		sh ./clean.sh ${ARG}
 		download ${ARG} ${LOGSDIR} "[0-9]*"
-		;;
-	packages|release)
-		sh ./clean.sh ${ARG}
-		download ${ARG} ${SETSDIR} "${ARG}-*-${PRODUCT_FLAVOUR}-*"
 		;;
 	esac
 done
