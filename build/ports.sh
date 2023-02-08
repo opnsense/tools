@@ -169,7 +169,7 @@ UNAME_r=\$(freebsd-version)
 
 		make -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}
 		continue
-	elif ! CHECK_PLIST=$(make -C ${PORTSDIR}/\${PORT} check-plist \${MAKE_ARGS} 2>&1); then
+	elif ! CHECK_PLIST=\$(make -C ${PORTSDIR}/\${PORT} check-plist \${MAKE_ARGS} 2>&1); then
 		echo ">>> Package list inconsistency for \${PORT_DESCR}" >> /.pkg-msg
 		echo "\${CHECK_PLIST}" >> /.pkg-msg
 	fi
