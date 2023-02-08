@@ -31,11 +31,7 @@ set -e
 
 if [ -z "${TARGET}" -o "${TARGET}" = "plugins" -o "${TARGET}" = "core" ]; then
 	# force a full rebuild of selected stage(s)
-	make clean-${TARGET:-"plugins,core"} ${TARGET:-"core"}-hotfix
-	if [ -z "${TARGET}" ]; then
-		# strip aux packages in standard mode
-		make packages
-	fi
+	make clean-${TARGET:-"plugins,core"} ${TARGET:-"packages"}-hotfix
 else
 	# assume quick target port(s) to rebuild from ports.conf
 	make ports-${TARGET} PORTSENV="DEPEND=no PRUNE=no ${PORTSENV}"
