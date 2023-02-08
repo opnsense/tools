@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2023 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -54,22 +54,32 @@ echo ">>> Fetching distfiles..."
 trap : 2
 
 if ! ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -es << EOF; then PORTSLIST=; fi
-echo "${PORTSLIST}" | while read PORT_ORIGIN; do
-	MAKE_ARGS="
+MAKE_ARGS="
 PACKAGES=${PACKAGESDIR}
 PRODUCT_ABI=${PRODUCT_ABI}
 TRYBROKEN=yes
 UNAME_r=\$(freebsd-version)
 USE_PACKAGE_DEPENDS=yes
 "
+echo "${PORTSLIST}" | while read PORT_ORIGIN; do
 	echo ">>> Fetching \${PORT_ORIGIN}..."
+	FLAVOR=\${PORT_ORIGIN##*@}
+	FLAVOR_ARG=
+	if [ "\${FLAVOR}" != "\${PORT_ORIGIN}" ]; then
+		FLAVOR_ARG="FLAVOR=\${FLAVOR}"
+	fi
 	PORT=\${PORT_ORIGIN%%@*}
-	make -C ${PORTSDIR}/\${PORT} fetch \${MAKE_ARGS}
+	make -C ${PORTSDIR}/\${PORT} fetch \${MAKE_ARGS} \${FLAVOR_ARG}
 	PORT_DEPENDS=\$(make -C ${PORTSDIR}/\${PORT} all-depends-list \
 	    \${MAKE_ARGS})
 	for PORT_DEPEND in \${PORT_DEPENDS}; do
-		PORT_DEPEND=\${PORT_DEPEND%%@*}
-		make -C \${PORT_DEPEND} fetch \${MAKE_ARGS}
+		FLAVOR=\${PORT_DEPEND##*@}
+		FLAVOR_ARG=
+		if [ "\${FLAVOR}" != "\${PORT_DEPEND}" ]; then
+			FLAVOR_ARG="FLAVOR=\${FLAVOR}"
+		fi
+		PORT=\${PORT_DEPEND%%@*}
+		make -C \${PORT} fetch \${MAKE_ARGS} \${FLAVOR_ARG}
 	done
 done
 EOF
