@@ -112,7 +112,8 @@ while getopts ${OPTS} OPT; do
 	n)
 		export PRODUCT_NAME=${OPTARG}
 		;;
-	O)	export PRODUCT_GITBASE=${OPTARG}
+	O)
+		export PRODUCT_GITBASE=${OPTARG}
 		;;
 	o)
 		if [ -n "${OPTARG}" ]; then
