@@ -28,7 +28,7 @@ STEPS=		audit arm base boot chroot clean clone compress confirm \
 		kernel list make.conf nano options packages plugins ports \
 		prefetch print rebase release rename rewind serial sign \
 		skim test update upload verify vga vm xtools
-SCRIPTS=	distribution factory hotfix nightly watch
+SCRIPTS=	custom distribution factory hotfix nightly watch
 
 .PHONY:		${STEPS} ${SCRIPTS}
 

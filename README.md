@@ -489,6 +489,11 @@ to operate yes or no questions before an action:
 
     # make info confirm dvd
 
+To add arbitrary plugins from an external location into an image you can
+use the following:
+
+    # make custom-<image> ADDITIONS="an-existing-plugin path/to/extra/plugin"
+
 Last but not least, a rebuild of OPNsense core and plugins on package
 sets is invoked using:
 
