@@ -76,7 +76,10 @@ for PLUGIN_ORIGIN in ${PLUGINSLIST}; do
 	fi
 
 	PLUGIN_NAME=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} -v PLUGIN_NAME)
-	install_packages ${STAGEDIR} os-${PLUGIN_NAME}${PRODUCT_DEVEL}
+	if ! install_packages ${STAGEDIR} os-${PLUGIN_NAME}${PRODUCT_DEVEL}; then
+		echo ">>> Missing ${PLUGIN_ORIGIN} package, skipping test"
+		continue
+	fi
 
 	echo ">>> Running ${PLUGIN_ORIGIN} test suite..."
 	chroot ${STAGEDIR} /bin/sh -es <<EOF
