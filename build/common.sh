@@ -934,7 +934,7 @@ install_packages()
 		done
 		if [ -z "${PKGFOUND}" ]; then
 			echo "Could not find package: ${PKG}" >&2
-			exit 1
+			return 1
 		fi
 	done
 
