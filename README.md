@@ -192,7 +192,7 @@ Device-specific settings
 Device-specific settings can be found and added in the
 device/ directory.  Of special interest are hooks into
 the build process for required non-default settings for
-image builds.  The .conf files are shell scrips that can
+image builds.  The .conf files are shell scripts that can
 define hooks in the form of e.g.:
 
     serial_hook()
@@ -233,7 +233,7 @@ Advanced package builds
 -----------------------
 
 Package sets ready for web server deployment are automatically
-generated and modified by ports, plugins and core setps.  The
+generated and modified by ports, plugins and core steps.  The
 build automatically caches temporary build dependencies to avoid
 spurious rebuilds.  These packages are later discarded to provide
 a slim runtime set only.
@@ -272,7 +272,7 @@ derived from their respective configuration files, i.e.:
     # make ports PORTSLIST="security/openssl"
     # make plugins PLUGINSLIST="devel/debug"
 
-Acquiring precompiled sets from the mirrors or another local direcory
+Acquiring precompiled sets from the mirrors or another local directory
 ---------------------------------------------------------------------
 
 Compiled sets can be prefetched from a mirror if they exist,
