@@ -319,7 +319,7 @@ For this reason they are not included in our binary releases.
 The default format is vmdk with 20G and 1G swap.  If you want
 to change that you can manually alter the invoke using:
 
-    # make vm-<format>[,<size>[,<swap>]]
+    # make vm-<format>[,<size>[,<swap>[,<extras>]]]
 
 Available virtual machine disk formats are:
 
@@ -331,6 +331,9 @@ Available virtual machine disk formats are:
 * vmdk:		VMWare, VirtualBox (dynamic size)
 
 The swap argument is either its size or set to "off" to disable.
+
+The extras argument can be any extras.conf hook in case the
+default "vm" hook is not desirable.
 
 Clearing individual build step progress
 ---------------------------------------
