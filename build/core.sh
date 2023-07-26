@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2023 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -47,8 +47,8 @@ remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR} pkg git
 lock_packages ${STAGEDIR}
 
-if [ -n "${VERSION}" ]; then
-	CORE_PKGVERSION="CORE_PKGVERSION=${VERSION}"
+if [ -n "${COREVERSION}" ]; then
+	CORE_PKGVERSION="CORE_PKGVERSION=${COREVERSION}"
 fi
 
 for BRANCH in ${EXTRABRANCH} ${COREBRANCH}; do
