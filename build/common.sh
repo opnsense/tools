@@ -1085,18 +1085,18 @@ _setup_extras_generic()
 
 _setup_extras_device()
 {
-	if [ ! -f ${DEVICEDIR}/${PRODUCT_DEVICE}.conf ]; then
+	if [ ! -f ${DEVICEDIR}/${PRODUCT_DEVICE_REAL}.conf ]; then
 		return
 	fi
 
 	unset -f ${2}_hook
 
-	. ${DEVICEDIR}/${PRODUCT_DEVICE}.conf
+	. ${DEVICEDIR}/${PRODUCT_DEVICE_REAL}.conf
 
 	if [ -n "$(type ${2}_hook 2> /dev/null)" ]; then
-		echo ">>> Begin ${PRODUCT_DEVICE} extra: ${2}_hook"
+		echo ">>> Begin ${PRODUCT_DEVICE_REAL} extra: ${2}_hook"
 		${2}_hook ${1}
-		echo ">>> End ${PRODUCT_DEVICE} extra: ${2}_hook"
+		echo ">>> End ${PRODUCT_DEVICE_REAL} extra: ${2}_hook"
 	fi
 }
 
