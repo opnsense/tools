@@ -25,7 +25,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-TARGET=${1}
+TARGET=${1%%-*}
 
 set -e
 
@@ -34,5 +34,5 @@ if [ -z "${TARGET}" -o "${TARGET}" = "plugins" -o "${TARGET}" = "core" ]; then
 	make clean-${TARGET:-"plugins,core"} ${TARGET:-"packages"}-hotfix
 else
 	# assume quick target port(s) to rebuild from ports.conf
-	make ports-${TARGET} PORTSENV="DEPEND=no PRUNE=no ${PORTSENV}"
+	make ports-${1} PORTSENV="DEPEND=no PRUNE=no ${PORTSENV}"
 fi
