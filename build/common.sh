@@ -304,7 +304,9 @@ done
 
 git_reset()
 {
-	git -C ${1} clean -xdqf .
+	if [ ${1} != ${TOOLSDIR} ]; then
+		git -C ${1} clean -xdqf .
+	fi
 	REPO_TAG=${2}
 	if [ -z "${REPO_TAG}" ]; then
 		git_tag ${1} ${PRODUCT_VERSION}
