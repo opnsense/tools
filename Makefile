@@ -91,11 +91,11 @@ UEFI?=		arm dvd serial vga vm
 ZFS?=		# empty
 GITBASE?=	https://github.com/opnsense
 MIRRORS?=	https://opnsense.c0urier.net \
-		http://mirrors.nycbug.org/pub/opnsense \
-		http://mirror.wdc1.us.leaseweb.net/opnsense \
-		http://mirror.sfo12.us.leaseweb.net/opnsense \
-		http://mirror.fra10.de.leaseweb.net/opnsense \
-		http://mirror.ams1.nl.leaseweb.net/opnsense
+		https://mirrors.nycbug.org/pub/opnsense \
+		https://mirror.wdc1.us.leaseweb.net/opnsense \
+		https://mirror.sfo12.us.leaseweb.net/opnsense \
+		https://mirror.fra10.de.leaseweb.net/opnsense \
+		https://mirror.ams1.nl.leaseweb.net/opnsense
 SERVER?=	user@does.not.exist
 UPLOADDIR?=	.
 _VERSION!=	date '+%Y%m%d%H%M'
