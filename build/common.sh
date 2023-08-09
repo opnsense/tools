@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2023 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -410,6 +410,9 @@ git_branch()
 git_tag()
 {
 	# Fuzzy-match a tag and return it for the caller.
+	local FUZZY
+	local MAX
+	local VERSION
 
 	POOL=$(git -C ${1} tag | awk '$1 == "'"${2}"'"')
 	if [ -z "${POOL}" ]; then

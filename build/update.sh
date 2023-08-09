@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2023 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -30,6 +30,11 @@ set -e
 SELF=update
 
 . ./common.sh
+
+if [ -n "${VERSION}" -a -n "${EXTRABRANCH}" ]; then
+	echo ">>> Cannot check out VERSION=${VERSION} while using EXTRABRANCH=${EXTRABRANCH}"
+	exit 1
+fi
 
 ARGS=${@}
 if [ -z "${ARGS}" ]; then
@@ -75,4 +80,10 @@ for ARG in ${ARGS}; do
 	for BRANCH in ${BRANCHES}; do
 		git_pull ${DIR} ${BRANCH}
 	done
+
+	if [ -n "${VERSION}" ]; then
+		git_tag ${DIR} ${VERSION}
+		git_pull ${DIR} ${BRANCHES}
+		git_reset ${DIR}
+	fi
 done

@@ -211,9 +211,11 @@ Updating the code repositories
 
 Updating all or individual repositories can be done as follows:
 
-    # make update[-<repo1>[,...]]
+    # make update[-<repo1>[,...]] [VERSION=git.tag]
 
 Available update options are: core, plugins, ports, portsref, src, tools
+
+VERSION can be used to update to the matching git tag instead of HEAD.
 
 Regression tests and ports audit
 --------------------------------
