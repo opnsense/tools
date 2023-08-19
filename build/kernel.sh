@@ -67,6 +67,7 @@ SRCCONF=${CONFIGDIR}/src.conf
 ${SRCDEBUG}
 __MAKE_CONF=
 ${MAKE_ARGS_DEV}
+WITHOUT_MODULES=if_wg
 "
 
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} kernel-toolchain ${MAKE_ARGS}
