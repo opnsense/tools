@@ -59,6 +59,7 @@ else
 	echo ">>> Attempting to use external kernel: ${PRODUCT_KERNEL}"
 fi
 
+# XXX remove WITHOUT_MODULES for wireguard ports removal
 MAKE_ARGS="
 TARGET_ARCH=${PRODUCT_ARCH}
 TARGET=${PRODUCT_TARGET}
