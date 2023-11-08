@@ -462,6 +462,12 @@ A fully contained nightly build for the system is invoked using:
 
     # make nightly
 
+When nightly builds are being run you can get a brief report of
+the latest one for each build step or select a build step to either
+view the file or watch it run in real time:
+
+    # make watch[-<step>]
+
 To allow the nightly build to build both release and development packages
 use:
 

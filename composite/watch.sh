@@ -36,11 +36,27 @@ if [ -z "${CURRENTDIR}" ]; then
 fi
 
 if [ -z "${LOGSTEP}" ]; then
-	find ${CURRENTDIR} -name "*.log"
-	return
+	echo nightly build $(basename ${CURRENTDIR})
+	echo ==========================
+	for CURRENTLOG in $(find -s ${CURRENTDIR} -name "*.log"); do
+		CURRENTRET=running
+		if [ -f ${CURRENTLOG}.ok ]; then
+			CURRENTRET=ok
+		elif [ -f ${CURRENTLOG}.err ]; then
+			CURRENTRET=error
+		fi
+		CURRENTLOG=${CURRENTLOG#"${CURRENTDIR}/"}
+		CURRENTLOG=${CURRENTLOG%.log}
+		CURRENTLOG=${CURRENTLOG#*-}
+		echo ${CURRENTLOG}: ${CURRENTRET}
+	done
+else
+	for CURRENTLOG in $(find ${CURRENTDIR} -name "??-${LOGSTEP}.log"); do
+		if [ -f ${CURRENTLOG}.ok -o -f ${CURRENTLOG}.err ]; then
+			less ${CURRENTLOG}
+		else
+			tail -f ${CURRENTLOG}
+		fi
+		break
+	done
 fi
-
-for CURRENTLOG in $(find ${CURRENTDIR} -name "??-${LOGSTEP}.log"); do
-	tail -f ${CURRENTLOG}
-	break
-done
