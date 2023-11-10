@@ -366,6 +366,7 @@ git_version()
 	if [ -z "$(echo ${PRODUCT_VERSION} | tr -d 0-9)" ]; then
 		git_describe ${1}
 		export PRODUCT_VERSION=${REPO_VERSION}
+		export PRODUCT_HASH=${REPO_COMMENT}
 	fi
 
 	if [ -z "${PRODUCT_VERSION%%*/*}" ]; then
@@ -583,6 +584,9 @@ setup_version()
 
 	# embed size for general information
 	echo "${SIZE}" > ${VERSIONDIR}/${3}.size
+
+        # embed commit hash for identification
+	echo "${PRODUCT_HASH}" > ${VERSIONDIR}/${3}.hash
 
 	# embed target architecture
 	echo "${PRODUCT_ARCH}" > ${VERSIONDIR}/${3}.arch
