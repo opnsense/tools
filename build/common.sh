@@ -877,6 +877,9 @@ prune_packages()
 		# if nothing worked, we are missing a dependency and force
 		# a rebuild for it and its reverse dependencies later on
 		rm -f ${1}/${PKG}
+
+		echo ">>> Unresolvable conflict with package" \
+		    "$(basename ${PKG%%.pkg})" >> ${BASEDIR}/.pkg-msg
 	done
 
 	pkg -c ${1} set -yaA1
