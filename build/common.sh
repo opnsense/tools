@@ -1222,7 +1222,8 @@ list_config()
 		if [ -n "${LIST_IGNORE}" -a -n "${LIST_MATCH}" ]; then
 			for LIST_QUIRK in $(echo ${LIST_IGNORE} | tr ',' ' '); do
 				if [ ${LIST_QUIRK} = ${PRODUCT_TARGET} -o \
-				     ${LIST_QUIRK} = ${PRODUCT_ARCH} ]; then
+				     ${LIST_QUIRK} = ${PRODUCT_ARCH} -o \
+				     ${LIST_QUIRK} = ${PRODUCT_SSL} ]; then
 					continue 2
 				fi
 			done
