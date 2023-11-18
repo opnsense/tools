@@ -57,9 +57,13 @@ for IMAGE in $(find ${IMAGESDIR} -name "${PRODUCT_NAME}-*-${PRODUCT_ARCH}.*.bz2"
 	cp ${IMAGE} ${STAGEDIR}
 done
 
-echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
+echo -n ">>> Checksumming compressed images for ${PRODUCT_RELEASE}... "
 
-(cd ${STAGEDIR} && sha256 ${PRODUCT_RELEASE}-*) > ${STAGEDIR}/checksums
+if [ -f "${IMAGESDIR}/checksums" ]; then
+	cp ${IMAGESDIR}/checksums ${STAGEDIR}/checksums
+fi
+
+(cd ${STAGEDIR} && sha256 ${PRODUCT_RELEASE}-*) >> ${STAGEDIR}/checksums
 mv ${STAGEDIR}/checksums \
     ${STAGEDIR}/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256
 
