@@ -36,6 +36,9 @@ for ARG in ${@}; do
 	arm|dvd|nano|serial|vga|vm)
 		for IMAGE in $(find ${IMAGESDIR} -name \
 		    "*-${ARG}-*" \! -name "*.bz2" \! -name "*.sig"); do
+			echo -n ">>> Checksumming uncompressed image ${IMAGE} for ${PRODUCT_RELEASE}... "
+   			(cd ${IMAGESDIR} && sha256 ${IMAGE}) >> ${IMAGESDIR}/checksums
+	 		echo "done"
 			echo -n ">>> Compressing ${ARG} image... "
 			bzip2 ${IMAGE}
 			echo "done"
