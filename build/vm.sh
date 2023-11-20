@@ -190,3 +190,5 @@ echo -n ">>> Building vm image... "
     -p freebsd-${ROOTFS}:=${VMBASE})
 
 echo "done"
+
+sign_image ${VMIMG}

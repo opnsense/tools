@@ -694,12 +694,12 @@ sign_image()
 	fi
 
 	if [ ! -f "${1}".sig ]; then
-		echo -n ">>> Creating ${PRODUCT_SETTINGS} signature for ${1}: "
+		echo -n ">>> Creating ${PRODUCT_SETTINGS} signature for $(basename ${1}): "
 
 		openssl dgst -sha256 -sign "${PRODUCT_PRIVKEY}" "${1}" | \
 		    openssl base64 > "${1}".sig
 	else
-		echo -n ">>> Retaining ${PRODUCT_SETTINGS} signature for ${1}: "
+		echo -n ">>> Retaining ${PRODUCT_SETTINGS} signature for $(basename ${1}): "
 	fi
 
 	openssl base64 -d -in "${1}".sig > "${1}.sig.tmp"

@@ -33,7 +33,7 @@ SELF=dvd
 
 check_image ${SELF} ${@}
 
-DVDIMAGE="${IMAGESDIR}/${PRODUCT_RELEASE}-dvd-${PRODUCT_ARCH}.iso"
+DVDIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-dvd-${PRODUCT_ARCH}.iso"
 DVDLABEL=$(echo "${PRODUCT_NAME}_Install" | tr '[:lower:]' '[:upper:]')
 
 sh ./clean.sh ${SELF}
@@ -66,6 +66,8 @@ echo -n ">>> Building dvd image... "
 
 makefs -t cd9660 \
     -o 'bootimage=i386;'"${STAGEDIR}"'/work/boot/cdboot' -o no-emul-boot \
-    ${UEFIBOOT} -o label=${DVDLABEL} -o rockridge ${DVDIMAGE} ${STAGEDIR}/work
+    ${UEFIBOOT} -o label=${DVDLABEL} -o rockridge ${DVDIMG} ${STAGEDIR}/work
 
 echo "done"
+
+sign_image ${DVDIMG}

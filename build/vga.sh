@@ -72,3 +72,5 @@ echo -n ">>> Building vga image... "
     -p freebsd-boot:=work/boot/gptboot ${GPTDUMMY} -p freebsd-ufs:=root.part)
 
 echo "done"
+
+sign_image ${VGAIMG}

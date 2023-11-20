@@ -76,10 +76,6 @@ if [ -f "${PRODUCT_PRIVKEY}" ]; then
 	    "${STAGEDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_SETTINGS}.pub"
 fi
 
-for IMAGE in $(find ${STAGEDIR} -type f \! -name "*.sig"); do
-	sign_image ${IMAGE}
-done
-
 echo -n ">>> Bundling images for ${PRODUCT_RELEASE}... "
 tar -C ${STAGEDIR} -cf ${RELEASESET} .
 echo "done"

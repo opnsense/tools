@@ -39,8 +39,6 @@ for ARG in ${@}; do
 			echo -n ">>> Compressing ${ARG} image... "
 			bzip2 ${IMAGE}
 			echo "done"
-
-			sign_image ${IMAGE}.bz2
 		done
 		;;
 	esac

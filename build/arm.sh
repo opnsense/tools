@@ -111,3 +111,5 @@ arm_unmount
 mdconfig -d -u ${DEV}
 
 echo "done"
+
+sign_image ${ARMIMG}

@@ -73,3 +73,5 @@ echo -n ">>> Building serial image... "
     -p freebsd-boot:=work/boot/gptboot ${GPTDUMMY} -p freebsd-ufs:=root.part)
 
 echo "done"
+
+sign_image ${SERIALIMG}

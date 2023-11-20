@@ -66,3 +66,5 @@ gpart create -s BSD ${DEV}
 gpart bootcode -b ${STAGEDIR}/boot/boot ${DEV}
 gpart add -t freebsd-ufs ${DEV}
 mdconfig -d -u ${DEV}
+
+sign_image ${NANOIMG}
