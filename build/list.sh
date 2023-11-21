@@ -33,7 +33,7 @@ SELF=list
 
 for ARG in ${*}; do
 	case ${ARG} in
-	base|kernel|packages|release)
+	base|distfiles|kernel|packages|release)
 		SET=$(find_set "${ARG}")
 		if [ -n "${SET}" ]; then
 			tar -tf ${SET}
