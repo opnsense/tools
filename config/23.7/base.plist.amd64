@@ -4453,6 +4453,7 @@
 /usr/libexec/zfs/zpool_influxdb
 /usr/local/opnsense/version/base
 /usr/local/opnsense/version/base.arch
+/usr/local/opnsense/version/base.hash
 /usr/local/opnsense/version/base.mtree
 /usr/local/opnsense/version/base.obsolete
 /usr/local/opnsense/version/base.size
