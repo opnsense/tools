@@ -31,6 +31,6 @@ SELF=chroot
 
 . ./common.sh
 
-echo ">>> chroot'ing into ${STAGEDIR}/${1}..."
+echo ">>> Change root directory to ${STAGEDIR}/${1}..."
 
 ${ENV_FILTER} chroot ${STAGEDIR}/${1} /bin/csh

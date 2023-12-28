@@ -31,6 +31,6 @@ SELF=connect
 
 . ./common.sh
 
-echo ">>> connecting to ${PRODUCT_SERVER}..."
+echo ">>> Connecting to ${PRODUCT_SERVER}..."
 
 ssh ${PRODUCT_SERVER}
