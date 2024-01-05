@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2024 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -59,7 +59,6 @@ else
 	echo ">>> Attempting to use external kernel: ${PRODUCT_KERNEL}"
 fi
 
-# XXX remove WITHOUT_MODULES for wireguard ports removal
 MAKE_ARGS="
 TARGET_ARCH=${PRODUCT_ARCH}
 TARGET=${PRODUCT_TARGET}
@@ -68,8 +67,12 @@ SRCCONF=${CONFIGDIR}/src.conf
 ${SRCDEBUG}
 __MAKE_CONF=
 ${MAKE_ARGS_DEV}
-WITHOUT_MODULES=if_wg
 "
+
+# XXX wireguard module glue for 23.x builds
+if [ ${PRODUCT_ABI%%.*} -lt 24 ]; then
+	MAKE_ARGS="${MAKE_ARGS}WITHOUT_MODULES=if_wg"
+fi
 
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} kernel-toolchain ${MAKE_ARGS}
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildkernel ${MAKE_ARGS}
