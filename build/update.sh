@@ -78,12 +78,12 @@ for ARG in ${ARGS}; do
 	git_clone ${DIR} "${URL}"
 	git_fetch ${DIR}
 	for BRANCH in ${BRANCHES}; do
-		git_pull ${DIR} ${BRANCH}
+		git_pull ${DIR} ${BRANCH} || true
 	done
 
 	if [ -n "${VERSION}" ]; then
 		git_tag ${DIR} ${VERSION}
-		git_pull ${DIR} ${BRANCHES}
+		git_pull ${DIR} ${BRANCHES} || true
 		git_reset ${DIR}
 	fi
 done
