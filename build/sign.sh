@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2024 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -65,5 +65,17 @@ for ARG in ${@}; do
 			bundle_packages ${STAGEDIR}
 		fi
 		;;
+	release)
+		RELEASESET=$(find_set release)
+		if [ -f "${RELEASESET}" ]; then
+			setup_stage ${STAGEDIR}
+			setup_set ${STAGEDIR} ${RELEASESET}
+			for FILE in $(find ${STAGEDIR} -name "*.sha256" -o \
+			    -name "*.pub"); do
+				sign_image ${FILE}
+			done
+			rm ${RELEASESET}
+			tar -C ${STAGEDIR} -cf ${RELEASESET} .
+		fi
 	esac
 done
