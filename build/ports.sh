@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2023 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2024 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -70,6 +70,11 @@ setup_chroot ${STAGEDIR}
 setup_distfiles ${STAGEDIR}
 
 if extract_packages ${STAGEDIR}; then
+	AUXSET=$(find_set aux)
+	if [ -f "${AUXSET}" ]; then
+		tar -C ${STAGEDIR}${PACKAGESDIR}/All -xpf ${AUXSET}
+	fi
+
 	if [ ${DEPEND} = "yes" ]; then
 		ARGS="${ARGS} ${PRODUCT_CORES} ${PRODUCT_PLUGINS}"
 		DEPS="plugins core"

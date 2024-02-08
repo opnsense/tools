@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2023 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2024 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -767,11 +767,8 @@ find_set()
 	kernel)
 		echo $(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
 		;;
-	packages)
-		echo $(find ${SETSDIR} -name "packages-*-${PRODUCT_ARCH}.tar")
-		;;
-	release)
-		echo $(find ${SETSDIR} -name "release-*-${PRODUCT_ARCH}.tar")
+	aux|packages|release)
+		echo $(find ${SETSDIR} -name "${1}-*-${PRODUCT_ARCH}.tar")
 		;;
 	xtools)
 		echo $(find ${SETSDIR} -name "xtools-*-${PRODUCT_ARCH}.txz")
@@ -1037,10 +1034,19 @@ bundle_packages()
 
 	echo ${SRCABI} > ${BASEDIR}${PACKAGESDIR}-new/.abi_hint
 
-	sh ./clean.sh packages
-
 	PACKAGEVER="${PRODUCT_VERSION}-${PRODUCT_ARCH}"
 	PACKAGESET="${SETSDIR}/packages-${PACKAGEVER}.tar"
+	AUXSET="${SETSDIR}/aux-${PACKAGEVER}.tar"
+
+	if [ -d ${BASEDIR}${PACKAGESDIR}-aux ]; then
+		sh ./clean.sh aux
+		echo -n ">>> Creating aux package set for ${PACKAGEVER}... "
+		tar -C ${BASEDIR}${PACKAGESDIR}-aux -cf ${AUXSET} .
+		echo "done"
+	fi
+
+	sh ./clean.sh ports
+
 	echo -n ">>> Creating package mirror set for ${PACKAGEVER}... "
 	tar -C ${BASEDIR}${PACKAGESDIR}-new -cf ${PACKAGESET} .
 	echo "done"
