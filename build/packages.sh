@@ -31,6 +31,11 @@ SELF=packages
 
 . ./common.sh
 
+if check_packages ${SELF} ${@}; then
+	echo ">>> Step ${SELF} is up to date"
+	exit 0
+fi
+
 AUXLIST=$(list_packages "${AUXLIST}" ${CONFIGDIR}/aux.conf)
 
 setup_stage ${STAGEDIR}

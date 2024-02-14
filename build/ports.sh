@@ -34,7 +34,7 @@ SELF=ports
 eval ${PORTSENV}
 
 ARGS=${*}
-DEPS=
+DEPS=packages
 
 for OPT in BATCH DEPEND PRUNE; do
 	VAL=$(eval echo \$${OPT});
@@ -77,7 +77,7 @@ if extract_packages ${STAGEDIR}; then
 
 	if [ ${DEPEND} = "yes" ]; then
 		ARGS="${ARGS} ${PRODUCT_CORES} ${PRODUCT_PLUGINS}"
-		DEPS="plugins core"
+		DEPS="${DEPS} plugins core"
 	fi
 	remove_packages ${STAGEDIR} ${ARGS}
 	if [ ${PRUNE} = "yes" ]; then
