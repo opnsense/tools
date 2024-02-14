@@ -261,6 +261,7 @@ core progress.  However, following option apply to PORTSENV:
 
 * BATCH=no	Developer mode with shell after each build failure
 * DEPEND=no	Do not tamper with plugins or core packages
+* MISMATCH=no	Rebuild packages that have a version mismatch
 * PRUNE=no	Do not check ports integrity prior to rebuild
 
 The defaults for these ports options are set to "yes".  A sample

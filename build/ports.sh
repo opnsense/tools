@@ -36,7 +36,7 @@ eval ${PORTSENV}
 ARGS=${*}
 DEPS=packages
 
-for OPT in BATCH DEPEND PRUNE; do
+for OPT in BATCH DEPEND MISMATCH PRUNE; do
 	VAL=$(eval echo \$${OPT});
 	case ${VAL} in
 	yes|no)
@@ -148,9 +148,13 @@ UNAME_r=\$(freebsd-version)
 	if [ -L \${PKGLINK} ]; then
 		PKGFILE=\$(readlink -f \${PKGLINK} || true)
 		if [ -f \${PKGFILE} ]; then
-			PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -v PKGVERSION \${MAKE_ARGS})
-			echo ">>> Skipped version \${PKGVERS} for \${PORT_DESCR}" >> /.pkg-msg
-			continue
+			if [ ${MISMATCH} = "no" ]; then
+				rm \${PKGFILE}
+			else
+				PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -v PKGVERSION \${MAKE_ARGS})
+				echo ">>> Skipped version \${PKGVERS} for \${PORT_DESCR}" >> /.pkg-msg
+				continue
+			fi
 		fi
 	fi
 

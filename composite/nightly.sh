@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2023 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2024 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -32,6 +32,7 @@ STAGENUM=0
 if [ -n "${1}" ]; then
 	CLEAN=plugins,core
 	CONTINUE=-nightly
+	PORTSENV="MISMATCH=no"
 fi
 
 # Stage 1 involves basic builds and preparation, reset progress for stage 2
@@ -82,7 +83,8 @@ for STAGE in ${STAGE2}; do
 	LOG="${LOGSDIR}/${PRODUCT_VERSION}/$(printf %02d ${STAGENUM})-${STAGE}.log"
 
 	# do not force rebuilds only if requested by user
-	(time make ${STAGE}${CONTINUE} 2>&1 || touch ${LOG}.err) > ${LOG}
+	(time make ${STAGE}${CONTINUE} PORTSENV=${PORTSENV} 2>&1 || \
+	    touch ${LOG}.err) > ${LOG}
 	if [ -f ${LOG}.err ]; then
 		echo ">>> Stage ${STAGE} was aborted due to an error, last ${LINES} lines as follows:" > ${LOG}.err
 	        tail -n ${LINES} ${LOG} >> ${LOG}.err
