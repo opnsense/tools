@@ -72,7 +72,7 @@ setup_distfiles ${STAGEDIR}
 if extract_packages ${STAGEDIR}; then
 	AUXSET=$(find_set aux)
 	if [ -f "${AUXSET}" ]; then
-		tar -C ${STAGEDIR}${PACKAGESDIR}/All -xpf ${AUXSET}
+		tar -C ${STAGEDIR}${PACKAGESDIR} -xpf ${AUXSET} ./All
 	fi
 
 	if [ ${DEPEND} = "yes" ]; then

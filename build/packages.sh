@@ -51,9 +51,9 @@ for AUX in ${AUXLIST}; do
 			echo ">>> Moving auxiliary package ${AUX}" \
 			    >> ${STAGEDIR}/.pkg-msg
 
-			# XXX switch to packages directory layout
-			mkdir -p ${STAGEDIR}${PACKAGESDIR}-aux
-			mv ${STAGEDIR}/${PKG} ${STAGEDIR}${PACKAGESDIR}-aux
+			mkdir -p ${STAGEDIR}${PACKAGESDIR}-aux/All
+			mv ${STAGEDIR}/${PKG} ${STAGEDIR}${PACKAGESDIR}-aux/All
+
 			break;
 		fi
 	done

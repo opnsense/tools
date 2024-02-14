@@ -1040,6 +1040,10 @@ bundle_packages()
 
 	if [ -d ${BASEDIR}${PACKAGESDIR}-aux ]; then
 		sh ./clean.sh aux
+
+		# generate index files (XXX ideally from a chroot)
+		pkg repo ${BASEDIR}${PACKAGESDIR}-aux/ ${SIGNARGS}
+
 		echo -n ">>> Creating aux package set for ${PACKAGEVER}... "
 		tar -C ${BASEDIR}${PACKAGESDIR}-aux -cf ${AUXSET} .
 		echo "done"
