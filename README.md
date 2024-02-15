@@ -513,4 +513,9 @@ sets is invoked using:
 
 It will flush all previous packages except for ports, rebuild core and
 plugins and sign the sets if enabled.  It can also explicity set "core"
-or "plugins".
+or "plugins" or "ports".  Note that the "ports" step will automatically
+rebuild mismatching versions of packages or missing ones while the "core"
+and "plugins" step will start from scratch for the individual step.
+
+Any other argument (or list of arguments separated by comma) will be
+treated as a single port to be rebuilt.
