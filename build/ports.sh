@@ -149,7 +149,7 @@ UNAME_r=\$(freebsd-version)
 		PKGFILE=\$(readlink -f \${PKGLINK} || true)
 		if [ -f \${PKGFILE} ]; then
 			if [ ${MISMATCH} = "no" ]; then
-				rm \${PKGFILE}
+				rm ${PACKAGESDIR}*/All/\$(basename \${PKGFILE})
 			else
 				PKGVERS=\$(make -C ${PORTSDIR}/\${PORT} -v PKGVERSION \${MAKE_ARGS})
 				echo ">>> Skipped version \${PKGVERS} for \${PORT_DESCR}" >> /.pkg-msg
