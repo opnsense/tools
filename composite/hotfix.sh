@@ -32,7 +32,7 @@ set -e
 
 if [ -z "${TARGET}" -o "${TARGET}" = "plugins" -o "${TARGET}" = "core" ]; then
 	# force a full rebuild of selected stage(s)
-	make clean-${TARGET:-"plugins,core"} packages
+	make clean-${TARGET:-"hotfix"} packages
 elif [ "${TARGET}" = "ports" ]; then
 	# force partial rebuild of out of date ports
 	make ports-${1} PORTSENV="MISMATCH=no ${PORTSENV}"

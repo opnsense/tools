@@ -62,6 +62,16 @@ for ARG in ${@}; do
 		echo ">>> Removing dvd image"
 		rm -f ${IMAGESDIR}/*-dvd-${PRODUCT_ARCH}.iso*
 		;;
+	hotfix)
+		echo ">>> Removing plugins and core from packages set"
+		setup_stage ${STAGEDIR}
+		setup_base ${STAGEDIR}
+		if extract_packages ${STAGEDIR}; then
+			remove_packages ${STAGEDIR} ${PRODUCT_CORES} \
+			    ${PRODUCT_PLUGINS}
+			bundle_packages ${STAGEDIR} '' plugins core
+		fi
+		;;
 	images)
 		setup_stage ${IMAGESDIR}
 		;;

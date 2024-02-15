@@ -30,7 +30,7 @@ CONTINUE=
 STAGENUM=0
 
 if [ -n "${1}" ]; then
-	CLEAN=plugins,core
+	CLEAN=hotfix
 	CONTINUE=-nightly
 	PORTSENV="MISMATCH=no"
 fi
