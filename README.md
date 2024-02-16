@@ -511,11 +511,11 @@ sets is invoked using:
 
     # make hotfix[-<step>]
 
-It will flush all previous packages except for ports, rebuild core and
-plugins and sign the sets if enabled.  It can also explicity set "core"
-or "plugins" or "ports".  Note that the "ports" step will automatically
-rebuild mismatching versions of packages or missing ones while the "core"
-and "plugins" step will start from scratch for the individual step.
+The default hotfix run is a non-destructive rebuild pass for missing
+plugins and core packages which also signs the packages.  You can also
+do a full rebuild using "core" or "plugins" or "core,plugins" or
+"plugins,core" step.  The "ports" step, however, will automatically
+rebuild mismatching and missing ports.
 
 Any other argument (or list of arguments separated by comma) will be
-treated as a single port to be rebuilt.
+treated as individual ports to be rebuilt.

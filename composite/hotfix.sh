@@ -27,16 +27,41 @@
 
 PORTSENV="DEPEND=no PRUNE=no ${PORTSENV}"
 TARGET=${1%%-*}
+MSGS=
 
 set -e
 
-if [ -z "${TARGET}" -o "${TARGET}" = "plugins" -o "${TARGET}" = "core" ]; then
+eval "$(make print-STAGEDIR)"
+
+if [ -z "${TARGET}" ]; then
+	for STAGE in plugins core packages; do
+		make ${STAGE}-hotfix
+
+		if [ -s ${STAGEDIR}/.pkg-msg ]; then
+			MSGS="${MSGS}$(cat ${STAGEDIR}/.pkg-msg)
+"
+		fi
+	done
+elif [ "${TARGET}" = "plugins" -o "${TARGET}" = "core" -o \
+    "${TARGET}" = "plugins,core" -o "${TARGET}" = "core,plugins" ]; then
 	# force a full rebuild of selected stage(s)
-	make clean-${TARGET:-"hotfix"} packages
+	make clean-${TARGET:-"hotfix"}
+	for STAGE in plugins core packages; do
+		make ${STAGE}
+		if [ -s ${STAGEDIR}/.pkg-msg ]; then
+			MSGS="${MSGS}$(cat ${STAGEDIR}/.pkg-msg)
+"
+		fi
+	done
 elif [ "${TARGET}" = "ports" ]; then
 	# force partial rebuild of out of date ports
 	make ports-${1} PORTSENV="MISMATCH=no ${PORTSENV}"
 else
 	# assume quick target port(s) to rebuild from ports.conf
 	make ports-${1} PORTSENV="${PORTSENV}"
+fi
+
+if [ -n "${MSGS}" ]; then
+	echo ">>> WARNING: The hotfixing provided additional info."
+	echo -n "${MSGS}";
 fi
