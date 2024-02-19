@@ -55,7 +55,7 @@ elif [ "${TARGET}" = "plugins" -o "${TARGET}" = "core" -o \
 	done
 elif [ "${TARGET}" = "ports" ]; then
 	# force partial rebuild of out of date ports
-	make ports-${1} PORTSENV="MISMATCH=no ${PORTSENV}"
+	make ports-hotfix PORTSENV="MISMATCH=no ${PORTSENV}"
 else
 	# assume quick target port(s) to rebuild from ports.conf
 	make ports-${1} PORTSENV="${PORTSENV}"
@@ -63,5 +63,5 @@ fi
 
 if [ -n "${MSGS}" ]; then
 	echo ">>> WARNING: The hotfixing provided additional info."
-	echo -n "${MSGS}";
+	echo -n "${MSGS}"
 fi
