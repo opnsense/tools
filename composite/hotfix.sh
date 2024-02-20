@@ -47,7 +47,7 @@ elif [ "${TARGET}" = "plugins" -o "${TARGET}" = "core" -o \
 	# force a full rebuild of selected stage(s)
 	make clean-${TARGET:-"hotfix"}
 	for STAGE in plugins core packages; do
-		make ${STAGE}
+		make ${STAGE}-hotfix
 		if [ -s ${STAGEDIR}/.pkg-msg ]; then
 			MSGS="${MSGS}$(cat ${STAGEDIR}/.pkg-msg)
 "
