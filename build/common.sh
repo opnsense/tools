@@ -1047,6 +1047,8 @@ bundle_packages()
 		echo -n ">>> Creating aux package set for ${PACKAGEVER}... "
 		tar -C ${BASEDIR}${PACKAGESDIR}-aux -cf ${AUXSET} .
 		echo "done"
+
+		generate_signature ${AUXSET}
 	fi
 
 	sh ./clean.sh ports

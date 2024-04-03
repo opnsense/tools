@@ -35,6 +35,12 @@ VERSIONDIR="/usr/local/opnsense/version"
 
 for ARG in ${@}; do
 	case ${ARG} in
+	aux)
+		AUXSET=$(find_set aux)
+		if [ -f "${AUXSET}" ]; then
+			generate_signature ${AUXSET}
+		fi
+		;;
 	base)
 		BASESET=$(find_set base)
 		if [ -f "${BASESET}" ]; then

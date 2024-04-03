@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2018-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2018-2024 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -42,11 +42,11 @@ for ARG in ${@}; do
 	arm|dvd|nano|serial|vga|vm)
 		upload ${ARG} ${IMAGESDIR} "*-${ARG}-*${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}*"
 		;;
+	aux|distfiles|packages|release)
+		upload ${ARG} ${SETSDIR} "${ARG}-*"
+		;;
 	base|kernel)
 		upload ${ARG} ${SETSDIR} "${ARG}-*${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}*"
-		;;
-	distfiles|packages|release)
-		upload ${ARG} ${SETSDIR} "${ARG}-*"
 		;;
 	log)
 		upload ${ARG} ${LOGSDIR} "${PRODUCT_VERSION}-*"
