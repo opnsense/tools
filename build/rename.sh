@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2023 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2024 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -40,6 +40,13 @@ for ARG in ${@}; do
 		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-arm-${FILE##*-arm-}
 		done
 		;;
+	aux|distfiles|packages)
+		echo ">>> Renaming ${ARG} set: ${PRODUCT_VERSION}"
+		for FILE in $(find ${SETSDIR} -name \
+		    "${ARG}-*-${PRODUCT_ARCH}.*"); do
+			mv ${FILE} ${SETSDIR}/${ARG}-${PRODUCT_VERSION}-${FILE##*-}
+		done
+		;;
 	base)
 		setup_stage ${STAGEDIR} work
 		echo ">>> Repacking base set..."
@@ -58,11 +65,6 @@ for ARG in ${@}; do
 			# XXX likely doesn't work for PRODUCT_DEVICE
 			mv ${FILE} ${SETSDIR}/base-${PRODUCT_VERSION}-${FILE##*-}
 		done
-		;;
-	distfiles)
-		echo ">>> Renaming distfiles set: ${PRODUCT_VERSION}"
-		mv ${SETSDIR}/distfiles-*.tar \
-		    ${SETSDIR}/distfiles-${PRODUCT_VERSION}.tar
 		;;
 	dvd)
 		echo ">>> Renaming dvd image: ${PRODUCT_VERSION}"
@@ -98,13 +100,6 @@ for ARG in ${@}; do
 		for FILE in $(find ${IMAGESDIR} -name \
 		    "*-nano-${PRODUCT_ARCH}.*"); do
 		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-nano-${FILE##*-}
-		done
-		;;
-	packages)
-		echo ">>> Renaming packages set: ${PRODUCT_VERSION}"
-		for FILE in $(find ${SETSDIR} -name \
-		    "packages-*-${PRODUCT_ARCH}.*"); do
-			mv ${FILE} ${SETSDIR}/packages-${PRODUCT_VERSION}-${FILE##*-}
 		done
 		;;
 	serial)
