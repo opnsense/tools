@@ -100,6 +100,8 @@ for STAGE in ${STAGE2}; do
 	fi
 done
 
+(make watch 2>&1) > ${LOGSDIR}/${PRODUCT_VERSION}/watch.log
+
 tar -C ${TARGETDIRPREFIX} -cJf \
     ${LOGSDIR}/${PRODUCT_VERSION}-${PRODUCT_ARCH}.txz \
     ${LOGSDIR##${TARGETDIRPREFIX}/}/${PRODUCT_VERSION}
