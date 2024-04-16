@@ -38,7 +38,7 @@ fi
 if [ -z "${LOGSTEP}" ]; then
 	echo nightly build $(basename ${CURRENTDIR})
 	echo ==========================
-	for CURRENTLOG in $(find -s ${CURRENTDIR} -name "*.log"); do
+	for CURRENTLOG in $(find -s ${CURRENTDIR} -name "??-*.log"); do
 		CURRENTRET=running
 		if [ -f ${CURRENTLOG}.ok ]; then
 			CURRENTRET=ok
