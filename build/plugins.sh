@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2024 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -59,9 +59,31 @@ for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 	setup_copy ${STAGEDIR} ${PLUGINSDIR}
 	git_reset ${STAGEDIR}${PLUGINSDIR} ${BRANCH}
 
-	_PLUGIN_ARGS="PLUGIN_ARCH=${PRODUCT_ARCH} ${PLUGINSENV}"
+	PREFIX=${PRODUCT_PLUGINS%"*"}
+	PLUGIN_LIST=
+	PLUGIN_DEFER=
 
 	for PLUGIN_ORIGIN in ${PLUGINSLIST}; do
+		PLUGIN=${PLUGIN_ORIGIN%%@*}
+
+		if [ ! -d ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ]; then
+			continue
+		fi
+
+		PLUGIN_DEPS=$(make -C ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ${PLUGIN_ARGS} -v PLUGIN_DEPENDS)
+		for PLUGIN_DEP in ${PLUGIN_DEPS}; do
+			if [ -z "${PLUGIN_DEP%%"${PREFIX}"*}" ]; then
+				PLUGIN_DEFER="${PLUGIN_DEFER} ${PLUGIN_ORIGIN}"
+				continue 2
+			fi
+		done
+
+		PLUGIN_LIST="${PLUGIN_LIST} ${PLUGIN_ORIGIN}"
+	done
+
+	_PLUGIN_ARGS="PLUGIN_ARCH=${PRODUCT_ARCH} ${PLUGINSENV}"
+
+	for PLUGIN_ORIGIN in ${PLUGIN_LIST} ${PLUGIN_DEFER}; do
 		VARIANT=${PLUGIN_ORIGIN##*@}
 		PLUGIN=${PLUGIN_ORIGIN%%@*}
 
