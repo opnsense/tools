@@ -48,4 +48,4 @@ if [ -n "${PRODUCT_ZFS}" ]; then
 	FS=zfs
 fi
 
-make vm-raw,3G,never,serial compress-vm VERSION=${COREFILE##*-}-${FS}
+make vm-raw,4G,never,serial compress-vm VERSION=${COREFILE##*-}-${FS}
