@@ -1161,6 +1161,7 @@
 /usr/bin/objcopy
 /usr/bin/objdump
 /usr/bin/od
+/usr/bin/opensm
 /usr/bin/openssl
 /usr/bin/pagesize
 /usr/bin/pargs
@@ -15693,6 +15694,7 @@
 /usr/share/man/man8/nss_tacplus.8.gz
 /usr/share/man/man8/nvmecontrol.8.gz
 /usr/share/man/man8/nvram.8.gz
+/usr/share/man/man8/opensm.8.gz
 /usr/share/man/man8/pac.8.gz
 /usr/share/man/man8/pam_chroot.8.gz
 /usr/share/man/man8/pam_deny.8.gz
