@@ -14523,6 +14523,7 @@
 /usr/share/man/man4/i386/vpd.4.gz
 /usr/share/man/man4/i8254.4.gz
 /usr/share/man/man4/iavf.4.gz
+/usr/share/man/man4/ice.4.gz
 /usr/share/man/man4/ichsmb.4.gz
 /usr/share/man/man4/ichwd.4.gz
 /usr/share/man/man4/icmp.4.gz
@@ -14570,6 +14571,7 @@
 /usr/share/man/man4/if_gif.4.gz
 /usr/share/man/man4/if_gre.4.gz
 /usr/share/man/man4/if_iavf.4.gz
+/usr/share/man/man4/if_ice.4.gz
 /usr/share/man/man4/if_igb.4.gz
 /usr/share/man/man4/if_ipheth.4.gz
 /usr/share/man/man4/if_ipsec.4.gz
@@ -15390,6 +15392,7 @@
 /usr/share/man/man7/mdoc.7.gz
 /usr/share/man/man7/miscellaneous.7.gz
 /usr/share/man/man7/mitigations.7.gz
+/usr/share/man/man7/networking.7.gz
 /usr/share/man/man7/operator.7.gz
 /usr/share/man/man7/orders.7.gz
 /usr/share/man/man7/pcap-filter.7.gz
@@ -15415,6 +15418,7 @@
 /usr/share/man/man7/tests.7.gz
 /usr/share/man/man7/tuning.7.gz
 /usr/share/man/man7/vdevprops.7.gz
+/usr/share/man/man7/wifi.7.gz
 /usr/share/man/man7/xo_options.7.gz
 /usr/share/man/man7/zfsconcepts.7.gz
 /usr/share/man/man7/zfsprops.7.gz
@@ -15794,6 +15798,7 @@
 /usr/share/man/man8/rwhod.8.gz
 /usr/share/man/man8/sa.8.gz
 /usr/share/man/man8/sade.8.gz
+/usr/share/man/man8/save-entropy.8.gz
 /usr/share/man/man8/savecore.8.gz
 /usr/share/man/man8/screen.lua.8.gz
 /usr/share/man/man8/sdpcontrol.8.gz
