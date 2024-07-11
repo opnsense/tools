@@ -69,11 +69,6 @@ __MAKE_CONF=
 ${MAKE_ARGS_DEV}
 "
 
-# XXX wireguard module glue for 23.x builds
-if [ ${PRODUCT_ABI%%.*} -lt 24 ]; then
-	MAKE_ARGS="${MAKE_ARGS}WITHOUT_MODULES=if_wg"
-fi
-
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} kernel-toolchain ${MAKE_ARGS}
 ${ENV_FILTER} make -s -C${SRCDIR} -j${CPUS} buildkernel ${MAKE_ARGS}
 if [ "${1}" = "build" ]; then
