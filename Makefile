@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2023 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2024 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -58,6 +58,9 @@ ROOTDIR?=	/usr
 TOOLSDIR?=	${ROOTDIR}/tools
 TOOLSBRANCH?=	master
 
+_OS!=	uname -r
+_OS:=	${_OS:C/-.*//}
+
 .if defined(CONFIGDIR)
 _CONFIGDIR=	${CONFIGDIR}
 .elif defined(SETTINGS)
@@ -66,7 +69,10 @@ _CONFIGDIR=	${TOOLSDIR}/config/${SETTINGS}
 __CONFIGDIR!=	find -s ${TOOLSDIR}/config -name "build.conf" -type f
 .for DIR in ${__CONFIGDIR}
 . if exists(${DIR}) && empty(_CONFIGDIR)
+_CONFIGOS!=	grep '^OS?*=' ${DIR}
+.  if ${_CONFIGOS:[2]} == ${_OS}
 _CONFIGDIR=	${DIR:C/\/build\.conf$//}
+.  endif
 . endif
 .endfor
 .endif
@@ -185,8 +191,6 @@ ${SCRIPT}: lint-composite
 	    sh ${VERBOSE_FLAGS} ./composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
 .endfor
 
-_OS!=	uname -r
-_OS:=	${_OS:C/-.*//}
 .if "${_OS}" != "${OS}"
 .error Expected OS version ${OS} for ${_CONFIGDIR}; to continue anyway set OS=${_OS}
 .endif
