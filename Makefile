@@ -77,6 +77,10 @@ _CONFIGDIR=	${DIR:C/\/build\.conf$//}
 .endfor
 .endif
 
+.if empty(_CONFIGDIR)
+.error Found no configuration matching OS version "${_OS}"
+.endif
+
 .-include "${_CONFIGDIR}/build.conf.local"
 .include "${_CONFIGDIR}/build.conf"
 
