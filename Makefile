@@ -174,7 +174,7 @@ VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 
 .for STEP in ${STEPS}
 ${STEP}: lint-steps
-	@echo ">>> Executing build step ${STEP} on ${_CONFIGDIR:C/.*\///}"
+	@echo ">>> Executing build step ${STEP} on ${_CONFIGDIR:C/.*\///}" >&2
 	${VERBOSE_HIDDEN} cd ${.CURDIR}/build && \
 	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} -F ${KERNEL} \
 	    -n ${NAME} -v "${VERSIONS}" -s ${_CONFIGDIR} \
@@ -192,7 +192,7 @@ ${STEP}: lint-steps
 
 .for SCRIPT in ${SCRIPTS}
 ${SCRIPT}: lint-composite
-	@echo ">>> Executing build script ${SCRIPT} on ${_CONFIGDIR:C/.*\///}"
+	@echo ">>> Executing build script ${SCRIPT} on ${_CONFIGDIR:C/.*\///}" >&2
 	${VERBOSE_HIDDEN} cd ${.CURDIR} && \
 	    sh ${VERBOSE_FLAGS} ./composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
 .endfor
