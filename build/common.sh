@@ -954,6 +954,12 @@ install_packages()
 		# add, unlike install, is not aware of repositories :(
 		pkg -c ${BASEDIR} annotate -qyA ${PKG} \
 		    repository ${PRODUCT_NAME}
+
+		# create the package version file for initial install
+		if [ "${PKG}" = "${PRODUCT_CORE}" ]; then
+			pkg -c ${BASEDIR} query %v ${PKG} > \
+			    ${BASEDIR}/usr/local/opnsense/version/pkgs
+		fi
 	done
 }
 
