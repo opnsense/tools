@@ -53,34 +53,36 @@ wait
 
 echo "done"
 
+mkdir -p ${STAGEDIR}/${PRODUCT_SETTINGS}
+
 for IMAGE in $(find ${IMAGESDIR} -name "${PRODUCT_NAME}-*-${PRODUCT_ARCH}.*.bz2"); do
-	cp ${IMAGE} ${STAGEDIR}
+	cp ${IMAGE} ${STAGEDIR}/${PRODUCT_SETTINGS}
 done
 
 echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
 
 (cd ${STAGEDIR} && sha256 ${PRODUCT_RELEASE}-*) > ${STAGEDIR}/checksums
 
-CHECKSUM=${STAGEDIR}/${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256
-mv ${STAGEDIR}/checksums ${CHECKSUM}
+CHECKSUM="${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256"
+mv ${STAGEDIR}/checksums ${STAGEDIR}/${PRODUCT_SETTINGS}/${CHECKSUM}
 
 echo "done"
 
-sign_image ${CHECKSUM}
+sign_image ${STAGEDIR}/${PRODUCT_SETTINGS}/${CHECKSUM}
 
 for IMAGE in $(find ${IMAGESDIR} -name "${PRODUCT_NAME}-*-${PRODUCT_ARCH}.*.sig"); do
-	cp ${IMAGE} ${STAGEDIR}
+	cp ${IMAGE} ${STAGEDIR}/${PRODUCT_SETTINGS}
 done
 
 if [ -f "${PRODUCT_PRIVKEY}" ]; then
 	# checked for private key, but want the public key to
 	# be able to verify the images on the mirror later on
 
-	PUBKEY="${STAGEDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_SETTINGS}.pub"
-	cp ${PRODUCT_PUBKEY} ${PUBKEY}
-	sign_image ${PUBKEY}
+	PUBKEY="${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_SETTINGS}.pub"
+	cp ${PRODUCT_PUBKEY} ${STAGEDIR}/${PRODUCT_SETTINGS}/${PUBKEY}
+	sign_image ${STAGEDIR}/${PRODUCT_SETTINGS}/${PUBKEY}
 fi
 
 echo -n ">>> Bundling images for ${PRODUCT_RELEASE}... "
-tar -C ${STAGEDIR} -cf ${RELEASESET} .
+tar -C ${STAGEDIR} -cf ${RELEASESET} ${PRODUCT_SETTINGS}
 echo "done"
