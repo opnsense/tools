@@ -1050,6 +1050,8 @@ bundle_packages()
 		# generate index files (XXX ideally from a chroot)
 		pkg repo ${BASEDIR}${PACKAGESDIR}-aux/ ${SIGNARGS}
 
+		echo ${SRCABI} > ${BASEDIR}${PACKAGESDIR}-aux/.abi_hint
+
 		echo -n ">>> Creating aux package set for ${PACKAGEVER}... "
 		tar -C ${BASEDIR}${PACKAGESDIR}-aux -cf ${AUXSET} .
 		echo "done"
