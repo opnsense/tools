@@ -61,7 +61,8 @@ done
 
 echo -n ">>> Checksumming images for ${PRODUCT_RELEASE}... "
 
-(cd ${STAGEDIR} && sha256 ${PRODUCT_RELEASE}-*) > ${STAGEDIR}/checksums
+(cd ${STAGEDIR}/${PRODUCT_SETTINGS} && sha256 ${PRODUCT_RELEASE}-*) > \
+    ${STAGEDIR}/checksums
 
 CHECKSUM="${PRODUCT_RELEASE}-checksums-${PRODUCT_ARCH}.sha256"
 mv ${STAGEDIR}/checksums ${STAGEDIR}/${PRODUCT_SETTINGS}/${CHECKSUM}
