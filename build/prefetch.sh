@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2023 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2024 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -41,17 +41,17 @@ fi
 
 for ARG in ${@}; do
 	case ${ARG} in
+	aux|packages)
+		sh ./clean.sh ${ARG}
+		URL="${MIRRORSETDIR}/${ARG}-${VERSION}-${PRODUCT_ARCH}"
+		for SUFFIX in tar.sig tar; do
+			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
+		done
+		;;
 	base|kernel)
 		sh ./clean.sh ${ARG}
 		URL="${MIRRORSETDIR}/${ARG}-${VERSION}-${PRODUCT_ARCH}"
 		for SUFFIX in txz.sig txz; do
-			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
-		done
-		;;
-	packages)
-		sh ./clean.sh ${ARG}
-		URL="${MIRRORSETDIR}/${ARG}-${VERSION}-${PRODUCT_ARCH}"
-		for SUFFIX in tar.sig tar; do
 			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
 		done
 		;;
