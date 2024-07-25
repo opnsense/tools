@@ -47,13 +47,21 @@ setup_mtree ${STAGEDIR}/work
 setup_entropy ${STAGEDIR}/work
 
 UEFIBOOT=
+LEGACYBOOT=
 
 if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
-	UEFIBOOT="-o bootimage=i386;${STAGEDIR}/efiboot.img"
+        if [ ${PRODUCT_ARCH} = "amd64" ]; then
+                UEFIBOOT="-o bootimage=i386;${STAGEDIR}/efiboot.img"
+        else
+                UEFIBOOT="-o bootimage=efi;${STAGEDIR}/efiboot.img"
+        fi
 	UEFIBOOT="${UEFIBOOT} -o no-emul-boot -o platformid=efi"
 
 	setup_efiboot ${STAGEDIR}/efiboot.img \
 	    ${STAGEDIR}/work/boot/loader.efi 2048 12
+fi
+if [ ${PRODUCT_ARCH} = "amd64" ]; then
+	LEGACYBOOT="-o bootimage=i386;${STAGEDIR}/work/boot/cdboot -o no-emul-boot"
 fi
 
 cat > ${STAGEDIR}/work/etc/fstab << EOF
@@ -65,7 +73,7 @@ EOF
 echo -n ">>> Building dvd image... "
 
 makefs -t cd9660 \
-    -o 'bootimage=i386;'"${STAGEDIR}"'/work/boot/cdboot' -o no-emul-boot \
+    ${LEGACYBOOT} \
     ${UEFIBOOT} -o label=${DVDLABEL} -o rockridge ${DVDIMG} ${STAGEDIR}/work
 
 echo "done"
