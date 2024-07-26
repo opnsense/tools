@@ -57,7 +57,7 @@ if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
 	    ${STAGEDIR}/work/boot/loader.efi 2048 12
 fi
 if [ ${PRODUCT_ARCH} = "amd64" ]; then
-	LEGACYBOOT="-o 'bootimage=i386;${STAGEDIR}/work/boot/cdboot' -o no-emul-boot"
+	LEGACYBOOT="-o bootimage=i386;${STAGEDIR}/work/boot/cdboot -o no-emul-boot"
 fi
 
 cat > ${STAGEDIR}/work/etc/fstab << EOF
