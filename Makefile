@@ -192,7 +192,6 @@ ${STEP}: lint-steps
 
 .for SCRIPT in ${SCRIPTS}
 ${SCRIPT}: lint-composite
-	@echo ">>> Executing build script ${SCRIPT} on ${_CONFIGDIR:C/.*\///}" >&2
 	${VERBOSE_HIDDEN} cd ${.CURDIR} && \
 	    sh ${VERBOSE_FLAGS} ./composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
 .endfor
