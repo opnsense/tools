@@ -48,7 +48,7 @@ KERNDEBUG="nomakeoptions	DEBUG"
 SRCDEBUG="WITHOUT_DEBUG_FILES=yes"
 
 if [ -n "${PRODUCT_DEBUG}" ]; then
-	KERNDEBUG="makeoptions	DEBUG=-g\noptions		INVARIANTS\noptions	INVARIANT_SUPPORT"
+	KERNDEBUG="makeoptions	DEBUG=-g\noptions		INVARIANTS\noptions		INVARIANT_SUPPORT\noptions		KASSERT_PANIC_OPTIONAL"
 	SRCDEBUG=
 fi
 
