@@ -640,6 +640,7 @@ setup_distfiles()
 	DISTFILESET=$(find_set distfiles)
 	if [ -n "${DISTFILESET}" ]; then
 		mkdir -p ${1}${PORTSDIR}
+		rm -rf ${1}${PORTSDIR}/distfiles
 		tar -C ${1}${PORTSDIR} -xpf ${DISTFILESET}
 	fi
 }
