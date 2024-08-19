@@ -7,11 +7,11 @@ create sets, packages and images for the OPNsense project.
 Setting up a build system
 =========================
 
-Install [FreeBSD](https://www.freebsd.org/) 13.2-RELEASE for amd64
-on a machine with at least 25GB of hard disk (UFS works better than ZFS)
-and at least 4GB of RAM to successfully build all standard images.
-All tasks require a root user.  Do the following to grab the repositories
-(overwriting standard ports and src):
+Install [FreeBSD](https://www.freebsd.org/) 14.1-RELEASE for amd64
+on a machine with at least 40GB of hard disk and at least 8GB of RAM
+to successfully build all standard images.  All tasks require a root
+user.  Do the following to grab the repositories (overwriting standard
+ports and src):
 
     # pkg install git
     # cd /usr
