@@ -58,6 +58,7 @@ Available early build options are:
 
 * SETTINGS:	the name of the requested local configuration
 * CONFIGDIR:	read configuration from other directory and override SETTINGS
+		(make sure to use an absolute path when specifiying)
 
 Available build options are:
 
