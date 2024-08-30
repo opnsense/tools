@@ -50,7 +50,11 @@ UEFIBOOT=
 LEGACYBOOT=
 
 if [ -n "${PRODUCT_UEFI}" -a -z "${PRODUCT_UEFI%%*"${SELF}"*}" ]; then
-	UEFIBOOT="-o bootimage=efi;${STAGEDIR}/efiboot.img"
+        if [ ${PRODUCT_ARCH} = "amd64" ]; then
+                UEFIBOOT="-o bootimage=i386;${STAGEDIR}/efiboot.img"
+        else
+                UEFIBOOT="-o bootimage=efi;${STAGEDIR}/efiboot.img"
+        fi
 	UEFIBOOT="${UEFIBOOT} -o no-emul-boot -o platformid=efi"
 
 	setup_efiboot ${STAGEDIR}/efiboot.img \
