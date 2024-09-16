@@ -27,52 +27,63 @@
 
 set -e
 
-DIR=${1:-.}
-BRANCH=${2:-master}
 FROM=FreeBSD
+SELF=sync
 
-if git diff --quiet ${BRANCH} ${DIR}; then
-	echo ">>> Cherry-pick already complete."
-	exit 0
-fi
+. ./common.sh
 
-echo -n ">>> Run a git-cherry-pick or raw merge? [r/G]: "
+GIT="git -C ${PORTSDIR}"
 
-read YN < /dev/tty
-case ${YN} in
-[rR])
-	git diff -R ${BRANCH} ${DIR} | git apply
-	git add ${DIR}
-	git commit -m \
-"${DIR}: sync with upstream
+for ARG in ${@}; do
+	# ARG should be "category/name" but not strictly checked
 
-Taken from: ${FROM}"
-	exit 0
-	;;
-*)
-	# FALLTHROUGH
-	;;
-esac
-
-COMMITS=
-
-for HASH in $(git log --oneline ${BRANCH} ${DIR} | awk '{ print $1 }'); do
-	if git diff --quiet ${HASH} ${DIR}; then
-		# found no more changes
-		break
+	if [ ! -d ${PORTSDIR}/${ARG} ]; then
+		echo ">>> Sync did not find the port ${ARG}" >&2
+		exit 1
 	fi
 
-	# reverse commit order for cherry-pick
-	COMMITS="${HASH} ${COMMITS}"
+	if ${GIT} diff --quiet ${PORTSBRANCH} ${ARG}; then
+		echo ">>> Sync already complete for ${ARG}"
+		continue
+	fi
+
+
+	COMMITS=
+
+	for HASH in $(${GIT} log --oneline ${PORTSBRANCH} ${ARG} | \
+	    awk '{ print $1 }'); do
+		if ${GIT} diff --quiet ${HASH} ${ARG}; then
+			# found no more changes
+			break
+		fi
+
+		# reverse commit order for cherry-pick
+		COMMITS="${HASH} ${COMMITS}"
+	done
+
+	FAILED=
+
+	for COMMIT in ${COMMITS}; do
+		if ! (${GIT} cherry-pick ${COMMIT} || \
+		    ${GIT} cherry-pick --skip); then
+			FAILED=yes
+			break
+		fi
+	done
+
+	if [ -n "${FAILED}" ]; then
+		${GIT} diff -R ${PORTSBRANCH} ${ARG} | ${GIT} apply
+		${GIT} add ${ARG}
+		${GIT} commit -m \
+"${ARG}: sync with upstream
+
+Taken from: ${FROM}"
+	fi
+
+	if ! ${GIT} diff --quiet ${PORTSBRANCH} ${ARG}; then
+		echo ">>> Sync failed due to non-emtpy diff for ${ARG}" >&2
+		exit 1
+	fi
+
+	echo ">>> Sync succeeded for ${ARG}"
 done
-
-for COMMIT in ${COMMITS}; do
-	git cherry-pick ${COMMIT} || git cherry-pick --skip
-done
-
-if ! git diff --quiet ${BRANCH} ${DIR}; then
-	echo ">>> Cherry-pick failed due to non-emtpy diff." >&2
-	exit 1
-fi
-
-echo ">>> Cherry-pick finished successfully."

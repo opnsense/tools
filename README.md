@@ -371,7 +371,7 @@ Available clean options are:
 * vm:		remove vm image
 * xtools:	remove xtools set
 
-How the port tree is synced with its upstream repository
+How the port tree is updated via its upstream repository
 --------------------------------------------------------
 
 The ports tree has a few of our modifications and is sometimes a
@@ -421,6 +421,15 @@ not published on the mirrors.  To generate the make.conf contents
 for standalone use on the host use:
 
     # make make.conf
+
+Syncing a ports branch from PORTSDIR
+------------------------------------
+
+When maintaining branches the master branch holds updates that
+we want to cherry-pick to another branch.  To ease the process
+the sync step can deal with the complexity involved:
+
+    # make sync-category/port[,category/port[,...]]
 
 Reading and modifying version numbers of build sets and images
 --------------------------------------------------------------

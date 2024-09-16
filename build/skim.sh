@@ -27,8 +27,8 @@
 
 set -e
 
-SELF=skim
 FROM=FreeBSD
+SELF=skim
 
 . ./common.sh
 
