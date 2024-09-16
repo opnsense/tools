@@ -422,8 +422,8 @@ for standalone use on the host use:
 
     # make make.conf
 
-Syncing a ports branch from PORTSDIR
-------------------------------------
+Syncing a ports branch
+----------------------
 
 When maintaining branches the master branch holds updates that
 we want to cherry-pick to another branch.  To ease the process
