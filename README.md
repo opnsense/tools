@@ -386,6 +386,15 @@ Available options are:
 * unused:	copy unused upstream changes
 * (none):	all of the above
 
+Syncing a ports branch for custom package builds
+------------------------------------------------
+
+When maintaining branches the master branch holds updates that
+we want to cherry-pick to another branch.  To ease the process
+the sync step can deal with the complexity involved:
+
+    # make sync-category/port[,category/port[,...]]
+
 Rebasing the file lists for the base sets
 -----------------------------------------
 
@@ -421,15 +430,6 @@ not published on the mirrors.  To generate the make.conf contents
 for standalone use on the host use:
 
     # make make.conf
-
-Syncing a ports branch
-----------------------
-
-When maintaining branches the master branch holds updates that
-we want to cherry-pick to another branch.  To ease the process
-the sync step can deal with the complexity involved:
-
-    # make sync-category/port[,category/port[,...]]
 
 Reading and modifying version numbers of build sets and images
 --------------------------------------------------------------
