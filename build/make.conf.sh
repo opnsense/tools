@@ -33,7 +33,7 @@ SELF=make.conf
 
 SED=sed
 
-for KEY in LUA PERL PHP PYTHON RUBY SSL; do
+for KEY in APACHE LUA PERL PHP PYTHON RUBY SSL; do
 	eval VALUE="\${PRODUCT_${KEY}}"
 	SED="${SED} -e s:%%${KEY}%%:${VALUE}:g"
 done
