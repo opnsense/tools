@@ -31,37 +31,70 @@ MSGS=
 
 set -e
 
-eval "$(make print-STAGEDIR)"
+run_stage()
+{
+	STAGE=${1}
+	ARGS=${2}
+
+	if [ -z "${ARGS}" ]; then
+		return
+	fi
+
+	make ${STAGE}-${ARGS} PORTSENV="${PORTSENV}"
+
+	if [ -s ${STAGEDIR}/.pkg-msg ]; then
+		MSGS="${MSGS}$(cat ${STAGEDIR}/.pkg-msg)
+"
+	fi
+}
+
+eval "$(make print-PRODUCT_CORES,PRODUCT_PLUGINS,STAGEDIR)"
 
 if [ -z "${TARGET}" ]; then
+	# run everything except ports in hotfix mode
 	for STAGE in plugins core packages; do
-		make ${STAGE}-hotfix
-
-		if [ -s ${STAGEDIR}/.pkg-msg ]; then
-			MSGS="${MSGS}$(cat ${STAGEDIR}/.pkg-msg)
-"
-		fi
+		run_stage ${STAGE} hotfix
 	done
-elif [ "${TARGET}" = "plugins" -o "${TARGET}" = "core" -o \
-    "${TARGET}" = "plugins,core" -o "${TARGET}" = "core,plugins" ]; then
-	# force a full rebuild of selected stage(s)
-	make clean-${TARGET:-"hotfix"}
-	for STAGE in plugins core packages; do
-		make ${STAGE}-hotfix
-		if [ -s ${STAGEDIR}/.pkg-msg ]; then
-			MSGS="${MSGS}$(cat ${STAGEDIR}/.pkg-msg)
-"
-		fi
-	done
+elif [ "${TARGET}" = "plugins" -o "${TARGET}" = "core" ]; then
+	# force a full rebuild of selected stage
+	make clean-${TARGET} ${TARGET}-hotfix
 elif [ "${TARGET}" = "ports" ]; then
 	# force partial rebuild of out of date ports
 	make ports-hotfix PORTSENV="MISMATCH=no ${PORTSENV}"
 else
-	# assume quick target port(s) to rebuild from ports.conf
-	make ports-${1} PORTSENV="${PORTSENV}"
+	ARG_PORTS=
+	ARG_PLUGINS=
+	ARG_CORE=
+
+	# figure out which stage a package belongs to
+	for PACKAGE in $(echo ${1} | tr ',' ' '); do
+		if [ -z "${PRODUCT_CORES%%*"${PACKAGE}"*}" ]; then
+			if [ -n "${ARG_CORE}" ]; then
+				ARG_CORE="${ARG_CORE},"
+			fi
+			ARG_CORE="${ARG_CORE}${PACKAGE}"
+		elif [ "${PRODUCT_PLUGINS}" = "${PACKAGE%%-*}-*" ]; then
+			if [ -n "${ARG_PLUGINS}" ]; then
+				ARG_PLUGINS="${ARG_PLUGINS},"
+			fi
+			ARG_PLUGINS="${ARG_PLUGINS}${PACKAGE}"
+		else
+			if [ -n "${ARG_PORTS}" ]; then
+				ARG_PORTS="${ARG_PORTS},"
+			fi
+			ARG_PORTS="${ARG_PORTS}${PACKAGE}"
+		fi
+	done
+
+	# run all stages required for this hotfix run
+	run_stage ports ${ARG_PORTS}
+	run_stage plugins ${ARG_PLUGINS}
+	run_stage core ${ARG_CORE}
+	run_stage packages always
 fi
 
 if [ -n "${MSGS}" ]; then
+	echo "=============================================================="
 	echo ">>> WARNING: The hotfixing provided additional info."
 	echo -n "${MSGS}"
 fi
