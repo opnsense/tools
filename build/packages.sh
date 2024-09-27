@@ -59,7 +59,7 @@ for AUX in ${AUXLIST}; do
 			mkdir -p ${STAGEDIR}${PACKAGESDIR}-aux/All
 			mv ${STAGEDIR}/${PKG} ${STAGEDIR}${PACKAGESDIR}-aux/All
 
-			break;
+			break
 		fi
 	done
 done
