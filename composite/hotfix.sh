@@ -25,7 +25,6 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-PORTSENV="DEPEND=no PRUNE=no ${PORTSENV}"
 TARGET=${1%%-*}
 MSGS=
 
@@ -35,12 +34,13 @@ run_stage()
 {
 	STAGE=${1}
 	ARGS=${2}
+	ENV=${3}
 
 	if [ -z "${ARGS}" ]; then
 		return
 	fi
 
-	make ${STAGE}-${ARGS} PORTSENV="${PORTSENV}"
+	make ${STAGE}-${ARGS} PORTSENV="${ENV}"
 
 	if [ -s ${STAGEDIR}/.pkg-msg ]; then
 		MSGS="${MSGS}$(cat ${STAGEDIR}/.pkg-msg)
@@ -55,12 +55,17 @@ if [ -z "${TARGET}" ]; then
 	for STAGE in plugins core packages; do
 		run_stage ${STAGE} hotfix
 	done
-elif [ "${TARGET}" = "plugins" -o "${TARGET}" = "core" ]; then
-	# force a full rebuild of selected stage
-	make clean-${TARGET} ${TARGET}-hotfix
-elif [ "${TARGET}" = "ports" ]; then
-	# force partial rebuild of out of date ports
-	make ports-hotfix PORTSENV="MISMATCH=no ${PORTSENV}"
+elif [ "${TARGET}" = "plugins" -o "${TARGET}" = "core" -o \
+    "${TARGET}" = "ports" ]; then
+	if [ "${TARGET}" != "ports" ]; then
+		# force a full rebuild of non-ports
+		run_stage clean ${TARGET}
+	fi
+
+	run_stage ${TARGET} hotfix "MISMATCH=no ${PORTSENV}"
+
+	# do not immediately echo what was being printed
+	MSGS=
 else
 	ARG_PORTS=
 	ARG_PLUGINS=
@@ -87,7 +92,7 @@ else
 	done
 
 	# run all stages required for this hotfix run
-	run_stage ports ${ARG_PORTS}
+	run_stage ports ${ARG_PORTS} "DEPEND=no PRUNE=no ${PORTSENV}"
 	run_stage plugins ${ARG_PLUGINS}
 	run_stage core ${ARG_CORE}
 	run_stage packages hotfix

@@ -522,7 +522,7 @@ sets is invoked using:
     # make hotfix[-<step>]
 
 The default hotfix run is a non-destructive rebuild pass for missing
-plugins and core packages which also signs the packages.
+plugins and core packages which also signs the existing packages.
 
 You can also do a full rebuild using "core" or "plugins".  The "ports"
 step, however, will automatically rebuild mismatching and missing ports.
