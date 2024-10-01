@@ -92,9 +92,9 @@ else
 	done
 
 	# run all stages required for this hotfix run
-	run_stage ports ${ARG_PORTS} "DEPEND=no PRUNE=no ${PORTSENV}"
-	run_stage plugins ${ARG_PLUGINS}
-	run_stage core ${ARG_CORE}
+	run_stage ports "${ARG_PORTS}" "DEPEND=no PRUNE=no ${PORTSENV}"
+	run_stage plugins "${ARG_PLUGINS}"
+	run_stage core "${ARG_CORE}"
 	run_stage packages hotfix
 fi
 
