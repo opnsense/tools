@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2021-2023 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2021-2024 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -43,13 +43,16 @@ fi
 
 for ARG in ${@}; do
 	case ${ARG} in
-	base|distfiles|kernel|packages)
+	aux|base|distfiles|kernel|packages)
 		SRC=$(find_set ${ARG})
 		if [ -f "${SRC}" ]; then
 			DST=$(echo ${SRC} | sed "s:/${PRODUCT_ABI}/:/${TO}/:")
 			echo -n ">>> Cloning ${DST}... "
 			rm -f $(dirname ${DST})/${ARG}-*
 			cp ${SRC} ${DST}
+			if [ -f ${SRC}.sig ]; then
+				cp ${SRC}.sig ${DST}.sig
+			fi
 			echo "done"
 		fi
 		;;
