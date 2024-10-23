@@ -93,7 +93,9 @@ for ARG in ${@}; do
 				setup_stage $(dirname ${DIR}) || true
 			done
 		fi
-		for DIR in $(find /usr/obj -type d -depth 1); do
+
+		OPNSENSE_OBJROOT=/usr/obj$(dirname ${TOOLSDIR})
+		for DIR in $(find ${OPNSENSE_OBJROOT} -type d -depth 1); do
 			setup_stage ${DIR}
 			rm -rf ${DIR}
 		done
