@@ -32,15 +32,12 @@ SELF=list
 . ./common.sh
 
 for ARG in ${*}; do
-	case ${ARG} in
-	aux|base|distfiles|kernel|packages|release|xtools)
+	if [ -d "${TARGETDIR}/${ARG}" ]; then
+		ls -lah ${TARGETDIR}/"${ARG}"
+	else
 		SET=$(find_set "${ARG}")
 		if [ -n "${SET}" ]; then
 			tar -tf ${SET}
 		fi
-		;;
-	*)
-		ls -lah ${TARGETDIR}/"${ARG}"
-		;;
-	esac
+	fi
 done
