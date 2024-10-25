@@ -43,7 +43,7 @@ git_version ${SRCDIR}
 
 KYUASET=${SETSDIR}/kyua-${PRODUCT_VERSION}-${PRODUCT_ARCH}.txz
 
-COMPONENTS="lib/liblutok lib/liblua usr.bin/kyua lib/libnetbsd tests"
+COMPONENTS="libexec/atf lib/liblutok lib/liblua usr.bin/kyua lib/libnetbsd tests"
 
 for COMPONENT in ${COMPONENTS}; do
 	make -sC ${SRCDIR}/${COMPONENT} clean
