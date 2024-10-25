@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2018-2024 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2024 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,32 +27,52 @@
 
 set -e
 
-SELF=upload
+SELF=kyua
 
 . ./common.sh
 
-upload()
-{
-	echo ">>> Uploading ${1} to ${PRODUCT_SERVER}..."
-	(echo "cd ${UPLOADDIR}"; echo "put ${2}/${3}") | sftp ${PRODUCT_SERVER}
-}
+KYUASET=$(find_set kyua)
 
-for ARG in ${@}; do
-	case ${ARG} in
-	arm|dvd|nano|serial|vga|vm)
-		upload ${ARG} ${IMAGESDIR} "*-${ARG}-*${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}*"
-		;;
-	aux|distfiles|kyua|packages|release)
-		upload ${ARG} ${SETSDIR} "${ARG}-*"
-		;;
-	base|kernel)
-		upload ${ARG} ${SETSDIR} "${ARG}-*${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}*"
-		;;
-	log)
-		upload ${ARG} ${LOGSDIR} "${PRODUCT_VERSION}-*"
-		;;
-	logs)
-		upload ${ARG} ${LOGSDIR} "[0-9]*"
-		;;
-	esac
+if [ -f "${KYUASET}" -a -z "${1}" ]; then
+	echo ">>> Reusing kyua set: ${KYUASET}"
+	exit 0
+fi
+
+git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
+git_version ${SRCDIR}
+
+KYUASET=${SETSDIR}/kyua-${PRODUCT_VERSION}-${PRODUCT_ARCH}.txz
+
+COMPONENTS="lib/liblutok lib/liblua usr.bin/kyua lib/libnetbsd tests"
+
+for COMPONENT in ${COMPONENTS}; do
+	make -sC ${SRCDIR}/${COMPONENT} clean
 done
+
+for COMPONENT in ${COMPONENTS}; do
+	echo -n ">>> Building ${COMPONENT}... "
+	make -sC ${SRCDIR}/${COMPONENT} all
+	echo "done."
+done
+
+setup_stage ${STAGEDIR} work/usr/tests
+
+mtree -deiU -f ${SRCDIR}/etc/mtree/BSD.usr.dist -p ${STAGEDIR}/work/usr
+mtree -deiU -f ${SRCDIR}/etc/mtree/BSD.tests.dist -p ${STAGEDIR}/work/usr/tests
+
+for COMPONENT in ${COMPONENTS}; do
+	if [ -n "${COMPONENT##lib/*}" ]; then
+		make -sC ${SRCDIR}/${COMPONENT} \
+		    DESTDIR=${STAGEDIR}/work install
+	fi
+done
+
+# remove a couple of debug additions
+rm -rf ${STAGEDIR}/work/usr/lib/debug
+find ${STAGEDIR}/work -type f -name "*.debug" -delete
+find ${STAGEDIR}/work -type d -empty -delete
+
+sh ./clean.sh ${SELF}
+
+setup_version ${STAGEDIR} ${STAGEDIR}/work ${SELF}
+generate_set ${STAGEDIR}/work ${KYUASET}

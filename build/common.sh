@@ -771,8 +771,8 @@ find_set()
 	aux|packages|release)
 		echo $(find ${SETSDIR} -name "${1}-*-${PRODUCT_ARCH}.tar")
 		;;
-	xtools)
-		echo $(find ${SETSDIR} -name "xtools-*-${PRODUCT_ARCH}.txz")
+	kyua|xtools)
+		echo $(find ${SETSDIR} -name "${1}-*-${PRODUCT_ARCH}.txz")
 		;;
 	*)
 		echo "Cannot find unknown set: ${1}" >&2
