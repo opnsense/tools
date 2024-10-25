@@ -43,7 +43,15 @@ git_version ${SRCDIR}
 
 KYUASET=${SETSDIR}/kyua-${PRODUCT_VERSION}-${PRODUCT_ARCH}.txz
 
-COMPONENTS="libexec/atf lib/liblutok lib/liblua usr.bin/kyua lib/libnetbsd tests"
+COMPONENTS="
+lib/atf
+libexec/atf
+lib/liblutok
+lib/liblua
+usr.bin/kyua
+lib/libnetbsd
+tests
+"
 
 for COMPONENT in ${COMPONENTS}; do
 	make -sC ${SRCDIR}/${COMPONENT} clean
@@ -55,13 +63,14 @@ for COMPONENT in ${COMPONENTS}; do
 	echo "done."
 done
 
-setup_stage ${STAGEDIR} work/usr/tests
+setup_stage ${STAGEDIR} work/usr/tests work/usr/include
 
 mtree -deiU -f ${SRCDIR}/etc/mtree/BSD.usr.dist -p ${STAGEDIR}/work/usr
 mtree -deiU -f ${SRCDIR}/etc/mtree/BSD.tests.dist -p ${STAGEDIR}/work/usr/tests
+mtree -deiU -f ${SRCDIR}/etc/mtree/BSD.include.dist -p ${STAGEDIR}/work/usr/include
 
 for COMPONENT in ${COMPONENTS}; do
-	if [ -n "${COMPONENT##lib/*}" ]; then
+	if [ -n "${COMPONENT##lib/*}" -o "${COMPONENT}" = "lib/atf" ]; then
 		make -sC ${SRCDIR}/${COMPONENT} \
 		    DESTDIR=${STAGEDIR}/work install
 	fi
