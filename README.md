@@ -9,33 +9,41 @@ Setting up a build system
 
 Install [FreeBSD](https://www.freebsd.org/) 14.1-RELEASE for amd64
 on a machine with at least 40GB of hard disk and at least 8GB of RAM
-to successfully build all standard images.  All tasks require a root
+to successfully build all standard images.  All tasks require a **root**
 user.  Do the following to grab the repositories (overwriting standard
 ports and src):
 
-    # pkg install git
-    # cd /usr
-    # git clone https://github.com/opnsense/tools
-    # cd tools
-    # make update
+```sh
+pkg install git
+cd /usr
+git clone https://github.com/opnsense/tools
+cd tools
+make update
+```
 
 Note that the OPNsense repositories can also be setup in a non-/usr directory
 by setting ROOTDIR.  For example:
 
-    # mkdir -p /tmp/opnsense
-    # cd /tmp/opnsense
-    # git clone https://github.com/opnsense/tools
-    # cd tools
-    # env ROOTDIR=/tmp/opnsense make update
+```sh
+mkdir -p /tmp/opnsense
+cd /tmp/opnsense
+git clone https://github.com/opnsense/tools
+cd tools
+env ROOTDIR=/tmp/opnsense make update
+```
 
 TL;DR
 =====
 
-    # make dvd
+```sh
+make dvd
+```
 
 If successful, a dvd image can be found under:
 
-    # make print-IMAGESDIR
+```sh
+make print-IMAGESDIR
+```
 
 Detailed build steps and options
 ================================
@@ -52,7 +60,9 @@ into a target image.
 
 All build steps are invoked via make(1):
 
-    # make step OPTION="value"
+```sh
+make step OPTION="value"
+```
 
 Available early build options are:
 
@@ -94,67 +104,97 @@ How to run individual or composite build steps
 
 Kernel, base, packages and release sets are stored under:
 
-    # make print-SETSDIR
+```sh
+make print-SETSDIR
+```
 
 All final images are stored under:
 
-    # make print-IMAGESDIR
+```sh
+make print-IMAGESDIR
+```
 
 Build the userland binaries, bootloader and administrative files:
 
-    # make base
+```sh
+make base
+```
 
 Build the kernel and loadable kernel modules:
 
-    # make kernel
+```sh
+make kernel
+```
 
 Build all the third-party ports:
 
-    # make ports
+```sh
+make ports
+```
 
 Build additional plugins if needed:
 
-    # make plugins
+```sh
+make plugins
+```
 
 Wrap up our core as a package:
 
-    # make core
+```sh
+make core
+```
 
 A dvd live image is created using:
 
-    # make dvd
+```sh
+make dvd
+```
 
 A serial memstick live image is created using:
 
-    # make serial
+```sh
+make serial
+```
 
 A vga memstick live image is created using:
 
-    # make vga
+```sh
+make vga
+```
 
 A flash card full disk image is created using:
 
-    # make nano
+```sh
+make nano
+```
 
 A virtual machine full disk image is created using:
 
-    # make vm
+```sh
+make vm
+```
 
 A special embedded device image based on vm variety:
 
-    # make factory
+```sh
+make factory
+```
 
 Release sets can be built as follows although the result is
 an unpredictable set of images depending on the previous
 build states:
 
-    # make release
+```sh
+make release
+```
 
 However, the release target is necessary for the following
 target which includes sanity checks, proper clearing of the
 images directory and core package version alignment:
 
-    # make distribution
+```sh
+make distribution
+```
 
 Cross-building for other architecures
 -------------------------------------
@@ -166,21 +206,29 @@ boot files to be installed as prompted by the build system.
 A cross-build on the operating system sources is executed by
 specifying the target architecture and custom kernel:
 
-    # make base kernel DEVICE=BANANAPI
+```sh
+make base kernel DEVICE=BANANAPI
+```
 
 In order to speed up building of using an emulated packages build,
 the xtools set can be created like so:
 
-    # make xtools DEVICE=BANANAPI
+```sh
+make xtools DEVICE=BANANAPI
+```
 
 The xtools set is then used during the packages build similar to
 the distfiles set.
 
-    # make packages DEVICE=BANANAPI
+```sh
+make packages DEVICE=BANANAPI
+```
 
 The final image is built using:
 
-    # make arm-<size> DEVICE=BANANAPI
+```sh
+make arm-<size> DEVICE=BANANAPI
+```
 
 Currently available device are: BANANAPI and RPI2.
 
@@ -196,11 +244,13 @@ the build process for required non-default settings for
 image builds.  The .conf files are shell scripts that can
 define hooks in the form of e.g.:
 
-    serial_hook()
-    {
-        # ${1} is the target file system root
-        touch ${1}/my_custom_file
-    }
+```sh
+serial_hook()
+{
+    # ${1} is the target file system root
+    touch ${1}/my_custom_file
+}
+```
 
 These hooks are available for all image types, namely
 dvd, nano, serial, vga and vm.  Device-specific hooks
@@ -212,7 +262,9 @@ Updating the code repositories
 
 Updating all or individual repositories can be done as follows:
 
-    # make update[-<repo1>[,...]] [VERSION=git.tag]
+```sh
+make update[-<repo1>[,...]] [VERSION=git.tag]
+```
 
 Available update options are: core, plugins, ports, portsref, src, tools
 
@@ -225,12 +277,16 @@ Before building images, you can run the regression tests
 to check the integrity of your core.git modifications plus
 generate output for the style checker:
 
-    # make test
+```sh
+make test
+```
 
 To check the binary packages from ports against the upstream
 vulnerability database run the following:
 
-    # make audit
+```sh
+make audit
+```
 
 Advanced package builds
 -----------------------
@@ -248,14 +304,18 @@ then again as a flat file (outside) to ensure integrity.
 For faster ports building it may be of use to cache all distribution
 files before running the actual build:
 
-    # make distfiles
+```sh
+make distfiles
+```
 
 For targeted rebuilding of already built packages the following
 works:
 
-    # make ports-<packagename>[,...]
-    # make plugins-<packagename>[,...]
-    # make core-<packagename>[,...]
+```sh
+make ports-<packagename>[,...]
+make plugins-<packagename>[,...]
+make core-<packagename>[,...]
+```
 
 Please note that reissuing ports builds will clear plugins and
 core progress.  However, following option apply to PORTSENV:
@@ -268,13 +328,17 @@ core progress.  However, following option apply to PORTSENV:
 The defaults for these ports options are set to "yes".  A sample
 invoke is as follows:
 
-    # make ports-curl PORTSENV="DEPEND=no PRUNE=no"
+```sh
+make ports-curl PORTSENV="DEPEND=no PRUNE=no"
+```
 
 Both ports and plugins builds allow to override the current list
 derived from their respective configuration files, i.e.:
 
-    # make ports PORTSLIST="security/openssl"
-    # make plugins PLUGINSLIST="devel/debug"
+```sh
+make ports PORTSLIST="security/openssl"
+make plugins PLUGINSLIST="devel/debug"
+```
 
 Acquiring precompiled sets from the mirrors or another local directory
 ---------------------------------------------------------------------
@@ -282,12 +346,16 @@ Acquiring precompiled sets from the mirrors or another local directory
 Compiled sets can be prefetched from a mirror if they exist,
 while removing any previously available set:
 
-    # make prefetch-<option>[,...] [VERSION=<full_version>]
+```sh
+make prefetch-<option>[,...] [VERSION=<full_version>]
+```
 
 If another build configuration is used locally that is compatible,
 the sets can be cloned from there as well:
 
-    # make clone-<option>[,...] TO=<major_version>
+```sh
+make clone-<option>[,...] TO=<major_version>
+```
 
 Available prefetch or clone options are:
 
@@ -302,18 +370,24 @@ Using signatures to verify integrity
 Signing for all sets can be redone or applied to a previous run
 that did not sign by invoking:
 
-    # make sign-base,kernel,packages
+```sh
+make sign-base,kernel,packages
+```
 
 A verification of all available set signatures is done via:
 
-    # make verify
+```sh
+make verify
+```
 
 Nano image size adjustment
 --------------------------
 
 Nano images can be adjusted in size using an argument as follows:
 
-    # make nano-<size>
+```sh
+make nano-<size>
+```
 
 Virtual machine images
 ----------------------
@@ -323,7 +397,9 @@ For this reason they are not included in our binary releases.
 The default format is vmdk with 20G and 1G swap.  If you want
 to change that you can manually alter the invoke using:
 
-    # make vm-<format>[,<size>[,<swap>[,<extras>]]]
+```sh
+make vm-<format>[,<size>[,<swap>[,<extras>]]]
+```
 
 Available virtual machine disk formats are:
 
@@ -345,7 +421,9 @@ Clearing individual build step progress
 A couple of build machine cleanup helpers are available
 via the clean script:
 
-    # make clean-<option>[,...]
+```sh
+make clean-<option>[,...]
+```
 
 Available clean options are:
 
@@ -378,7 +456,9 @@ The ports tree has a few of our modifications and is sometimes a
 bit ahead of FreeBSD.  In order to keep the local changes, a
 skimming script is used to review and copy upstream changes:
 
-    # make skim[-<option>]
+```sh
+make skim[-<option>]
+```
 
 Available options are:
 
@@ -393,7 +473,9 @@ When maintaining branches the master branch holds updates that
 we want to cherry-pick to another branch.  To ease the process
 the sync step can deal with the complexity involved:
 
-    # make sync-category/port[,category/port[,...]]
+```sh
+make sync-category/port[,category/port[,...]]
+```
 
 Rebasing the file lists for the base sets
 -----------------------------------------
@@ -401,7 +483,9 @@ Rebasing the file lists for the base sets
 In case base files changed, the base package list and obsoleted
 files need to be regenerated.  This is done using:
 
-    # make rebase
+```sh
+make rebase
+```
 
 Switching to the build jail for inspection
 ------------------------------------------
@@ -409,14 +493,18 @@ Switching to the build jail for inspection
 Shall any debugging be needed inside the build jail, the following
 command will use chroot(8) to enter the active build jail:
 
-    # make chroot[-<subdir>]
+```sh
+make chroot[-<subdir>]
+```
 
 Boot images in the native bhyve(8) hypervisor
 ---------------------------------------------
 
 There's also the posh way to boot a final image using bhyve(8):
 
-    # make boot-<image>
+```sh
+make boot-<image>
+```
 
 Please note that login is only possible via the Nano and Serial images.
 
@@ -429,7 +517,9 @@ A ports tree in a running OPNsense can be used to build packages
 not published on the mirrors.  To generate the make.conf contents
 for standalone use on the host use:
 
-    # make make.conf
+```sh
+make make.conf
+```
 
 Reading and modifying version numbers of build sets and images
 --------------------------------------------------------------
@@ -438,7 +528,9 @@ Normally the build scripts will pick up version numbers based
 on commit tags or given version tags or a date-type string.
 Should it not fit your needs, you can change the name using:
 
-    # make rename-<set>[,<another_set>] VERSION=<new_name>
+```sh
+make rename-<set>[,<another_set>] VERSION=<new_name>
+```
 
 The available targets are: base, distfiles, dvd, kernel, nano,
 packages, serial, vga and vm.
@@ -446,17 +538,23 @@ packages, serial, vga and vm.
 The current state of the associated build repositories checked
 out on the system can be printed using:
 
-    # make info
+```sh
+make info
+```
 
 Repositories that have signing keys can show the current
 fingerprint using:
 
-    # make fingerprint
+```sh
+make fingerprint
+```
 
 Last but not least, in case build variables needs to be inspected,
 they can be printed selectively using:
 
-    # make print-<variable1>[,<variable2>]
+```sh
+make print-<variable1>[,<variable2>]
+```
 
 Compressing images
 ------------------
@@ -464,40 +562,54 @@ Compressing images
 Images are compressed using bzip2(1) for distribution.  This can
 be invoked manually using:
 
-    # make compress-<image1>[,<image2>]
+```sh
+make compress-<image1>[,<image2>]
+```
 
 Composite build steps
 ---------------------
 
 A fully contained nightly build for the system is invoked using:
 
-    # make nightly
+```sh
+make nightly
+```
 
 When nightly builds are being run you can get a brief report of
 the latest one for each build step or select a build step to either
 view the file or watch it run in real time:
 
-    # make watch[-<step>]
+```sh
+make watch[-<step>]
+```
 
 To allow the nightly build to build both release and development packages
 use:
 
-    # make nightly EXTRABRANCH=master
+```sh
+make nightly EXTRABRANCH=master
+```
 
 Nightly builds are the only builds that write and archive logs under:
 
-    # make print-LOGSDIR
+```sh
+make print-LOGSDIR
+```
 
 with ./latest containing the last nightly build run.  Older logs are
 archived and available for a whole week for retrospective analysis.
 
 To push sets and images to a remote location use the upload target:
 
-    # make upload-<set>[,...]
+```sh
+make upload-<set>[,...]
+```
 
 To pull sets and images from a remote location use the download target:
 
-    # make download-<set>[,...]
+```sh
+make download-<set>[,...]
+```
 
 Logs can be downloaded as well for local inspection.  Note that download
 like prefetch will purge all locally existing targets.  Use SERVER to
@@ -509,17 +621,23 @@ this point only "logs" upload cleares and creates directories on the fly.
 If you want to script interactive prompts you may use the confirm target
 to operate yes or no questions before an action:
 
-    # make info confirm dvd
+```sh
+make info confirm dvd
+```
 
 To add arbitrary plugins from an external location into an image you can
 use the following:
 
-    # make custom-<image> ADDITIONS="an-existing-plugin path/to/extra/plugin"
+```sh
+make custom-<image> ADDITIONS="an-existing-plugin path/to/extra/plugin"
+```
 
 Last but not least, a rebuild of OPNsense core and plugins on package
 sets is invoked using:
 
-    # make hotfix[-<step>]
+```sh
+make hotfix[-<step>]
+```
 
 The default hotfix run is a non-destructive rebuild pass for missing
 plugins and core packages which also signs the existing packages.
