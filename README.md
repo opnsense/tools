@@ -14,7 +14,7 @@ user.  Do the following to grab the repositories (overwriting standard
 ports and src):
 
 ```sh
-pkg install git
+pkg install -y git
 cd /usr
 git clone https://github.com/opnsense/tools
 cd tools
@@ -25,6 +25,7 @@ Note that the OPNsense repositories can also be setup in a non-/usr directory
 by setting ROOTDIR.  For example:
 
 ```sh
+pkg install -y git
 mkdir -p /tmp/opnsense
 cd /tmp/opnsense
 git clone https://github.com/opnsense/tools
