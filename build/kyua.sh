@@ -54,12 +54,13 @@ tests
 "
 
 for COMPONENT in ${COMPONENTS}; do
-	make -sC ${SRCDIR}/${COMPONENT} clean
+	${ENV_FILTER} make -sC ${SRCDIR}/${COMPONENT} clean
 done
+
 
 for COMPONENT in ${COMPONENTS}; do
 	echo -n ">>> Building ${COMPONENT}... "
-	make -sC ${SRCDIR}/${COMPONENT} all
+	${ENV_FILTER} make -sC ${SRCDIR}/${COMPONENT} all
 	echo "done."
 done
 
@@ -71,7 +72,7 @@ mtree -deiU -f ${SRCDIR}/etc/mtree/BSD.include.dist -p ${STAGEDIR}/work/usr/incl
 
 for COMPONENT in ${COMPONENTS}; do
 	if [ -n "${COMPONENT##lib/*}" -o "${COMPONENT}" = "lib/atf" ]; then
-		make -sC ${SRCDIR}/${COMPONENT} \
+		${ENV_FILTER} make -sC ${SRCDIR}/${COMPONENT} \
 		    DESTDIR=${STAGEDIR}/work install
 	fi
 done
