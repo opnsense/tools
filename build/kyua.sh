@@ -46,22 +46,22 @@ KYUASET=${SETSDIR}/kyua-${PRODUCT_VERSION}-${PRODUCT_ARCH}.txz
 COMPONENTS="
 lib/atf
 libexec/atf
-lib/liblutok
-lib/liblua
-usr.bin/kyua
-lib/libnetbsd
-tests
 "
 
+MAKE_ARGS="
+TARGET_ARCH=${PRODUCT_ARCH}
+TARGET=${PRODUCT_TARGET}
+SRCCONF=${CONFIGDIR}/src.conf
+WITHOUT_DEBUG_FILES=yes
+__MAKE_CONF=
+${MAKE_ARGS_DEV}
+"
 for COMPONENT in ${COMPONENTS}; do
-	${ENV_FILTER} make -sC ${SRCDIR}/${COMPONENT} clean
+	${ENV_FILTER} make -sC ${SRCDIR}/${COMPONENT} clean ${MAKE_ARGS}
 done
 
-
 for COMPONENT in ${COMPONENTS}; do
-	echo -n ">>> Building ${COMPONENT}... "
-	${ENV_FILTER} make -sC ${SRCDIR}/${COMPONENT} all
-	echo "done."
+	${ENV_FILTER} make -sC ${SRCDIR}/${COMPONENT} all ${MAKE_ARGS}
 done
 
 setup_stage ${STAGEDIR} work/usr/tests work/usr/include
@@ -73,14 +73,15 @@ mtree -deiU -f ${SRCDIR}/etc/mtree/BSD.include.dist -p ${STAGEDIR}/work/usr/incl
 for COMPONENT in ${COMPONENTS}; do
 	if [ -n "${COMPONENT##lib/*}" -o "${COMPONENT}" = "lib/atf" ]; then
 		${ENV_FILTER} make -sC ${SRCDIR}/${COMPONENT} \
-		    DESTDIR=${STAGEDIR}/work install
+		    DESTDIR=${STAGEDIR}/work install ${MAKE_ARGS}
 	fi
 done
 
-# remove a couple of debug additions
-rm -rf ${STAGEDIR}/work/usr/lib/debug
-find ${STAGEDIR}/work -type f -name "*.debug" -delete
+# remove irrelevant glue
 find ${STAGEDIR}/work -type d -empty -delete
+rm -rf ${STAGEDIR}/work/usr/share/man
+rm -rf ${STAGEDIR}/work/usr/include
+rm -rf ${STAGEDIR}/work/usr/tests
 
 sh ./clean.sh ${SELF}
 
