@@ -24,8 +24,8 @@
 # SUCH DAMAGE.
 
 STEPS=		audit arm base boot chroot clean clone compress confirm \
-		connect core distfiles download dvd fingerprint info kernel \
-		kyua list make.conf nano options packages plugins ports \
+		connect core distfiles download dvd fingerprint info \
+		kernel list make.conf nano options packages plugins ports \
 		prefetch print rebase release rename serial sign skim \
 		sync test update upload verify vga vm xtools
 SCRIPTS=	custom distribution factory hotfix nightly watch

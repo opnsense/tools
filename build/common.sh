@@ -771,7 +771,7 @@ find_set()
 	aux|packages|release)
 		echo $(find ${SETSDIR} -name "${1}-*-${PRODUCT_ARCH}.tar")
 		;;
-	kyua|xtools)
+	xtools)
 		echo $(find ${SETSDIR} -name "${1}-*-${PRODUCT_ARCH}.txz")
 		;;
 	*)

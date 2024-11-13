@@ -42,7 +42,7 @@ for ARG in ${@}; do
 	arm|dvd|nano|serial|vga|vm)
 		upload ${ARG} ${IMAGESDIR} "*-${ARG}-*${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}*"
 		;;
-	aux|distfiles|kyua|packages|release)
+	aux|distfiles|packages|release)
 		upload ${ARG} ${SETSDIR} "${ARG}-*"
 		;;
 	base|kernel)

@@ -79,10 +79,6 @@ for ARG in ${@}; do
 		echo ">>> Removing kernel set"
 		rm -f ${SETSDIR}/kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*
 		;;
-	kyua)
-		echo ">>> Removing kyua set"
-		rm -f ${SETSDIR}/kyua-*-${PRODUCT_ARCH}.*
-		;;
 	logs)
 		setup_stage ${LOGSDIR}
 		;;

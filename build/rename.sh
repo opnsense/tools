@@ -40,7 +40,7 @@ for ARG in ${@}; do
 		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-arm-${FILE##*-arm-}
 		done
 		;;
-	aux|distfiles|kyua|packages)
+	aux|distfiles|packages)
 		echo ">>> Renaming ${ARG} set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "${ARG}-*-${PRODUCT_ARCH}.*"); do
