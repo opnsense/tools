@@ -25,7 +25,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-TARGET=${1%%-*}
+TARGET=${1}
 MSGS=
 
 set -e
@@ -72,7 +72,7 @@ else
 	ARG_CORE=
 
 	# figure out which stage a package belongs to
-	for PACKAGE in $(echo ${1} | tr ',' ' '); do
+	for PACKAGE in $(echo ${TARGET} | tr ',' ' '); do
 		if [ -z "${PRODUCT_CORES%%*"${PACKAGE}"*}" ]; then
 			if [ -n "${ARG_CORE}" ]; then
 				ARG_CORE="${ARG_CORE},"
