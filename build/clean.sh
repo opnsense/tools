@@ -42,8 +42,9 @@ for ARG in ${@}; do
 		rm -f ${SETSDIR}/${ARG}-*-${PRODUCT_ARCH}.*
 		;;
 	base)
-		echo ">>> Removing base set"
+		echo ">>> Removing base including tests set"
 		rm -f ${SETSDIR}/base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*
+		rm -f ${SETSDIR}/tests-*-${PRODUCT_ARCH}.*
 		;;
 	core)
 		echo ">>> Removing core from packages set"
