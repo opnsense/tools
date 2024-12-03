@@ -48,7 +48,7 @@ for ARG in ${@}; do
 			fetch -o ${SETSDIR} ${URL}.${SUFFIX} || true
 		done
 		;;
-	base|kernel)
+	base|kernel|tests)
 		sh ./clean.sh ${ARG}
 		URL="${MIRRORSETDIR}/${ARG}-${VERSION}-${PRODUCT_ARCH}"
 		for SUFFIX in txz.sig txz; do
