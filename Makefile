@@ -136,8 +136,8 @@ SRCDIR?=	${ROOTDIR}/src
 
 # A couple of meta-targets for easy use and ordering:
 
-kernel tests ports distfiles: base
-kernel: tests
+kernel ports distfiles: base
+base: tests
 audit plugins: ports
 core: plugins
 packages test: core
