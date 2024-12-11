@@ -84,21 +84,26 @@ _CONFIGDIR=	${DIR:C/\/build\.conf$//}
 .-include "${_CONFIGDIR}/build.conf.local"
 .include "${_CONFIGDIR}/build.conf"
 
+_ARCH!=		uname -p
+_VERSION!=	date '+%Y%m%d%H%M'
+
 # Bootstrap the build options if not set:
 
-NAME?=		OPNsense
-TYPE?=		${NAME:tl}
-SUFFIX?=	# empty
-_ARCH!=		uname -p
-ARCH?=		${_ARCH}
 ABI?=		${_CONFIGDIR:C/^.*\///}
-KERNEL?=	SMP
 ADDITIONS?=	# empty
+ARCH?=		${_ARCH}
+COMSPEED?=	115200
 DEBUG?=		# empty
 DEVICE?=	A10
-COMSPEED?=	115200
+KERNEL?=	SMP
+NAME?=		OPNsense
+SUFFIX?=	# empty
+TESTS?=		# empty
+TYPE?=		${NAME:tl}
 UEFI?=		arm dvd serial vga vm
+VERSION?=	${_VERSION}
 ZFS?=		# empty
+
 GITBASE?=	https://github.com/opnsense
 MIRRORS?=	https://opnsense.c0urier.net \
 		https://mirrors.nycbug.org/pub/opnsense \
@@ -108,8 +113,7 @@ MIRRORS?=	https://opnsense.c0urier.net \
 		https://mirror.ams1.nl.leaseweb.net/opnsense
 SERVER?=	user@does.not.exist
 UPLOADDIR?=	.
-_VERSION!=	date '+%Y%m%d%H%M'
-VERSION?=	${_VERSION}
+
 STAGEDIRPREFIX?=/usr/obj
 
 EXTRABRANCH?=	# empty
@@ -137,7 +141,9 @@ SRCDIR?=	${ROOTDIR}/src
 # A couple of meta-targets for easy use and ordering:
 
 kernel ports distfiles: base
+.if !empty(TESTS)
 base: tests
+.endif
 audit plugins: ports
 core: plugins
 packages test: core
