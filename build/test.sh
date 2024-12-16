@@ -70,6 +70,11 @@ for PLUGIN_ORIGIN in ${PLUGINSLIST}; do
 	VARIANT=${PLUGIN_ORIGIN##*@}
 	PLUGIN=${PLUGIN_ORIGIN%%@*}
 
+	if [ ! -d ${STAGEDIR}${PLUGINSDIR}/${PLUGIN} ]; then
+		echo ">>> Missing ${PLUGIN} origin, skipping test"
+		continue
+	fi
+
 	PLUGIN_ARGS=${PLUGINSENV}
 	if [ ${VARIANT} != ${PLUGIN} ]; then
 		PLUGIN_ARGS="${PLUGIN_ARGS} PLUGIN_VARIANT=${VARIANT}"
