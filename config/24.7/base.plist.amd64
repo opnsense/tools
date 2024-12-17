@@ -5020,6 +5020,7 @@
 /usr/libexec/bsdinstall/docsinstall
 /usr/libexec/bsdinstall/entropy
 /usr/libexec/bsdinstall/fetchmissingdists
+/usr/libexec/bsdinstall/firmware
 /usr/libexec/bsdinstall/hardening
 /usr/libexec/bsdinstall/hostname
 /usr/libexec/bsdinstall/jail
