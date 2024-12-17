@@ -1199,6 +1199,7 @@
 /usr/lib/libwind.a
 /usr/lib/libwind.so
 /usr/lib/libwind.so.11
+/usr/lib/ossl-modules/fips.so
 /usr/lib/pam_chroot.so.5
 /usr/lib/pam_deny.so.5
 /usr/lib/pam_echo.so.5
@@ -2206,6 +2207,7 @@
 /usr/share/man/man9/getpbuf.9.gz
 /usr/share/man/man9/gsignal.9.gz
 /usr/share/man/man9/ieee80211_unref_node.9.gz
+/usr/share/man/man9/ifaddr_byindex.9.gz
 /usr/share/man/man9/in6_pcbgroup_byhash.9.gz
 /usr/share/man/man9/in_pcbgroup_byhash.9.gz
 /usr/share/man/man9/in_pcbgroup_byinpcb.9.gz
@@ -2433,3 +2435,5 @@
 /var/db/etcupdate/current/usr/share/nls/POSIX
 /var/db/etcupdate/current/usr/share/nls/en_US.US-ASCII
 /var/db/etcupdate/current/var/db/services.db
+/var/db/etcupdate/log
+/var/db/locate.database

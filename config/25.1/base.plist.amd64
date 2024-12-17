@@ -157,6 +157,7 @@
 /etc/defaults/rc.conf
 /etc/devd.conf
 /etc/devd/asus.conf
+/etc/devd/autofs.conf
 /etc/devd/bluetooth.conf
 /etc/devd/devmatch.conf
 /etc/devd/dhclient.conf
@@ -1120,7 +1121,9 @@
 /usr/bin/man
 /usr/bin/mandoc
 /usr/bin/manpath
+/usr/bin/mdo
 /usr/bin/mesg
+/usr/bin/mididump
 /usr/bin/ministat
 /usr/bin/mkcsmapper
 /usr/bin/mkdep
@@ -3888,6 +3891,7 @@
 /usr/include/sys/soundcard.h
 /usr/include/sys/specialfd.h
 /usr/include/sys/spigenio.h
+/usr/include/sys/splash.h
 /usr/include/sys/stack.h
 /usr/include/sys/stat.h
 /usr/include/sys/stats.h
@@ -4822,7 +4826,6 @@
 /usr/lib/libzutil.so
 /usr/lib/nss_tacplus.so
 /usr/lib/nss_tacplus.so.1
-/usr/lib/ossl-modules/fips.so
 /usr/lib/ossl-modules/legacy.so
 /usr/lib/pam_chroot.so
 /usr/lib/pam_chroot.so.6
@@ -5020,6 +5023,7 @@
 /usr/libexec/bsdinstall/docsinstall
 /usr/libexec/bsdinstall/entropy
 /usr/libexec/bsdinstall/fetchmissingdists
+/usr/libexec/bsdinstall/firmware
 /usr/libexec/bsdinstall/hardening
 /usr/libexec/bsdinstall/hostname
 /usr/libexec/bsdinstall/jail
@@ -5129,6 +5133,7 @@
 /usr/libexec/flua
 /usr/libexec/ftpd
 /usr/libexec/fwget/pci
+/usr/libexec/fwget/pci_network_intel
 /usr/libexec/fwget/pci_network_mediatek
 /usr/libexec/fwget/pci_network_qca
 /usr/libexec/fwget/pci_network_realtek
@@ -7930,8 +7935,10 @@
 /usr/share/man/man1/manpath.1.gz
 /usr/share/man/man1/md5.1.gz
 /usr/share/man/man1/md5sum.1.gz
+/usr/share/man/man1/mdo.1.gz
 /usr/share/man/man1/mdocml.1.gz
 /usr/share/man/man1/mesg.1.gz
+/usr/share/man/man1/mididump.1.gz
 /usr/share/man/man1/ministat.1.gz
 /usr/share/man/man1/mkcsmapper.1.gz
 /usr/share/man/man1/mkdep.1.gz
@@ -8323,6 +8330,7 @@
 /usr/share/man/man2/getresgid.2.gz
 /usr/share/man/man2/getresuid.2.gz
 /usr/share/man/man2/getrlimit.2.gz
+/usr/share/man/man2/getrlimitusage.2.gz
 /usr/share/man/man2/getrusage.2.gz
 /usr/share/man/man2/getsid.2.gz
 /usr/share/man/man2/getsockname.2.gz
@@ -8366,6 +8374,7 @@
 /usr/share/man/man2/lstat.2.gz
 /usr/share/man/man2/lutimes.2.gz
 /usr/share/man/man2/madvise.2.gz
+/usr/share/man/man2/membarrier.2.gz
 /usr/share/man/man2/mincore.2.gz
 /usr/share/man/man2/minherit.2.gz
 /usr/share/man/man2/mkdir.2.gz
@@ -12034,6 +12043,7 @@
 /usr/share/man/man3/mixer_get_dunit.3.gz
 /usr/share/man/man3/mixer_get_mode.3.gz
 /usr/share/man/man3/mixer_get_nmixers.3.gz
+/usr/share/man/man3/mixer_get_path.3.gz
 /usr/share/man/man3/mixer_mod_recsrc.3.gz
 /usr/share/man/man3/mixer_open.3.gz
 /usr/share/man/man3/mixer_remove_ctl.3.gz
@@ -14085,6 +14095,7 @@
 /usr/share/man/man4/SCSI.4.gz
 /usr/share/man/man4/SMP.4.gz
 /usr/share/man/man4/SW_WATCHDOG.4.gz
+/usr/share/man/man4/_hn.4.gz
 /usr/share/man/man4/aac.4.gz
 /usr/share/man/man4/aacraid.4.gz
 /usr/share/man/man4/aarch64/armv8crypto.4.gz
@@ -14433,6 +14444,7 @@
 /usr/share/man/man4/if_genet.4.gz
 /usr/share/man/man4/if_gif.4.gz
 /usr/share/man/man4/if_gre.4.gz
+/usr/share/man/man4/if_hn.4.gz
 /usr/share/man/man4/if_iavf.4.gz
 /usr/share/man/man4/if_ice.4.gz
 /usr/share/man/man4/if_igb.4.gz
@@ -14601,6 +14613,7 @@
 /usr/share/man/man4/mac_biba.4.gz
 /usr/share/man/man4/mac_bsdextended.4.gz
 /usr/share/man/man4/mac_ddb.4.gz
+/usr/share/man/man4/mac_do.4.gz
 /usr/share/man/man4/mac_ifoff.4.gz
 /usr/share/man/man4/mac_ipacl.4.gz
 /usr/share/man/man4/mac_lomac.4.gz
@@ -14663,6 +14676,7 @@
 /usr/share/man/man4/netmap.4.gz
 /usr/share/man/man4/networking.4.gz
 /usr/share/man/man4/nfe.4.gz
+/usr/share/man/man4/nfslockd.4.gz
 /usr/share/man/man4/nfsmb.4.gz
 /usr/share/man/man4/nfsv4.4.gz
 /usr/share/man/man4/ng_UI.4.gz
@@ -14831,6 +14845,7 @@
 /usr/share/man/man4/rtsx.4.gz
 /usr/share/man/man4/rtw88.4.gz
 /usr/share/man/man4/rtw88fw.4.gz
+/usr/share/man/man4/rtw89.4.gz
 /usr/share/man/man4/rtwn.4.gz
 /usr/share/man/man4/rtwn_pci.4.gz
 /usr/share/man/man4/rtwn_usb.4.gz
@@ -14859,6 +14874,7 @@
 /usr/share/man/man4/send.4.gz
 /usr/share/man/man4/ses.4.gz
 /usr/share/man/man4/sfxge.4.gz
+/usr/share/man/man4/sg.4.gz
 /usr/share/man/man4/sge.4.gz
 /usr/share/man/man4/siba.4.gz
 /usr/share/man/man4/siftr.4.gz
@@ -14883,6 +14899,7 @@
 /usr/share/man/man4/snd_cs4281.4.gz
 /usr/share/man/man4/snd_csa.4.gz
 /usr/share/man/man4/snd_davbus.4.gz
+/usr/share/man/man4/snd_dummy.4.gz
 /usr/share/man/man4/snd_emu10k1.4.gz
 /usr/share/man/man4/snd_emu10kx.4.gz
 /usr/share/man/man4/snd_envy24.4.gz
@@ -15839,6 +15856,8 @@
 /usr/share/man/man9/BIT_ISSET.9.gz
 /usr/share/man/man9/BIT_OR.9.gz
 /usr/share/man/man9/BIT_OR2.9.gz
+/usr/share/man/man9/BIT_ORNOT.9.gz
+/usr/share/man/man9/BIT_ORNOT2.9.gz
 /usr/share/man/man9/BIT_OR_ATOMIC.9.gz
 /usr/share/man/man9/BIT_OVERLAP.9.gz
 /usr/share/man/man9/BIT_SET.9.gz
@@ -15893,6 +15912,7 @@
 /usr/share/man/man9/CPU_ISFULLSET.9.gz
 /usr/share/man/man9/CPU_ISSET.9.gz
 /usr/share/man/man9/CPU_OR.9.gz
+/usr/share/man/man9/CPU_ORNOT.9.gz
 /usr/share/man/man9/CPU_OR_ATOMIC.9.gz
 /usr/share/man/man9/CPU_OVERLAP.9.gz
 /usr/share/man/man9/CPU_SET.9.gz
@@ -17055,7 +17075,6 @@
 /usr/share/man/man9/ifa_ifwithnet.9.gz
 /usr/share/man/man9/ifa_ref.9.gz
 /usr/share/man/man9/ifaddr.9.gz
-/usr/share/man/man9/ifaddr_byindex.9.gz
 /usr/share/man/man9/ifaof_ifpforaddr.9.gz
 /usr/share/man/man9/ifdi_attach_post.9.gz
 /usr/share/man/man9/ifdi_attach_pre.9.gz
@@ -17999,6 +18018,7 @@
 /usr/share/man/man9/taskqueue_drain_timeout.9.gz
 /usr/share/man/man9/taskqueue_enqueue.9.gz
 /usr/share/man/man9/taskqueue_enqueue_timeout.9.gz
+/usr/share/man/man9/taskqueue_enqueue_timeout_sbt.9.gz
 /usr/share/man/man9/taskqueue_free.9.gz
 /usr/share/man/man9/taskqueue_member.9.gz
 /usr/share/man/man9/taskqueue_quiesce.9.gz
@@ -24928,6 +24948,7 @@
 /var/db/etcupdate/current/etc/defaults/rc.conf
 /var/db/etcupdate/current/etc/devd.conf
 /var/db/etcupdate/current/etc/devd/asus.conf
+/var/db/etcupdate/current/etc/devd/autofs.conf
 /var/db/etcupdate/current/etc/devd/bluetooth.conf
 /var/db/etcupdate/current/etc/devd/devmatch.conf
 /var/db/etcupdate/current/etc/devd/dhclient.conf
@@ -25223,7 +25244,5 @@
 /var/db/etcupdate/current/root/.shrc
 /var/db/etcupdate/current/root/.vimrc
 /var/db/etcupdate/current/var/crash/minfree
-/var/db/etcupdate/log
-/var/db/locate.database
 /var/db/mergemaster.mtree
 /var/db/services.db
