@@ -106,7 +106,7 @@ echo "done"
 
 if [ -f ${STAGEDIR}/.pkg-msg ]; then
 	echo ">>> WARNING: The fetch provided additional info."
-	cat ${BASEDIR}/.pkg-msg
+	cat ${STAGEDIR}/.pkg-msg
 
 	# signal error as well now
 	PORTSLIST=
