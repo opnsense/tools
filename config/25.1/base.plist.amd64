@@ -15178,6 +15178,7 @@
 /usr/share/man/man5/nsswitch.conf.5.gz
 /usr/share/man/man5/nullfs.5.gz
 /usr/share/man/man5/os-release.5.gz
+/usr/share/man/man5/p9fs.5.gz
 /usr/share/man/man5/pam.conf.5.gz
 /usr/share/man/man5/pam.d.5.gz
 /usr/share/man/man5/passwd.5.gz
