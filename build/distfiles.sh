@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2023 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2025 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -69,7 +69,12 @@ echo "${PORTSLIST}" | while read PORT_ORIGIN; do
 		FLAVOR_ARG="FLAVOR=\${FLAVOR}"
 	fi
 	PORT=\${PORT_ORIGIN%%@*}
-	make -C ${PORTSDIR}/\${PORT} fetch \${MAKE_ARGS} \${FLAVOR_ARG}
+	if ! make -C ${PORTSDIR}/\${PORT} fetch \${MAKE_ARGS} \${FLAVOR_ARG}; then
+		if [ -n "${PRODUCT_REBUILD}" ]; then
+			exit 1
+		fi
+		echo ">>> Failed fetching \${PORT}" >> ${STAGEDIR}/.pkg-msg
+	fi
 	PORT_DEPENDS=\$(make -C ${PORTSDIR}/\${PORT} all-depends-list \
 	    \${MAKE_ARGS})
 	for PORT_DEPEND in \${PORT_DEPENDS}; do
@@ -79,7 +84,12 @@ echo "${PORTSLIST}" | while read PORT_ORIGIN; do
 			FLAVOR_ARG="FLAVOR=\${FLAVOR}"
 		fi
 		PORT=\${PORT_DEPEND%%@*}
-		make -C \${PORT} fetch \${MAKE_ARGS} \${FLAVOR_ARG}
+		if ! make -C \${PORT} fetch \${MAKE_ARGS} \${FLAVOR_ARG}; then
+			if [ -n "${PRODUCT_REBUILD}" ]; then
+				exit 1
+			fi
+			echo ">>> Failed fetching \${PORT}" >> ${STAGEDIR}/.pkg-msg
+		fi
 	done
 done
 EOF
@@ -93,6 +103,14 @@ echo -n ">>> Creating distfiles set... "
 tar -C ${STAGEDIR}${PORTSDIR} -cf \
     ${SETSDIR}/distfiles-${PRODUCT_VERSION}.tar distfiles
 echo "done"
+
+if [ -f ${STAGEDIR}/.pkg-msg ]; then
+	echo ">>> WARNING: The fetch provided additional info."
+	cat ${BASEDIR}/.pkg-msg
+
+	# signal error as well now
+	PORTSLIST=
+fi
 
 if [ -z "${PORTSLIST}" ]; then
 	echo ">>> The distfiles fetch did not finish properly :("
