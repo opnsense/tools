@@ -27,7 +27,7 @@
 
 set -e
 
-MEM=2048
+MEM=3092
 SELF=boot
 
 . ./common.sh
