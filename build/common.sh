@@ -228,19 +228,18 @@ export PRODUCT_SETTINGS="${CONFIGDIR##*/}"
 export DEVICEDIR="${TOOLSDIR}/device"
 export PACKAGESDIR="/.pkg"
 
+# load device-specific environment
+if [ ! -f ${DEVICEDIR}/${PRODUCT_DEVICE_REAL}.conf ]; then
+	echo ">>> No configuration found for device ${PRODUCT_DEVICE_REAL}." >&2
+	exit 1
+fi
+. ${DEVICEDIR}/${PRODUCT_DEVICE_REAL}.conf
+
 # get the current version for the selected source repository
 SRCREVISION=unknown
 if [ -f ${SRCDIR}/sys/conf/newvers.sh ]; then
 	eval export SRC$(grep ^REVISION= ${SRCDIR}/sys/conf/newvers.sh)
 fi
-
-if [ ! -f ${DEVICEDIR}/${PRODUCT_DEVICE_REAL}.conf ]; then
-	echo ">>> No configuration found for device ${PRODUCT_DEVICE_REAL}." >&2
-	exit 1
-fi
-
-# load device-specific environment
-. ${DEVICEDIR}/${PRODUCT_DEVICE_REAL}.conf
 export SRCABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}"
 
 # define and bootstrap target directories
