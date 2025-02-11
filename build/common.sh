@@ -233,7 +233,6 @@ SRCREVISION=unknown
 if [ -f ${SRCDIR}/sys/conf/newvers.sh ]; then
 	eval export SRC$(grep ^REVISION= ${SRCDIR}/sys/conf/newvers.sh)
 fi
-export SRCABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}"
 
 if [ ! -f ${DEVICEDIR}/${PRODUCT_DEVICE_REAL}.conf ]; then
 	echo ">>> No configuration found for device ${PRODUCT_DEVICE_REAL}." >&2
@@ -242,6 +241,7 @@ fi
 
 # load device-specific environment
 . ${DEVICEDIR}/${PRODUCT_DEVICE_REAL}.conf
+export SRCABI="FreeBSD:${SRCREVISION%%.*}:${PRODUCT_ARCH}"
 
 # define and bootstrap target directories
 export STAGEDIR="${STAGEDIRPREFIX}${CONFIGDIR}/${PRODUCT_ARCH}"
