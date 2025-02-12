@@ -115,9 +115,11 @@ setup_base ${STAGEDIR}/mnt
 cp -R ${STAGEDIR}/mnt/boot ${STAGEDIR}
 
 setup_kernel ${STAGEDIR}/mnt
+setup_xtools ${STAGEDIR}/mnt
 setup_packages ${STAGEDIR}/mnt
 setup_extras ${STAGEDIR}/mnt ${VMEXTRAS}
 setup_entropy ${STAGEDIR}/mnt
+setup_xbase ${STAGEDIR}/mnt
 
 cat > ${STAGEDIR}/mnt/etc/fstab << EOF
 # Device	Mountpoint	FStype	Options	Dump	Pass#
