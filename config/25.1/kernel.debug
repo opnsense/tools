@@ -4,7 +4,7 @@ makeoptions	WITH_CTF=1
 options		INVARIANTS
 options		INVARIANT_SUPPORT
 options		KASSERT_PANIC_OPTIONAL
-options 	KASAN
 options		KDTRACE_HOOKS
 options		KDTRACE_FRAME
 options		DDB_CTF
+#options 	KASAN	# heavy network performance degradation
