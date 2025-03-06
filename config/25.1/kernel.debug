@@ -1,0 +1,6 @@
+# included from kernel.debug
+makeoptions	DEBUG=-g
+options		INVARIANTS
+options		INVARIANT_SUPPORT
+options		KASSERT_PANIC_OPTIONAL
+options 	KASAN

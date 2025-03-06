@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2024 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2025 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -44,16 +44,17 @@ git_version ${SRCDIR}
 KERNEL_DEBUG_SET=${SETSDIR}/kernel-dbg-${PRODUCT_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 KERNEL_RELEASE_SET=${SETSDIR}/kernel-${PRODUCT_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz
 
-KERNDEBUG="nomakeoptions	DEBUG"
+KERNDEBUG=default
 SRCDEBUG="WITHOUT_DEBUG_FILES=yes"
 
 if [ -n "${PRODUCT_DEBUG}" ]; then
-	KERNDEBUG="makeoptions	DEBUG=-g\noptions		INVARIANTS\noptions		INVARIANT_SUPPORT\noptions		KASSERT_PANIC_OPTIONAL"
+	KERNDEBUG=debug
 	SRCDEBUG=
 fi
 
 if [ -f "${CONFIGDIR}/${PRODUCT_KERNEL}" ]; then
-	sed -e "s/%%DEBUG%%/${KERNDEBUG}/" "${CONFIGDIR}/${PRODUCT_KERNEL}" > \
+	sed -e "/%%DEBUG%%/r ${CONFIGDIR}/kernel.${KERNDEBUG}" \
+	    "${CONFIGDIR}/${PRODUCT_KERNEL}" | grep -v %%DEBUG%% > \
 	    "${SRCDIR}/sys/${PRODUCT_TARGET}/conf/${PRODUCT_KERNEL}"
 else
 	echo ">>> Attempting to use external kernel: ${PRODUCT_KERNEL}"
