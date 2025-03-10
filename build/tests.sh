@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2024 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2024-2025 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -54,6 +54,8 @@ ${MAKE_ARGS_DEV}
 
 ${ENV_FILTER} make -C${SRCDIR}/lib/libnetbsd -j${CPUS} all ${MAKE_ARGS}
 ${ENV_FILTER} make -C${SRCDIR}/tests -j${CPUS} all ${MAKE_ARGS}
+
+sh ./clean.sh ${SELF}
 
 setup_stage ${STAGEDIR} work/usr/tests
 mtree -deiU -f ${SRCDIR}/etc/mtree/BSD.tests.dist -p ${STAGEDIR}/work/usr/tests
