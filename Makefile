@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2024 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2025 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,7 +28,7 @@ STEPS=		audit arm base boot chroot clean clone compress confirm \
 		kernel list make.conf nano options packages plugins ports \
 		prefetch print rebase release rename serial sign skim \
 		sync test tests update upload verify vga vm xtools
-SCRIPTS=	custom distribution factory hotfix nightly watch
+SCRIPTS=	custom distribution factory hotfix nightly pkgver watch
 
 .PHONY:		${STEPS} ${SCRIPTS}
 
