@@ -33,7 +33,7 @@ TARGETS=$(echo ${1} | tr ',' ' ')
 for TARGET in ${TARGETS}; do
 	RESULT=$(echo "${VERSIONS}" | (grep -i "/${TARGET}-[0-9]" || true))
 	if [ -z "${RESULT}" ]; then
-		echo "${TARGET}: not found"
+		echo "${TARGET}: N/A"
 	else
 		RESULT=${RESULT##*-}
 		echo "${TARGET}:" ${RESULT%.pkg}
