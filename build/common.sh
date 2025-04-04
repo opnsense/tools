@@ -344,7 +344,7 @@ git_clone()
 		URL=${PRODUCT_GITBASE}/$(basename ${1})
 	fi
 
-	git clone "${URL}" ${1}
+	git clone --filter=blob:none "${URL}" ${1}
 }
 
 git_pull()
