@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2024 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2025 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -42,9 +42,8 @@ for ARG in ${@}; do
 		rm -f ${SETSDIR}/${ARG}-*-${PRODUCT_ARCH}.*
 		;;
 	base)
-		echo ">>> Removing base including tests set"
+		echo ">>> Removing base set"
 		rm -f ${SETSDIR}/base-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.*
-		rm -f ${SETSDIR}/tests-*-${PRODUCT_ARCH}.*
 		;;
 	core)
 		echo ">>> Removing core from packages set"
