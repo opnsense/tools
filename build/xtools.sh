@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2021 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2016-2025 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -48,21 +48,24 @@ git_version ${SRCDIR}
 
 XTOOLSET=${SETSDIR}/xtools-${PRODUCT_VERSION}-${PRODUCT_ARCH}.txz
 
-sh ./clean.sh ${SELF}
-
 setup_stage ${STAGEDIR}
 
-MAKE_ARGS="TARGET_ARCH=${PRODUCT_ARCH} TARGET=${PRODUCT_TARGET}"
-MAKE_ARGS="${MAKE_ARGS} SRCCONF=${CONFIGDIR}/src.conf __MAKE_CONF="
+MAKE_ARGS="
+-j${CPUS}
+TARGET_ARCH=${PRODUCT_ARCH}
+SRCCONF=${CONFIGDIR}/src.conf
+__MAKE_CONF=
+"
 
-${ENV_FILTER} make -C${SRCDIR} -j${CPUS} native-xtools ${MAKE_ARGS}
+${ENV_FILTER} make -C${SRCDIR} ${MAKE_ARGS} native-xtools
 
-XTOOLS_DIR=$(make -C${SRCDIR} -f Makefile.inc1 -v OBJTREE ${MAKE_ARGS})/nxb-bin
+sh ./clean.sh ${SELF}
 
-${ENV_FILTER} make -C${SRCDIR} -j${CPUS} native-xtools-install ${MAKE_ARGS} DESTDIR=${XTOOLS_DIR}/..
+${ENV_FILTER} make -C${SRCDIR} ${MAKE_ARGS} native-xtools-install \
+	DESTDIR=${STAGEDIR}
 
 echo -n ">>> Generating xtools set... "
 
-tar -C ${XTOOLS_DIR} -cJf ${XTOOLSET} .
+tar -C ${STAGEDIR}/nxb-bin -cJf ${XTOOLSET} .
 
 echo "done"
