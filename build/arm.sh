@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2025 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2015-2017 The FreeBSD Foundation
 #
 # Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,9 @@ SELF=arm
 
 . ./common.sh
 
-if [ ${PRODUCT_ARCH} != armv6 -a ${PRODUCT_ARCH} != armv7 -a ${PRODUCT_ARCH} != aarch64 ]; then
+if [ ${PRODUCT_ARCH} != armv6 \
+    -a ${PRODUCT_ARCH} != armv7 \
+    -a ${PRODUCT_ARCH} != aarch64 ]; then
 	echo ">>> Cannot build arm image with arch ${PRODUCT_ARCH}"
 	exit 1
 fi
@@ -45,7 +47,7 @@ if [ -n "${1}" ]; then
 	ARMSIZE=${1}
 fi
 
-ARMIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-arm-${PRODUCT_ARCH}-${PRODUCT_DEVICE}.img"
+ARMIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-arm-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.img"
 ARMLABEL="${PRODUCT_NAME}"
 
 sh ./clean.sh ${SELF}
