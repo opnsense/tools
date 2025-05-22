@@ -523,14 +523,7 @@ setup_xtools()
 	# additional emulation layer so that chroot
 	# looks like a native environment later on
 	mkdir -p ${1}/usr/local/bin
-	case ${PRODUCT_TARGET} in
-	arm64)
-		cp /usr/local/bin/qemu-${PRODUCT_ARCH}-static ${1}/usr/local/bin
-		;;
-	*)
-		cp /usr/local/bin/qemu-${PRODUCT_TARGET}-static ${1}/usr/local/bin
-		;;
-	esac
+	cp /usr/local/bin/qemu-${PRODUCT_ARCH}-static ${1}/usr/local/bin
 	/usr/local/etc/rc.d/qemu_user_static onerestart
 
 	# copy the native toolchain for extra speed
