@@ -46,7 +46,7 @@ if [ -n "${1}" ]; then
 fi
 
 ARMIMG="${IMAGESDIR}/${PRODUCT_RELEASE}-arm-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.img"
-ARMLABEL="${PRODUCT_NAME}"
+ARMLABEL="${PRODUCT_NAME}_ARM"
 
 sh ./clean.sh ${SELF}
 
