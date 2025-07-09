@@ -38,8 +38,6 @@ git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 RET=0
 
 for PORT in ${PORTSLIST}; do
-	PORT=${PORT%%@*}
-
 	if ! grep "^${PORT}|" ${PORTSDIR}/MOVED; then
 		RET=1
 	fi
