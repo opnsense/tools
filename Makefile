@@ -25,9 +25,10 @@
 
 STEPS=		audit arm base boot chroot clean clone compress confirm \
 		connect core distfiles download dvd fingerprint info \
-		kernel list make.conf nano options packages plugins ports \
-		prefetch print rebase release rename serial sign skim \
-		sync test tests update upload verify vga vm xtools
+		kernel list make.conf nano obsolete options packages \
+		plugins ports prefetch print rebase release rename \
+		serial sign skim sync test tests update upload \
+		verify vga vm xtools
 SCRIPTS=	custom distribution factory hotfix nightly pkgver watch
 
 .PHONY:		${STEPS} ${SCRIPTS}

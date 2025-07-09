@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2017-2024 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2017-2025 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -39,10 +39,10 @@ fi
 STAGE1=${STAGE1:-"clean-obj update info base kernel xtools distfiles clean-${CLEAN}"}
 
 # Stage 2 centers around ports, packages and QA for partial or full rebuild
-STAGE2=${STAGE2:-"options ports plugins core audit test clean-obj"}
+STAGE2=${STAGE2:-"obsolete options ports plugins core audit test clean-obj"}
 
 # Do not error out on these optional targets
-NOERROR=${NOERROR:-"distfiles options audit test"}
+NOERROR=${NOERROR:-"distfiles obsolete options audit test"}
 
 # Number of error lines to log separately
 LINES=${LINES:-400}
