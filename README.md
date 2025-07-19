@@ -7,7 +7,7 @@ create sets, packages and images for the OPNsense project.
 Setting up a build system
 =========================
 
-Install [FreeBSD](https://www.freebsd.org/) 14.2-RELEASE for amd64
+Install [FreeBSD](https://www.freebsd.org/) 14.3-RELEASE for amd64
 on a machine with at least 40GB of hard disk and at least 8GB of RAM
 to successfully build all standard images.  All tasks require a root
 user.  Do the following to grab the repositories (overwriting standard
