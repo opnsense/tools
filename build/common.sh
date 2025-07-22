@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2024 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2025 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -316,6 +316,13 @@ git_reset()
 git_fetch()
 {
 	echo ">>> Fetching ${1}:"
+
+	# sometimes tagging needs to be redone but a fetch
+	# will fail because of clobbered tags so when passing
+	# a tag to be stripped try removal to unbreak
+	if [ -n "${REPO_STRIP}" ]; then
+		git -C ${1} tag -d ${REPO_STRIP} || true
+	fi
 
 	git -C ${1} fetch --tags --prune origin
 }
