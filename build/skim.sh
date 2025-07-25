@@ -43,8 +43,6 @@ LESS="less -R"
 setup_stage ${STAGEDIR}
 
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
-git_fetch ${PORTSREFDIR}
-git_pull ${PORTSREFDIR} ${PORTSREFBRANCH}
 git_reset ${PORTSREFDIR} HEAD
 git_reset ${PORTSDIR} HEAD
 

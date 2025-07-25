@@ -40,6 +40,11 @@ PAGER?=		less
 all:
 	@cat ${.CURDIR}/README.md | ${PAGER}
 
+updateportsref:
+	@make -C ${.CURDIR} update-portsref
+
+skim: updateportsref
+
 lint-steps:
 .for STEP in common ${STEPS}
 	@sh -n ${.CURDIR}/build/${STEP}.sh
