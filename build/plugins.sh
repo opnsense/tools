@@ -119,7 +119,7 @@ for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 			fi
 		done
 
-		if search_packages ${STAGEDIR} ${PLUGIN_NAME} ${PLUGIN_VERS}; then
+		if search_packages ${STAGEDIR} ${PLUGIN_NAME} ${PLUGIN_VERS} ${BRANCH}; then
 			# already built
 			continue
 		fi

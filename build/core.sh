@@ -74,7 +74,7 @@ for BRANCH in ${EXTRABRANCH} ${COREBRANCH}; do
 		fi
 	done
 
-	if search_packages ${STAGEDIR} ${CORE_NAME} ${CORE_VERS}; then
+	if search_packages ${STAGEDIR} ${CORE_NAME} ${CORE_VERS} ${BRANCH}; then
 		# already built
 		continue
 	fi

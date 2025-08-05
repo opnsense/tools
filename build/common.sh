@@ -807,6 +807,7 @@ search_packages()
 	BASEDIR=${1}
 	PKGNAME=${2}
 	PKGVERS=${3}
+	PKGBRCH=${4}
 
 	# check whether the package has already been built
 	PKGFILE=${BASEDIR}${PACKAGESDIR}/All/${PKGNAME}-${PKGVERS}.pkg
@@ -820,7 +821,7 @@ search_packages()
 	if [ -L ${PKGLINK} ]; then
 		PKGFILE=$(readlink -f ${PKGLINK} || true)
 		if [ -f ${PKGFILE} ]; then
-			echo ">>> Skipped version ${PKGVERS} for ${PKGNAME}" >> ${BASEDIR}/.pkg-msg
+			echo ">>> Skipped version ${PKGVERS} for ${PKGNAME} from ${PKGBRCH}" >> ${BASEDIR}/.pkg-msg
 			return 0
 		fi
 	fi
