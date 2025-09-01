@@ -634,22 +634,24 @@ setup_kernel()
 
 setup_distfiles()
 {
-	echo ">>> Setting up distfiles in ${1}"
+	DSTDIR=${1}
+	shift
+
+	echo ">>> Setting up distfiles in ${DSTDIR}"
 
 	DISTFILESET=$(find_set distfiles)
 	if [ -n "${DISTFILESET}" ]; then
-		mkdir -p ${1}${PORTSDIR}
-		rm -rf ${1}${PORTSDIR}/distfiles
-		tar -C ${1}${PORTSDIR} -xpf ${DISTFILESET}
-
-		# clear all additional sub-directories passed
-		for DIR in ${@}; do
-			rm -rf ${1}${PORTSDIR}/distfiles/${DIR}
-		done
+		mkdir -p ${DSTDIR}${PORTSDIR}
+		rm -rf ${DSTDIR}${PORTSDIR}/distfiles
+		tar -C ${DSTDIR}${PORTSDIR} -xpf ${DISTFILESET}
 	fi
 
 	if [ -n "${@}" ]; then
-		# in cleanup mode signal that we are done
+		# clear all additional sub-directories passed
+		for DIR in ${@}; do
+			rm -rf ${DSTDIR}${PORTSDIR}/distfiles/${DIR}
+		done
+
 		return 1
 	fi
 }
