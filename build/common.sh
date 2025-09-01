@@ -648,7 +648,7 @@ setup_distfiles()
 
 	mkdir -p ${DSTDIR}${PORTSDIR}/distfiles
 
-	if [ -n "${@}" ]; then
+	if [ -n "${*}" ]; then
 		# clear all additional sub-directories passed
 		for DIR in ${@}; do
 			rm -rf ${DSTDIR}${PORTSDIR}/distfiles/${DIR}
