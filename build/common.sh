@@ -644,9 +644,9 @@ setup_distfiles()
 		mkdir -p ${DSTDIR}${PORTSDIR}
 		rm -rf ${DSTDIR}${PORTSDIR}/distfiles
 		tar -C ${DSTDIR}${PORTSDIR} -xpf ${DISTFILESET}
-	else
-		mkdir -p ${DSTDIR}${PORTSDIR}/distfiles
 	fi
+
+	mkdir -p ${DSTDIR}${PORTSDIR}/distfiles
 
 	if [ -n "${@}" ]; then
 		# clear all additional sub-directories passed
