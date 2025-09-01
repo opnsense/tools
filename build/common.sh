@@ -644,6 +644,8 @@ setup_distfiles()
 		mkdir -p ${DSTDIR}${PORTSDIR}
 		rm -rf ${DSTDIR}${PORTSDIR}/distfiles
 		tar -C ${DSTDIR}${PORTSDIR} -xpf ${DISTFILESET}
+	else
+		mkdir -p ${DSTDIR}${PORTSDIR}/distfiles
 	fi
 
 	if [ -n "${@}" ]; then
