@@ -641,6 +641,16 @@ setup_distfiles()
 		mkdir -p ${1}${PORTSDIR}
 		rm -rf ${1}${PORTSDIR}/distfiles
 		tar -C ${1}${PORTSDIR} -xpf ${DISTFILESET}
+
+		# clear all additional sub-directories passed
+		for DIR in ${@}; do
+			rm -rf ${1}${PORTSDIR}/distfiles/${DIR}
+		done
+	fi
+
+	if [ -n "${@}" ]; then
+		# in cleanup mode signal that we are done
+		return 1
 	fi
 }
 

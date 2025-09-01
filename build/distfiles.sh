@@ -42,7 +42,15 @@ setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
-setup_distfiles ${STAGEDIR}
+
+if ! setup_distfiles ${STAGEDIR} ${@}; then
+	echo -n ">>> Recreating distfiles set... "
+	tar -C ${STAGEDIR}${PORTSDIR} -cf \
+	    ${SETSDIR}/distfiles-${PRODUCT_VERSION}.tar distfiles
+	echo "done"
+
+	exit 0
+fi
 
 extract_packages ${STAGEDIR} || true
 
