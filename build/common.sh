@@ -480,7 +480,7 @@ setup_clone()
 	echo ">>> Setting up ${2} clone in ${1}"
 
 	# repositories may be huge so avoid the copy :)
-	mkdir -p ${1}${2} && mount_unionfs -o below ${2} ${1}${2}
+	mkdir -p ${1}${2} && mount_nullfs ${2} ${1}${2}
 }
 
 setup_copy()
