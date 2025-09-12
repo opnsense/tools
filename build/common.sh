@@ -745,6 +745,7 @@ check_packages()
 	if [ "${PKG_WANT}" != "${PKG_HAVE}" ]; then
 		echo "Installed pkg version '${PKG_HAVE}' does not match required version '${PKG_WANT}'" >&2
 		echo "To fix this please run 'make -C ${PORTSDIR}/ports-mgmt/pkg clean all reinstall'" >&2
+  		echo "If that didn't work, please run: 'pkg-static install -f pkg'" >&2
 		exit 1
 	fi
 
