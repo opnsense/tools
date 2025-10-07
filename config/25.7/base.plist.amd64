@@ -9516,6 +9516,7 @@
 /usr/share/man/man3/atf_init_test_cases.3.gz
 /usr/share/man/man3/atf_no_error.3.gz
 /usr/share/man/man3/atf_pass.3.gz
+/usr/share/man/man3/atf_require_kmod.3.gz
 /usr/share/man/man3/atf_require_prog.3.gz
 /usr/share/man/man3/atf_set.3.gz
 /usr/share/man/man3/atf_skip.3.gz
@@ -9534,6 +9535,8 @@
 /usr/share/man/man3/atf_tc_get_config_var_as_long_wd.3.gz
 /usr/share/man/man3/atf_tc_get_config_var_wd.3.gz
 /usr/share/man/man3/atf_tc_pass.3.gz
+/usr/share/man/man3/atf_tc_require_kmod.3.gz
+/usr/share/man/man3/atf_tc_require_prog.3.gz
 /usr/share/man/man3/atf_tc_skip.3.gz
 /usr/share/man/man3/atf_test_case.3.gz
 /usr/share/man/man3/atf_utils_cat_file.3.gz
