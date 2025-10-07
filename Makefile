@@ -104,7 +104,6 @@ DEVICE?=	A10
 KERNEL?=	SMP
 NAME?=		OPNsense
 SUFFIX?=	# empty
-TESTS?=		# empty
 TYPE?=		${NAME:tl}
 UEFI?=		arm dvd serial vga vm
 VERSION?=	${_VERSION}
@@ -147,9 +146,6 @@ SRCDIR?=	${ROOTDIR}/src
 # A couple of meta-targets for easy use and ordering:
 
 kernel ports distfiles: base
-.if !empty(TESTS)
-base: tests
-.endif
 audit plugins: ports
 core: plugins
 packages test: core
