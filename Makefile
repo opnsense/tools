@@ -201,7 +201,7 @@ ${STEP}: lint-steps
 
 .for SCRIPT in ${SCRIPTS}
 ${SCRIPT}: lint-composite
-	${VERBOSE_HIDDEN} sh ${VERBOSE_FLAGS} \
+	${VERBOSE_HIDDEN} cd ${.CURDIR} && sh ${VERBOSE_FLAGS} \
 	    ${TOOLSDIR}/composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
 .endfor
 
