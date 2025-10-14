@@ -41,18 +41,18 @@ all:
 	@cat ${.CURDIR}/README.md | ${PAGER}
 
 updateportsref:
-	@make -C ${.CURDIR} update-portsref
+	@make -C ${TOOLSDIR} update-portsref
 
 skim: updateportsref
 
 lint-steps:
 .for STEP in common ${STEPS}
-	@sh -n ${.CURDIR}/build/${STEP}.sh
+	@sh -n ${TOOLSDIR}/build/${STEP}.sh
 .endfor
 
 lint-composite:
 .for SCRIPT in ${SCRIPTS}
-	@sh -n ${.CURDIR}/composite/${SCRIPT}.sh
+	@sh -n ${TOOLSDIR}/composite/${SCRIPT}.sh
 .endfor
 
 lint: lint-steps lint-composite
@@ -70,9 +70,9 @@ _OS:=	${_OS:C/-.*//}
 .if defined(CONFIGDIR)
 _CONFIGDIR=	${CONFIGDIR}
 .elif defined(SETTINGS)
-_CONFIGDIR=	${TOOLSDIR}/config/${SETTINGS}
+_CONFIGDIR=	${.CURDIR}/config/${SETTINGS}
 .elif !defined(CONFIGDIR)
-__CONFIGDIR!=	find -s ${TOOLSDIR}/config -name "build.conf" -type f
+__CONFIGDIR!=	find -s ${.CURDIR}/config -name "build.conf" -type f
 .for DIR in ${__CONFIGDIR}
 . if exists(${DIR}) && empty(_CONFIGDIR)
 _CONFIGOS!=	grep '^OS?*=' ${DIR}
@@ -184,7 +184,7 @@ VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 .for STEP in ${STEPS}
 ${STEP}: lint-steps
 	@echo ">>> Executing build step ${STEP} on ${_CONFIGDIR:C/.*\///}" >&2
-	${VERBOSE_HIDDEN} cd ${.CURDIR}/build && \
+	${VERBOSE_HIDDEN} cd ${TOOLSDIR}/build && \
 	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} -F ${KERNEL} \
 	    -n ${NAME} -v "${VERSIONS}" -s ${_CONFIGDIR} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
@@ -201,8 +201,8 @@ ${STEP}: lint-steps
 
 .for SCRIPT in ${SCRIPTS}
 ${SCRIPT}: lint-composite
-	${VERBOSE_HIDDEN} cd ${.CURDIR} && \
-	    sh ${VERBOSE_FLAGS} ./composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
+	${VERBOSE_HIDDEN} sh ${VERBOSE_FLAGS} \
+	    ${TOOLSDIR}/composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
 .endfor
 
 .if "${_OS}" != "${OS}"
