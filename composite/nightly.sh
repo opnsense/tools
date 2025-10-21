@@ -109,6 +109,7 @@ tar -C ${TARGETDIRPREFIX} -cJf \
 rm -rf ${LOGSDIR}/latest
 mv ${LOGSDIR}/${PRODUCT_VERSION} ${LOGSDIR}/latest
 
+# XXX SERVER and UPLOADDIR are forced here and not imported from Makefile
 (make upload-log SERVER=${SERVER} UPLOADDIR=${UPLOADDIR} \
     VERSION=${PRODUCT_VERSION} 2>&1) > ${LOGSDIR}/latest/upload.log
 
