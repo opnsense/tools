@@ -47,7 +47,7 @@ NOERROR=${NOERROR:-"distfiles obsolete options audit test"}
 # Number of error lines to log separately
 LINES=${LINES:-400}
 
-eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX)"
+eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX 2> /dev/null)"
 
 for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | \
     sort -r | tail -n +7); do
@@ -110,4 +110,6 @@ rm -rf ${LOGSDIR}/latest
 mv ${LOGSDIR}/${PRODUCT_VERSION} ${LOGSDIR}/latest
 
 (make upload-log SERVER=${SERVER} UPLOADDIR=${UPLOADDIR} \
-    VERSION=${PRODUCT_VERSION} 2>&1) > /dev/null
+    VERSION=${PRODUCT_VERSION} 2>&1) > ${LOGSDIR}/latest/upload.log
+
+cat ${LOGSDIR}/latest/watch.log
