@@ -29,7 +29,7 @@ IMAGE=${1}
 
 set -e
 
-eval "$(make print-PLUGINSDIR,PLUGINSENV)"
+eval "$(make print-PLUGINSDIR,PLUGINSENV 2> /dev/null)"
 
 # handle path-based plugins as custom install for target image
 MISSING=

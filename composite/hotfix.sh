@@ -48,7 +48,7 @@ run_stage()
 	fi
 }
 
-eval "$(make print-PRODUCT_CORES,PRODUCT_PLUGINS,STAGEDIR)"
+eval "$(make print-PRODUCT_CORES,PRODUCT_PLUGINS,STAGEDIR 2> /dev/null)"
 
 if [ -z "${TARGET}" ]; then
 	# run everything except ports in hotfix mode
