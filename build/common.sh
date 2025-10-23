@@ -991,7 +991,7 @@ EOF
 	)
 
 	if [ -n "${PRODUCT_REBUILD}" ]; then
-		echo ">>> Rebuilt version ${5} for ${4}" >> ${1}/.pkg-msg
+		echo ">>> Rebuilt version ${5} for ${4} from ${6}" >> ${1}/.pkg-msg
 	fi
 }
 

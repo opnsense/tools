@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2023 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2025 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -81,7 +81,7 @@ for BRANCH in ${EXTRABRANCH} ${COREBRANCH}; do
 
 	install_packages ${STAGEDIR} ${CORE_DEPS}
 	custom_packages ${STAGEDIR} ${COREDIR} \
-	    "${CORE_ARGS}" ${CORE_NAME} ${CORE_VERS}
+	    "${CORE_ARGS}" ${CORE_NAME} ${CORE_VERS} ${BRANCH}
 done
 
 bundle_packages ${STAGEDIR} ${SELF}

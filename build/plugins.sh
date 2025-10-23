@@ -126,7 +126,7 @@ for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 
 		install_packages ${STAGEDIR} ${PLUGIN_DEPS}
 		custom_packages ${STAGEDIR} ${PLUGINSDIR}/${PLUGIN} \
-		    "${PLUGIN_ARGS}" ${PLUGIN_NAME} ${PLUGIN_VERS}
+		    "${PLUGIN_ARGS}" ${PLUGIN_NAME} ${PLUGIN_VERS} ${BRANCH}
 	done
 done
 
