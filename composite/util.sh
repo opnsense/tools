@@ -25,12 +25,32 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+load_core_version()
+{
+	PACKAGESET=$(find ${1} -name "packages-*-${2}.tar")
+	if [ ! -f "${PACKAGESET}" ]; then
+		echo ">>> Cannot continue without packages set" >&2
+		exit 1
+	fi
+
+	COREFILE=$(tar -tf ${PACKAGESET} | grep -x "\./All/${3}-[0-9].*\.pkg")
+	if [ -z "${COREFILE}" ]; then
+		echo ">>> Cannot continue without core package: ${3}" >&2
+		exit 1
+	fi
+
+	COREFILE=$(basename ${COREFILE%.pkg})
+	COREFILE=${COREFILE%_*}
+
+	echo ${COREFILE##*-}
+}
+
 load_make_vars()
 {
 	for VAR in ${*}; do
 		RESULT=$(make print-${VAR} 2> /dev/null)
 		if [ -z "${RESULT}" ]; then
-			echo "Variable '${VAR}' could not be loaded" >&2
+			echo ">>> Variable '${VAR}' could not be loaded" >&2
 			exit 1
 		fi
 		eval "${RESULT}"

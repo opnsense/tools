@@ -29,21 +29,6 @@
 
 load_make_vars PRODUCT_ARCH PRODUCT_CORE SETSDIR
 
-PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_ARCH}.tar")
+CORE_VERSION=$(load_core_version ${SETSDIR} ${PRODUCT_ARCH} ${PRODUCT_CORE})
 
-if [ ! -f "${PACKAGESET}" ]; then
-	echo ">>> Cannot continue without packages set"
-	exit 1
-fi
-
-COREFILE=$(tar -tf ${PACKAGESET} | grep -x "\./All/${PRODUCT_CORE}-[0-9].*\.pkg")
-
-if [ -z "${COREFILE}" ]; then
-	echo ">>> Cannot continue without core package: ${PRODUCT_CORE}"
-	exit 1
-fi
-
-COREFILE=$(basename ${COREFILE%.pkg})
-COREFILE=$(basename ${COREFILE%_*})
-
-make clean-obj,release,images release VERSION=${COREFILE##*-}
+make clean-obj,release,images release VERSION=${CORE_VERSION}
