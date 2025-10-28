@@ -25,7 +25,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-. ./composite/util.sh
+. ./../tools/composite/util.sh
 
 load_make_vars PRODUCT_ARCH PRODUCT_CORE PRODUCT_ZFS SETSDIR
 
