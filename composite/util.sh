@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2022-2025 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2025 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,30 +25,15 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-. ./composite/util.sh
+load_make_vars()
+{
+	for VAR in ${*}; do
+		RESULT=$(make print-${VAR} 2> /dev/null)
+		if [ -z "${RESULT}" ]; then
+			echo "Variable '${VAR}' could not be loaded" >&2
+			exit 1
+		fi
+		eval "${RESULT}"
+	done
 
-load_make_vars PRODUCT_ARCH PRODUCT_CORE PRODUCT_ZFS SETSDIR
-
-PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_ARCH}.tar")
-
-if [ ! -f "${PACKAGESET}" ]; then
-	echo ">>> Cannot continue without packages set"
-	exit 1
-fi
-
-COREFILE=$(tar -tf ${PACKAGESET} | grep -x "\./All/${PRODUCT_CORE}-[0-9].*\.pkg")
-
-if [ -z "${COREFILE}" ]; then
-	echo ">>> Cannot continue without core package: ${PRODUCT_CORE}"
-	exit 1
-fi
-
-COREFILE=$(basename ${COREFILE%.pkg})
-COREFILE=$(basename ${COREFILE%_*})
-
-FS=ufs
-if [ -n "${PRODUCT_ZFS}" ]; then
-	FS=zfs
-fi
-
-make vm-raw,4G,never,serial compress-vm VERSION=${COREFILE##*-}-${FS}
+}
