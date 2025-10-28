@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2022-2023 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2022-2024 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -25,7 +25,9 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-eval "$(make print-LOGSDIR 2> /dev/null)"
+. $(dirname ${0})/util.sh
+
+load_make_vars LOGSDIR
 
 CURRENTDIR=$(find -s ${LOGSDIR} -type d -depth 1 \! -name latest | tail -n1)
 LOGSTEP=${1}
