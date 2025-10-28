@@ -41,7 +41,8 @@ if [ -z "${COREFILE}" ]; then
 	exit 1
 fi
 
-COREFILE=$(basename ${COREFILE%%.pkg})
+COREFILE=$(basename ${COREFILE%.pkg})
+COREFILE=$(basename ${COREFILE%_*})
 
 FS=ufs
 if [ -n "${PRODUCT_ZFS}" ]; then
