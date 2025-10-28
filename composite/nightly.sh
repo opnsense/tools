@@ -25,6 +25,8 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+. $(dirname ${0})/util.sh
+
 CLEAN=packages
 CONTINUE=
 STAGENUM=0
@@ -47,7 +49,7 @@ NOERROR=${NOERROR:-"distfiles obsolete options audit test"}
 # Number of error lines to log separately
 LINES=${LINES:-400}
 
-eval "$(make print-LOGSDIR,PRODUCT_ARCH,PRODUCT_VERSION,STAGEDIR,TARGETDIRPREFIX 2> /dev/null)"
+load_make_vars LOGSDIR PRODUCT_ARCH PRODUCT_VERSION STAGEDIR TARGETDIRPREFIX
 
 for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | \
     sort -r | tail -n +7); do
