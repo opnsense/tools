@@ -25,10 +25,12 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+set -e
+
+. $(dirname ${0})/util.sh
+
 TARGET=${1}
 MSGS=
-
-set -e
 
 run_stage()
 {
@@ -48,7 +50,7 @@ run_stage()
 	fi
 }
 
-eval "$(make print-PRODUCT_CORES,PRODUCT_PLUGINS,STAGEDIR 2> /dev/null)"
+load_make_vars PRODUCT_CORES PRODUCT_PLUGINS STAGEDIR
 
 if [ -z "${TARGET}" ]; then
 	# run everything except ports in hotfix mode

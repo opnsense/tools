@@ -25,7 +25,9 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-eval "$(make print-PRODUCT_ARCH,PRODUCT_CORE,SETSDIR 2> /dev/null)"
+. $(dirname ${0})/util.sh
+
+load_make_vars PRODUCT_ARCH PRODUCT_CORE SETSDIR
 
 PACKAGESET=$(find ${SETSDIR} -name "packages-*-${PRODUCT_ARCH}.tar")
 

@@ -25,11 +25,13 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-IMAGE=${1}
-
 set -e
 
-eval "$(make print-PLUGINSDIR,PLUGINSENV 2> /dev/null)"
+. $(dirname ${0})/util.sh
+
+IMAGE=${1}
+
+load_make_vars PLUGINSDIR PLUGINSENV
 
 # handle path-based plugins as custom install for target image
 MISSING=
