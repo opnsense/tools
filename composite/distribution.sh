@@ -41,7 +41,7 @@ if [ -z "${COREFILE}" ]; then
 	exit 1
 fi
 
-COREFILE=$(basename ${COREFILE%%.pkg})
-COREFILE=$(basename ${COREFILE%%_*})
+COREFILE=$(basename ${COREFILE%.pkg})
+COREFILE=$(basename ${COREFILE%_*})
 
 make clean-obj,release,images release VERSION=${COREFILE##*-}
