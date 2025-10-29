@@ -34,6 +34,6 @@ SELF=print
 for ARG in ${@}; do
 	RESULT=$(env | grep "^${ARG}=" || true)
 	if [ -n "${RESULT}" ]; then
-		echo ${RESULT}
+		echo ${ARG}=\"$(printenv ${ARG})\"
 	fi
 done
