@@ -32,8 +32,7 @@ SELF=print
 . ./common.sh
 
 for ARG in ${@}; do
-	RESULT=$(env | grep "^${ARG}=" || true)
-	if [ -n "${RESULT}" ]; then
+	if env | grep -q "^${ARG}="; then
 		echo ${ARG}=\"$(printenv ${ARG})\"
 	fi
 done
