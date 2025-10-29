@@ -53,6 +53,7 @@ EOF
 
 echo ">>> Running ${COREDIR} test suite..."
 chroot ${STAGEDIR} /bin/sh -es <<EOF
+/usr/local/etc/rc.subr.d/php
 make -C${COREDIR} ${COREENV} lint
 make -C${COREDIR} ${COREENV} style
 make -C${COREDIR} ${COREENV} test
