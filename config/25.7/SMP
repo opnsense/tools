@@ -15,6 +15,7 @@ options		IPSTEALTH
 options		MROUTING
 options		PPS_SYNC
 options		RSS
+options		TCP_SAD_DETECTION
 options		TCP_SIGNATURE
 
 # Additional built-in devices
