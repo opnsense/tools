@@ -835,7 +835,7 @@ search_packages()
 	if [ -L ${PKGLINK} ]; then
 		PKGFILE=$(readlink -f ${PKGLINK} || true)
 		if [ -f ${PKGFILE} ]; then
-			echo ">>> Skipped version ${PKGVERS} for ${PKGNAME} from ${PKGBRCH}" >> ${BASEDIR}/.pkg-msg
+			echo ">>> Skipped ${PKGNAME}-${PKGVERS} via ${PKGBRCH}" >> ${BASEDIR}/.pkg-msg
 			return 0
 		fi
 	fi
@@ -991,7 +991,7 @@ EOF
 	)
 
 	if [ -n "${PRODUCT_REBUILD}" ]; then
-		echo ">>> Rebuilt version ${5} for ${4} from ${6}" >> ${1}/.pkg-msg
+		echo ">>> Rebuilt ${4}-${5} via ${6}" >> ${1}/.pkg-msg
 	fi
 }
 
