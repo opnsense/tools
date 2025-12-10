@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2018-2019 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2018-2025 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -34,7 +34,7 @@ SELF=download
 download()
 {
 	echo ">>> Downloading ${1} from ${PRODUCT_SERVER}..."
-	(cd ${2}; echo "get ${2}/${3}" | sftp ${PRODUCT_SERVER})
+	(cd ${2}; echo "get ${REMOTEDIR:-"${2}"}/${3}" | sftp ${PRODUCT_SERVER})
 }
 
 for ARG in ${@}; do

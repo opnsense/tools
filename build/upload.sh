@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2018-2024 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2018-2025 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -34,7 +34,7 @@ SELF=upload
 upload()
 {
 	echo ">>> Uploading ${1} to ${PRODUCT_SERVER}..."
-	(echo "cd ${UPLOADDIR}"; echo "put ${2}/${3}") | sftp ${PRODUCT_SERVER}
+	(echo "cd ${REMOTEDIR:-"."}"; echo "put ${2}/${3}") | sftp ${PRODUCT_SERVER}
 }
 
 for ARG in ${@}; do

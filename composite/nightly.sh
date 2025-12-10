@@ -111,8 +111,8 @@ tar -C ${TARGETDIRPREFIX} -cJf \
 rm -rf ${LOGSDIR}/latest
 mv ${LOGSDIR}/${PRODUCT_VERSION} ${LOGSDIR}/latest
 
-# XXX SERVER and UPLOADDIR are forced here and not imported from Makefile
-(make upload-log SERVER=${SERVER} UPLOADDIR=${UPLOADDIR} \
+# XXX SERVER and REMOTEDIR are forced here and not imported from Makefile
+(make upload-log SERVER=${SERVER} REMOTEDIR=${REMOTEDIR} \
     VERSION=${PRODUCT_VERSION} 2>&1) > ${LOGSDIR}/latest/upload.log
 
 cat ${LOGSDIR}/latest/watch.log
