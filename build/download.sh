@@ -43,7 +43,7 @@ for ARG in ${@}; do
 		sh ./clean.sh ${ARG}
 		download ${ARG} ${IMAGESDIR} "*-${ARG}-*"
 		;;
-	base|distfiles|kernel|packages|release)
+	aux|base|distfiles|kernel|packages|release)
 		sh ./clean.sh ${ARG}
 		download ${ARG} ${SETSDIR} "${ARG}-*"
 		;;
