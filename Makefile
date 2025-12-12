@@ -117,6 +117,7 @@ MIRRORS?=	https://opnsense.c0urier.net \
 		https://mirror.fra10.de.leaseweb.net/opnsense \
 		https://mirror.ams1.nl.leaseweb.net/opnsense
 SERVER?=	user@does.not.exist
+REMOTEDIR?=	# empty
 
 STAGEDIRPREFIX?=/usr/obj
 
@@ -194,7 +195,7 @@ ${STEP}: lint-steps
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
 	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
-	    -h "${PLUGINSENV}" -D "${EXTRABRANCH}" \
+	    -h "${PLUGINSENV}" -I "${REMOTEDIR}" -D "${EXTRABRANCH}" \
 	    -A "${PORTSREFURL}" -J "${PORTSENV}" ${${STEP}_ARGS}
 .endfor
 

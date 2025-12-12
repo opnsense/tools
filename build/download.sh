@@ -33,8 +33,8 @@ SELF=download
 
 download()
 {
-	echo ">>> Downloading ${1} from ${PRODUCT_SERVER}..."
-	(cd ${2}; echo "get ${REMOTEDIR:-"${2}"}/${3}" | sftp ${PRODUCT_SERVER})
+	echo ">>> Downloading ${1} from ${SERVER}..."
+	(cd ${2}; echo "get ${REMOTEDIR:-"${2}"}/${3}" | sftp ${SERVER})
 }
 
 for ARG in ${@}; do
@@ -43,7 +43,7 @@ for ARG in ${@}; do
 		sh ./clean.sh ${ARG}
 		download ${ARG} ${IMAGESDIR} "*-${ARG}-*"
 		;;
-	aux|base|distfiles|kernel|packages|release)
+	base|distfiles|kernel|packages|release)
 		sh ./clean.sh ${ARG}
 		download ${ARG} ${SETSDIR} "${ARG}-*"
 		;;

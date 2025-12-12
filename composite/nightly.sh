@@ -49,7 +49,7 @@ NOERROR=${NOERROR:-"distfiles obsolete options audit test"}
 # Number of error lines to log separately
 LINES=${LINES:-400}
 
-load_make_vars LOGSDIR PRODUCT_ARCH PRODUCT_VERSION STAGEDIR TARGETDIRPREFIX
+load_make_vars LOGSDIR PRODUCT_ARCH PRODUCT_VERSION REMOTEDIR SERVER TARGETDIRPREFIX
 
 for RECYCLE in $(cd ${LOGSDIR}; find . -name "[0-9]*" -type f | \
     sort -r | tail -n +7); do
@@ -111,7 +111,6 @@ tar -C ${TARGETDIRPREFIX} -cJf \
 rm -rf ${LOGSDIR}/latest
 mv ${LOGSDIR}/${PRODUCT_VERSION} ${LOGSDIR}/latest
 
-# XXX SERVER and REMOTEDIR are forced here and not imported from Makefile
 (make upload-log SERVER=${SERVER} REMOTEDIR=${REMOTEDIR} \
     VERSION=${PRODUCT_VERSION} 2>&1) > ${LOGSDIR}/latest/upload.log
 

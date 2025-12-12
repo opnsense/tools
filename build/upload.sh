@@ -33,8 +33,8 @@ SELF=upload
 
 upload()
 {
-	echo ">>> Uploading ${1} to ${PRODUCT_SERVER}..."
-	(echo "cd ${REMOTEDIR:-"."}"; echo "put ${2}/${3}") | sftp ${PRODUCT_SERVER}
+	echo ">>> Uploading ${1} to ${SERVER}..."
+	(echo "cd ${REMOTEDIR:-"."}"; echo "put ${2}/${3}") | sftp ${SERVER}
 }
 
 for ARG in ${@}; do

@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="A:a:B:b:C:c:D:d:E:e:F:G:g:H:h:J:K:k:L:l:m:n:O:o:P:p:R:r:S:s:T:t:U:u:v:V:"
+OPTS="A:a:B:b:C:c:D:d:E:e:F:G:g:H:h:I:J:K:k:L:l:m:n:O:o:P:p:R:r:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -80,6 +80,9 @@ while getopts ${OPTS} OPT; do
 	h)
 		export PLUGINSENV=${OPTARG}
 		;;
+	I)
+		export REMOTEDIR=${OPTARG}
+		;;
 	J)
 		export PORTSENV=${OPTARG}
 		;;
@@ -127,7 +130,7 @@ while getopts ${OPTS} OPT; do
 		export PORTSREFDIR=${OPTARG}
 		;;
 	r)
-		export PRODUCT_SERVER=${OPTARG}
+		export SERVER=${OPTARG}
 		;;
 	S)
 		export SRCDIR=${OPTARG}
@@ -194,9 +197,9 @@ PRODUCT_PERL
 PRODUCT_PHP
 PRODUCT_PYTHON
 PRODUCT_RUBY
-PRODUCT_SERVER
 PRODUCT_TYPE
 PRODUCT_VERSION
+SERVER
 SRCBRANCH
 SRCDIR
 TOOLSBRANCH
