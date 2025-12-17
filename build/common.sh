@@ -1095,7 +1095,6 @@ bundle_packages()
 		cat ${BASEDIR}/.pkg-err
 		exit 1
 	fi
-
 }
 
 setup_packages()
