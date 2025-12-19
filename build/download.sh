@@ -43,9 +43,17 @@ for ARG in ${@}; do
 		sh ./clean.sh ${ARG}
 		download ${ARG} ${IMAGESDIR} "*-${ARG}-*"
 		;;
-	base|distfiles|kernel|packages|release)
+	base|distfiles|packages|release)
 		sh ./clean.sh ${ARG}
 		download ${ARG} ${SETSDIR} "${ARG}-*"
+		;;
+	kernel)
+		MATCH="${ARG}-[0-9]*"
+		if [ -n "${PRODUCT_DEBUG}" ]; then
+			MATCH="${ARG}-dbg-*"
+		fi
+		sh ./clean.sh ${ARG}
+		download ${ARG} ${SETSDIR} "${MATCH}"
 		;;
 	log)
 		# one log only, do not clear
