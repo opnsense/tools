@@ -5035,6 +5035,7 @@
 /usr/libexec/bsdinstall/keymap
 /usr/libexec/bsdinstall/mirrorselect
 /usr/libexec/bsdinstall/mount
+/usr/libexec/bsdinstall/mount_aux
 /usr/libexec/bsdinstall/netconfig
 /usr/libexec/bsdinstall/netconfig_ipv4
 /usr/libexec/bsdinstall/netconfig_ipv6
