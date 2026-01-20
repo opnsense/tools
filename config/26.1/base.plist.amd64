@@ -14620,6 +14620,8 @@
 /usr/share/man/man4/lem.4.gz
 /usr/share/man/man4/lge.4.gz
 /usr/share/man/man4/linux.4.gz
+/usr/share/man/man4/linuxkpi.4.gz
+/usr/share/man/man4/linuxkpi_wlan.4.gz
 /usr/share/man/man4/liquidio.4.gz
 /usr/share/man/man4/llan.4.gz
 /usr/share/man/man4/lm75.4.gz
