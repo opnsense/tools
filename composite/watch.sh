@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2022-2023 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2022-2026 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -33,6 +33,10 @@ CURRENTDIR=$(find -s ${LOGSDIR} -type d -depth 1 \! -name latest | tail -n1)
 LOGSTEP=${1}
 
 if [ -z "${CURRENTDIR}" ]; then
+	CURRENTDIR=${LOGSDIR}/latest
+fi
+
+if [ ! -d "${CURRENTDIR}" ]; then
 	echo "No logs were found"
 	return
 fi
@@ -55,7 +59,7 @@ if [ -z "${LOGSTEP}" ]; then
 else
 	for CURRENTLOG in $(find ${CURRENTDIR} -name "??-${LOGSTEP}.log"); do
 		if [ -f ${CURRENTLOG}.ok -o -f ${CURRENTLOG}.err ]; then
-			less ${CURRENTLOG}
+			less +G ${CURRENTLOG}
 		else
 			tail -f ${CURRENTLOG}
 		fi
