@@ -111,7 +111,9 @@ tar -C ${TARGETDIRPREFIX} -cJf \
 rm -rf ${LOGSDIR}/latest
 mv ${LOGSDIR}/${PRODUCT_VERSION} ${LOGSDIR}/latest
 
+# put an upload log as a watchable log, but only after it was packaged
+LOG="${LOGSDIR}/latest/$(printf %02d $(expr ${STAGENUM} + 1))-upload.log"
 (make upload-log SERVER=${SERVER} REMOTEDIR=${REMOTEDIR} \
-    VERSION=${PRODUCT_VERSION} 2>&1) > ${LOGSDIR}/latest/upload.log
+    VERSION=${PRODUCT_VERSION} 2>&1) > ${LOG}
 
 cat ${LOGSDIR}/latest/watch.log
