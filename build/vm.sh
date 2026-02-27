@@ -69,7 +69,7 @@ truncate -s ${VMSIZE} ${STAGEDIR}/${VMBASE}
 DEV=$(mdconfig -t vnode -f ${STAGEDIR}/${VMBASE})
 
 if [ -n "${PRODUCT_ZFS}" ]; then
-	ZPOOL=${PRODUCT_ZFS}
+	ZPOOL=zroot
 
 	# avoid clobbering existing pools
 	for IMPORT in $(zpool import 2> /dev/null | awk '$1 == "pool:" { print $2}'); do
