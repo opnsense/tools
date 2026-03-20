@@ -74,4 +74,10 @@ for PLUGIN in ${MISSING}; do
 	PLUGINS="${PLUGINS} ${PLUGIN}"
 done
 
-make clean-${IMAGE} ${IMAGE} ADDITIONS="${ADDITIONS}"
+if [ -n "${IMAGE}" = "factory" ]; then
+	_IMAGE=vm
+else
+	_IMAGE=${IMAGE}
+fi
+
+make clean-${_IMAGE} ${IMAGE} ADDITIONS="${ADDITIONS}"
