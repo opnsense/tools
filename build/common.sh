@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2025 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2026 Franco Fichtner <franco@opnsense.org>
 # Copyright (c) 2010-2011 Scott Ullrich <sullrich@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="A:a:B:b:C:c:D:d:E:e:F:G:g:H:h:I:J:K:k:L:l:m:n:O:o:P:p:R:r:S:s:T:t:U:u:v:V:"
+OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:J:K:k:L:l:m:n:O:o:P:p:R:r:S:s:T:t:U:u:v:V:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -67,6 +67,14 @@ while getopts ${OPTS} OPT; do
 		;;
 	F)
 		export PRODUCT_KERNEL=${OPTARG}
+		;;
+	f)
+		export PRODUCT_ZFS_ALLOWED=${PRODUCT_ZFS_ALLOWED:-""}
+		export PRODUCT_ZFS_REQUESTED=${OPTARG}
+		if [ -n "${PRODUCT_ZFS_ALLOWED}" -a -n "${PRODUCT_ZFS_REQUESTED}" ]; then
+			# XXX can soft-code this later
+			export PRODUCT_ZFS=zroot
+		fi
 		;;
 	G)
 		export PORTSREFBRANCH=${OPTARG}

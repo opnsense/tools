@@ -80,4 +80,4 @@ else
 	_IMAGE=${IMAGE}
 fi
 
-make clean-${_IMAGE} ${IMAGE} ADDITIONS="${ADDITIONS}"
+make clean-${_IMAGE} ${IMAGE} ADDITIONS="${ADDITIONS}" SUFFIX="${SUFFIX}"

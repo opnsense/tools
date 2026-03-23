@@ -29,6 +29,8 @@ set -e
 
 SELF=vm
 
+PRODUCT_ZFS_ALLOWED=1
+
 . ./common.sh
 
 check_image ${SELF} ${@}
@@ -69,7 +71,7 @@ truncate -s ${VMSIZE} ${STAGEDIR}/${VMBASE}
 DEV=$(mdconfig -t vnode -f ${STAGEDIR}/${VMBASE})
 
 if [ -n "${PRODUCT_ZFS}" ]; then
-	ZPOOL=zroot
+	ZPOOL=${PRODUCT_ZFS}
 
 	# avoid clobbering existing pools
 	for IMPORT in $(zpool import 2> /dev/null | awk '$1 == "pool:" { print $2}'); do

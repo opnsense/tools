@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2025 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2026 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -174,7 +174,7 @@ VERBOSE_FLAGS=	-x
 VERBOSE_HIDDEN=	@
 .endif
 
-.for _VERSION in ABI APACHE DEBUG LUA PERL PHP PYTHON RUBY SSL VERSION ZFS
+.for _VERSION in ABI APACHE DEBUG LUA PERL PHP PYTHON RUBY SSL VERSION
 VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 .endfor
 
@@ -196,7 +196,7 @@ ${STEP}: lint-steps
 	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" \
 	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
 	    -h "${PLUGINSENV}" -I "${REMOTEDIR}" -D "${EXTRABRANCH}" \
-	    -A "${PORTSREFURL}" -J "${PORTSENV}" ${${STEP}_ARGS}
+	    -A "${PORTSREFURL}" -J "${PORTSENV}" -f "${ZFS}" ${${STEP}_ARGS}
 .endfor
 
 .for SCRIPT in ${SCRIPTS}
