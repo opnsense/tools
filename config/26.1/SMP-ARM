@@ -16,6 +16,9 @@ options		PPS_SYNC
 options		RSS
 options		TCP_SIGNATURE
 
+# ARM specific
+options		UNIONFS
+
 # Additional built-in devices
 #device		bwi
 device		bwn
