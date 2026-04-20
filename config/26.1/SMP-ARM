@@ -15,6 +15,7 @@ options		MROUTING
 options		PPS_SYNC
 options		RSS
 options		TCP_SIGNATURE
+options		UNIONFS
 
 # Additional built-in devices
 #device		bwi
