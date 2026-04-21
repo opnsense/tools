@@ -31,7 +31,7 @@ set -e
 
 IMAGE=${1}
 
-load_make_vars PLUGINSDIR PLUGINSENV
+load_make_vars PLUGINSDIR PLUGINSENV PRODUCT_SUFFIX
 
 # handle path-based plugins as custom install for target image
 MISSING=
@@ -80,4 +80,5 @@ else
 	_IMAGE=${IMAGE}
 fi
 
-make clean-${_IMAGE} ${IMAGE} ADDITIONS="${ADDITIONS}" SUFFIX="${SUFFIX}"
+make clean-${_IMAGE} ${IMAGE} ADDITIONS="${ADDITIONS}" \
+    NAMESUFFIX="${NAMESUFFIX}" SUFFIX="${PRODUCT_SUFFIX}"

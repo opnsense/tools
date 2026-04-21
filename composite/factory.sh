@@ -27,7 +27,7 @@
 
 . $(dirname ${0})/util.sh
 
-load_make_vars PRODUCT_ARCH PRODUCT_CORE PRODUCT_ZFS_REQUESTED SETSDIR
+load_make_vars PRODUCT_ARCH PRODUCT_CORE PRODUCT_SUFFIX PRODUCT_ZFS_REQUESTED SETSDIR
 
 CORE_VERSION=$(load_core_version ${SETSDIR} ${PRODUCT_ARCH} ${PRODUCT_CORE})
 
@@ -36,5 +36,6 @@ if [ -n "${PRODUCT_ZFS_REQUESTED}" ]; then
 	FS=zfs
 fi
 
-make vm-raw,4G,never,serial compress-vm VERSION=${CORE_VERSION}-${FS} \
-    ADDITIONS="${ADDITIONS}" SUFFIX="${SUFFIX}"
+make vm-raw,4G,never,serial compress-vm \
+    VERSION=${CORE_VERSION}${NAMESUFFIX}-${FS} \
+    ADDITIONS="${ADDITIONS}" SUFFIX="${PRODUCT_SUFFIX}"
