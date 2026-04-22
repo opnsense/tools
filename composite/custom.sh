@@ -30,7 +30,11 @@ set -e
 . $(dirname ${0})/util.sh
 
 IMAGE=${1%%,*}
-EXTRA=${1#*,}
+EXTRA=
+
+if [ ${IMAGE} != ${1} ]; then
+	EXTRA=${1#*,}
+fi
 
 load_make_vars PLUGINSDIR PLUGINSENV PRODUCT_ARCH PRODUCT_CORE \
     PRODUCT_SUFFIX PRODUCT_ZFS_REQUESTED SETSDIR
