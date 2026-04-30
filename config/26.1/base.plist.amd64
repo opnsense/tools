@@ -18688,6 +18688,8 @@
 /usr/share/openssl/man/man3/BIO_callback_ctrl.3.gz
 /usr/share/openssl/man/man3/BIO_callback_fn.3.gz
 /usr/share/openssl/man/man3/BIO_callback_fn_ex.3.gz
+/usr/share/openssl/man/man3/BIO_clear_flags.3.gz
+/usr/share/openssl/man/man3/BIO_clear_retry_flags.3.gz
 /usr/share/openssl/man/man3/BIO_closesocket.3.gz
 /usr/share/openssl/man/man3/BIO_connect.3.gz
 /usr/share/openssl/man/man3/BIO_ctrl.3.gz
@@ -18743,6 +18745,7 @@
 /usr/share/openssl/man/man3/BIO_get_ex_data.3.gz
 /usr/share/openssl/man/man3/BIO_get_ex_new_index.3.gz
 /usr/share/openssl/man/man3/BIO_get_fd.3.gz
+/usr/share/openssl/man/man3/BIO_get_flags.3.gz
 /usr/share/openssl/man/man3/BIO_get_fp.3.gz
 /usr/share/openssl/man/man3/BIO_get_indent.3.gz
 /usr/share/openssl/man/man3/BIO_get_info_callback.3.gz
@@ -18760,6 +18763,7 @@
 /usr/share/openssl/man/man3/BIO_get_peer_port.3.gz
 /usr/share/openssl/man/man3/BIO_get_read_request.3.gz
 /usr/share/openssl/man/man3/BIO_get_retry_BIO.3.gz
+/usr/share/openssl/man/man3/BIO_get_retry_flags.3.gz
 /usr/share/openssl/man/man3/BIO_get_retry_reason.3.gz
 /usr/share/openssl/man/man3/BIO_get_shutdown.3.gz
 /usr/share/openssl/man/man3/BIO_get_ssl.3.gz
@@ -18859,6 +18863,7 @@
 /usr/share/openssl/man/man3/BIO_set_data.3.gz
 /usr/share/openssl/man/man3/BIO_set_ex_data.3.gz
 /usr/share/openssl/man/man3/BIO_set_fd.3.gz
+/usr/share/openssl/man/man3/BIO_set_flags.3.gz
 /usr/share/openssl/man/man3/BIO_set_fp.3.gz
 /usr/share/openssl/man/man3/BIO_set_indent.3.gz
 /usr/share/openssl/man/man3/BIO_set_info_callback.3.gz
@@ -18871,7 +18876,10 @@
 /usr/share/openssl/man/man3/BIO_set_next.3.gz
 /usr/share/openssl/man/man3/BIO_set_prefix.3.gz
 /usr/share/openssl/man/man3/BIO_set_read_buffer_size.3.gz
+/usr/share/openssl/man/man3/BIO_set_retry_read.3.gz
 /usr/share/openssl/man/man3/BIO_set_retry_reason.3.gz
+/usr/share/openssl/man/man3/BIO_set_retry_special.3.gz
+/usr/share/openssl/man/man3/BIO_set_retry_write.3.gz
 /usr/share/openssl/man/man3/BIO_set_shutdown.3.gz
 /usr/share/openssl/man/man3/BIO_set_ssl.3.gz
 /usr/share/openssl/man/man3/BIO_set_ssl_mode.3.gz
@@ -18890,6 +18898,7 @@
 /usr/share/openssl/man/man3/BIO_ssl_copy_session_id.3.gz
 /usr/share/openssl/man/man3/BIO_ssl_shutdown.3.gz
 /usr/share/openssl/man/man3/BIO_tell.3.gz
+/usr/share/openssl/man/man3/BIO_test_flags.3.gz
 /usr/share/openssl/man/man3/BIO_up_ref.3.gz
 /usr/share/openssl/man/man3/BIO_vfree.3.gz
 /usr/share/openssl/man/man3/BIO_vprintf.3.gz
@@ -19061,6 +19070,7 @@
 /usr/share/openssl/man/man3/CMS_EncryptedData_decrypt.3.gz
 /usr/share/openssl/man/man3/CMS_EncryptedData_encrypt.3.gz
 /usr/share/openssl/man/man3/CMS_EncryptedData_encrypt_ex.3.gz
+/usr/share/openssl/man/man3/CMS_EncryptedData_set1_key.3.gz
 /usr/share/openssl/man/man3/CMS_EnvelopedData_create.3.gz
 /usr/share/openssl/man/man3/CMS_EnvelopedData_create_ex.3.gz
 /usr/share/openssl/man/man3/CMS_ReceiptRequest_create0.3.gz
@@ -19118,6 +19128,7 @@
 /usr/share/openssl/man/man3/CMS_sign.3.gz
 /usr/share/openssl/man/man3/CMS_sign_ex.3.gz
 /usr/share/openssl/man/man3/CMS_sign_receipt.3.gz
+/usr/share/openssl/man/man3/CMS_signed_get_attr.3.gz
 /usr/share/openssl/man/man3/CMS_uncompress.3.gz
 /usr/share/openssl/man/man3/CMS_verify.3.gz
 /usr/share/openssl/man/man3/CMS_verify_receipt.3.gz
@@ -20246,6 +20257,7 @@
 /usr/share/openssl/man/man3/EVP_PKEY_get1_RSA.3.gz
 /usr/share/openssl/man/man3/EVP_PKEY_get1_encoded_public_key.3.gz
 /usr/share/openssl/man/man3/EVP_PKEY_get1_tls_encodedpoint.3.gz
+/usr/share/openssl/man/man3/EVP_PKEY_get_attr.3.gz
 /usr/share/openssl/man/man3/EVP_PKEY_get_base_id.3.gz
 /usr/share/openssl/man/man3/EVP_PKEY_get_bits.3.gz
 /usr/share/openssl/man/man3/EVP_PKEY_get_bn_param.3.gz
@@ -22804,6 +22816,7 @@
 /usr/share/openssl/man/man3/X509_ALGOR_new.3.gz
 /usr/share/openssl/man/man3/X509_ALGOR_set0.3.gz
 /usr/share/openssl/man/man3/X509_ALGOR_set_md.3.gz
+/usr/share/openssl/man/man3/X509_ATTRIBUTE.3.gz
 /usr/share/openssl/man/man3/X509_ATTRIBUTE_dup.3.gz
 /usr/share/openssl/man/man3/X509_ATTRIBUTE_free.3.gz
 /usr/share/openssl/man/man3/X509_ATTRIBUTE_new.3.gz
@@ -22968,6 +22981,8 @@
 /usr/share/openssl/man/man3/X509_REQ_get0_pubkey.3.gz
 /usr/share/openssl/man/man3/X509_REQ_get0_signature.3.gz
 /usr/share/openssl/man/man3/X509_REQ_get_X509_PUBKEY.3.gz
+/usr/share/openssl/man/man3/X509_REQ_get_attr.3.gz
+/usr/share/openssl/man/man3/X509_REQ_get_extensions.3.gz
 /usr/share/openssl/man/man3/X509_REQ_get_pubkey.3.gz
 /usr/share/openssl/man/man3/X509_REQ_get_signature_nid.3.gz
 /usr/share/openssl/man/man3/X509_REQ_get_subject_name.3.gz
