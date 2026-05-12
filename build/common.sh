@@ -1051,7 +1051,7 @@ bundle_packages()
 
 	# generate all signatures and add bootstrap links
 	for PKGFILE in $(cd ${BASEDIR}${PACKAGESDIR}-new; \
-	    find All -type f); do
+	    find -s All -type f); do
 		PKGINFO=$(pkg info -F ${BASEDIR}${PACKAGESDIR}-new/${PKGFILE} \
 		    | grep ^Name | awk '{ print $3; }')
 		LATESTDIR=${BASEDIR}${PACKAGESDIR}-new/Latest
