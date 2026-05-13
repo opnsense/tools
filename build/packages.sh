@@ -41,6 +41,7 @@ AUXLIST=$(list_packages "${AUXLIST}" ${CONFIGDIR}/aux.conf)
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 extract_packages ${STAGEDIR}
+remove_packages ${STAGEDIR} ${@}
 
 # The goal for aux packages is that they are part of the packages
 # set for nightly builds until they are officially built using the

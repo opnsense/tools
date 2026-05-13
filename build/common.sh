@@ -861,6 +861,7 @@ remove_packages()
 	echo ">>> Removing packages in ${BASEDIR}: ${PKGLIST}"
 
 	for PKG in ${PKGLIST}; do
+		PKG=$(echo ${PKG} | tr '%' '*')
 		for PKGFILE in $(cd ${BASEDIR}${PACKAGESDIR}; \
 		    find All -name "${PKG}-[0-9]*.pkg" -type f); do
 			rm ${BASEDIR}${PACKAGESDIR}/${PKGFILE}
