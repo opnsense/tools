@@ -700,10 +700,13 @@ generate_set()
 
 generate_signature()
 {
-	if [ -n "$(${PRODUCT_SIGNCHK})" ]; then
+	FINGERPRINT=$(${PRODUCT_SIGNCHK})
+
+	if [ -n "${FINGERPRINT}" ]; then
 		echo -n ">>> Creating ${PRODUCT_SETTINGS} signature for $(basename ${1})... "
 		sha256 -q ${1} | ${PRODUCT_SIGNCMD} > ${1}.sig
 		echo "done"
+		echo "${FINGERPRINT}"
 	else
 		# do not keep a stale signature
 		rm -f ${1}.sig
