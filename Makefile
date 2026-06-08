@@ -72,7 +72,7 @@ _CONFIGDIR=	${CONFIGDIR}
 .elif defined(SETTINGS)
 _CONFIGDIR=	${.CURDIR}/config/${SETTINGS}
 .elif !defined(CONFIGDIR)
-__CONFIGDIR!=	find -s ${.CURDIR}/config -name "build.conf" -type f
+__CONFIGDIR!=	find ${.CURDIR}/config -name "build.conf" -type f | sort -r
 .for DIR in ${__CONFIGDIR}
 . if exists(${DIR}) && empty(_CONFIGDIR)
 _CONFIGOS!=	grep '^OS?*=' ${DIR}
