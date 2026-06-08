@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2021-2024 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2021-2026 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -48,6 +48,7 @@ for ARG in ${@}; do
 		if [ -f "${SRC}" ]; then
 			DST=$(echo ${SRC} | sed "s:/${PRODUCT_ABI}/:/${TO}/:")
 			echo -n ">>> Cloning ${DST}... "
+			mkdir -p $(dirname ${DST})
 			rm -f $(dirname ${DST})/${ARG}-*
 			cp ${SRC} ${DST}
 			if [ -f ${SRC}.sig ]; then
