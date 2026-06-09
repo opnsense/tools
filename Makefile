@@ -23,6 +23,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+IMAGES=		arm dvd nano serial vga vm
 STEPS=		audit arm base boot chroot clean clone compress confirm \
 		connect core distfiles download dvd fingerprint info \
 		kernel list make.conf nano obsolete options packages \
@@ -149,7 +150,10 @@ kernel ports distfiles: base
 audit plugins: ports
 core: plugins
 packages test: core
-arm dvd nano serial vga vm: kernel core
+${IMAGES}: kernel
+.if !defined(BARE)
+${IMAGES}: core
+.endif
 sets: kernel distfiles packages
 images: dvd nano serial vga vm
 release: dvd nano serial vga

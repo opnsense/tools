@@ -1113,8 +1113,9 @@ bundle_packages()
 setup_packages()
 {
 	setup_norun ${1}
-	extract_packages ${1}
-	install_packages ${@} ${PRODUCT_ADDITIONS} ${PRODUCT_CORE}
+	if extract_packages ${1}; then
+		install_packages ${@} ${PRODUCT_ADDITIONS} ${PRODUCT_CORE}
+	fi
 
 	# remove package repository
 	rm -rf ${1}${PACKAGESDIR}
