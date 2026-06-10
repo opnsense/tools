@@ -766,6 +766,7 @@
 /sbin/disklabel
 /sbin/dmesg
 /sbin/dnctl
+/sbin/dnctl15
 /sbin/dump
 /sbin/dumpfs
 /sbin/dumpon
@@ -810,6 +811,7 @@
 /sbin/ifconfig
 /sbin/init
 /sbin/ipfw
+/sbin/ipfw15
 /sbin/kldconfig
 /sbin/kldload
 /sbin/kldstat
