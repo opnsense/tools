@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2024 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2026 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -191,7 +191,12 @@ UNAME_r=\$(freebsd-version)
 	done
 
 	(echo "${PORTSLIST}"; echo "${AUXLIST}") | while read PORT_DEPENDS; do
-		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS%%@*}" %n)
+		PORT_DEPENDS=\${PORT_DEPENDS%%@*}
+		if [ "\$(echo "\${PORT_DEPENDS}" | grep -c "\.\.\/")" != "0" ]; then
+			# normalize the port origin here so it matches below
+			PORT_DEPENDS=\$(make -C ${PORTSDIR}/\${PORT_DEPENDS} -v PKGORIGIN \${MAKE_ARGS})
+		fi
+		PORT_DEPNAME=\$(pkg query -e "%o == \${PORT_DEPENDS}" %n)
 		if [ -n "\${PORT_DEPNAME}" ]; then
 			echo ">>> Locking package dependency: \${PORT_DEPNAME}"
 			pkg set -yA0 \${PORT_DEPNAME}
