@@ -607,7 +607,7 @@ setup_version()
 	    -X ${1}/mtree.exclude > ${1}/mtree
 	mv ${1}/mtree ${VERSIONDIR}/${3}.mtree
 	rm ${1}/mtree.exclude
-	generate_signature ${VERSIONDIR}/${3}.mtree
+	generate_signature ${VERSIONDIR}/${3}.mtree silent
 	chmod 600 ${VERSIONDIR}/${3}.mtree*
 
 	# for testing, custom builds, etc.
@@ -703,10 +703,10 @@ generate_signature()
 	FINGERPRINT=$(${PRODUCT_SIGNCHK})
 
 	if [ -n "${FINGERPRINT}" ]; then
-		echo -n ">>> Creating ${PRODUCT_SETTINGS} signature for $(basename ${1})... "
+		[ -z "${2}" ] && echo -n ">>> Creating ${PRODUCT_SETTINGS} signature for $(basename ${1})... "
 		sha256 -q ${1} | ${PRODUCT_SIGNCMD} > ${1}.sig
-		echo "done"
-		echo "${FINGERPRINT}"
+		[ -z "${2}" ] && echo "done"
+		[ -z "${2}" ] && echo "${FINGERPRINT}"
 	else
 		# do not keep a stale signature
 		rm -f ${1}.sig
@@ -1061,7 +1061,8 @@ bundle_packages()
 		LATESTDIR=${BASEDIR}${PACKAGESDIR}-new/Latest
 		ln -sfn ../${PKGFILE} ${LATESTDIR}/${PKGINFO}.pkg
 		generate_signature \
-		    ${BASEDIR}${PACKAGESDIR}-new/Latest/${PKGINFO}.pkg
+		    ${BASEDIR}${PACKAGESDIR}-new/Latest/${PKGINFO}.pkg \
+		    silent
 	done
 
 	# generate index files (XXX ideally from a chroot)
