@@ -83,6 +83,9 @@ touch ${STAGEDIR}/work/usr/local/opnsense/version/base.mtree
 touch ${STAGEDIR}/work/usr/local/opnsense/version/base.obsolete
 touch ${STAGEDIR}/work/usr/local/opnsense/version/base.size
 
+# remove unwanted certificate bundle
+rm -f ${STAGEDIR}/work/etc/ssl/cert.pem
+
 echo -n ">>> Generating obsolete file list... "
 
 (cd ${STAGEDIR}/work; find . ! -type d) | sed -e 's/^\.//g' | \

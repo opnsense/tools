@@ -458,7 +458,6 @@
 /etc/shells
 /etc/snmpd.config
 /etc/spwd.db
-/etc/ssl/cert.pem
 /etc/ssl/certs/002c0b4f.0
 /etc/ssl/certs/0179095f.0
 /etc/ssl/certs/062cdee6.0
