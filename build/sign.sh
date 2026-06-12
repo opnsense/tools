@@ -46,7 +46,7 @@ for ARG in ${@}; do
 		if [ -f "${BASESET}" ]; then
 			setup_stage ${STAGEDIR}
 			setup_set ${STAGEDIR} ${BASESET}
-			generate_signature ${STAGEDIR}${VERSIONDIR}/base.mtree silent
+			generate_signature ${STAGEDIR}${VERSIONDIR}/base.mtree mute
 			rm ${BASESET}
 			generate_set ${STAGEDIR} ${BASESET}
 			generate_signature ${BASESET}
@@ -57,7 +57,7 @@ for ARG in ${@}; do
 		if [ -f "${KERNELSET}" ]; then
 			setup_stage ${STAGEDIR}
 			setup_set ${STAGEDIR} ${KERNELSET}
-			generate_signature ${STAGEDIR}${VERSIONDIR}/kernel.mtree silent
+			generate_signature ${STAGEDIR}${VERSIONDIR}/kernel.mtree mute
 			rm ${KERNELSET}
 			generate_set ${STAGEDIR} ${KERNELSET}
 			generate_signature ${KERNELSET}
