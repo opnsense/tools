@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2025 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2026 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -120,8 +120,18 @@ for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 		done
 
 		if search_packages ${STAGEDIR} ${PLUGIN_NAME} ${PLUGIN_VERS} ${BRANCH}; then
+			# vendor plugins may need an ABI rebuild
+			if [ "${PLUGIN%%/*}" = "vendor" ]; then
+				if [ "${1}" != "hotfix" ]; then
+					echo ">>> Skipped ${PLUGIN_NAME}-${PLUGIN_VERS} ABI rebuild" >> ${STAGEDIR}/.pkg-msg
+					continue
+				else
+					remove_packages ${STAGEDIR} ${PLUGIN_NAME}
+				fi
 			# already built
-			continue
+			else
+				continue
+			fi
 		fi
 
 		install_packages ${STAGEDIR} ${PLUGIN_DEPS}
