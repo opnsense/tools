@@ -36,7 +36,7 @@ eval ${PORTSENV}
 ARGS=${*}
 DEPS=packages
 
-for OPT in BATCH DEPEND MISMATCH PRUNE; do
+for OPT in BATCH DEPEND DISTFILES MISMATCH PRUNE; do
 	VAL=$(eval echo \$${OPT});
 	case ${VAL} in
 	yes|no)
@@ -67,7 +67,7 @@ setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
-setup_distfiles ${STAGEDIR}
+[ ${DISTFILES} = "yes" ] && setup_distfiles ${STAGEDIR}
 
 if extract_packages ${STAGEDIR}; then
 	AUXSET=$(find_set aux)
