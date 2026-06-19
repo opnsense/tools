@@ -257,14 +257,19 @@ Please note that reissuing ports builds will clear plugins and
 core progress.  However, following option apply to PORTSENV:
 
 * BATCH=no
+
   Developer mode with shell after each build failure.
 * DEPEND=no
+
   Do not tamper with plugins or core packages.
 * DISTFILES=no
+
   Do not use distfiles set even if available.
 * MISMATCH=no
+
   Rebuild packages that have a version mismatch.
 * PRUNE=no
+
   Do not check ports integrity prior to rebuild.
 
 The defaults for these ports options are set to "yes".  A sample
