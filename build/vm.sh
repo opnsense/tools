@@ -129,7 +129,7 @@ EOF
 
 if [ -z "${PRODUCT_ZFS}" ]; then
 	cat >> ${STAGEDIR}/mnt/etc/fstab << EOF
-/dev/gpt/rootfs	/		ufs	rw	1	1
+/dev/gpt/rootfs	/		ufs	rw,noatime	1	1
 EOF
 	fi
 
