@@ -58,16 +58,14 @@ for PORT in ${PORTSLIST}; do
 	if [ -n "${SET}" ]; then
 		for OPT in ${SET}; do
 			for DEFAULT in ${DEFAULTS}; do
-				case ${ARG} in
+				case ${OPT} in
 				DOCS|EXAMPLES)
 					# ignore since it defaults to off
 					continue
 					;;
-				*)
-					if [ ${OPT} == ${DEFAULT} ]; then
-						echo "${PORT}: ${OPT} is set by default"
-						RET=1
-					fi
+				${DEFAULT})
+					echo "${PORT}: ${OPT} is set by default"
+					RET=1
 					;;
 				esac
 			done
