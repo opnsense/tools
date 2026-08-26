@@ -37,6 +37,7 @@ git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 git_version ${PORTSDIR}
 
+setup_stage ${PORTSDIR}/distfiles
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
