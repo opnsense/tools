@@ -17374,11 +17374,14 @@
 /usr/share/man/man9/iflib_device_register.9.gz
 /usr/share/man/man9/iflib_device_resume.9.gz
 /usr/share/man/man9/iflib_device_suspend.9.gz
+/usr/share/man/man9/iflib_init_failed.9.gz
 /usr/share/man/man9/iflib_irq_alloc.9.gz
 /usr/share/man/man9/iflib_irq_alloc_generic.9.gz
 /usr/share/man/man9/iflib_led_create.9.gz
 /usr/share/man/man9/iflib_link_intr_deferred.9.gz
 /usr/share/man/man9/iflib_link_state_change.9.gz
+/usr/share/man/man9/iflib_request_reset.9.gz
+/usr/share/man/man9/iflib_request_reset_if_up.9.gz
 /usr/share/man/man9/iflib_rx_intr_deferred.9.gz
 /usr/share/man/man9/iflib_tx_intr_deferred.9.gz
 /usr/share/man/man9/iflibdd.9.gz
