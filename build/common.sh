@@ -796,7 +796,7 @@ find_set()
 	kernel)
 		echo $(find ${SETSDIR} -name "kernel-*-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz")
 		;;
-	aux|packages|release)
+	aux|packages|pkgbase|release)
 		echo $(find ${SETSDIR} -name "${1}-*-${PRODUCT_ARCH}.tar")
 		;;
 	tests|xtools)

@@ -37,7 +37,7 @@ for ARG in ${@}; do
 		echo ">>> Removing arm image"
 		rm -f ${IMAGESDIR}/*-arm-${PRODUCT_ARCH}-${PRODUCT_DEVICE}.img*
 		;;
-	aux|tests|xtools)
+	aux|pkgbase|tests|xtools)
 		echo ">>> Removing ${ARG} set"
 		rm -f ${SETSDIR}/${ARG}-*-${PRODUCT_ARCH}.*
 		;;
