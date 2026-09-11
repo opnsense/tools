@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2024 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2024-2026 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -32,17 +32,20 @@ SELF=sync
 
 . ./common.sh
 
-GIT="git -C ${PORTSDIR}"
+SYNCBRANCH=${SYNCBRANCH:-"${PORTSBRANCH}"}
+SYNCDIR=${SYNCDIR:-"${PORTSDIR}"}
+
+GIT="git -C ${SYNCDIR}"
 
 for ARG in ${@}; do
 	# ARG should be "category/name" but not strictly checked
 
-	if [ ! -d ${PORTSDIR}/${ARG} ]; then
-		echo ">>> Sync did not find the port ${ARG}" >&2
+	if [ ! -d ${SYNCDIR}/${ARG} ]; then
+		echo ">>> Sync did not find the directory ${ARG}" >&2
 		exit 1
 	fi
 
-	if ${GIT} diff --quiet ${PORTSBRANCH} ${ARG}; then
+	if ${GIT} diff --quiet ${SYNCBRANCH} ${ARG}; then
 		echo ">>> Sync already complete for ${ARG}"
 		continue
 	fi
@@ -50,7 +53,7 @@ for ARG in ${@}; do
 
 	COMMITS=
 
-	for HASH in $(${GIT} log --oneline ${PORTSBRANCH} ${ARG} | \
+	for HASH in $(${GIT} log --oneline ${SYNCBRANCH} ${ARG} | \
 	    awk '{ print $1 }'); do
 		if ${GIT} diff --quiet ${HASH} ${ARG}; then
 			# found no more changes
@@ -72,7 +75,7 @@ for ARG in ${@}; do
 	done
 
 	if [ -n "${FAILED}" ]; then
-		${GIT} diff -R ${PORTSBRANCH} ${ARG} | ${GIT} apply
+		${GIT} diff -R ${SYNCBRANCH} ${ARG} | ${GIT} apply
 		${GIT} add ${ARG}
 		${GIT} commit -m \
 "${ARG}: sync with upstream
@@ -80,7 +83,7 @@ for ARG in ${@}; do
 Taken from: ${FROM}"
 	fi
 
-	if ! ${GIT} diff --quiet ${PORTSBRANCH} ${ARG}; then
+	if ! ${GIT} diff --quiet ${SYNCBRANCH} ${ARG}; then
 		echo ">>> Sync failed due to non-emtpy diff for ${ARG}" >&2
 		exit 1
 	fi
