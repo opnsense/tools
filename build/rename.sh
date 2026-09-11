@@ -40,7 +40,7 @@ for ARG in ${@}; do
 		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-arm-${FILE##*-arm-}
 		done
 		;;
-	aux|distfiles|packages|tests)
+	aux|distfiles|packages|pkgbase|tests)
 		echo ">>> Renaming ${ARG} set: ${PRODUCT_VERSION}"
 		for FILE in $(find ${SETSDIR} -name \
 		    "${ARG}-*-${PRODUCT_ARCH}.*"); do
@@ -101,6 +101,10 @@ for ARG in ${@}; do
 		    "*-nano-${PRODUCT_ARCH}.*"); do
 		    mv ${FILE} ${IMAGESDIR}/${PRODUCT_NAME}${PRODUCT_SUFFIX}-${PRODUCT_VERSION}-nano-${FILE##*-}
 		done
+		;;
+	release)
+		echo "A release cannot be renamed" >&2
+		exit 1
 		;;
 	serial)
 		echo ">>> Renaming serial image: ${PRODUCT_VERSION}"
