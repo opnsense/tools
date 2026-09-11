@@ -38,10 +38,10 @@ SYNCDIR=${SYNCDIR:-"${PORTSDIR}"}
 GIT="git -C ${SYNCDIR}"
 
 for ARG in ${@}; do
-	# ARG should be "category/name" but not strictly checked
+	# ARG intended as "category/name" but not strictly checked
 
-	if [ ! -d ${SYNCDIR}/${ARG} ]; then
-		echo ">>> Sync did not find the directory ${ARG}" >&2
+	if [ ! -e ${SYNCDIR}/${ARG} ]; then
+		echo ">>> Sync did not find the path ${ARG}" >&2
 		exit 1
 	fi
 
@@ -67,9 +67,10 @@ for ARG in ${@}; do
 	FAILED=
 
 	for COMMIT in ${COMMITS}; do
-		if ! (${GIT} cherry-pick ${COMMIT} || \
-		    ${GIT} cherry-pick --skip); then
-			FAILED=yes
+		if ! ${GIT} cherry-pick ${COMMIT}; then
+		        ${GIT} cherry-pick --skip
+			# do not do a fail-sync by default
+			#FAILED=yes
 			break
 		fi
 	done
