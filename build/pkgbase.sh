@@ -35,7 +35,7 @@ PKGBASESET=$(find_set pkgbase)
 
 if [ -f "${PKGBASESET}" -a -z "${1}" ]; then
 	echo ">>> Keeping pkgbase set: ${PKGBASESET}"
-	echo ">>> Re-run 'base' and 'kernel' first."
+	echo ">>> Have you re-run 'base' and 'kernel' yet?"
 	exit 0
 fi
 
@@ -68,6 +68,22 @@ for DIR in $(find ${STAGEDIR} -d 2); do
 		exit 1
 	fi
 done
+
+# So pkgbase does not track state inside the source tree.
+# Instead, it relies on build artifacts and the incrememtal
+# make logic to rebuild changes as they hit the source tree.
+# This way, on each clean build the build artifacts change
+# and make a tracking of unchanged pkgbase packages futile.
+#
+# On a build it produces a full set of new packages and if
+# there is a previous set available it will use the %X query
+# trick to decide if packages have changed.  That only works
+# as long as the object directory is not cleared.
+#
+# The packages produced here are usable, but fail to meet
+# the bar for reproducible stable versioning.  It is unlikey
+# pkgbase will be integrated into OPNsense as long as this
+# behaviour and other bits are not taken care of.
 
 if [ ! -l ${STAGEDIR}/latest ]; then
 	${ENV_FILTER} make -s -C${SRCDIR} packages ${MAKE_ARGS}
