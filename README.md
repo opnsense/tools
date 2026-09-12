@@ -74,10 +74,22 @@ Available build options are:
 * PRIVKEY:	the private key for signing sets
 * PUBKEY:	the public key for signing sets
 * SUFFIX:	the suffix of top package name (default is empty)
+* TIMESTAMP:    fixed timestamp to build a reproducible pkgbase set
 * TYPE:		the base name of the top package to be installed
 * UEFI:		use amd64 hybrid images for said images, e.g. "vga vm"
 * VERSION:	a version tag (if applicable)
 * ZFS:		build VM images with ZFS (pool name "zroot") when set
+
+The TIMESTAMP can be arbitrary, but should be fixed per major release
+in order to make pkgbase sets reproducible throughout its series.
+
+The derivation is usually done by grabbing the timestamp off the
+tools commit of the first stable commit which the tag points to:
+
+    # git show -s --format=%ct 26.7^{}
+
+Please note that while we offer the pkgbase build step we do not
+currently use it in OPNsense.
 
 How to specify build options via configuration file
 ---------------------------------------------------

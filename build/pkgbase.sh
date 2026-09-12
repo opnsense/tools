@@ -44,7 +44,7 @@ echo ">>> Refreshing pkgbase set: ${PKGBASESET}"
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_version ${SRCDIR}
 
-setup_stage ${STAGEDIR}
+setup_stage ${STAGEDIR} work
 
 if [ -f "${PKGBASESET}" ]; then
 	tar -C ${STAGEDIR} -xpf ${PKGBASESET}
@@ -55,10 +55,10 @@ TARGET_ARCH=${PRODUCT_ARCH}
 TARGET=${PRODUCT_TARGET}
 KERNCONF=${PRODUCT_KERNEL}
 SRCCONF=${CONFIGDIR}/src.conf
-REPODIR=${STAGEDIR}
 WITHOUT_DEBUG_FILES=yes
 PKG_NAME_PREFIX=${PRODUCT_NAME}
 PKG_VERSION=${PRODUCT_VERSION}
+PKG_TIMESTAMP=${PRODUCT_TIMESTAMP}
 __MAKE_CONF=
 "
 
@@ -69,29 +69,22 @@ for DIR in $(find ${STAGEDIR} -d 2); do
 	fi
 done
 
-# So pkgbase does not track state inside the source tree.
-# Instead, it relies on build artifacts and the incrememtal
-# make logic to rebuild changes as they hit the source tree.
-# This way, on each clean build the build artifacts change
-# and make a tracking of unchanged pkgbase packages futile.
-#
-# On a build it produces a full set of new packages and if
-# there is a previous set available it will use the %X query
-# trick to decide if packages have changed.  That only works
-# as long as the object directory is not cleared.
-#
-# The packages produced here are usable, but fail to meet
-# the bar for reproducible stable versioning.  It is unlikey
-# pkgbase will be integrated into OPNsense as long as this
-# behaviour and other bits are not taken care of.
+# Enforce a full run first: update-packages fails
+# to do its job without it.  It beats running the
+# update-packages target twice.
+REPODIR=${STAGEDIR}/work
+${ENV_FILTER} make -s -C${SRCDIR} packages ${MAKE_ARGS} REPODIR=${REPODIR}
 
-if [ ! -l ${STAGEDIR}/latest ]; then
-	${ENV_FILTER} make -s -C${SRCDIR} packages ${MAKE_ARGS}
-else
-	${ENV_FILTER} make -s -C${SRCDIR} update-packages ${MAKE_ARGS}
+# If we can build a partial update do it now and
+# remove the full set of regenerated ones.
+if [ -L ${STAGEDIR}/${SRCABI}/latest ]; then
+	rm -rf ${STAGEDIR}/work
+	REPODIR=${STAGEDIR}
+	${ENV_FILTER} make -s -C${SRCDIR} update-packages ${MAKE_ARGS} \
+	    REPODIR=${REPODIR}
 fi
 
-for DIR in $(find ${STAGEDIR} -d 2); do
+for DIR in $(find ${REPODIR} -d 2); do
 	case "$(basename ${DIR})" in
 	latest|${PRODUCT_VERSION})
 		;;
@@ -105,5 +98,5 @@ done
 sh ./clean.sh pkgbase
 
 PKGBASESET=${SETSDIR}/pkgbase-${PRODUCT_VERSION}-${PRODUCT_ARCH}.tar
-generate_set ${STAGEDIR} ${PKGBASESET}
+generate_set ${REPODIR} ${PKGBASESET}
 generate_signature ${PKGBASESET}

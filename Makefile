@@ -93,6 +93,7 @@ _CONFIGDIR=	${__CONFIGDIR:[1]:C/\/build\.conf$//}
 .include "${_CONFIGDIR}/build.conf"
 
 _ARCH!=		uname -p
+_TIMESTAMP!=	date '+%s'
 _VERSION!=	date '+%Y%m%d%H%M'
 
 # Bootstrap the build options if not set:
@@ -106,6 +107,7 @@ DEVICE?=	A10
 KERNEL?=	SMP
 NAME?=		OPNsense
 SUFFIX?=	# empty
+TIMESTAMP?=	${_TIMESTAMP}
 TYPE?=		${NAME:tl}
 UEFI?=		arm dvd serial vga vm
 VERSION?=	${_VERSION}
@@ -193,7 +195,7 @@ ${STEP}: lint-steps
 	@echo ">>> Executing build step ${STEP} on ${_CONFIGDIR:C/.*\///}" >&2
 	${VERBOSE_HIDDEN} cd ${TOOLSDIR}/build && \
 	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} -F ${KERNEL} \
-	    -n ${NAME} -v "${VERSIONS}" -s ${_CONFIGDIR} \
+	    -n ${NAME} -v "${VERSIONS}" -s ${_CONFIGDIR} -Q ${TIMESTAMP} \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
