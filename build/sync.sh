@@ -36,58 +36,44 @@ SYNCBRANCH=${SYNCBRANCH:-"${PORTSBRANCH}"}
 SYNCDIR=${SYNCDIR:-"${PORTSDIR}"}
 
 GIT="git -C ${SYNCDIR}"
+ARGS=${@}
 
-for ARG in ${@}; do
+for ARG in ${ARGS}; do
 	# ARG intended as "category/name" but not strictly checked
-
 	if [ ! -e ${SYNCDIR}/${ARG} ]; then
 		echo ">>> Sync did not find the path ${ARG}" >&2
 		exit 1
 	fi
-
-	if ${GIT} diff --quiet ${SYNCBRANCH} ${ARG}; then
-		echo ">>> Sync already complete for ${ARG}"
-		continue
-	fi
-
-
-	COMMITS=
-
-	for HASH in $(${GIT} log --oneline ${SYNCBRANCH} ${ARG} | \
-	    awk '{ print $1 }'); do
-		if ${GIT} diff --quiet ${HASH} ${ARG}; then
-			# found no more changes
-			break
-		fi
-
-		# reverse commit order for cherry-pick
-		COMMITS="${HASH} ${COMMITS}"
-	done
-
-	FAILED=
-
-	for COMMIT in ${COMMITS}; do
-		if ! ${GIT} cherry-pick ${COMMIT}; then
-		        ${GIT} cherry-pick --skip
-			# do not do a fail-sync by default
-			#FAILED=yes
-			break
-		fi
-	done
-
-	if [ -n "${FAILED}" ]; then
-		${GIT} diff -R ${SYNCBRANCH} ${ARG} | ${GIT} apply
-		${GIT} add ${ARG}
-		${GIT} commit -m \
-"${ARG}: sync with upstream
-
-Taken from: ${FROM}"
-	fi
-
-	if ! ${GIT} diff --quiet ${SYNCBRANCH} ${ARG}; then
-		echo ">>> Sync failed due to non-emtpy diff for ${ARG}" >&2
-		exit 1
-	fi
-
-	echo ">>> Sync succeeded for ${ARG}"
 done
+
+if ${GIT} diff --quiet ${SYNCBRANCH} ${ARGS}; then
+	echo ">>> Sync already complete for ${ARGS}"
+	exit 0
+fi
+
+COMMITS=
+
+for HASH in $(${GIT} log --oneline ${SYNCBRANCH} ${ARGS} | \
+    awk '{ print $1 }'); do
+	if ${GIT} diff --quiet ${HASH} ${ARGS}; then
+		# found no more changes
+		break
+	fi
+
+	# reverse commit order for cherry-pick
+	COMMITS="${HASH} ${COMMITS}"
+done
+
+for COMMIT in ${COMMITS}; do
+	if ! ${GIT} cherry-pick ${COMMIT}; then
+	        ${GIT} cherry-pick --skip
+		break
+	fi
+done
+
+if ! ${GIT} diff --quiet ${SYNCBRANCH} ${ARGS}; then
+	echo ">>> Sync failed due to non-emtpy diff for ${ARGS}" >&2
+	exit 1
+fi
+
+echo ">>> Sync succeeded for ${ARGS}"
