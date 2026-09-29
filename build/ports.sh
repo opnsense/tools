@@ -114,6 +114,7 @@ clean.up.post.build" | while read PORT_ORIGIN; do
 	PORT=\${PORT_ORIGIN%%@*}
 	MAKE_ARGS="
 PACKAGES=${PACKAGESDIR}-cache
+PKG_ORIGIN=opnsense/pkg
 PRODUCT_ABI=${PRODUCT_ABI}
 PRODUCT_ARCH=${PRODUCT_ARCH}
 UNAME_r=\$(freebsd-version)
