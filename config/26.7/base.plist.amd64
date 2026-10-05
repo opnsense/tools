@@ -15160,6 +15160,7 @@
 /usr/share/man/man4/tarfs.4.gz
 /usr/share/man/man4/targ.4.gz
 /usr/share/man/man4/tcp.4.gz
+/usr/share/man/man4/tcp_bblog.4.gz
 /usr/share/man/man4/tcp_bbr.4.gz
 /usr/share/man/man4/tcp_rack.4.gz
 /usr/share/man/man4/tdfx.4.gz
@@ -17408,6 +17409,7 @@
 /usr/share/man/man9/iov_init.9.gz
 /usr/share/man/man9/iov_uinit.9.gz
 /usr/share/man/man9/is_fpu_kern_thread.9.gz
+/usr/share/man/man9/is_pci_device.9.gz
 /usr/share/man/man9/is_random_seeded.9.gz
 /usr/share/man/man9/isc_rxd_available.9.gz
 /usr/share/man/man9/isc_rxd_flush.9.gz
@@ -17835,6 +17837,7 @@
 /usr/share/man/man9/pci_get_vpd_ident.9.gz
 /usr/share/man/man9/pci_get_vpd_readonly.9.gz
 /usr/share/man/man9/pci_has_pm.9.gz
+/usr/share/man/man9/pci_has_pme.9.gz
 /usr/share/man/man9/pci_iov_attach.9.gz
 /usr/share/man/man9/pci_iov_attach_name.9.gz
 /usr/share/man/man9/pci_iov_detach.9.gz
