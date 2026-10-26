@@ -11,15 +11,19 @@
 /etc/rc.d/ntpdate
 /etc/ssl/certs/02265526.0
 /etc/ssl/certs/106f3e4d.0
+/etc/ssl/certs/14bc7599.0
 /etc/ssl/certs/228f89db.0
 /etc/ssl/certs/244b5494.0
 /etc/ssl/certs/2b349938.0
 /etc/ssl/certs/3513523f.0
 /etc/ssl/certs/40547a79.0
+/etc/ssl/certs/406c9bb1.0
+/etc/ssl/certs/4b718d9b.0
 /etc/ssl/certs/4f316efb.0
 /etc/ssl/certs/4fd49c6c.0
 /etc/ssl/certs/5ad8a5d6.0
 /etc/ssl/certs/5cd81ad7.0
+/etc/ssl/certs/616816f6.0
 /etc/ssl/certs/626dceaf.0
 /etc/ssl/certs/653b494a.0
 /etc/ssl/certs/6b99d060.0
@@ -36,9 +40,11 @@
 /etc/ssl/certs/b66938e9.0
 /etc/ssl/certs/b727005e.0
 /etc/ssl/certs/ba8887ce.0
+/etc/ssl/certs/ca6e4ad9.0
 /etc/ssl/certs/d7e8dc79.0
 /etc/ssl/certs/d887a5bb.0
 /etc/ssl/certs/e113c810.0
+/etc/ssl/certs/e36a6752.0
 /etc/ssl/certs/ee64a828.0
 /etc/ssl/certs/f081611a.0
 /etc/ssl/certs/f249de83.0
@@ -66,6 +72,7 @@
 /etc/ssl/untrusted/62744ee1.0
 /etc/ssl/untrusted/6410666e.0
 /etc/ssl/untrusted/66445960.0
+/etc/ssl/untrusted/6b99d060.0
 /etc/ssl/untrusted/7aaf71c0.0
 /etc/ssl/untrusted/7d0b38bd.0
 /etc/ssl/untrusted/8867006a.0
@@ -134,6 +141,7 @@
 /usr/share/certs/trusted/AffirmTrust_Networking.pem
 /usr/share/certs/trusted/AffirmTrust_Premium.pem
 /usr/share/certs/trusted/AffirmTrust_Premium_ECC.pem
+/usr/share/certs/trusted/Atos_TrustedRoot_2011.pem
 /usr/share/certs/trusted/Baltimore_CyberTrust_Root.pem
 /usr/share/certs/trusted/COMODO_Certification_Authority.pem
 /usr/share/certs/trusted/Certigna.pem
@@ -156,6 +164,7 @@
 /usr/share/certs/trusted/Go_Daddy_Class_2_CA.pem
 /usr/share/certs/trusted/QuoVadis_Root_CA_2.pem
 /usr/share/certs/trusted/QuoVadis_Root_CA_3.pem
+/usr/share/certs/trusted/SecureSign_Root_CA12.pem
 /usr/share/certs/trusted/SecureTrust_CA.pem
 /usr/share/certs/trusted/Secure_Global_CA.pem
 /usr/share/certs/trusted/Starfield_Class_2_CA.pem
@@ -166,6 +175,10 @@
 /usr/share/certs/trusted/Trustwave_Global_ECC_P384_Certification_Authority.pem
 /usr/share/certs/trusted/XRamp_Global_CA_Root.pem
 /usr/share/certs/trusted/certSIGN_ROOT_CA.pem
+/usr/share/certs/trusted/ePKI_Root_Certification_Authority.pem
+/usr/share/certs/trusted/emSign_ECC_Root_CA_-_C3.pem
+/usr/share/certs/trusted/emSign_ECC_Root_CA_-_G3.pem
+/usr/share/certs/trusted/emSign_Root_CA_-_C1.pem
 /usr/share/certs/untrusted/Camerfirma_Chambers_of_Commerce_Root.pem
 /usr/share/certs/untrusted/Camerfirma_Global_Chambersign_Root.pem
 /usr/share/certs/untrusted/Chambers_of_Commerce_Root_-_2008.pem
@@ -173,6 +186,7 @@
 /usr/share/certs/untrusted/E-Tugra_Global_Root_CA_RSA_v3.pem
 /usr/share/certs/untrusted/EC-ACC.pem
 /usr/share/certs/untrusted/EE_Certification_Centre_Root_CA.pem
+/usr/share/certs/untrusted/Entrust_Root_Certification_Authority.pem
 /usr/share/certs/untrusted/GeoTrust_Primary_Certification_Authority.pem
 /usr/share/certs/untrusted/GeoTrust_Primary_Certification_Authority_-_G2.pem
 /usr/share/certs/untrusted/GeoTrust_Primary_Certification_Authority_-_G3.pem

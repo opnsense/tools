@@ -471,7 +471,6 @@
 /etc/ssl/certs/0f5dc4f3.0
 /etc/ssl/certs/0f6fa695.0
 /etc/ssl/certs/1001acf7.0
-/etc/ssl/certs/14bc7599.0
 /etc/ssl/certs/1cef98f5.0
 /etc/ssl/certs/1d3472b9.0
 /etc/ssl/certs/1e08bfd1.0
@@ -481,14 +480,14 @@
 /etc/ssl/certs/2ccbdda3.0
 /etc/ssl/certs/30e1580d.0
 /etc/ssl/certs/32888f65.0
+/etc/ssl/certs/36c6b318.0
 /etc/ssl/certs/3bde41ac.0
 /etc/ssl/certs/3e359ba6.0
 /etc/ssl/certs/3fb36b73.0
 /etc/ssl/certs/40193066.0
 /etc/ssl/certs/4042bcee.0
-/etc/ssl/certs/406c9bb1.0
+/etc/ssl/certs/422cf4bf.0
 /etc/ssl/certs/48bec511.0
-/etc/ssl/certs/4b718d9b.0
 /etc/ssl/certs/4bfab552.0
 /etc/ssl/certs/5443e9e3.0
 /etc/ssl/certs/54657681.0
@@ -497,7 +496,6 @@
 /etc/ssl/certs/5f15c80c.0
 /etc/ssl/certs/5f618aec.0
 /etc/ssl/certs/607986c7.0
-/etc/ssl/certs/616816f6.0
 /etc/ssl/certs/6805c744.0
 /etc/ssl/certs/68dd7389.0
 /etc/ssl/certs/6a9bdba3.0
@@ -526,6 +524,7 @@
 /etc/ssl/certs/988a38cb.0
 /etc/ssl/certs/9b46e03d.0
 /etc/ssl/certs/9bf03295.0
+/etc/ssl/certs/9cd9d94b.0
 /etc/ssl/certs/9d04f354.0
 /etc/ssl/certs/9e654b62.0
 /etc/ssl/certs/9ef4a08a.0
@@ -543,7 +542,6 @@
 /etc/ssl/certs/bf53fb88.0
 /etc/ssl/certs/c01eb047.0
 /etc/ssl/certs/c28a8a30.0
-/etc/ssl/certs/ca6e4ad9.0
 /etc/ssl/certs/cbf06781.0
 /etc/ssl/certs/cc450945.0
 /etc/ssl/certs/cd58d51e.0
@@ -559,7 +557,6 @@
 /etc/ssl/certs/de6d66f3.0
 /etc/ssl/certs/e18bfb83.0
 /etc/ssl/certs/e35234b1.0
-/etc/ssl/certs/e36a6752.0
 /etc/ssl/certs/e73d606e.0
 /etc/ssl/certs/e868b802.0
 /etc/ssl/certs/e8de2f56.0
@@ -571,6 +568,7 @@
 /etc/ssl/certs/f30dd6ad.0
 /etc/ssl/certs/f44703f1.0
 /etc/ssl/certs/f51bb24c.0
+/etc/ssl/certs/faf4fe6b.0
 /etc/ssl/certs/fb717492.0
 /etc/ssl/certs/fc5a8f99.0
 /etc/ssl/certs/fd64f3fc.0
@@ -584,6 +582,7 @@
 /etc/ssl/untrusted/0d972af8.0
 /etc/ssl/untrusted/106f3e4d.0
 /etc/ssl/untrusted/1422d63c.0
+/etc/ssl/untrusted/14bc7599.0
 /etc/ssl/untrusted/1766e401.0
 /etc/ssl/untrusted/19dbc0dd.0
 /etc/ssl/untrusted/244b5494.0
@@ -592,6 +591,8 @@
 /etc/ssl/untrusted/3136ea36.0
 /etc/ssl/untrusted/3323bb7e.0
 /etc/ssl/untrusted/3513523f.0
+/etc/ssl/untrusted/3dbee7d3.0
+/etc/ssl/untrusted/3ed72a2f.0
 /etc/ssl/untrusted/40547a79.0
 /etc/ssl/untrusted/442adcac.0
 /etc/ssl/untrusted/4632c230.0
@@ -603,7 +604,6 @@
 /etc/ssl/untrusted/5e98733a.0
 /etc/ssl/untrusted/626dceaf.0
 /etc/ssl/untrusted/69cf9657.0
-/etc/ssl/untrusted/6b99d060.0
 /etc/ssl/untrusted/76faf6c0.0
 /etc/ssl/untrusted/779a714a.0
 /etc/ssl/untrusted/7ffa47b4.0
@@ -613,13 +613,16 @@
 /etc/ssl/untrusted/aee5f10d.0
 /etc/ssl/untrusted/b1159c4c.0
 /etc/ssl/untrusted/b1b8a7f3.0
+/etc/ssl/untrusted/b548496f.0
 /etc/ssl/untrusted/c9e4c02b.0
 /etc/ssl/untrusted/cbd811bd.0
 /etc/ssl/untrusted/d2be6420.0
 /etc/ssl/untrusted/d7e8dc79.0
 /etc/ssl/untrusted/e113c810.0
 /etc/ssl/untrusted/e1e8b7dc.0
+/etc/ssl/untrusted/e36a6752.0
 /etc/ssl/untrusted/e53e0c3b.0
+/etc/ssl/untrusted/eb784c64.0
 /etc/ssl/untrusted/ee64a828.0
 /etc/ssl/untrusted/f081611a.0
 /etc/ssl/untrusted/f2d4863f.0
@@ -5653,7 +5656,6 @@
 /usr/share/certs/trusted/Amazon_Root_CA_2.pem
 /usr/share/certs/trusted/Amazon_Root_CA_3.pem
 /usr/share/certs/trusted/Amazon_Root_CA_4.pem
-/usr/share/certs/trusted/Atos_TrustedRoot_2011.pem
 /usr/share/certs/trusted/Atos_TrustedRoot_Root_CA_ECC_TLS_2021.pem
 /usr/share/certs/trusted/Atos_TrustedRoot_Root_CA_RSA_TLS_2021.pem
 /usr/share/certs/trusted/Autoridad_de_Certificacion_Firmaprofesional_CIF_A62634068.pem
@@ -5719,6 +5721,8 @@
 /usr/share/certs/trusted/QuoVadis_Root_CA_1_G3.pem
 /usr/share/certs/trusted/QuoVadis_Root_CA_2_G3.pem
 /usr/share/certs/trusted/QuoVadis_Root_CA_3_G3.pem
+/usr/share/certs/trusted/SECOM_TLS_ECC_Root_CA_2024.pem
+/usr/share/certs/trusted/SECOM_TLS_RSA_Root_CA_2024.pem
 /usr/share/certs/trusted/SSL_com_EV_Root_Certification_Authority_ECC.pem
 /usr/share/certs/trusted/SSL_com_EV_Root_Certification_Authority_RSA_R2.pem
 /usr/share/certs/trusted/SSL_com_Root_Certification_Authority_ECC.pem
@@ -5728,7 +5732,6 @@
 /usr/share/certs/trusted/SZAFIR_ROOT_CA2.pem
 /usr/share/certs/trusted/Sectigo_Public_Server_Authentication_Root_E46.pem
 /usr/share/certs/trusted/Sectigo_Public_Server_Authentication_Root_R46.pem
-/usr/share/certs/trusted/SecureSign_Root_CA12.pem
 /usr/share/certs/trusted/SecureSign_Root_CA14.pem
 /usr/share/certs/trusted/SecureSign_Root_CA15.pem
 /usr/share/certs/trusted/Security_Communication_ECC_RootCA1.pem
@@ -5744,6 +5747,8 @@
 /usr/share/certs/trusted/TWCA_Root_Certification_Authority.pem
 /usr/share/certs/trusted/Telekom_Security_TLS_ECC_Root_2020.pem
 /usr/share/certs/trusted/Telekom_Security_TLS_RSA_Root_2023.pem
+/usr/share/certs/trusted/Telia_EC_TLS_Root_CA_v3.pem
+/usr/share/certs/trusted/Telia_RSA_TLS_Root_CA_v3.pem
 /usr/share/certs/trusted/Telia_Root_CA_v2.pem
 /usr/share/certs/trusted/TrustAsia_Global_Root_CA_G3.pem
 /usr/share/certs/trusted/TrustAsia_Global_Root_CA_G4.pem
@@ -5757,13 +5762,10 @@
 /usr/share/certs/trusted/certSIGN_Root_CA_G2.pem
 /usr/share/certs/trusted/e-Szigno_Root_CA_2017.pem
 /usr/share/certs/trusted/e-Szigno_TLS_Root_CA_2023.pem
-/usr/share/certs/trusted/ePKI_Root_Certification_Authority.pem
-/usr/share/certs/trusted/emSign_ECC_Root_CA_-_C3.pem
-/usr/share/certs/trusted/emSign_ECC_Root_CA_-_G3.pem
-/usr/share/certs/trusted/emSign_Root_CA_-_C1.pem
 /usr/share/certs/trusted/emSign_Root_CA_-_G1.pem
 /usr/share/certs/trusted/vTrus_ECC_Root_CA.pem
 /usr/share/certs/trusted/vTrus_Root_CA.pem
+/usr/share/certs/untrusted/Atos_TrustedRoot_2011.pem
 /usr/share/certs/untrusted/Atos_TrustedRoot_Root_CA_ECC_G2_2020.pem
 /usr/share/certs/untrusted/Atos_TrustedRoot_Root_CA_RSA_G2_2020.pem
 /usr/share/certs/untrusted/COMODO_Certification_Authority.pem
@@ -5780,7 +5782,6 @@
 /usr/share/certs/untrusted/DigiCert_High_Assurance_EV_Root_CA.pem
 /usr/share/certs/untrusted/DigiCert_SMIME_ECC_P384_Root_G5.pem
 /usr/share/certs/untrusted/DigiCert_SMIME_RSA4096_Root_G5.pem
-/usr/share/certs/untrusted/Entrust_Root_Certification_Authority.pem
 /usr/share/certs/untrusted/Entrust_Root_Certification_Authority_-_EC1.pem
 /usr/share/certs/untrusted/Entrust_Root_Certification_Authority_-_G2.pem
 /usr/share/certs/untrusted/Entrust_Root_Certification_Authority_-_G4.pem
@@ -5798,10 +5799,12 @@
 /usr/share/certs/untrusted/OISTE_WISeKey_Global_Root_GA_CA.pem
 /usr/share/certs/untrusted/QuoVadis_Root_CA_2.pem
 /usr/share/certs/untrusted/QuoVadis_Root_CA_3.pem
+/usr/share/certs/untrusted/SECOM_SMIME_RSA_Root_CA_2024.pem
 /usr/share/certs/untrusted/SSL_com_Client_ECC_Root_CA_2022.pem
 /usr/share/certs/untrusted/SSL_com_Client_RSA_Root_CA_2022.pem
 /usr/share/certs/untrusted/Sectigo_Public_Email_Protection_Root_E46.pem
 /usr/share/certs/untrusted/Sectigo_Public_Email_Protection_Root_R46.pem
+/usr/share/certs/untrusted/SecureSign_Root_CA16.pem
 /usr/share/certs/untrusted/Staat_der_Nederlanden_Root_CA_-_G3.pem
 /usr/share/certs/untrusted/Starfield_Class_2_CA.pem
 /usr/share/certs/untrusted/SwissSign_Gold_CA_-_G2.pem
@@ -5809,8 +5812,11 @@
 /usr/share/certs/untrusted/TWCA_Global_Root_CA_G2.pem
 /usr/share/certs/untrusted/Telekom_Security_SMIME_ECC_Root_2021.pem
 /usr/share/certs/untrusted/Telekom_Security_SMIME_RSA_Root_2023.pem
+/usr/share/certs/untrusted/Telia_EC_Email_Root_CA_v3.pem
+/usr/share/certs/untrusted/Telia_RSA_Email_Root_CA_v3.pem
 /usr/share/certs/untrusted/TrustAsia_SMIME_ECC_Root_CA.pem
 /usr/share/certs/untrusted/TrustAsia_SMIME_RSA_Root_CA.pem
+/usr/share/certs/untrusted/emSign_ECC_Root_CA_-_G3.pem
 /usr/share/doc/kyua/AUTHORS
 /usr/share/doc/kyua/CONTRIBUTORS
 /usr/share/doc/kyua/LICENSE
