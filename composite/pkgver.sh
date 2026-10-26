@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2025 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2026 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -27,24 +27,43 @@
 
 set -e
 
-VERSIONS=$(make list-packages | grep All/ | sort)
+VERSIONSPKG=$(make list-packages 2> /dev/null | grep All/ | sort)
+VERSIONSAUX=$(make list-aux 2> /dev/null | grep All/ | sort)
 TARGETS=$(echo ${1} | tr ',' ' ')
 
 for TARGET in ${TARGETS}; do
-	RESULT=$(echo "${VERSIONS}" | (grep -i "/${TARGET}-[0-9]" || true))
-	if [ -z "${RESULT}" ]; then
-		echo "${TARGET}: N/A"
-	else
+	RESULT=$(echo "${VERSIONSPKG}" | (grep -i "/${TARGET}-[0-9]" || true))
+	if [ -n "${RESULT}" ]; then
 		RESULT=${RESULT##*-}
-		echo "${TARGET}:" ${RESULT%.pkg}
+		echo "${TARGET}:" ${RESULT%.pkg} "(packages)"
+		continue
+	fi
+
+	RESULT=$(echo "${VERSIONSAUX}" | (grep -i "/${TARGET}-[0-9]" || true))
+	if [ -n "${RESULT}" ]; then
+		RESULT=${RESULT##*-}
+		echo "${TARGET}:" ${RESULT%.pkg} "(aux)"
+	else
+		echo "${TARGET}: N/A"
 	fi
 done
 
 if [ -z ${TARGET} ]; then
-	for RESULT in ${VERSIONS}; do
+	for RESULT in ${VERSIONSPKG}; do
 		RESULT=${RESULT#./All/}
 		TARGET=${RESULT%-*}
 		RESULT=${RESULT##*-}
-		echo "${TARGET}:" ${RESULT%.pkg}
+		if [ -n "${TARGET}" ]; then
+			echo "${TARGET}:" ${RESULT%.pkg} "(packages)"
+		fi
+	done
+
+	for RESULT in ${VERSIONSAUX}; do
+		RESULT=${RESULT#./All/}
+		TARGET=${RESULT%-*}
+		RESULT=${RESULT##*-}
+		if [ -n "${TARGET}" ]; then
+			echo "${TARGET}:" ${RESULT%.pkg} "(aux)"
+		fi
 	done
 fi
