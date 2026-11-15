@@ -40,7 +40,7 @@ fi
 DIFF="$(which colordiff 2> /dev/null || echo cat)"
 LESS="less -R"
 
-setup_stage ${STAGEDIR}
+setup_stage ${STAGEDIR} etc
 
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 git_reset ${PORTSREFDIR} HEAD
@@ -62,7 +62,7 @@ for ARG in ${@}; do
 	esac
 done
 
-sh ./make.conf.sh > ${STAGEDIR}/make.conf
+sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 echo "${PORTSLIST}" > ${STAGEDIR}/skim
 : > ${STAGEDIR}/used
 
@@ -76,7 +76,7 @@ while read PORT_ORIGIN PORT_BROKEN; do
 	PORT=${PORT_ORIGIN%%@*}
 
 	MAKE_ARGS="
-__MAKE_CONF=${STAGEDIR}/make.conf
+__MAKE_CONF=${STAGEDIR}/etc/make.conf
 PRODUCT_ABI=${PRODUCT_ABI}
 "
 
