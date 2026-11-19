@@ -33,8 +33,9 @@ SELF=ports
 
 eval ${PORTSENV}
 
-ARGS=${*}
+ARGS=
 DEPS=packages
+OARGS=${*}
 
 for OPT in BATCH DEPEND DISTFILES MISMATCH PRUNE; do
 	VAL=$(eval echo \$${OPT});
@@ -51,7 +52,7 @@ for OPT in BATCH DEPEND DISTFILES MISMATCH PRUNE; do
 	esac
 done
 
-if check_packages ${SELF} ${ARGS}; then
+if check_packages ${SELF} ${OARGS}; then
 	echo ">>> Step ${SELF} is up to date"
 	exit 0
 fi
@@ -62,7 +63,45 @@ AUXLIST=$(list_packages "${AUXLIST}" ${CONFIGDIR}/aux.conf)
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 
-setup_stage ${STAGEDIR}
+setup_stage ${STAGEDIR} etc
+
+sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
+
+for ARG in ${OARGS}; do
+	FLAVOR=${ARG##*@}
+	PORT=${ARG%%@*}
+	CAT=${ARG%%/*}
+
+	if [ ${CAT} = ${PORT} ]; then
+		ARGS="${ARGS} ${ARG}"
+		continue
+	fi
+
+	MAKE_ARGS="
+__MAKE_CONF=${STAGEDIR}/etc/make.conf
+PRODUCT_ABI=${PRODUCT_ABI}
+"
+
+	if [ ${FLAVOR} != ${PORT} ]; then
+		MAKE_ARGS="${MAKE_ARGS} FLAVOR=${FLAVOR}"
+	fi
+
+	if [ ! -d ${PORTSDIR}/${PORT} ]; then
+		echo ">>> Port directory ${PORT} does not exist"
+		exit 1
+	fi
+
+	PKGNAME=$(${ENV_FILTER} make -C ${PORTSDIR}/${PORT} \
+	    PORTSDIR=${PORTSDIR} ${MAKE_ARGS} -v PKGNAME)
+	PKGNAME=${PKGNAME%%-[0-9]*}
+
+	ARGS="${ARGS} ${PKGNAME}"
+	PORTSLIST=$(echo "${ARG}
+${PORTSLIST}")
+
+	echo ">>> Translated ${ARG} to package ${PKGNAME} and prepended to PORTSLIST"
+done
+
 setup_base ${STAGEDIR}
 setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
@@ -84,8 +123,6 @@ if extract_packages ${STAGEDIR}; then
 		prune_packages ${STAGEDIR}
 	fi
 fi
-
-sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 
 if [ ${BATCH} = "no" ]; then
 	sed -i '' -e 's/^#DEVELOPER=/DEVELOPER=/' ${STAGEDIR}/etc/make.conf
