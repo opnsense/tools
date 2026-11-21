@@ -457,6 +457,103 @@ git_tag()
 	export REPO_TAG=${POOL}
 }
 
+git_recipe()
+{
+	BASEDIR=${1}
+	GITREPO=${2}
+	DIGEST=${3}
+
+	echo ">>> Using ${RECIPE} ${GITREPO} recipe"
+
+	case ${GITREPO} in
+	core)
+		GITDIR=${COREDIR}
+		GITTAG=${CORETAG}
+		GITMOD=${COREMOD}
+		;;
+	plugins)
+		GITDIR=${PLUGINSDIR}
+		GITTAG=${PLUGINSTAG}
+		GITMOD=${PLUGINSMOD}
+		;;
+	ports)
+		GITDIR=${PORTSDIR}
+		GITTAG=${PORTSTAG}
+		GITMOD=${PORTSMOD}
+		;;
+	src)
+		GITDIR=${SRCDIR}
+		GITTAG=${SRCTAG}
+		GITMOD=
+		;;
+	*)
+		echo ">>> Recipies do not support ${GITREPO}" >&2
+		exit 1
+		;;
+	esac
+
+	CONF=${RECIPEDIR}/${RECIPE}.conf
+	DIST=${RECIPEDIR}/${RECIPE}.dist
+
+	if [ -n "${DIGEST}" ]; then
+		if [ ! -f ${DIST} ]; then
+			echo ">>> Missing ${DIST}"
+			exit 1
+		fi
+
+		REF=$(sed -n "s/^CONFDIGEST=//p" ${DIST})
+
+		if [ -z "${REF}" ]; then
+			echo ">>> Missing CONFDIGEST"
+			exit 1
+		fi
+
+		if [ "${REF}" != "$(sha256 -q ${CONF})" ]; then
+			echo ">>> Mismatching CONFDIGEST"
+			exit 1
+		fi
+	fi
+
+	git_reset ${BASEDIR}${GITDIR} ${GITTAG}
+
+	if [ -n "${GITMOD}" ]; then
+		: > ${BASEDIR}/mbox
+
+		for MOD in ${GITMOD}; do
+			if [ -f ${RECIPEDIR}/${MOD} ]; then
+				cat  ${RECIPEDIR}/${MOD} >> ${BASEDIR}/mbox
+			else
+				git -C ${BASEDIR}${GITDIR} format-patch -1 \
+				    --stdout ${MOD} >> ${BASEDIR}/mbox
+			fi
+		done
+
+		GIT_COMMITTER_NAME="${PRODUCT_NAME} Tools" \
+		    GIT_COMMITTER_EMAIL="${PRODUCT_EMAIL}" \
+		    git -C ${BASEDIR}${GITDIR} am --no-3way \
+		    --committer-date-is-author-date ${BASEDIR}/mbox
+	fi
+
+	REPO_HASH=$(git -C ${BASEDIR}${GITDIR} rev-parse --short=9 HEAD)
+	REPO_TREE=$(git -C ${BASEDIR}${GITDIR} write-tree)
+
+	export REPO_HASH REPO_TREE
+
+	if [ -n "${DIGEST}" ]; then
+		REF=$(sed -n "s/^${DIGEST}=//p" ${DIST})
+
+		if [ -z "${REF}" ]; then
+			echo ">>> Missing ${DIGEST}"
+			exit 1
+		fi
+
+		if [ "${REF}" != "${REPO_HASH}:${REPO_TREE}" ]; then
+			echo ">>> Mismatching ${DIGEST}"
+			exit 1
+		fi
+	fi
+}
+
 setup_clone()
 {
 	echo ">>> Setting up ${2} clone in ${1}"

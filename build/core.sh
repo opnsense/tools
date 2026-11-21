@@ -47,10 +47,6 @@ remove_packages ${STAGEDIR} ${@}
 install_packages ${STAGEDIR} pkg git
 lock_packages ${STAGEDIR}
 
-if [ -n "${COREVERSION}" ]; then
-	CORE_PKGVERSION="CORE_PKGVERSION=${COREVERSION}"
-fi
-
 setup_clone ${STAGEDIR} ${COREDIR}
 
 for BRANCH in ${EXTRABRANCH} ${COREBRANCH}; do
@@ -58,7 +54,10 @@ for BRANCH in ${EXTRABRANCH} ${COREBRANCH}; do
 
 	CORE_ARGS="CORE_ARCH=${PRODUCT_ARCH} ${COREENV}"
 	if [ ${BRANCH} = ${COREBRANCH} ]; then
-		CORE_ARGS="${CORE_ARGS} ${CORE_PKGVERSION}"
+		if [ -n "${RECIPE}" ]; then
+			git_recipe ${STAGEDIR} core COREDIGEST
+			CORE_ARGS="${CORE_ARGS} CORE_PKGVERSION=${RECIPE}${CORESUF}"
+		fi
 	fi
 
 	CORE_NAME=$(make -C ${STAGEDIR}${COREDIR} ${CORE_ARGS} -v CORE_NAME)

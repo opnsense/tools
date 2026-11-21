@@ -61,6 +61,10 @@ setup_clone ${STAGEDIR} ${PLUGINSDIR}
 for BRANCH in ${EXTRABRANCH} ${PLUGINSBRANCH}; do
 	git_switch ${STAGEDIR}${PLUGINSDIR} ${BRANCH}
 
+	if [ ${BRANCH} = ${PLUGINSBRANCH} ]; then
+		[ -n "${RECIPE}" ] && git_recipe ${STAGEDIR} plugins PLUGINSDIGEST
+	fi
+
 	PREFIX=${PRODUCT_PLUGINS%"*"}
 	PLUGIN_LIST=
 	PLUGIN_DEFER=

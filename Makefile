@@ -26,11 +26,11 @@
 IMAGES=		arm dvd nano serial vga vm
 STEPS=		audit arm base boot chroot clean clone compress confirm \
 		connect core distfiles download dvd fingerprint info \
-		kernel list make.conf nano obsolete options packages \
-		pkgbase plugins ports prefetch print rebase release \
-		rename serial sign skim sync test tests update upload \
-		verify vga vm xtools
-SCRIPTS=	custom distribution hotfix nightly pkgver source watch
+		kernel list make.conf makedist nano obsolete options \
+		packages pkgbase plugins ports prefetch print rebase \
+		release rename serial sign skim sync test tests update \
+		upload verify vga vm xtools
+SCRIPTS=	custom distribution hotfix nightly patch pkgver source watch
 
 .PHONY:		${STEPS} ${SCRIPTS}
 
@@ -92,6 +92,18 @@ _CONFIGDIR=	${__CONFIGDIR:[1]:C/\/build\.conf$//}
 .-include "${_CONFIGDIR}/build.conf.local"
 .include "${_CONFIGDIR}/build.conf"
 
+# load the recipe after build config if specified
+.if defined(RECIPE)
+RECIPEDIR=	${_CONFIGDIR}/recipe
+.include "${RECIPEDIR}/${RECIPE}.conf"
+CORETAG?=	${RECIPE}
+PLUGINSTAG?=	${RECIPE}
+PORTSTAG?=	${RECIPE}
+SRCTAG?=	${RECIPE}
+.export CORETAG COREMOD COREPKG CORESUF PLUGINSTAG PLUGINSMOD PLUGINSPKG \
+	PORTSTAG PORTSMOD PORTSPKG SRCTAG RECIPE RECIPEDIR
+.endif
+
 _ARCH!=		uname -p
 _TIMESTAMP!=	date '+%s'
 _VERSION!=	date '+%Y%m%d%H%M'
@@ -130,7 +142,6 @@ STAGEDIRPREFIX?=/usr/obj
 EXTRABRANCH?=	# empty
 
 COREBRANCH?=	stable/${ABI}
-COREVERSION?=	# empty
 COREDIR?=	${ROOTDIR}/core
 COREENV?=	CORE_PHP=${PHP} CORE_ABI=${ABI} CORE_PYTHON=${PYTHON}
 

@@ -111,6 +111,11 @@ setup_chroot ${STAGEDIR}
 git_switch ${STAGEDIR}${PORTSDIR} ${PORTSBRANCH}
 git_switch ${STAGEDIR}${SRCDIR} ${SRCBRANCH}
 
+if [ -n "${RECIPE}" ]; then
+	git_recipe ${STAGEDIR} ports PORTSDIGEST
+	git_recipe ${STAGEDIR} src SRCDIGEST
+fi
+
 if extract_packages ${STAGEDIR}; then
 	AUXSET=$(find_set aux)
 	if [ -f "${AUXSET}" ]; then

@@ -535,10 +535,10 @@ use the following:
 
     # make custom-<image> ADDITIONS="an-existing-plugin path/to/extra/plugin"
 
-Last but not least, a rebuild of OPNsense core and plugins on package
-sets is invoked using:
+Manual hotfix runs a rebuild of OPNsense ports, core and plugins on
+existing package sets using:
 
-    # make hotfix[-<step>]
+    # make hotfix[-<step-or-list-of-packages>]
 
 The default hotfix run is a non-destructive rebuild pass for missing
 plugins and core packages which also signs the existing packages.
@@ -548,3 +548,23 @@ step, however, will automatically rebuild mismatching and missing ports.
 
 Any other argument (or list of arguments separated by comma) will be
 treated as individual packages to be rebuilt by their matching steps.
+
+A wildcard glob character is available as "%" for removing a larger number
+of similar packages.  For ports, port origins matching ports.conf content
+are also allowed for hidden dependency rebuilds.
+
+Last but not least, the patch step allows to build packages from repeatable
+recipies:
+
+    # make patch RECIPE=<recipe-version>
+
+Although patch uses the hotfix infrastructure it aims to provide a clean
+wrapper around it.  RECIPE can also be used on a full build run if desired.
+
+Recipies are stored under config/<abi>/recipe/ and are made of .conf file
+and a .dist file.  The name of the files is the recipe name, typically
+an annotated release version number.  In the .conf file are the descriptions
+of additional modifications and the .dist file is required to be generated
+with "make makedist RECIPE=<recipe-version>" to record the recipe and source
+digests.  The files shall be committed together.  A patch build requires
+both and aborts if .dist is missing or its digests do not match.

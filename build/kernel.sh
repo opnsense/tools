@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2014-2025 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2014-2026 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -39,6 +39,7 @@ if [ -f "${KERNELSET}" -a -z "${1}" ]; then
 fi
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
+[ -n "${RECIPE}" ] && git_recipe / src SRCDIGEST
 git_version ${SRCDIR}
 
 KERNEL_DEBUG_SET=${SETSDIR}/kernel-dbg-${PRODUCT_VERSION}-${PRODUCT_ARCH}${PRODUCT_DEVICE+"-${PRODUCT_DEVICE}"}.txz

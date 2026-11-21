@@ -42,6 +42,7 @@ fi
 echo ">>> Refreshing pkgbase set: ${PKGBASESET}"
 
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
+[ -n "${RECIPE}" ] && git_recipe / src SRCDIGEST
 git_version ${SRCDIR}
 
 setup_stage ${STAGEDIR} work
