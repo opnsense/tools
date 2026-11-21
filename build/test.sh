@@ -40,6 +40,9 @@ setup_clone ${STAGEDIR} ${COREDIR}
 setup_clone ${STAGEDIR} ${PLUGINSDIR}
 setup_chroot ${STAGEDIR}
 
+git_reset ${STAGEDIR}${COREDIR}
+git_reset ${STAGEDIR}${PLUGINSDIR}
+
 extract_packages ${STAGEDIR}
 install_packages ${STAGEDIR} ${PRODUCT_CORE} os-debug${PRODUCT_DEVEL}
 lock_packages ${STAGEDIR}

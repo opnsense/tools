@@ -42,6 +42,9 @@ setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
 
+git_reset ${STAGEDIR}${PORTSDIR}
+git_reset ${STAGEDIR}${SRCDIR}
+
 sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 
 RET=0

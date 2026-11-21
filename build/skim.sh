@@ -43,8 +43,9 @@ LESS="less -R"
 setup_stage ${STAGEDIR} etc
 
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
-git_reset ${PORTSREFDIR} HEAD
-git_reset ${PORTSDIR} HEAD
+
+git_reset ${PORTSREFDIR}
+git_reset ${PORTSDIR}
 
 UNUSED=1
 USED=1

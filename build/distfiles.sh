@@ -44,6 +44,9 @@ setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
 
+git_reset ${STAGEDIR}${PORTSDIR}
+git_reset ${STAGEDIR}${SRCDIR}
+
 if ! setup_distfiles ${STAGEDIR} ${@}; then
 	echo -n ">>> Recreating distfiles set... "
 	tar -C ${STAGEDIR}${PORTSDIR} -cf \

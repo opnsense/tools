@@ -108,6 +108,9 @@ setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
 [ ${DISTFILES} = "yes" ] && setup_distfiles ${STAGEDIR}
 
+git_reset ${STAGEDIR}${PORTSDIR}
+git_reset ${STAGEDIR}${SRCDIR}
+
 if extract_packages ${STAGEDIR}; then
 	AUXSET=$(find_set aux)
 	if [ -f "${AUXSET}" ]; then
