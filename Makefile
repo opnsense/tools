@@ -104,6 +104,7 @@ ARCH?=		${_ARCH}
 COMSPEED?=	115200
 DEBUG?=		# empty
 DEVICE?=	A10
+EMAIL?=		project@opnsense.org
 KERNEL?=	SMP
 NAME?=		OPNsense
 SUFFIX?=	# empty
@@ -120,6 +121,7 @@ MIRRORS?=	https://opnsense.c0urier.net \
 		https://mirror.sfo12.us.leaseweb.net/opnsense \
 		https://mirror.fra10.de.leaseweb.net/opnsense \
 		https://mirror.ams1.nl.leaseweb.net/opnsense
+MIRROR?=	${MIRRORS:Ox:[1]}
 SERVER?=	user@does.not.exist
 REMOTEDIR?=	# empty
 
@@ -183,8 +185,14 @@ VERBOSE_FLAGS=	-x
 VERBOSE_HIDDEN=	@
 .endif
 
-.for _VERSION in ABI APACHE DEBUG LUA PERL PHP PYTHON RUBY SSL VERSION
-VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
+# export these variables as authoritative variables for all build steps
+PRODUCT_ENV=	ABI ADDITIONS APACHE COMSPEED DEBUG EMAIL GITBASE \
+		KERNEL LUA MIRROR NAME PERL PHP PYTHON RUBY SSL \
+		TIMESTAMP TYPE UEFI VERSION
+
+.for _VERSION in ${PRODUCT_ENV}
+PRODUCT_${_VERSION}=${${_VERSION}}
+.export PRODUCT_${_VERSION}
 .endfor
 
 # Expand build steps to launch into the selected
@@ -194,16 +202,14 @@ VERSIONS+=	PRODUCT_${_VERSION}=${${_VERSION}}
 ${STEP}: lint-steps
 	@echo ">>> Executing build step ${STEP} on ${_CONFIGDIR:C/.*\///}" >&2
 	${VERBOSE_HIDDEN} cd ${TOOLSDIR}/build && \
-	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} -F ${KERNEL} \
-	    -n ${NAME} -v "${VERSIONS}" -s ${_CONFIGDIR} -Q ${TIMESTAMP} \
+	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} \
+	    -s ${_CONFIGDIR} -o "${STAGEDIRPREFIX}" \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
-	    -C ${COREDIR} -R ${PORTSREFDIR} -t ${TYPE} -k "${PRIVKEY}" \
+	    -C ${COREDIR} -R ${PORTSREFDIR} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
-	    -m ${MIRRORS:Ox:[1]} -o "${STAGEDIRPREFIX}" -c ${COMSPEED} \
 	    -b ${SRCBRANCH} -B ${PORTSBRANCH} -e ${PLUGINSBRANCH} \
 	    -g ${TOOLSBRANCH} -E ${COREBRANCH} -G ${PORTSREFBRANCH} \
-	    -H "${COREENV}" -u "${UEFI:tl}" -U "${SUFFIX}" \
-	    -V "${ADDITIONS}" -O "${GITBASE}"  -r "${SERVER}" \
+	    -H "${COREENV}" -U "${SUFFIX}" -r "${SERVER}" \
 	    -h "${PLUGINSENV}" -I "${REMOTEDIR}" -D "${EXTRABRANCH}" \
 	    -A "${PORTSREFURL}" -J "${PORTSENV}" -f "${ZFS}" ${${STEP}_ARGS}
 .endfor

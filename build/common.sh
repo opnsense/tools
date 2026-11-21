@@ -28,7 +28,7 @@
 
 set -e
 
-OPTS="A:a:B:b:C:c:D:d:E:e:F:f:G:g:H:h:I:J:K:k:L:l:m:n:O:o:P:p:Q:R:r:S:s:T:t:U:u:v:V:"
+OPTS="A:a:B:b:C:D:d:E:e:f:G:g:H:h:I:J:K:k:L:l:o:P:p:R:r:S:s:T:U:"
 
 while getopts ${OPTS} OPT; do
 	case ${OPT} in
@@ -49,9 +49,6 @@ while getopts ${OPTS} OPT; do
 	C)
 		export COREDIR=${OPTARG}
 		;;
-	c)
-		export PRODUCT_COMSPEED=${OPTARG}
-		;;
 	d)
 		export PRODUCT_DEVICE_REAL=${OPTARG}
 		export PRODUCT_DEVICE=${OPTARG}
@@ -64,9 +61,6 @@ while getopts ${OPTS} OPT; do
 		;;
 	e)
 		export PLUGINSBRANCH=${OPTARG}
-		;;
-	F)
-		export PRODUCT_KERNEL=${OPTARG}
 		;;
 	f)
 		export PRODUCT_ZFS_ALLOWED=${PRODUCT_ZFS_ALLOWED:-""}
@@ -114,15 +108,6 @@ while getopts ${OPTS} OPT; do
 			export PRODUCT_SIGNCHK=${OPTARG}
 		fi
 		;;
-	m)
-		export PRODUCT_MIRROR=${OPTARG}
-		;;
-	n)
-		export PRODUCT_NAME=${OPTARG}
-		;;
-	O)
-		export PRODUCT_GITBASE=${OPTARG}
-		;;
 	o)
 		if [ -n "${OPTARG}" ]; then
 			export STAGEDIRPREFIX=${OPTARG}
@@ -133,9 +118,6 @@ while getopts ${OPTS} OPT; do
 		;;
 	p)
 		export PLUGINSDIR=${OPTARG}
-		;;
-	Q)
-		export PRODUCT_TIMESTAMP=${OPTARG}
 		;;
 	R)
 		export PORTSREFDIR=${OPTARG}
@@ -152,9 +134,6 @@ while getopts ${OPTS} OPT; do
 	T)
 		export TOOLSDIR=${OPTARG}
 		;;
-	t)
-		export PRODUCT_TYPE=${OPTARG}
-		;;
 	U)
 		case "${OPTARG}" in
 		''|-business|-devel)
@@ -165,17 +144,6 @@ while getopts ${OPTS} OPT; do
 			exit 1
 			;;
 		esac
-		;;
-	u)
-		export PRODUCT_UEFI=${OPTARG}
-		;;
-	v)
-		for _VERSION in ${OPTARG}; do
-			eval "export ${_VERSION}"
-		done
-		;;
-	V)
-		export PRODUCT_ADDITIONS=${OPTARG}
 		;;
 	*)
 		echo "${0}: Unknown argument '${OPT}'" >&2
@@ -199,6 +167,7 @@ PRODUCT_ABI
 PRODUCT_ARCH
 PRODUCT_COMSPEED
 PRODUCT_DEVICE_REAL
+PRODUCT_EMAIL
 PRODUCT_GITBASE
 PRODUCT_KERNEL
 PRODUCT_LUA
