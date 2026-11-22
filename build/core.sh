@@ -54,7 +54,7 @@ fi
 setup_clone ${STAGEDIR} ${COREDIR}
 
 for BRANCH in ${EXTRABRANCH} ${COREBRANCH}; do
-	git_reset ${STAGEDIR}${COREDIR} ${BRANCH}
+	git_switch ${STAGEDIR}${COREDIR} ${BRANCH}
 
 	CORE_ARGS="CORE_ARCH=${PRODUCT_ARCH} ${COREENV}"
 	if [ ${BRANCH} = ${COREBRANCH} ]; then

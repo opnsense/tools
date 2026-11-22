@@ -281,6 +281,11 @@ for WANT in ${PRODUCT_WANTS}; do
 	fi
 done
 
+git_switch()
+{
+	git -C ${1} switch --discard-changes ${2}
+}
+
 git_reset()
 {
 	if [ ${1} != ${TOOLSDIR} ]; then

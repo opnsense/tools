@@ -60,8 +60,8 @@ fi
 PORTSLIST=$(list_packages "${PORTSLIST}" ${CONFIGDIR}/ports.conf)
 AUXLIST=$(list_packages "${AUXLIST}" ${CONFIGDIR}/aux.conf)
 
-git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
+git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 
 setup_stage ${STAGEDIR} etc
 
@@ -108,8 +108,8 @@ setup_clone ${STAGEDIR} ${SRCDIR}
 setup_chroot ${STAGEDIR}
 [ ${DISTFILES} = "yes" ] && setup_distfiles ${STAGEDIR}
 
-git_reset ${STAGEDIR}${PORTSDIR}
-git_reset ${STAGEDIR}${SRCDIR}
+git_switch ${STAGEDIR}${PORTSDIR} ${PORTSBRANCH}
+git_switch ${STAGEDIR}${SRCDIR} ${SRCBRANCH}
 
 if extract_packages ${STAGEDIR}; then
 	AUXSET=$(find_set aux)
