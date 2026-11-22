@@ -84,6 +84,6 @@ for ARG in ${ARGS}; do
 	if [ -n "${VERSION}" ]; then
 		git_tag ${DIR} ${VERSION}
 		git_pull ${DIR} ${BRANCHES} || true
-		git_reset ${DIR}
+		git_reset ${DIR} ${REPO_TAG}
 	fi
 done

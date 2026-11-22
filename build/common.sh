@@ -286,11 +286,8 @@ git_reset()
 	if [ ${1} != ${TOOLSDIR} ]; then
 		git -C ${1} clean -xdqf .
 	fi
-	REPO_TAG=${2}
-	if [ -z "${REPO_TAG}" ]; then
-		git_tag ${1} ${PRODUCT_VERSION}
-	fi
-	git -C ${1} reset --hard ${REPO_TAG}
+
+	git -C ${1} reset --hard ${2}
 }
 
 git_fetch()
