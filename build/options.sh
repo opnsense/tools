@@ -38,12 +38,12 @@ git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
-setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
+setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_chroot ${STAGEDIR}
 
-git_reset ${STAGEDIR}${PORTSDIR}
-git_reset ${STAGEDIR}${SRCDIR}
+git_switch ${STAGEDIR}${SRCDIR} ${SRCBRANCH}
+git_switch ${STAGEDIR}${PORTSDIR} ${PORTSBRANCH}
 
 sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 

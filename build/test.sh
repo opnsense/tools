@@ -31,8 +31,8 @@ SELF=test
 
 . ./common.sh
 
-git_branch ${PLUGINSDIR} ${PLUGINSBRANCH} PLUGINSBRANCH
 git_branch ${COREDIR} ${COREBRANCH} COREBRANCH
+git_branch ${PLUGINSDIR} ${PLUGINSBRANCH} PLUGINSBRANCH
 
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
@@ -40,8 +40,8 @@ setup_clone ${STAGEDIR} ${COREDIR}
 setup_clone ${STAGEDIR} ${PLUGINSDIR}
 setup_chroot ${STAGEDIR}
 
-git_reset ${STAGEDIR}${COREDIR}
-git_reset ${STAGEDIR}${PLUGINSDIR}
+git_switch ${STAGEDIR}${COREDIR} ${COREBRANCH}
+git_switch ${STAGEDIR}${PLUGINSDIR} ${PLUGINSBRANCH}
 
 extract_packages ${STAGEDIR}
 install_packages ${STAGEDIR} ${PRODUCT_CORE} os-debug${PRODUCT_DEVEL}

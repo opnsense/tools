@@ -40,12 +40,12 @@ git_version ${PORTSDIR}
 setup_stage ${PORTSDIR}/distfiles
 setup_stage ${STAGEDIR}
 setup_base ${STAGEDIR}
-setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_clone ${STAGEDIR} ${SRCDIR}
+setup_clone ${STAGEDIR} ${PORTSDIR}
 setup_chroot ${STAGEDIR}
 
-git_reset ${STAGEDIR}${PORTSDIR}
-git_reset ${STAGEDIR}${SRCDIR}
+git_switch ${STAGEDIR}${SRCDIR} ${SRCBRANCH}
+git_switch ${STAGEDIR}${PORTSDIR} ${PORTSBRANCH}
 
 if ! setup_distfiles ${STAGEDIR} ${@}; then
 	echo -n ">>> Recreating distfiles set... "
