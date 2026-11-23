@@ -181,8 +181,6 @@ ${TARGET}: ${_TARGET}
 
 .if "${VERBOSE}" != ""
 VERBOSE_FLAGS=	-x
-.else
-VERBOSE_HIDDEN=	@
 .endif
 
 # export these variables as authoritative variables for all build steps
@@ -201,9 +199,8 @@ PRODUCT_${_VERSION}=${${_VERSION}}
 .for STEP in ${STEPS}
 ${STEP}: lint-steps
 	@echo ">>> Executing build step ${STEP} on ${_CONFIGDIR:C/.*\///}" >&2
-	${VERBOSE_HIDDEN} cd ${TOOLSDIR}/build && \
-	    sh ${VERBOSE_FLAGS} ./${.TARGET}.sh -a ${ARCH} \
-	    -s ${_CONFIGDIR} -o "${STAGEDIRPREFIX}" \
+	@cd ${TOOLSDIR}/build && sh ${VERBOSE_FLAGS} ./${.TARGET}.sh \
+	    -a ${ARCH} -s ${_CONFIGDIR} -o "${STAGEDIRPREFIX}" \
 	    -S ${SRCDIR} -P ${PORTSDIR} -p ${PLUGINSDIR} -T ${TOOLSDIR} \
 	    -C ${COREDIR} -R ${PORTSREFDIR} -k "${PRIVKEY}" \
 	    -K "${PUBKEY}" -l "${SIGNCHK}" -L "${SIGNCMD}" -d ${DEVICE} \
@@ -216,7 +213,7 @@ ${STEP}: lint-steps
 
 .for SCRIPT in ${SCRIPTS}
 ${SCRIPT}: lint-composite
-	${VERBOSE_HIDDEN} cd ${.CURDIR} && sh ${VERBOSE_FLAGS} \
+	@cd ${.CURDIR} && sh ${VERBOSE_FLAGS} \
 	    ${TOOLSDIR}/composite/${SCRIPT}.sh ${${SCRIPT}_ARGS}
 .endfor
 

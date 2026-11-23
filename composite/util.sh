@@ -55,5 +55,4 @@ load_make_vars()
 		fi
 		eval "${RESULT}"
 	done
-
 }
