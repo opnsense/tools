@@ -405,6 +405,7 @@ Available options are:
 * used:		review and copy upstream changes
 * unused:	copy unused upstream changes
 * (none):	all of the above
+* raw:      same as used but no dependencies
 
 Syncing a ports branch for custom package builds
 ------------------------------------------------

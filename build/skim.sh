@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2015-2022 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2015-2026 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -49,14 +49,22 @@ git_reset ${PORTSDIR}
 
 UNUSED=1
 USED=1
+RAW=
 
 for ARG in ${@}; do
 	case ${ARG} in
+	raw)
+		RAW=1
+		UNUSED=
+		USED=
+		;;
 	unused)
+		RAW=
 		UNUSED=1
 		USED=
 		;;
 	used)
+		RAW=
 		UNUSED=
 		USED=1
 		;;
@@ -90,9 +98,12 @@ PRODUCT_ABI=${PRODUCT_ABI}
 		SOURCE=${PORTSREFDIR}
 	fi
 
-	${ENV_FILTER} make -C ${SOURCE}/${PORT} \
-	    PORTSDIR=${SOURCE} ${MAKE_ARGS} all-depends-list \
-	    | awk -F"${SOURCE}/" '{print $2}' >> ${STAGEDIR}/used
+	if [ -z "${RAW}" ]; then
+		${ENV_FILTER} make -C ${SOURCE}/${PORT} \
+		    PORTSDIR=${SOURCE} ${MAKE_ARGS} all-depends-list \
+		    | awk -F"${SOURCE}/" '{print $2}' >> ${STAGEDIR}/used
+	fi
+
 	echo ${PORT} >> ${STAGEDIR}/used
 
 	PORTSNUM=$(expr ${PORTSNUM} + 1)
@@ -175,7 +186,7 @@ while read PORT; do
 	echo ${PORT} >> ${STAGEDIR}/used.changed
 done < ${STAGEDIR}/used.unique
 
-if [ -n "${USED}" ]; then
+if [ -n "${USED}${RAW}" ]; then
 	while read PORT; do
 		clear
 		(diff -Nru ${PORTSDIR}/${PORT} ${PORTSREFDIR}/${PORT} \
@@ -191,33 +202,37 @@ if [ -n "${USED}" ]; then
 		[eE])
 			rm -fr ${PORTSDIR}/${PORT}
 			cp -a ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
-			(cd ${PORTSDIR}; git checkout -p ${PORT} < /dev/tty)
-			(cd ${PORTSDIR}; git add ${PORT})
-			(cd ${PORTSDIR}; if ! git diff --quiet HEAD; then
-				git commit -m \
+			git -C ${PORTSDIR} checkout -p ${PORT} < /dev/tty
+			git -C ${PORTSDIR} add ${PORT}
+			if ! git -C ${PORTSDIR} diff --quiet HEAD; then
+				git -C ${PORTSDIR} commit -m \
 "${PORT}: partially sync with upstream
 
 Taken from: ${FROM}"
-			fi)
+			fi
 			;;
 		[cC])
 			rm -fr ${PORTSDIR}/${PORT}
 			cp -a ${PORTSREFDIR}/${PORT} ${PORTSDIR}/${PORT}
-			(cd ${PORTSDIR}; git add ${PORT})
-			(cd ${PORTSDIR}; git commit -m \
+			git -C ${PORTSDIR} add ${PORT}
+			git -C ${PORTSDIR} commit -m \
 "${PORT}: sync with upstream
 
-Taken from: ${FROM}")
+Taken from: ${FROM}"
 			;;
 		esac
 	done < ${STAGEDIR}/used.changed
 
-	for ENTRY in ${PORTSREFDIR}/[A-Z]*; do
-		ENTRY=${ENTRY##"${PORTSREFDIR}/"}
+	ENTRIES=
 
-		diff -rq ${PORTSDIR}/${ENTRY} ${PORTSREFDIR}/${ENTRY} \
-		    > /dev/null || ENTRIES="${ENTRIES} ${ENTRY}"
-	done
+	if [ -z "${RAW}" ]; then
+		for ENTRY in ${PORTSREFDIR}/[A-Z]*; do
+			ENTRY=${ENTRY##"${PORTSREFDIR}/"}
+
+			diff -rq ${PORTSDIR}/${ENTRY} ${PORTSREFDIR}/${ENTRY} \
+			    > /dev/null || ENTRIES="${ENTRIES} ${ENTRY}"
+		done
+	fi
 
 	if [ -n "${ENTRIES}" ]; then
 		clear
@@ -240,25 +255,25 @@ Taken from: ${FROM}")
 				rm -r ${PORTSDIR}/${ENTRY}
 				cp -a ${PORTSREFDIR}/${ENTRY} ${PORTSDIR}/
 			done
-			(cd ${PORTSDIR}; git checkout -p ${ENTRIES} < /dev/tty)
-			(cd ${PORTSDIR}; git add ${ENTRIES})
-			(cd ${PORTSDIR}; if ! git diff --quiet HEAD; then
-				git commit -m \
+			git -C ${PORTSDIR} checkout -p ${ENTRIES} < /dev/tty
+			git -C ${PORTSDIR} git add ${ENTRIES}
+			if ! git -C ${PORTSDIR} diff --quiet HEAD; then
+				git -C ${PORTSDIR} commit -m \
 "Framework: partially sync with upstream
 
 Taken from: ${FROM}"
-			fi)
+			fi
 			;;
 		[cC])
 			for ENTRY in ${ENTRIES}; do
 				rm -r ${PORTSDIR}/${ENTRY}
 				cp -a ${PORTSREFDIR}/${ENTRY} ${PORTSDIR}/
-				(cd ${PORTSDIR}; git add ${ENTRY})
+				git -C ${PORTSDIR} add ${ENTRY}
 			done
-			(cd ${PORTSDIR}; git commit -m \
+			git ${PORTSDIR} commit -m \
 "Framework: sync with upstream
 
-Taken from: ${FROM}")
+Taken from: ${FROM}"
 			;;
 		esac
 	fi
