@@ -249,6 +249,17 @@ if [ -n "${*}" ]; then
 fi
 
 case "${SELF}" in
+base|core|kernel|makedist|pkgbase|plugins|ports)
+	;;
+*)
+	if [ -n "${RECIPE}" ]; then
+		echo ">>> Step ${SELF} does not support RECIPE." >&2
+		exit 1
+	fi
+	;;
+esac
+
+case "${SELF}" in
 clean|confirm|fingerprint|info|list|make\.conf|print)
 	;;
 *)
