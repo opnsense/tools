@@ -508,7 +508,10 @@ git_recipe()
 			exit 1
 		fi
 
-		if [ "${REF}" != "$(sha256 -q ${CONF})" ]; then
+		# XXX find a better way to deal with shifting configurations
+		if [ "${REF}" != "$(cat ${CONFIGDIR}/make.conf \
+		    ${CONFIGDIR}/ports.conf ${CONFIGDIR}/plugins.conf \
+		    ${CONF} | sha256 -q)" ]; then
 			echo ">>> Mismatching CONFDIGEST"
 			exit 1
 		fi
