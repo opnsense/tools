@@ -492,26 +492,8 @@ git_recipe()
 		;;
 	esac
 
-	DIST=${RECIPEDIR}/${RECIPE}.dist
-
 	if [ -n "${DIGEST}" ]; then
-		if [ ! -f ${DIST} ]; then
-			echo ">>> Missing ${DIST}"
-			exit 1
-		fi
-
-		REF=$(sed -n "s/^CONFDIGEST=//p" ${DIST})
-
-		if [ -z "${REF}" ]; then
-			echo ">>> Missing CONFDIGEST"
-			exit 1
-		fi
-
-		# XXX find a better way to deal with shifting configurations
-		if [ "${REF}" != "$(hash_recipe)" ]; then
-			echo ">>> Mismatching CONFDIGEST"
-			exit 1
-		fi
+		verify_recipe
 	fi
 
 	git_reset ${BASEDIR}${GITDIR} ${GITTAG}
@@ -540,15 +522,17 @@ git_recipe()
 	export REPO_HASH REPO_TREE
 
 	if [ -n "${DIGEST}" ]; then
+		DIST=${RECIPEDIR}/${RECIPE}.dist
+
 		REF=$(sed -n "s/^${DIGEST}=//p" ${DIST})
 
 		if [ -z "${REF}" ]; then
-			echo ">>> Missing ${DIGEST}"
+			echo ">>> Missing ${DIGEST}" >&2
 			exit 1
 		fi
 
 		if [ "${REF}" != "${REPO_HASH}:${REPO_TREE}" ]; then
-			echo ">>> Mismatching ${DIGEST}"
+			echo ">>> Mismatching ${DIGEST}" >&2
 			exit 1
 		fi
 	fi
@@ -556,13 +540,36 @@ git_recipe()
 
 hash_recipe()
 {
+	# XXX find a better way to deal with shifting configurations
 	cat ${CONFIGDIR}/make.conf ${RECIPEDIR}/${RECIPE}.conf | sha256 -q
+}
+
+verify_recipe()
+{
+	DIST=${RECIPEDIR}/${RECIPE}.dist
+
+	if [ ! -f ${DIST} ]; then
+		echo ">>> Missing ${DIST}" >&2
+		exit 1
+	fi
+
+	REF=$(sed -n "s/^CONFDIGEST=//p" ${DIST})
+
+	if [ -z "${REF}" ]; then
+		echo ">>> Missing CONFDIGEST" >&2
+		exit 1
+	fi
+
+	if [ "${REF}" != "$(hash_recipe)" ]; then
+		echo ">>> Mismatching CONFDIGEST" >&2
+		exit 1
+	fi
 }
 
 load_config()
 {
 	if [ -n "${RECIPE}" ]; then
-		# XXX verify that CONFDIGEST is good
+		verify_recipe
 		git -C ${1} show ${TOOLSTAG}:./${2}
 	else
 		# can use uncommitted changes here
