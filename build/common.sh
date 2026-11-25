@@ -492,7 +492,6 @@ git_recipe()
 		;;
 	esac
 
-	CONF=${RECIPEDIR}/${RECIPE}.conf
 	DIST=${RECIPEDIR}/${RECIPE}.dist
 
 	if [ -n "${DIGEST}" ]; then
@@ -509,9 +508,7 @@ git_recipe()
 		fi
 
 		# XXX find a better way to deal with shifting configurations
-		if [ "${REF}" != "$(cat ${CONFIGDIR}/make.conf \
-		    ${CONFIGDIR}/ports.conf ${CONFIGDIR}/plugins.conf \
-		    ${CONF} | sha256 -q)" ]; then
+		if [ "${REF}" != "$(hash_recipe)" ]; then
 			echo ">>> Mismatching CONFDIGEST"
 			exit 1
 		fi
@@ -554,6 +551,22 @@ git_recipe()
 			echo ">>> Mismatching ${DIGEST}"
 			exit 1
 		fi
+	fi
+}
+
+hash_recipe()
+{
+	cat ${CONFIGDIR}/make.conf ${RECIPEDIR}/${RECIPE}.conf | sha256 -q
+}
+
+load_config()
+{
+	if [ -n "${RECIPE}" ]; then
+		# XXX verify that CONFDIGEST is good
+		git -C ${1} show ${TOOLSTAG}:./${2}
+	else
+		# can use uncommitted changes here
+		cat ${1}/${2}
 	fi
 }
 

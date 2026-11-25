@@ -57,13 +57,16 @@ if check_packages ${SELF} ${OARGS}; then
 	exit 0
 fi
 
-PORTSLIST=$(list_packages "${PORTSLIST}" ${CONFIGDIR}/ports.conf)
-AUXLIST=$(list_packages "${AUXLIST}" ${CONFIGDIR}/aux.conf)
-
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 git_branch ${SRCDIR} ${SRCBRANCH} SRCBRANCH
 
 setup_stage ${STAGEDIR} etc
+
+load_config ${CONFIGDIR} ports.conf > ${STAGEDIR}/ports.conf
+PORTSLIST=$(list_packages "${PORTSLIST}" ${STAGEDIR}/ports.conf)
+
+# XXX this will go away soon
+AUXLIST=$(list_packages "${AUXLIST}" ${CONFIGDIR}/aux.conf)
 
 sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 

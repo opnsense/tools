@@ -36,18 +36,18 @@ if check_packages ${SELF} ${@}; then
 	exit 0
 fi
 
-PLUGINSCONF=${CONFIGDIR}/plugins.conf
-
-if [ -f ${PLUGINSCONF}.local ]; then
-	PLUGINSCONF="${PLUGINSCONF} ${PLUGINSCONF}.local"
-fi
-
-PLUGINSLIST=$(list_packages "${PLUGINSLIST}" ${PLUGINSCONF})
 _PLUGIN_ARGS="PLUGIN_ARCH=${PRODUCT_ARCH} ${PLUGINSENV}"
 
 git_branch ${PLUGINSDIR} ${PLUGINSBRANCH} PLUGINSBRANCH
 
 setup_stage ${STAGEDIR}
+
+load_config ${CONFIGDIR} plugins.conf > ${STAGEDIR}/plugins.conf
+# XXX unsure if we should do this for recipes
+[ -f ${CONFIGDIR}/plugins.conf.local ] && \
+    cat ${CONFIGDIR}/plugins.conf.local >> ${STAGEDIR}/plugins.conf
+PLUGINSLIST=$(list_packages "${PLUGINSLIST}" ${STAGEDIR}/plugins.conf)
+
 setup_base ${STAGEDIR}
 setup_chroot ${STAGEDIR}
 

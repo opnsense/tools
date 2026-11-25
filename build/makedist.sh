@@ -65,10 +65,7 @@ SRC_TREE=${REPO_TREE}
 # not modified after makedist was run which means
 # the recipe is complete and immutable from the
 # git commit point of view
-#
-# XXX find a better way to deal with shifting configurations
-CONFDIGEST=$(cat ${CONFIGDIR}/make.conf ${CONFIGDIR}/ports.conf \
-    ${CONFIGDIR}/plugins.conf ${RECIPEDIR}/${RECIPE}.conf | sha256 -q)
+CONFDIGEST=$(hash_recipe)
 
 cat > ${RECIPEDIR}/${RECIPE}.dist << EOF
 CONFDIGEST=${CONFDIGEST}
