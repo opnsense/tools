@@ -66,7 +66,8 @@ load_config ${CONFIGDIR} ports.conf > ${STAGEDIR}/ports.conf
 PORTSLIST=$(list_packages "${PORTSLIST}" ${STAGEDIR}/ports.conf)
 
 # XXX this will go away soon
-AUXLIST=$(list_packages "${AUXLIST}" ${CONFIGDIR}/aux.conf)
+load_config ${CONFIGDIR} aux.conf > ${STAGEDIR}/aux.conf
+AUXLIST=$(list_packages "${AUXLIST}" ${STAGEDIR}/aux.conf)
 
 sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 

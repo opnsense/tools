@@ -36,9 +36,12 @@ if check_packages ${SELF} ${@}; then
 	exit 0
 fi
 
-AUXLIST=$(list_packages "${AUXLIST}" ${CONFIGDIR}/aux.conf)
-
 setup_stage ${STAGEDIR}
+
+# XXX this will go away soon
+load_config ${CONFIGDIR} aux.conf > ${STAGEDIR}/aux.conf
+AUXLIST=$(list_packages "${AUXLIST}" ${STAGEDIR}/aux.conf)
+
 setup_base ${STAGEDIR}
 extract_packages ${STAGEDIR}
 remove_packages ${STAGEDIR} ${@}
