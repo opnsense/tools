@@ -595,10 +595,22 @@ load_config()
 	if [ -n "${RECIPE}" ]; then
 		echo ">>> Using ${RECIPE} ${2} recipe" >&2
 		verify_recipe
-		git -C ${1} show ${TOOLSTAG}:./${2}
+		if ! git -C "${1}" cat-file -e "${TOOLSTAG}^{tree}" 2>/dev/null; then
+			echo ">>> TOOLSTAG=${TOOLSTAG} was not found" >&2
+			exit 1
+		fi
+		if git -C ${1} cat-file -e ${TOOLSTAG}:./${2} 2> /dev/null; then
+			git -C ${1} show ${TOOLSTAG}:./${2}
+		else
+			echo ">>> TOOLSTAG=${TOOLSTAG} ${2} not found, continuing" >&2
+		fi
 	else
-		# can use uncommitted changes here
-		cat ${1}/${2}
+		if [ -f ${1}/${2} ]; then
+			# can use uncommitted changes here
+			cat ${1}/${2}
+		else
+			echo ">>> Config ${2} not found, continuing" >&2
+		fi
 	fi
 }
 

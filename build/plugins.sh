@@ -43,9 +43,7 @@ git_branch ${PLUGINSDIR} ${PLUGINSBRANCH} PLUGINSBRANCH
 setup_stage ${STAGEDIR}
 
 load_config ${CONFIGDIR} plugins.conf > ${STAGEDIR}/plugins.conf
-# XXX unsure if we should do this for recipes
-[ -f ${CONFIGDIR}/plugins.conf.local ] && \
-    cat ${CONFIGDIR}/plugins.conf.local >> ${STAGEDIR}/plugins.conf
+load_config ${CONFIGDIR} plugins.conf.local >> ${STAGEDIR}/plugins.conf
 PLUGINSLIST=$(list_packages "${PLUGINSLIST}" ${STAGEDIR}/plugins.conf)
 
 setup_base ${STAGEDIR}

@@ -36,6 +36,11 @@ if [ -z "${RECIPE}" ]; then
 	exit 1
 fi
 
+if ! git -C "${1}" cat-file -e "${TOOLSTAG}^{tree}" 2>/dev/null; then
+	echo ">>> TOOLSTAG=${TOOLSTAG} was not found" >&2
+	exit 1
+fi
+
 setup_stage ${STAGEDIR}
 setup_clone ${STAGEDIR} ${COREDIR}
 setup_clone ${STAGEDIR} ${PLUGINSDIR}
