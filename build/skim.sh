@@ -32,9 +32,7 @@ SELF=skim
 
 . ./common.sh
 
-if [ -z "${PORTSLIST}" ]; then
-	PORTSLIST=$(list_config ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf)
-fi
+PORTSLIST=$(list_config "${PORTSLIST}" ${CONFIGDIR}/skim.conf ${CONFIGDIR}/ports.conf)
 
 DIFF="$(which colordiff 2> /dev/null || echo cat)"
 LESS="less -R"
