@@ -1171,6 +1171,11 @@ bundle_packages()
 	# push packages to home location
 	cp ${BASEDIR}${PACKAGESDIR}/All/* ${BASEDIR}${PACKAGESDIR}-new/All
 
+	for DIR in ${BASEDIR}${PACKAGESDIR}/.Build \
+	    ${BASEDIR}${PACKAGESDIR}/.Run; do
+		[ -d ${DIR} ] && cp -R ${DIR} ${BASEDIR}${PACKAGESDIR}-new/
+	done
+
 	SIGNARGS=
 
 	if [ -n "$(${PRODUCT_SIGNCHK})" ]; then

@@ -65,10 +65,6 @@ setup_stage ${STAGEDIR} etc
 load_config ${CONFIGDIR} ports.conf > ${STAGEDIR}/ports.conf
 PORTSLIST=$(list_packages "${PORTSLIST}" ${STAGEDIR}/ports.conf)
 
-# XXX this will go away soon
-load_config ${CONFIGDIR} aux.conf > ${STAGEDIR}/aux.conf
-AUXLIST=$(list_packages "${AUXLIST}" ${STAGEDIR}/aux.conf)
-
 sh ./make.conf.sh > ${STAGEDIR}/etc/make.conf
 
 for ARG in ${OARGS}; do
@@ -123,14 +119,22 @@ fi
 if extract_packages ${STAGEDIR}; then
 	AUXSET=$(find_set aux)
 	if [ -f "${AUXSET}" ]; then
-		tar -C ${STAGEDIR}${PACKAGESDIR} -xpf ${AUXSET} ./All
+		mkdir -p ${STAGEDIR}${PACKAGESDIR}/Aux ${STAGEDIR}${PACKAGESDIR}/.Build
+		tar -C ${STAGEDIR}${PACKAGESDIR}/Aux -xpf ${AUXSET} ./All
+		for FILE in $(find ${STAGEDIR}${PACKAGESDIR}/Aux/All -name "*.pkg"); do
+			mv ${FILE} ${STAGEDIR}${PACKAGESDIR}/All
+			touch ${STAGEDIR}${PACKAGESDIR}/.Build/$(basename ${FILE%-[0-9]*})
+		done
+		rm -r ${STAGEDIR}${PACKAGESDIR}/Aux
 	fi
 
 	if [ ${DEPEND} = "yes" ]; then
 		ARGS="${ARGS} ${PRODUCT_CORES} ${PRODUCT_PLUGINS}"
 		DEPS="${DEPS} plugins core"
 	fi
+
 	remove_packages ${STAGEDIR} ${ARGS}
+
 	if [ ${PRUNE} = "yes" ]; then
 		prune_packages ${STAGEDIR}
 	fi
@@ -154,7 +158,7 @@ trap : 2
 
 ${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || true
 # create a caching mirror for all temporary package dependencies
-mkdir -p ${PACKAGESDIR}-cache
+mkdir -p ${PACKAGESDIR}-cache ${PACKAGESDIR}/.Build ${PACKAGESDIR}/.Run
 cp -R ${PACKAGESDIR}/All ${PACKAGESDIR}-cache/All
 
 echo "${PORTSLIST}
@@ -240,7 +244,7 @@ UNAME_r=\$(freebsd-version)
 		pkg create -no ${PACKAGESDIR}-cache/All \${PKGNAME}
 	done
 
-	(echo "${PORTSLIST}"; echo "${AUXLIST}") | while read PORT_DEPENDS; do
+	echo "${PORTSLIST}" | while read PORT_DEPENDS; do
 		PORT_DEPENDS=\${PORT_DEPENDS%%@*}
 		if [ "\$(echo "\${PORT_DEPENDS}" | grep -c "\.\.\/")" != "0" ]; then
 			# normalize the port origin here so it matches below
@@ -253,17 +257,22 @@ UNAME_r=\$(freebsd-version)
 		fi
 	done
 
-	pkg autoremove -y
+	BUILDDEPS=\$(pkg autoremove -qn)
 
-	for PKGNAME in \$(pkg query %n); do
+	pkg query '%n %n-%v' | while read -r PKGNAME PKGID; do
 		OLD=\$(find ${PACKAGESDIR}/All -name "\${PKGNAME}-[0-9]*.pkg")
 		if [ -n "\${OLD}" ]; then
 			# already found
 			continue
 		fi
-		NEW=\$(find ${PACKAGESDIR}-cache/All -name "\${PKGNAME}-[0-9]*.pkg")
-		echo ">>> Saving runtime package: \${PKGNAME}"
-		cp \${NEW} ${PACKAGESDIR}/All
+
+		cp ${PACKAGESDIR}-cache/All/\${PKGID}.pkg ${PACKAGESDIR}/All
+
+		if echo "\${BUILDDEPS}" | grep -Fxq "\${PKGID}"; then
+			touch ${PACKAGESDIR}/.Build/\${PKGNAME}
+		else
+			touch ${PACKAGESDIR}/.Run/\${PKGNAME}
+		fi
 	done
 
 	make -C ${PORTSDIR}/\${PORT} clean \${MAKE_ARGS}

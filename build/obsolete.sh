@@ -31,7 +31,7 @@ SELF=obsolete
 
 . ./common.sh
 
-PORTSLIST=$(list_packages "${PORTSLIST}" ${CONFIGDIR}/aux.conf ${CONFIGDIR}/ports.conf)
+PORTSLIST=$(list_packages "${PORTSLIST}" ${CONFIGDIR}/ports.conf)
 
 git_branch ${PORTSDIR} ${PORTSBRANCH} PORTSBRANCH
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2019-2024 Franco Fichtner <franco@opnsense.org>
+# Copyright (c) 2019-2026 Franco Fichtner <franco@opnsense.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -38,11 +38,6 @@ fi
 
 setup_stage ${STAGEDIR}
 
-# XXX this will go away soon
-load_config ${CONFIGDIR} aux.conf > ${STAGEDIR}/aux.conf
-AUXLIST=$(list_packages "${AUXLIST}" ${STAGEDIR}/aux.conf)
-
-setup_base ${STAGEDIR}
 extract_packages ${STAGEDIR}
 remove_packages ${STAGEDIR} ${@}
 
@@ -50,22 +45,26 @@ remove_packages ${STAGEDIR} ${@}
 # set for nightly builds until they are officially built using the
 # "packages" target in which case the only thing that needs to be
 # done is stripping the auxiliary packages that are only needed for
-# the build and further testing.  Small lookup and delete code...
-for AUX in ${AUXLIST}; do
-	for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
-		PKGORIGIN=$(pkg -c ${STAGEDIR} info -F ${PKG} | \
-		    grep ^Origin | awk '{ print $3; }')
+# the build and further testing.
 
-		if [ "${AUX}" = "${PKGORIGIN}" ]; then
-			echo ">>> Moving auxiliary package ${AUX}" \
-			    >> ${STAGEDIR}/.pkg-msg
+for PKG in $(cd ${STAGEDIR}; find .${PACKAGESDIR}/All -type f); do
+	PKGNAME=$(basename ${PKG%-[0-9]*})
 
-			mkdir -p ${STAGEDIR}${PACKAGESDIR}-aux/All
-			mv ${STAGEDIR}/${PKG} ${STAGEDIR}${PACKAGESDIR}-aux/All
+	# only treat build dependencies as aux packages when they
+	# are also not marked as runtime dependencies -- if they
+	# already existed they were not added and not marked which
+	# means we keep their status quo of runtime depedency
+	if [ -f ${STAGEDIR}${PACKAGESDIR}/.Build/${PKGNAME} -a \
+	    ! -f ${STAGEDIR}${PACKAGESDIR}/.Run/${PKGNAME} ]; then
+		echo ">>> Moving auxiliary package ${PKGNAME}" \
+		    >> ${STAGEDIR}/.pkg-msg
 
-			break
-		fi
-	done
+		mkdir -p ${STAGEDIR}${PACKAGESDIR}-aux/All
+		mv ${STAGEDIR}/${PKG} ${STAGEDIR}${PACKAGESDIR}-aux/All
+	fi
 done
+
+# remove the hints from the resulting packages set
+rm -rf ${STAGEDIR}${PACKAGESDIR}/.Build ${STAGEDIR}${PACKAGESDIR}/.Run
 
 bundle_packages ${STAGEDIR} ${SELF}
