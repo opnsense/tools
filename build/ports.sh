@@ -156,7 +156,9 @@ echo "ECHO_MSG=echotime" >> ${STAGEDIR}/etc/make.conf
 # block SIGINT to allow for collecting port progress (use with care)
 trap : 2
 
-${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || true
+RET=
+
+${ENV_FILTER} chroot ${STAGEDIR} /bin/sh -s << EOF || RET=${?}
 # create a caching mirror for all temporary package dependencies
 mkdir -p ${PACKAGESDIR}-cache ${PACKAGESDIR}/.Build ${PACKAGESDIR}/.Run
 cp -R ${PACKAGESDIR}/All ${PACKAGESDIR}-cache/All
@@ -259,9 +261,16 @@ UNAME_r=\$(freebsd-version)
 
 	BUILDDEPS=\$(pkg autoremove -qn)
 
-	pkg query '%n %n-%v' | while read -r PKGNAME PKGID; do
+	for PKGID in \$(pkg query '%n-%v'); do
+		PKGNAME=\${PKGID%-[0-9]*}
 		OLD=\$(find ${PACKAGESDIR}/All -name "\${PKGNAME}-[0-9]*.pkg")
 		if [ -n "\${OLD}" ]; then
+			if [ ! -f "${PACKAGESDIR}/All/\${PKGID}.pkg" ]; then
+				echo ">>> Package inconsistency! old: \$(basename \${OLD%.pkg}) new: \${PKGID}"
+				echo ">>> Remove package '\${PKGNAME}' and rerun the build or fix current branch."
+				exit 11
+			fi
+
 			# already found
 			continue
 		fi
@@ -281,5 +290,11 @@ EOF
 
 # unblock SIGINT
 trap - 2
+
+# XXX maybe rather use .pkg-err inspection
+if [ "${RET}" = "11" ]; then
+	# stop bundling on this particular edge case
+	exit 1
+fi
 
 bundle_packages ${STAGEDIR} ${SELF} ${DEPS}
