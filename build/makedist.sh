@@ -60,11 +60,6 @@ git_recipe ${STAGEDIR} src
 SRC_HASH=${REPO_HASH}
 SRC_TREE=${REPO_TREE}
 
-# the configuration digest is to make sure that
-# related config variables such as CORESUF are
-# not modified after makedist was run which means
-# the recipe is complete and immutable from the
-# git commit point of view
 CONFDIGEST=$(hash_recipe)
 
 cat > ${RECIPEDIR}/${RECIPE}.dist << EOF

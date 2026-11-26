@@ -43,4 +43,4 @@ for KEY in SRCDIR; do
 	SED="${SED} -e s:%%${KEY}%%:${VALUE}:g"
 done
 
-${SED} ${CONFIGDIR}/make.conf
+load_config ${CONFIGDIR} make.conf | ${SED}

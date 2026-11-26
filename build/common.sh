@@ -249,11 +249,15 @@ if [ -n "${*}" ]; then
 fi
 
 case "${SELF}" in
-base|core|kernel|makedist|pkgbase|plugins|ports)
+base|core|kernel|makedist|packages|pkgbase|plugins|ports)
+	# explicit support
+	;;
+clean|info|make.conf|print)
+	# implicit support
 	;;
 *)
 	if [ -n "${RECIPE}" ]; then
-		echo ">>> Step ${SELF} does not support RECIPE." >&2
+		echo ">>> Step '${SELF}' does not support RECIPE." >&2
 		exit 1
 	fi
 	;;
@@ -474,7 +478,7 @@ git_recipe()
 	GITREPO=${2}
 	DIGEST=${3}
 
-	echo ">>> Using ${RECIPE} ${GITREPO} recipe"
+	echo ">>> Using ${RECIPE} ${GITREPO} recipe" >&2
 
 	case ${GITREPO} in
 	core)
@@ -533,26 +537,18 @@ git_recipe()
 	export REPO_HASH REPO_TREE
 
 	if [ -n "${DIGEST}" ]; then
-		DIST=${RECIPEDIR}/${RECIPE}.dist
-
-		REF=$(sed -n "s/^${DIGEST}=//p" ${DIST})
-
-		if [ -z "${REF}" ]; then
-			echo ">>> Missing ${DIGEST}" >&2
-			exit 1
-		fi
-
-		if [ "${REF}" != "${REPO_HASH}:${REPO_TREE}" ]; then
-			echo ">>> Mismatching ${DIGEST}" >&2
-			exit 1
-		fi
+		verify_git ${DIGEST}
 	fi
 }
 
 hash_recipe()
 {
-	# XXX find a better way to deal with shifting configurations
-	cat ${CONFIGDIR}/make.conf ${RECIPEDIR}/${RECIPE}.conf | sha256 -q
+	# the configuration digest is to make sure that
+	# related config variables such as CORESUF are
+	# not modified after makedist was run which means
+	# the recipe is complete and immutable from the
+	# git commit point of view
+	cat ${RECIPEDIR}/${RECIPE}.conf | sha256 -q
 }
 
 verify_recipe()
@@ -577,9 +573,27 @@ verify_recipe()
 	fi
 }
 
+verify_git()
+{
+	DIST=${RECIPEDIR}/${RECIPE}.dist
+
+	REF=$(sed -n "s/^${DIGEST}=//p" ${DIST})
+
+	if [ -z "${REF}" ]; then
+		echo ">>> Missing ${DIGEST}" >&2
+		exit 1
+	fi
+
+	if [ "${REF}" != "${REPO_HASH}:${REPO_TREE}" ]; then
+		echo ">>> Mismatching ${DIGEST}" >&2
+		exit 1
+	fi
+}
+
 load_config()
 {
 	if [ -n "${RECIPE}" ]; then
+		echo ">>> Using ${RECIPE} ${2} recipe" >&2
 		verify_recipe
 		git -C ${1} show ${TOOLSTAG}:./${2}
 	else
